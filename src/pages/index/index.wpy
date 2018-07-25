@@ -1,0 +1,18 @@
+<style lang="less">
+
+</style>
+<template>
+  首页
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'test'
+    }
+
+  }
+</script>

@@ -1,0 +1,15 @@
+{
+	"description": "A WePY project",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wx1ad334a77b9421e6",
+	"projectname": "fansti",
+	"miniprogramRoot": "./dist",
+	"condition": {}
+}

@@ -1,0 +1,67 @@
+<style lang="less">
+
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index/index',
+
+      'pages/track/index',
+
+      'pages/search/index',
+
+      'pages/person/index',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: '范思特',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#5a738a',
+      selectedColor: '#5a738a',
+      backgroundColor: '#ffffff',
+      list: [{
+        pagePath: "pages/index/index",
+        text: "首页",
+        iconPath: "images/tabbar_index.png",
+        selectedIconPath: "images/tabbar_index_active.png"
+      },{
+        pagePath: "pages/track/index",
+        text: "跟踪",
+        iconPath: "images/tabbar_track.png",
+        selectedIconPath: "images/tabbar_track_active.png"
+      },{
+        pagePath: "pages/search/index",
+        text: "查询",
+        iconPath: "images/tabbar_search.png",
+        selectedIconPath: "images/tabbar_search_active.png"
+      },{
+        pagePath: "pages/person/index",
+        text: "个人",
+        iconPath: "images/tabbar_person.png",
+        selectedIconPath: "images/tabbar_person_active.png"
+      }]
+    }
+  }
+
+  globalData = {
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+  }
+
+  onLaunch() {
+  }
+}
+</script>
