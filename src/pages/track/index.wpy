@@ -3,28 +3,41 @@
 </style>
 
 <template>
-  追踪
+  <block wx:if="{{isLogin}}">
+    追踪
 
+  </block>
+  <placeholder wx:else>
+    asd
+  </placeholder>
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
+  import Placeholder from '@/components/common/placeholder'
 
-    export default class Index extends wepy.page {
-        config = {}
+  export default class Index extends wepy.page {
+    config = {}
 
-        components = {}
-
-        data = {}
-        computed = {}
-
-        methods = {}
-
-        events = {}
-
-        onLoad() {
-
-        }
+    components = {
+      placeholder: Placeholder
     }
+
+    data = {
+      isLogin: false
+    }
+    computed = {}
+
+    methods = {}
+
+    events = {}
+
+    onLoad() {
+      let token = wx.getStorageSync('token');
+      this.isLogin = !!token;
+
+      console.log('isLogin',this.isLogin)
+    }
+  }
 </script>
 

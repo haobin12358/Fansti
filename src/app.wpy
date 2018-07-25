@@ -1,5 +1,5 @@
 <style lang="less">
-
+  @import "./styles/base";
 </style>
 
 <script>
@@ -10,13 +10,16 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index/index',
+      'pages/index/index',  //首页
+      'pages/index/newsDetail', //新闻详情
 
-      'pages/track/index',
+      'pages/search/index', //查询首页
 
-      'pages/search/index',
+      'pages/track/index',  //跟踪首页
 
-      'pages/person/index',
+      'pages/person/index', //个人首页
+      'pages/person/binding', //绑定页
+
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -61,7 +64,7 @@ export default class extends wepy.app {
     this.use('promisify')
   }
 
-  onLaunch() {
+  onLoad() {
   }
 }
 </script>

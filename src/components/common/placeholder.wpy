@@ -1,0 +1,60 @@
+<style scoped lang="less">
+  @import "../../styles/base";
+
+  .placeholder{
+    text-align: center;
+
+    .placeholder-icon {
+      margin-top: 277rpx;
+      width: 450rpx;
+      height: 150rpx;
+    }
+
+    .placeholder-text{
+      margin-top: 93rpx;
+      font-size: 32rpx;
+
+      navigator{
+        display: inline-block;
+
+        color: @mainBlueColor;
+      }
+    }
+
+  }
+</style>
+
+<template>
+  <view class="placeholder">
+    <image class="placeholder-icon" src="../../images/track_paper_plane2.png"></image>
+    <view class="placeholder-text">
+      去绑定,<navigator url="/pages/person/binding"><text>绑定账户</text></navigator>后即可查看
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Placeholder extends wepy.component {
+        props = {
+            text: {
+                //  Object Array String Number Boolean
+                type: String
+            }
+        }
+
+        data = {}
+
+        computed = {}
+
+        methods = {}
+
+        events = {}
+
+        onLoad() {
+
+        }
+    }
+</script>
+

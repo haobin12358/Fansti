@@ -1,0 +1,147 @@
+<style lang="less">
+  @import "../../styles/base";
+
+  page{
+    height: 100%;
+  }
+
+  .container{
+    height: 100%;
+    background: linear-gradient(to top,@mainBlueColor, #FFFFFF);
+
+    display: flex;
+    flex-direction: column;
+
+    .container-hd{
+      height: 240rpx;
+      text-align: right;
+      padding-top: 46rpx;
+      padding-right: 65rpx;
+
+      image{
+        height: 109rpx;
+        width: 262rpx;
+      }
+    }
+
+    .container-bd {
+      .form-list{
+
+        .form-item{
+          height: 121rpx;
+          padding-left: 75rpx;
+          border-bottom: 1px solid #e9e9e9;
+
+          display: flex;
+          align-items: center;
+
+          .form-item-hd{
+            margin-right: 40rpx;
+            display: flex;
+            align-items: center;
+
+            image{
+              width: 32rpx;
+              height: 35rpx;
+            }
+          }
+          .form-item-bd{
+            flex: 1;
+
+            input{
+
+            }
+
+            .input-placeholder{
+              color: @mainBlueColor;
+            }
+          }
+        }
+      }
+
+    }
+    .container-ft{
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .confirm-btn{
+        width: 680rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        border-radius: 40rpx;
+        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+        background: @mainBlueColor;
+        color: #FFFFFF;
+
+        .fz38();
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+
+    <view class="container-hd">
+      <image src="../../images/track_paper_plane2.png"></image>
+    </view>
+    <view class="container-bd">
+      <view class="form-list">
+        <view class="form-item">
+          <view class="form-item-hd">
+            <image src="../../images/people.png"></image>
+          </view>
+          <view class="form-item-bd">
+            <input type="text" placeholder="请输入用户名">
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-item-hd">
+            <image src="../../images/phone.png"></image>
+          </view>
+          <view class="form-item-bd">
+            <input type="text" type="number" placeholder="请输入手机号码">
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="form-item-hd">
+            <image src="../../images/lock.png"></image>
+          </view>
+          <view class="form-item-bd">
+            <input type="text" password="true" placeholder="请输入密码">
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="container-ft">
+      <button class="confirm-btn">绑 定</button>
+    </view>
+  </view>
+
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Binding extends wepy.page {
+        config = {}
+
+        components = {}
+
+        data = {}
+        computed = {}
+
+        methods = {}
+
+        events = {}
+
+        onLoad() {
+
+        }
+    }
+</script>
+

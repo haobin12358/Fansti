@@ -1,0 +1,118 @@
+<style scoped lang="less">
+  @import "../styles/base";
+
+  .news-list{
+    padding: 17rpx 20rpx 0;
+    box-sizing: border-box;
+
+    .list-header{
+      color: @mainBlueColor;
+      margin-bottom: 13rpx;
+    }
+
+    .list-content{
+      .news-item{
+        height: 201rpx;
+        border: 1px solid @borderColor;
+        margin-bottom: 19rpx;
+        padding: 21rpx 21rpx 10rpx;
+        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+        border-radius: 10rpx;
+
+        display: flex;
+
+        .main-content{
+          flex: 1;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .line1{
+            color: @mainBlueColor;
+          }
+          .line2{
+            flex: 1;
+            color: @mainFontColor;
+
+            .fz24();
+          }
+          .line3{
+            color: @mainFontColor;
+
+            .fz21();
+
+            .news-source{
+              margin-right: 36rpx;
+            }
+          }
+        }
+
+        .news-img{
+          width: 162rpx;
+          height: 162rpx;
+
+          border: 1px solid @borderColor;
+        }
+
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="news-list">
+    <view class="list-header">
+      新闻资讯
+    </view>
+    <view class="list-content">
+      <view wx:for="123456" class="news-item" @tap.stop="tapItemHandler({{item}})">
+        <view class="main-content">
+          <view class="line1">新闻{{item}}</view>
+          <view class="line2">
+            展示行业新闻公司新闻等信息，供普通用户
+            （非绑定）查看。
+          </view>
+          <view class="line3">
+            <text class="news-source">xx日报</text>
+            <text class="news-time">2018/07/18 21:17</text>
+          </view>
+
+        </view>
+        <image class="news-img" src="../images/test-news.png">
+        </image>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class NewsList extends wepy.component {
+        props = {
+            xxx: {
+                //  Object Array String Number Boolean
+                type: Object
+            }
+        }
+
+        data = {}
+
+        computed = {}
+
+        methods = {
+          tapItemHandler(news){
+            console.log('组件 点击');
+            this.$emit('tapItem', news);
+          }
+        }
+
+        events = {}
+
+        onLoad() {
+
+        }
+    }
+</script>
+

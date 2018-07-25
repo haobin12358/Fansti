@@ -3,28 +3,28 @@
 </style>
 
 <template>
-个人
+  个人
 
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class Index extends wepy.page {
-        config = {}
+  export default class Index extends wepy.page {
+    config = {}
 
-        components = {}
+    components = {}
 
-        data = {}
-        computed = {}
+    data = {}
+    computed = {}
 
-        methods = {}
+    methods = {}
 
-        events = {}
+    events = {}
 
-        onLoad() {
+    onLoad() {
 
-        }
     }
+  }
 </script>
 

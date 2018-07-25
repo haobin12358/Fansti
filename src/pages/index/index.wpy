@@ -1,17 +1,50 @@
 <style lang="less">
+  @import "../../styles/base";
 
+  .container  {
+
+    .swiper{
+      height: 401rpx;
+
+      swiper-item{
+        image{
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
 </style>
 <template>
-  首页
+  <view class="container">
+    <swiper class="swiper">
+      <swiper-item>
+        <image src="../../images/test_swiper.png"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+  <news-list @tapItem.user="goNewsDetail"></news-list>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import NewsList from '@/components/newsList'
 
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: 'test'
+    }
+
+    components = {
+      'news-list': NewsList
+    }
+
+    methods={
+      goNewsDetail(news){
+        console.log('页面',news)
+        this.$navigate('/pages/index/newsDetail', news)
+      }
     }
 
   }

@@ -1,30 +1,197 @@
 <style scoped lang="less">
+  @import "../../styles/base";
 
-</style>
+  .container{
+    padding: 48rpx 32rpx 0;
+
+    .search-form{
+      .form-item{
+        margin-bottom: 41rpx;
+
+        .form-item-label{
+          color: @mainBlueColor;
+
+          margin-bottom: 19rpx;
+        }
+
+
+        .form-item-main{
+          display: flex;
+
+          .form-item-input{
+            flex: 1;
+
+            border: 2px solid @mainBlueColor;
+            border-radius: 10rpx;
+            height: 74rpx;
+            line-height: 74rpx;
+            margin-right: 19rpx;
+            color:  #5a738a;
+
+            box-sizing: border-box;
+            padding-left: 30rpx;
+
+          }
+
+          .form-item-btn{
+            width: 144rpx;
+            background: @mainYellowColor;
+            color: #FFFFFF;
+            height: 74rpx;
+            line-height: 74rpx;
+
+          }
+        }
+      }
+
+      .form-item-flight{
+        .form-item-label{
+          color: @mainBlueColor;
+
+          margin-bottom: 19rpx;
+        }
+
+        .form-item-main {
+          display: flex;
+
+          .expand-main{
+            flex: 1;
+            display: flex;
+            input{
+              border: 2px solid @mainBlueColor;
+              border-radius: 10rpx;
+              height: 74rpx;
+              line-height: 74rpx;
+              box-sizing: border-box;
+              padding-left: 30rpx;
+            }
+
+            input:last-child{
+              margin-right: 19rpx;
+
+            }
+
+            .flight-img{
+              width: 113rpx;
+              height: 33rpx;
+              align-self: center;
+              margin-right: 10rpx;
+              margin-left: 10rpx;
+            }
+          }
+
+          .form-item-btn{
+            width: 144rpx;
+            background: @mainYellowColor;
+            color: #FFFFFF;
+            height: 74rpx;
+            line-height: 74rpx;
+
+          }
+        }
+
+      }
+    }
+  }
+</style>form-item-flight
 
 <template>
+  <view class="container">
+    <view class="search-form">
+      <view class="form-item">
+        <view class="form-item-label">
+          DGR
+        </view>
 
-  查询
+        <view class="form-item-main">
+            <input class="form-item-input" type="text"></input>
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="form-item-label">
+          鉴定报告
+        </view>
+
+        <view class="form-item-main">
+          <input class="form-item-input" type="text"></input>
+
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="form-item-label">
+          北京始发TACT
+        </view>
+
+        <view class="form-item-main">
+          <input class="form-item-input" type="text"></input>
+
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="form-item-label">
+          HS code
+        </view>
+
+        <view class="form-item-main">
+          <input class="form-item-input" type="text"></input>
+
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="form-item-label">
+          CAS
+        </view>
+
+        <view class="form-item-main">
+          <input class="form-item-input" type="text"></input>
+
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+      <view class="form-item-flight ">
+        <view class="form-item-label">
+          航班时刻
+        </view>
+
+        <view class="form-item-main">
+          <view class="expand-main">
+            <input type="text" class="form-item-input flight-start"></input>
+            <image class="flight-img" src="../../images/search_airplane1.png"></image>
+            <input type="text" class="form-item-input flight-start"></input>
+          </view>
+          <button class="form-item-btn">查询</button>
+        </view>
+      </view>
+
+    </view>
+
+  </view>
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class Index extends wepy.page {
-        config = {}
-
-        components = {}
-
-        data = {}
-        computed = {}
-
-        methods = {}
-
-        events = {}
-
-        onLoad() {
-
-        }
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '查询'
     }
+
+    components = {}
+
+    data = {}
+    computed = {}
+
+    methods = {}
+
+    events = {}
+
+    onLoad() {
+
+    }
+  }
 </script>
 
