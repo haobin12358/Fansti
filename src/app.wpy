@@ -10,12 +10,15 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/track/index',  //跟踪首页
+      'pages/track/consignmentDetail',  //托运详情
+      'pages/track/confirmConsignment',  //确认托运照片
+
       'pages/index/index',  //首页
       'pages/index/newsDetail', //新闻详情
 
       'pages/search/index', //查询首页
 
-      'pages/track/index',  //跟踪首页
 
       'pages/person/index', //个人首页
       'pages/person/binding', //绑定页

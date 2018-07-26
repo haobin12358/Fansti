@@ -1,0 +1,227 @@
+<style scoped lang="less">
+    @import "../styles/base";
+    .freight-consignment-list{
+      .goods-item{
+        margin-bottom: 19rpx;
+        height: 261rpx;
+        border-radius: 10rpx;
+        border: 1px solid @borderColor;
+        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+        padding: 50rpx 25rpx 58rpx;
+        box-sizing: border-box;
+        color: @mainBlueColor;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        position: relative;
+
+        overflow: hidden;
+
+        .fz28();
+
+        .line-progress{
+          display: flex;
+          align-items: center;
+
+          .circle-big {
+            flex: 1;
+            height: 32rpx;
+            text-align: center;
+
+            image{
+              height: 32rpx;
+              width: 32rpx;
+            }
+          }
+          .circle-small{
+            height: 8rpx;
+            width: 8rpx;
+            background: @mainYellowColor;
+            border-radius: 50%;
+            margin: 0 4rpx;
+          }
+
+        }
+        .line-detail{
+          display: flex;
+          justify-content: space-between;
+
+          .line-right{
+            min-width: 35%;
+          }
+
+          .item-label{
+            display: inline-block;
+            margin-right: 20rpx;
+
+            image{
+              width: 36rpx;
+              height: 25rpx;
+              margin-right: 5rpx;
+
+            }
+
+            .text-number{
+              padding-left: 20rpx;
+            }
+          }
+          .item-value{
+            display: inline-block;
+
+          }
+
+
+        }
+
+        .top-right-label{
+          position: absolute;
+          top: -60rpx;
+          right: -60rpx;
+
+          width: 120rpx;
+          height: 120rpx;
+          line-height: 50rpx;
+          text-align: center;
+          border-radius:50%;
+
+          color: #ffffff;
+
+          .fz21();
+
+          .top-right-label-text{
+            position: absolute;
+
+            bottom: 15rpx;
+            left: 15rpx;
+          }
+        }
+
+        .top-right-label-delay{
+          background: #BA272D;
+
+        }
+
+        .top-right-label-finish{
+          background: #0071B5;
+
+        }
+      }
+    }
+
+</style>
+
+<template>
+  <view class="freight-consignment-list">
+    <view wx:for="{{list}}" class="goods-item" @tap.stop="tapItemHandler">
+      <view class="line-progress">
+        <block wx:for="{{progressNum}}" wx:key="*this"  wx:for-item="progressItem">
+          <block wx:if="{{item.progress>progressItem}}">
+            <view class="circle-big">
+              <image src="../images/circle_full.png"></image>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="circle-big">
+              <image src="../images/circle.png"></image>
+            </view>
+          </block>
+
+          <block wx:if="{{index != progressNum.length-1}}">
+            <view class="circle-small"></view>
+            <view class="circle-small"></view>
+            <view class="circle-small"></view>
+          </block>
+        </block>
+
+      </view>
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../images/goods.png"></image>
+            <text>运单号:</text>
+          </view>
+          <view class="item-value">
+            {{item.expressNumber}}
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" src="../images/plane.png"></image>
+            <text>目的港:</text>
+          </view>
+          <view class="item-value">
+            {{item.destination}}
+
+          </view>
+        </view>
+      </view>
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../images/order.png"></image>
+            <text>运单号:</text>
+          </view>
+          <view class="item-value">
+            {{item.orderNumber}}
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" src="../images/number.png"></image>
+            <text space="emsp"> 件数:</text>
+          </view>
+          <view class="item-value">
+            {{item.num}}
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{item.progress == 0}}" class="top-right-label top-right-label-delay">
+        <text class="top-right-label-text">延误</text>
+      </view>
+
+
+      <view wx:if="{{item.progress == 9}}" class="top-right-label top-right-label-finish">
+        <text class="top-right-label-text">完成</text>
+      </view>
+    </view>
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  //  托运货物列表  跟踪页
+  export default class FreightConsignmentList extends wepy.component {
+    props = {
+      list: {
+        //  Object Array String Number Boolean
+        type: Array
+      }
+    };
+
+    data = {
+      progressNum: [0,1,2,3,4,5,6,7,8]
+    };
+
+    computed = {};
+
+    methods = {
+      tapItemHandler(){
+        console.log('组件tap');
+        this.$emit('tapItem')
+      }
+    };
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

@@ -61,6 +61,7 @@
               border: 2px solid @mainBlueColor;
               border-radius: 10rpx;
               height: 74rpx;
+              width: 200rpx;
               line-height: 74rpx;
               box-sizing: border-box;
               padding-left: 30rpx;

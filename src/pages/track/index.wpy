@@ -1,40 +1,114 @@
 <style scoped lang="less">
+  @import "../../styles/base";
 
+  .container{
+    padding-top: 51rpx;
+
+    .progress-chart{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+
+      .progress-item{
+        flex: 1;
+        color: @mainBlueColor;
+        background: @mainYellowColor;
+        text-align: center;
+        height: 51rpx;
+        line-height: 51rpx;
+        border-right: 1px solid #ffffff;
+
+       .fz26();
+
+        &:last-child{
+          border-right: 0px;
+        }
+      }
+    }
+
+    .container-bd{
+      padding: 11rpx 20rpx 0;
+
+    }
+  }
 </style>
 
 <template>
   <block wx:if="{{isLogin}}">
-    追踪
+    <view class="container">
+      <view class="progress-chart">
+        <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
+          {{item}}
+        </view>
+      </view>
+      <view class="container-bd">
+        <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
+      </view>
+    </view>
 
   </block>
-  <placeholder wx:else>
-    asd
-  </placeholder>
+  <placeholder wx:else></placeholder>
 </template>
 
 <script>
   import wepy from 'wepy'
   import Placeholder from '@/components/common/placeholder'
+  import FreightConsignmentList from '@/components/freightConsignmentList'
 
   export default class Index extends wepy.page {
     config = {}
 
     components = {
-      placeholder: Placeholder
+      placeholder: Placeholder,
+      'freight-consignment-list': FreightConsignmentList
     }
 
     data = {
-      isLogin: false
+      isLogin: true,
+
+      progressData: ['预配','进仓','出仓','称重','报关','运单','交单','起飞','送达'],
+
+      goodsList: [
+        {
+          progress: 5,
+          expressNumber: '020-98214690',
+          destination: 'BRU',
+          orderNumber: '8214690',
+          num: 5
+        },{
+          progress: 0,
+          expressNumber: '020-98214690',
+          destination: 'BRU',
+          orderNumber: '8214690',
+          num: 5
+        },{
+          progress: 9,
+          expressNumber: '020-98214690',
+          destination: 'BRU',
+          orderNumber: '8214690',
+          num: 5
+        },
+      ],
+
+
     }
     computed = {}
 
-    methods = {}
+    methods = {
+      goConsignmentDetail(){
+        console.log('页面tapItem');
+        this.$navigate('/pages/track/consignmentDetail')
+      }
+    }
 
     events = {}
 
     onLoad() {
       let token = wx.getStorageSync('token');
-      this.isLogin = !!token;
+      // this.isLogin = !!token;
+      this.isLogin = true;
 
       console.log('isLogin',this.isLogin)
     }

@@ -1,0 +1,298 @@
+<style scoped lang="less">
+    @import "../../styles/base";
+
+  .container{
+    padding-top: 20rpx;
+
+    .container-consignment-info{
+      border-radius: 10rpx;
+      border: 1px solid @borderColor;
+      box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+
+      padding: 64rpx 21rpx 46rpx;
+      box-sizing: border-box;
+      margin:0 20rpx 41rpx;
+
+      color: @mainBlueColor;
+
+      .line-detail{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 40rpx;
+
+        .line-right{
+          min-width: 35%;
+        }
+
+        .line-section-rich{
+          display: flex;
+
+          .item-value{
+            flex: 1;
+          }
+        }
+
+        .item-label{
+          display: inline-block;
+          margin-right: 20rpx;
+
+          image{
+            width: 36rpx;
+            height: 33rpx;
+            margin-right: 5rpx;
+
+          }
+
+          .text-number{
+            padding-left: 20rpx;
+          }
+        }
+        .item-value{
+          display: inline-block;
+          white-space: normal;
+        }
+      }
+
+    }
+
+    .container-check-section{
+      padding-right: 30rpx;
+      padding-left: 40rpx;
+
+      .check-img-section{
+        margin-bottom: 40rpx;
+
+        .check-img-section-hd{
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 12rpx;
+
+          .hd-left{
+            .check-type{
+              color: @mainBlueColor;
+              margin-right: 12rpx;
+
+            }
+
+            .check-time{
+              color: #a0afba;
+
+              .fz24();
+            }
+
+          }
+
+          .hd-right{
+            .check-staff{
+              color: #a0afba;
+              margin-right: 6rpx;
+            }
+
+            .check-img{
+              width: 45rpx;
+              height: 33rpx;
+            }
+
+            .uncheck-img{
+              height: 35rpx;
+              width: 35rpx;
+
+            }
+          }
+        }
+        .check-img-section-bd{
+
+
+          scroll-view{
+            width: 100%;
+            white-space: nowrap;
+
+            image{
+              height: 164rpx;
+              width: 164rpx;
+              margin-right: 10rpx;
+            }
+          }
+        }
+
+        .check-img-section-bd-empty{
+          height: 164rpx;
+          font-size: 21rpx;
+          line-height: 164rpx;
+          text-align: center;
+          color: #a0afba;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="container-consignment-info">
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../../images/goods.png"></image>
+            <text>运单号:</text>
+          </view>
+          <view class="item-value">
+            123456
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" src="../../images/plane.png"></image>
+            <text>目的港:</text>
+          </view>
+          <view class="item-value">
+            LON
+          </view>
+        </view>
+      </view>
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../../images/house.png"></image>
+            <text>进仓号:</text>
+          </view>
+          <view class="item-value">
+            E123456
+          </view>
+        </view>
+      </view>
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../../images/number.png"></image>
+            <text space="emsp"> 件数:</text>
+          </view>
+          <view class="item-value">
+            5
+          </view>
+        </view>
+        <view class="line-right ">
+          <view class="item-label">
+            <image class="label-img" src="../../images/weight.png"></image>
+            <text space="emsp"> 重量:</text>
+          </view>
+          <view class="item-value">
+            50
+          </view>
+        </view>
+      </view>
+      <view class="line-detail">
+        <view class="line-left line-section-rich">
+          <view class="item-label">
+            <image class="label-img" src="../../images/description.png"></image>
+            <text space="emsp"> 品名:</text>
+          </view>
+          <view class="item-value">
+            3-（4-PHENOXYPHENYL)1H
+            3-（4-PHENOXYPHENYL)1H
+            3-（4-PHENOXYPHENYL)1H
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="container-check-section">
+      <view class="check-img-section">
+        <view class="check-img-section-hd">
+          <view class="hd-left">
+            <text class="check-type">1. 入仓照片</text>
+            <text class="check-time">2018/07/18 17:35:12</text>
+          </view>
+          <view class="hd-right">
+            <text class="check-staff">资深工匠:李师傅</text>
+            <image class="check-img" src="../../images/staff_check.png"></image>
+          </view>
+
+        </view>
+        <view class="check-img-section-bd" @tap="goConfirmConsignment">
+          <scroll-view scroll-x="true">
+            <image wx:for="{{checkImgs}}" src="{{item}}"></image>
+
+          </scroll-view>
+        </view>
+
+      </view>
+        <view class="check-img-section">
+        <view class="check-img-section-hd">
+          <view class="hd-left">
+            <text class="check-type">2. 出仓照片</text>
+            <text class="check-time">2018/07/18 17:35:12</text>
+          </view>
+          <view class="hd-right">
+            <text class="check-staff">资深工匠:陈师傅</text>
+            <image class="uncheck-img" src="../../images/staff_uncheck.png"></image>
+          </view>
+
+        </view>
+        <view class="check-img-section-bd" @tap="goConfirmConsignment">
+          <scroll-view scroll-x="true">
+            <image wx:for="{{checkImgs}}" src="{{item}}"></image>
+          </scroll-view>
+        </view>
+
+      </view>
+        <view class="check-img-section">
+        <view class="check-img-section-hd">
+          <view class="hd-left">
+            <text class="check-type">3. 称重照片</text>
+            <text class="check-time"></text>
+          </view>
+          <view class="hd-right">
+            <text class="check-staff"></text>
+            <image class="uncheck-img" src="../../images/staff_uncheck.png"></image>
+          </view>
+
+        </view>
+        <view class="check-img-section-bd check-img-section-bd-empty">
+
+          <!--<scroll-view scroll-x="true">-->
+            <!--<image wx:for="{{checkImgs}}" src="{{item}}"></image>-->
+
+          <!--</scroll-view>-->
+          暂未称重
+        </view>
+
+      </view>
+
+
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class ConsignmentDetail extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {
+      checkImgs: ['../../images/test_check_img1.jpg','../../images/test_check_img2.jpg',
+        '../../images/test_check_img3.jpg','../../images/test_check_img4.jpg','../../images/test_check_img5.jpg']
+    };
+
+    computed = {};
+
+    methods = {
+      goConfirmConsignment(){
+        this.$navigate('/pages/track/confirmConsignment')
+      }
+    };
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

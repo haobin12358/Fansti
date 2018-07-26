@@ -88,37 +88,42 @@
     <view class="container-hd">
       <image src="../../images/track_paper_plane2.png"></image>
     </view>
-    <view class="container-bd">
-      <view class="form-list">
-        <view class="form-item">
-          <view class="form-item-hd">
-            <image src="../../images/people.png"></image>
+    <form bindsubmit="formSubmit">
+
+      <view class="container-bd">
+          <view class="form-list">
+          <view class="form-item">
+            <view class="form-item-hd">
+              <image src="../../images/people.png"></image>
+            </view>
+            <view class="form-item-bd">
+              <input type="text" name="username" placeholder="请输入用户名"/>
+            </view>
           </view>
-          <view class="form-item-bd">
-            <input type="text" placeholder="请输入用户名">
+          <view class="form-item">
+            <view class="form-item-hd">
+              <image src="../../images/phone.png"></image>
+            </view>
+            <view class="form-item-bd">
+              <input type="text" name="phone" type="number" placeholder="请输入手机号码"/>
+            </view>
+          </view>
+          <view class="form-item">
+            <view class="form-item-hd">
+              <image src="../../images/lock.png"></image>
+            </view>
+            <view class="form-item-bd">
+              <input type="text" name="password" password="true" placeholder="请输入密码"/>
+            </view>
           </view>
         </view>
-        <view class="form-item">
-          <view class="form-item-hd">
-            <image src="../../images/phone.png"></image>
-          </view>
-          <view class="form-item-bd">
-            <input type="text" type="number" placeholder="请输入手机号码">
-          </view>
-        </view>
-        <view class="form-item">
-          <view class="form-item-hd">
-            <image src="../../images/lock.png"></image>
-          </view>
-          <view class="form-item-bd">
-            <input type="text" password="true" placeholder="请输入密码">
-          </view>
-        </view>
+
       </view>
-    </view>
-    <view class="container-ft">
-      <button class="confirm-btn">绑 定</button>
-    </view>
+      <view class="container-ft">
+        <button class="confirm-btn" form-type="submit">绑 定</button>
+      </view>
+    </form>
+
   </view>
 
 
@@ -132,10 +137,15 @@
 
         components = {}
 
-        data = {}
+        data = {
+        }
         computed = {}
 
-        methods = {}
+        methods = {
+          formSubmit(e){
+            console.log(e.detail.value);
+          }
+        }
 
         events = {}
 

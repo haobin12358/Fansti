@@ -1,0 +1,154 @@
+<style scoped lang="less">
+    @import "../../styles/base";
+
+    .container{
+      padding: 20rpx 20rpx 0;
+
+      .container-card{
+        height: 1054rpx;
+        border: 1px solid @borderColor;
+        border-radius: 10rpx;
+        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+
+        display: flex;
+        flex-direction: column;
+
+        padding: 27rpx 24rpx 0;
+        .card-hd{
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-bottom: 11rpx;
+
+          .check-type{
+            color: @mainBlueColor;
+          }
+
+          .check-time{
+            color: #a0afba;
+
+            .fz24();
+          }
+        }
+        .card-bd{
+          image{
+            border:1px solid #CCCCCC;
+          }
+          .current-view-img{
+            width: 654rpx;
+            height: 654rpx;
+            margin-bottom: 20rpx;
+
+            image{
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          .check-img-swiper{
+            height: 210rpx;
+
+            .check-img-swiper-item{
+              text-align: center;
+
+              image{
+                width: 210rpx;
+                height: 210rpx;
+
+                opacity: .8;
+              }
+
+              .image-view{
+                opacity: 1;
+              }
+            }
+
+
+          }
+        }
+        .card-ft{
+          flex: 1;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .confirm-btn{
+            background: @mainYellowColor;
+            color: #ffffff;
+            padding-left: 40rpx;
+            padding-right: 40rpx;
+
+            .fz30();
+          }
+        }
+      }
+    }
+</style>
+
+<template>
+  <view class="container">
+    <view class="container-card">
+      <view class="card-hd">
+        <text class="check-type">2. 出仓照片</text>
+        <text class="check-time">2018/07/20 10:11:01</text>
+      </view>
+      <view class="card-bd">
+        <!-- 查看的大图 -->
+        <view class="current-view-img">
+          <image src="{{checkImgs[currentViewIndex]}}"></image>
+        </view>
+        <!-- 多图滑动 -->
+        <swiper class="check-img-swiper" scroll-x="true"  previous-margin="220rpx" next-margin="220rpx"
+                circular="true" current="{{currentViewIndex}}" bindchange="swiperChange">
+          <swiper-item class="check-img-swiper-item" wx:for="{{checkImgs}}">
+            <image  class=" {{currentViewIndex == index ?'image-view': ''}}" src="{{item}}" @tap="viewNext({{index}})"></image>
+          </swiper-item>
+        </swiper>
+      </view>
+      <view class="card-ft">
+        <button class="confirm-btn">
+          确认照片
+        </button>
+      </view>
+
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class ConfirmConsignment extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {
+      currentViewIndex: 0,
+      checkImgs: ['../../images/test_check_img1.jpg','../../images/test_check_img2.jpg',
+        '../../images/test_check_img3.jpg','../../images/test_check_img4.jpg','../../images/test_check_img5.jpg']
+
+    };
+
+    computed = {};
+
+    methods = {
+      swiperChange(e){
+        this.currentViewIndex = e.detail.current
+      },
+
+      viewNext(index){
+        this.currentViewIndex = index;
+      }
+    };
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+
