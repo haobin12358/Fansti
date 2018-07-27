@@ -105,7 +105,7 @@ class AIR_HWYS_WTS(Base):
     hcsb = Column(String(100))
 
 class AIR_HWYS_DCD(Base):
-    __tablename__ = 'AIR_HWYS_DCD'
+    __tablename__ = "AIR_HWYS_DCD"
     id = Column(String(200), primary_key=True)          # 主键id
     tname = Column(String(100))                         # 收件人姓名
     ttel = Column(String(50))                           # 收件人电话
@@ -158,7 +158,7 @@ class AIR_HWYS_DCD(Base):
     hbdate11 = Column(String(100))                      # 交单截止时刻（针对一程信息）
 
 class AIR_HWYS_FILE(Base):
-    __tablename__ = 'AIR_HWYS_FILE'
+    __tablename__ = "AIR_HWYS_FILE"
     id = Column(String(50), primary_key=True)                   # 主键id
     jcno = Column(String(20))                                   # 鉴定单对应id
     content = Column(String(200))                               # 文件备注
@@ -166,7 +166,7 @@ class AIR_HWYS_FILE(Base):
     filename = Column(String(500))                              # 文件名称
 
 class AIR_HWYS_DCD_JLD(Base):
-    __tablename__ = 'AIE_HWYS_DCD_JLD'
+    __tablename__ = "AIR_HWYS_DCD_JLD"
     id = Column(String(200), primary_key=True)
     jcno = Column(String(50))
     message = Column(String(2000))
@@ -176,3 +176,32 @@ class AIR_HWYS_DCD_JLD(Base):
     mes1 = Column(String(2000))
     mes2 = Column(String(2000))
     mes3 = Column(String(2000))
+
+class AIR_WAYS_DCD_PHOTOS(Base):
+    __tablename__ = "AIR_HWYS_DCD_PHOTOS"
+    id = Column(String(200), primary_key=True)          # 主键
+    jcno = Column(String(50), nullable=False)           # 进仓单号
+    phototype = Column(String(100), nullable=False)     # 照片类型in进仓out出仓weight称重
+    photourl = Column(String(200), nullable=False)      # 图片地址
+    createtime = Column(DATE, nullable=False)           # 创建时间
+    czr = Column(String(100))                           # 处理师傅
+    filename = Column(String(100))                      # 文件名称
+    filetext = Column(String(100), default="无")        # 文件信息
+    photoheadid = Column(String(100))                   # 关联photo_head
+
+class WECHAT_LOGIN(Base):
+    __tablename__ = "WECHAT_LOGIN"
+    id = Column(String(200), primary_key=True)          # 主键id
+    openid = Column(String(200))                        # 微信id
+    login_name = Column(String(40))                     # 登录名
+    phone = Column(String(32))                          # 手机号
+    status = Column(String(10), default="0")            # 绑定状态，1为已绑定
+
+class WECHAT_NEWS(Base):
+    __tablename__ = "WECHAT_NEWS"
+    id = Column(String(200), primary_key=True)          # 主键id
+    news_title = Column(String(200))                    # 新闻标题
+    news_all = Column(Text)                             # 新闻详情
+    news_picture = Column(String(200))                  # 新闻主图
+    news_from = Column(String(200))                     # 新闻来源
+    news_time = Column(DATE)                            # 新闻日期

@@ -2,32 +2,35 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid
-from Fansti.models.model import D_MESSAGE_USER
-from Fansti.common.TransformToList import trans_params
+from Fansti.models.model import D_MESSAGE_USER, WECHAT_LOGIN
 from Fansti.services.SBase import SBase, close_session
 
 class SUsers(SBase):
+    @close_session
+    def get_name_password_phone(self, login_name):
+        return self.session.query(D_MESSAGE_USER.login_name, D_MESSAGE_USER.login_password, D_MESSAGE_USER.phone)\
+            .filter_by(login_name=login_name).first()
 
     @close_session
-    def get_all(self):
-        return self.session.query(D_MESSAGE_USER.login_name).all()
+    def update_phone_by_name(self, login_name, phone_args):
+        self.session.query(D_MESSAGE_USER).filter_by(login_name=login_name).update(phone_args)
+        return True
 
-    def get(self):
-        try:
-            import cx_Oracle  # 导入模块
-            db = cx_Oracle.connect('C##M/root@localhost:1521/C##M')
-            cursor = db.cursor()
-            cursor.excute("select user_type from d_message_user")
-            row = cursor.fetchall()
-            for key in row:
-                for v in key:
-                    print v
-        except Exception as e:
-            print(1)
-            print(e.message)
+    @close_session
+    def get_wechat_login(self, login_name):
+        return self.session.query(WECHAT_LOGIN.login_name, WECHAT_LOGIN.openid, WECHAT_LOGIN.status)\
+            .filter_by(login_name=login_name).first()
 
+    @close_session
+    def update_wechat_login(self, login_name, wechat_args):
+        self.session.query(WECHAT_LOGIN).filter_by(login_name=login_name).update(wechat_args)
+        return True
 
-if __name__ == '__main__':
-    suser = SUsers()
-    print(suser.get_all())
+    @close_session
+    def get_wechat_login_by_openid(self, openid):
+        return self.session.query(WECHAT_LOGIN.login_name, WECHAT_LOGIN.openid, WECHAT_LOGIN.status)\
+            .filter_by(openid=openid).first()
+
+    @close_session
+    def get_compnay_by_loginname(self, login_name):
+        return self.session.query(D_MESSAGE_USER.compnay).filter_by(login_name=login_name).first()
