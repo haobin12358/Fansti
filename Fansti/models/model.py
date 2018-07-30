@@ -177,8 +177,8 @@ class AIR_HWYS_DCD_JLD(Base):
     mes2 = Column(String(2000))
     mes3 = Column(String(2000))
 
-class AIR_WAYS_DCD_PHOTOS(Base):
-    __tablename__ = "AIR_HWYS_DCD_PHOTOS"
+class AIR_HWYS_PHOTOS(Base):
+    __tablename__ = "AIR_HWYS_PHOTOS"
     id = Column(String(200), primary_key=True)          # 主键
     jcno = Column(String(50), nullable=False)           # 进仓单号
     phototype = Column(String(100), nullable=False)     # 照片类型in进仓out出仓weight称重
@@ -205,3 +205,76 @@ class WECHAT_NEWS(Base):
     news_picture = Column(String(200))                  # 新闻主图
     news_from = Column(String(200))                     # 新闻来源
     news_time = Column(DATE)                            # 新闻日期
+    news_status = Column(String(10))                    # 新闻状态
+
+class AIR_HWYS_JD(Base):
+    __tablename__ = "AIR_WAYS_JD"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    jcno = Column(String(1000))                                 # 进仓编号
+    createtime = Column(DATE, default=datetime.datetime.now())  # 创建时间
+    endtime = Column(DATE)                                      # 出鉴定日期
+    reportno = Column(String(1000))                             # 报告编号
+    chinesename = Column(String(2000))                          # 中文品名
+    englistname = Column(String(2000))                          # 英文品名
+    appearance = Column(String(200))                            # 外观-颜色
+    identificationunits = Column(String(200))                   # 鉴定委托单位
+    cost = Column(String(200), default="未填写")                # 费用
+    remarks = Column(String(2000))                              # 备注
+    principal = Column(String(200))                             # 鉴定委托人
+    jdtime = Column(DATE)                                       # 做鉴定日期
+    singlenode = Column(String(20))                             # 是否结单
+    crz = Column(String(200))                                   # 客服人
+    unno = Column(String(200))                                  # UN信息
+    wphw = Column(String(20))                                   # 危险品/普货
+    cz = Column(String(200))                                    # 单据操作者
+    flag = Column(String(10))                                   # 是否带入中文品名
+    flag2 = Column(String(10))                                  # 是否带入英文品名
+    flag3 = Column(String(10))                                  # 是否带入成本费用
+    flag4 = Column(String(10), default="0")                     # 展示标识
+    flag5 = Column(String(10))                                  # 带入鉴定单
+    factory = Column(String(200))                               # 生产厂家
+    appearance2 = Column(String(200))                           # 外观-状态
+    casno = Column(String(100))                                 # CAS NO号码
+    costtype = Column(String(50))                               # 费用种类
+
+class SELECT_INFO(Base):
+    __tablename__ = "SELECT_INFO"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    login_name = Column(String(40))                             # 登录名
+    select_name = Column(String(200))                           # 查询名称
+    select_value = Column(String(400))                          # 查询内容
+
+class AIR_HWYS_LINES(Base):
+    __tablename__ = "AIR_HWYS_LINES"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    airline = Column(String(200))                               # 航线编号
+    aipcompany = Column(String(200))                            # 航空公司
+    airname = Column(String(200))                               # 航空类型
+    flight = Column(String(200))                                # 航班编号
+    depa = Column(String(50))                                   # 起飞地
+    dest = Column(String(50))                                   # 目的地
+    date = Column(String(50))                                   # 航班日期
+    etd = Column(DATE)                                          # 起飞时间
+    eta = Column(DATE)                                          # 落地时间
+    supporttime = Column(String(100))                           # 交单时间
+    aircraft = Column(String(200))                              # 机型
+    remark = Column(Text)                                       # 备注
+
+class WECHAT_RED_COIN(Base):
+    __tablename__ = "WECHAT_RED_COIN"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    name = Column(String(1000))                                 # 任务名称
+    price = Column(String(10))                                  # 红包金额
+
+class GET_RED_COIN(Base):
+    __tablename__ = "GET_RED_COIN"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    login_name = Column(String(40))                             # 领取人
+    createtime = Column(DATE, default=datetime.datetime.now())  # 领取时间
+    red_id = Column(String(200))                                # 关联id
+
+class USER_MESSAGE(Base):
+    __tablename__ = "USER_MESSAGE"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    login_name = Column(String(40))                             # 留言人
+    message = Column(Text)                                      # 留言内容

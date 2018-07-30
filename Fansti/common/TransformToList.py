@@ -52,5 +52,5 @@ def add_model(model_name, **kwargs):
         session.add(model_bean)
         session.commit()
         session.close()
-        return
+        return True
     raise Exception("session connect error")

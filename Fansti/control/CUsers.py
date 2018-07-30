@@ -28,10 +28,10 @@ class CUsers():
         if data["login_password"] != name_password_phone["login_password"]:
             return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
         else:
-            wechat_login = self.susers.get_wechat_login(data["login_name"])
+            wechat_login = get_model_return_dict(self.susers.get_wechat_login(data["login_name"]))
             make_log("wechat_login", wechat_login)
             if not wechat_login:
-                wechat_login = add_model("WECHAT_LOGIN",
+                add_wechat_login = add_model("WECHAT_LOGIN",
                                          **{
                                              "id": str(uuid.uuid1()),
                                              "login_name": data["login_name"],
@@ -39,8 +39,8 @@ class CUsers():
                                              "status": "1",
                                              "phone": data["phone"]
                                          })
-                make_log("wechat_login", wechat_login)
-                if not wechat_login:
+                make_log("add_wechat_login", add_wechat_login)
+                if not add_wechat_login:
                     return SYSTEM_ERROR
             else:
                 update_wechat_login = self.susers.update_wechat_login(data["login_name"],
