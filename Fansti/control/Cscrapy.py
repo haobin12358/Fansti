@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid
+import uuid, datetime
 from flask import request
 from HTMLParser import HTMLParser
 from Fansti.config.response import SYSTEM_ERROR, PARAMS_MISS
@@ -10,6 +10,25 @@ from Fansti.common.import_status import import_status
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.TransformToList import add_model
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
+from Fansti.common.timeformate import get_db_time_str
+
+class MyHTMLParser(HTMLParser):
+
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.text = []
+
+    def handle_data(self, data):
+        self.text.append(data.decode("gbk").encode("utf8"))
+
+class MyHTMLParser2(HTMLParser):
+
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.text = []
+
+    def handle_data(self, data):
+        self.text.append(data)
 
 class Cscrapy():
     def __init__(self):
@@ -27,26 +46,28 @@ class Cscrapy():
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
-                                 "select_name": "HScode查询",
+                                 "select_name": "HScode",
                                  "select_value": args["hs_name"]
                              })
         if not new_info:
             return SYSTEM_ERROR
         try:
             import urllib2
-            url = "https://www.hsbianma.com/Code/{0}.html".format(args["code"])
+            url = "https://www.hsbianma.com/Code/{0}.html".format(args["hs_name"])
             headers = {'Content-Type': 'application/xml'}
             req = urllib2.Request(url, headers=headers)
             url_response = urllib2.urlopen(req)
             strResult = url_response.read()
-            parser = MyHTMLParser()
+            parser = MyHTMLParser2()
             parser.feed(strResult)
+            print(parser.text)
             length = len(parser.text)
             while length >= 0:
                 print(parser.text[length - 1])
                 if parser.text[length - 1].replace(" ", "") in ["\r\n", "\r\n\r\n", "\r\n\r\n\r\n", "]", "?"]:
                     parser.text.remove(parser.text[length - 1])
                 length = length - 1
+            print(parser.text)
             data = [
                 {
                     "name": "基本信息",
@@ -109,23 +130,23 @@ class Cscrapy():
             return SYSTEM_ERROR
 
     def get_cas(self):
-        args = request.args.to_dict()
-        make_log("args", args)
-        true_keys = ["login_name", "cas_name"]
-        if judge_keys(true_keys, args.keys()) != 200:
-            return judge_keys(true_keys, args.keys())
-        new_info = add_model("SELECT_INFO",
-                             **{
-                                 "id": str(uuid.uuid4()),
-                                 "login_name": args["login_name"],
-                                 "select_name": "化工品信息查询",
-                                 "select_value": args["cas_name"]
-                             })
-        if not new_info:
-            return SYSTEM_ERROR
         try:
+            args = request.args.to_dict()
+            make_log("args", args)
+            true_keys = ["login_name", "cas_name"]
+            if judge_keys(true_keys, args.keys()) != 200:
+                return judge_keys(true_keys, args.keys())
+            new_info = add_model("SELECT_INFO",
+                                 **{
+                                     "id": str(uuid.uuid4()),
+                                     "login_name": args["login_name"],
+                                     "select_name": "cas",
+                                     "select_value": args["cas_name"]
+                                 })
+            if not new_info:
+                return SYSTEM_ERROR
             import urllib2
-            url = "http://www.ichemistry.cn/chemistry/{0}.htm".format(args["code"])
+            url = "http://www.ichemistry.cn/chemistry/{0}.htm".format(args["cas_name"])
             headers = {'Content-Type': 'application/xml'}
             req = urllib2.Request(url, headers=headers)
             url_response = urllib2.urlopen(req)
@@ -219,44 +240,51 @@ class Cscrapy():
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
-                                 "select_name": "鉴定报告查询",
+                                 "select_name": "jd",
                                  "select_value": args["jd_name"]
                              })
         if not new_info:
             return SYSTEM_ERROR
         jd_report = get_model_return_dict(self.sscrapy.get_jd_by_name(args["jd_name"]))
+        make_log("jd_report", jd_report)
         if not jd_report:
             return import_status("ERROR_FIND_JD", "FANSTI_ERROR", "ERROR_FIND_JD")
         for key in jd_report.keys():
             if not jd_report[key]:
-                jd_report[key] = "暂无信息"
+                if key != "appearance" and key != "appearance2":
+                    jd_report[key] = "暂无信息"
+        if not jd_report["appearance"]:
+            if not jd_report["appearance2"]:
+                appearance = "暂无信息"
+            else:
+                appearance = jd_report["appearance2"].decode("gbk").encode("utf8")
+        else:
+            if not jd_report["appearance2"]:
+                appearance = jd_report["appearance"].decode("gbk").encode("utf8")
+            else:
+                appearance = jd_report["appearance"].decode("gbk").encode("utf8") \
+                             + jd_report["appearance2"].decode("gbk").encode("utf8")
         data = [
             {
                 "name": "中文品名",
-                "value": jd_report["chinessname"]
+                "value": jd_report["chinesename"].decode("gbk").encode("utf8")
             },
             {
                 "name": "英文品名",
-                "value": jd_report["englistname"]
+                "value": jd_report["englishname"]
             },
             {
                 "name": "UN信息",
-                "value": jd_report["unno"]
+                "value": jd_report["unno"].decode("gbk").encode("utf8")
             },
             {
                 "name": "颜色状态",
-                "value": self.del_none(str(jd_report["appearance"]) + str(jd_report["appearance2"]))
+                "value": appearance
             }
         ]
         response = import_status("SUCCESS_GET_INFO", "OK")
         response["data"] = data
         return response
-
-    def del_none(self, str_word):
-        str_word = str_word.replace("暂无信息", "")
-        if not str_word:
-            str_word = "暂无信息"
-        return str_word
 
     def get_flyno(self):
         args = request.args.to_dict()
@@ -284,13 +312,17 @@ class Cscrapy():
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
-                                 "select_name": select_name,
-                                 "select_value": args["jd_name"]
+                                 "select_name": "flyno",
+                                 "select_value": select_name
                              })
         if not new_info:
             return SYSTEM_ERROR
         all_airline = get_model_return_list(self.sscrapy.get_all_by_depa_dest(args["depa"], args["dest"]))
         make_log("all_airline", all_airline)
+        for airline in all_airline:
+            airline["mydate"] = datetime.datetime.strptime(airline["mydate"], '%Y%m%d').strftime("%Y-%m-%d")
+            airline["etd"] = airline["etd"].strftime("%Y-%m-%d %H:%M")
+            airline["eta"] = airline["eta"].strftime("%Y-%m-%d %H:%M")
         if not all_airline:
             return SYSTEM_ERROR
         response = import_status("SUCCESS_GET_INFO", "OK")
@@ -304,11 +336,3 @@ class Cscrapy():
         pass
 
 
-class MyHTMLParser(HTMLParser):
-
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.text = []
-
-    def handle_data(self, data):
-        self.text.append(data.decode("gbk").encode("utf8"))

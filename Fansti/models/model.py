@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, create_engine, Integer, String, Text, Float, DATE
+from sqlalchemy import Column, create_engine, Integer, String, Text, Float, DATE, DATETIME
 from Fansti.config import dbconfig as cfg
 import datetime
 
@@ -208,14 +208,14 @@ class WECHAT_NEWS(Base):
     news_status = Column(String(10))                    # 新闻状态
 
 class AIR_HWYS_JD(Base):
-    __tablename__ = "AIR_WAYS_JD"
+    __tablename__ = "AIR_HWYS_JD"
     id = Column(String(200), primary_key=True)                  # 主键id
     jcno = Column(String(1000))                                 # 进仓编号
     createtime = Column(DATE, default=datetime.datetime.now())  # 创建时间
     endtime = Column(DATE)                                      # 出鉴定日期
     reportno = Column(String(1000))                             # 报告编号
     chinesename = Column(String(2000))                          # 中文品名
-    englistname = Column(String(2000))                          # 英文品名
+    englishname = Column(String(2000))                          # 英文品名
     appearance = Column(String(200))                            # 外观-颜色
     identificationunits = Column(String(200))                   # 鉴定委托单位
     cost = Column(String(200), default="未填写")                # 费用
@@ -253,9 +253,9 @@ class AIR_HWYS_LINES(Base):
     flight = Column(String(200))                                # 航班编号
     depa = Column(String(50))                                   # 起飞地
     dest = Column(String(50))                                   # 目的地
-    date = Column(String(50))                                   # 航班日期
-    etd = Column(DATE)                                          # 起飞时间
-    eta = Column(DATE)                                          # 落地时间
+    mydate = Column(String(50))                                 # 航班日期
+    etd = Column(DATETIME)                                      # 起飞时间
+    eta = Column(DATETIME)                                      # 落地时间
     supporttime = Column(String(100))                           # 交单时间
     aircraft = Column(String(200))                              # 机型
     remark = Column(Text)                                       # 备注
@@ -272,9 +272,16 @@ class GET_RED_COIN(Base):
     login_name = Column(String(40))                             # 领取人
     createtime = Column(DATE, default=datetime.datetime.now())  # 领取时间
     red_id = Column(String(200))                                # 关联id
+    status = Column(String(20))                                 # 红包状态，0为不可领取，1为可领取，2为已领取
 
 class USER_MESSAGE(Base):
     __tablename__ = "USER_MESSAGE"
     id = Column(String(200), primary_key=True)                  # 主键id
     login_name = Column(String(40))                             # 留言人
     message = Column(Text)                                      # 留言内容
+
+class USER_INVATE(Base):
+    __tablename__ = "USER_INVATE"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    login_name = Column(String(40))                             # 邀请人login_name
+    invate_openid = Column(String(200))                         # 被邀请人微信id

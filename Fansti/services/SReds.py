@@ -8,12 +8,19 @@ from Fansti.services.SBase import SBase, close_session
 class SReds(SBase):
 
     @close_session
-    def get_all_red(self):
-        return self.session.query(WECHAT_RED_COIN.name, WECHAT_RED_COIN.id, WECHAT_RED_COIN.price).all()
+    def get_my_red_receive(self, login_name):
+        return self.session.query(GET_RED_COIN.createtime, GET_RED_COIN.red_id)\
+            .filter_by(login_name=login_name).filter_by(status=2).all()
 
     @close_session
-    def get_my_red(self, login_name):
-        return self.session.query(GET_RED_COIN.createtime, GET_RED_COIN.red_id).filter_by(login_name=login_name).all()
+    def get_my_red_rereceive(self, login_name):
+        return self.session.query(GET_RED_COIN.createtime, GET_RED_COIN.red_id) \
+            .filter_by(login_name=login_name).filter_by(status=1).all()
+
+    @close_session
+    def get_my_red_status(self, login_name):
+        return self.session.query(GET_RED_COIN.red_id, GET_RED_COIN.status)\
+            .filter_by(login_name=login_name).filter(GET_RED_COIN.status >= 0, GET_RED_COIN.status <= 1).all()
 
     @close_session
     def get_my_red_by_time(self, starttime, endtime):

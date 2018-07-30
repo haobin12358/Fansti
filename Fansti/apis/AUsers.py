@@ -27,7 +27,9 @@ class FSUser(Resource):
         print(self.title.format("api is" + users))
 
         apis = {
-            "user_binding": "self.cusers.user_binding()"
+            "user_binding": "self.cusers.user_binding()",
+            "make_user_message": "self.cusers.make_user_message()",
+            "add_invate": "self.cusers.add_invate()"
         }
 
         if users not in apis:

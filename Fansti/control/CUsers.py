@@ -66,7 +66,10 @@ class CUsers():
         if not get_status_by_openid:
             return import_status("ERROR_NONE_BINDING", "FANSTI_ERROR", "ERROR_NONE_BINDING")
         else:
-            return import_status("ERROR_HAVE_BINDING", "FANSTI_ERROR", "ERROR_HAVE_BINDING")
+            response = import_status("ERROR_HAVE_BINDING", "FANSTI_ERROR", "ERROR_HAVE_BINDING")
+            response["data"] = {}
+            response["data"]["login_name"] = get_status_by_openid["login_name"]
+            return response
 
     def get_openid(self):
         args = request.args.to_dict()
@@ -97,4 +100,45 @@ class CUsers():
         response["data"]["openid"] = openid
         return response
 
+    def make_user_message(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_args_params = ["login_name"]
+        true_data_params = ["message"]
+        if judge_keys(true_args_params, args.keys()) != 200:
+            return judge_keys(true_args_params, args.keys())
+        if judge_keys(true_data_params, data.keys()) != 200:
+            return judge_keys(true_data_params, data.keys())
+        new_message = add_model("USER_MESSAGE",
+                                **{
+                                    "id": str(uuid.uuid4()),
+                                    "login_name": args["login_name"],
+                                    "message": data["message"]
+                                })
+        if not new_message:
+            return SYSTEM_ERROR
+        return import_status("SUCCESS_MAKE_MESSAGE", "OK")
+
+    def add_invate(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_args = ["login_name"]
+        true_data = ["openid"]
+        if judge_keys(true_args, args.keys()) != 200:
+            return judge_keys(true_args, args.keys())
+        if judge_keys(true_data, data.keys()) != 200:
+            return judge_keys(true_data, data.keys())
+        new_user_invate = add_model("USER_INVATE",
+                                    **{
+                                        "id": str(uuid.uuid4()),
+                                        "login_name": args["login_name"],
+                                        "openid": data["openid"]
+                                    })
+        if not new_user_invate:
+            return SYSTEM_ERROR
+        return import_status("SUCCESS_NEW_INVATE", "OK")
 

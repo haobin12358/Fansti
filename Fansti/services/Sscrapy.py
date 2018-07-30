@@ -9,9 +9,9 @@ class Sscrapy(SBase):
 
     @close_session
     def get_jd_by_name(self, name):
-        return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englistname, AIR_HWYS_JD.unno,
+        return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
-            .filter_by(chinessname=name).first()
+            .filter_by(chinesename=name).first()
 
     @close_session
     def get_chinessname_by_englishname(self, englishname):
@@ -19,7 +19,7 @@ class Sscrapy(SBase):
 
     @close_session
     def get_all_by_depa_dest(self, depa=None, dest=None):
-        return self.session.query(AIR_HWYS_LINES.depa, AIR_HWYS_LINES.dest, AIR_HWYS_LINES.flight, AIR_HWYS_LINES.date,
+        return self.session.query(AIR_HWYS_LINES.depa, AIR_HWYS_LINES.dest, AIR_HWYS_LINES.flight, AIR_HWYS_LINES.mydate,
                                   AIR_HWYS_LINES.aircraft, AIR_HWYS_LINES.etd, AIR_HWYS_LINES.eta)\
             .filter_by(depa=depa).filter_by(dest=dest).all()
 
