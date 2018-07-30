@@ -2,27 +2,47 @@
     @import "../../styles/table";
 
     .container{
-      .two-column-table{
-        .thead{
-          color: #ffffff;
-          background: @mainYellowColor;
-          padding:8rpx 0 7rpx 28rpx;
+      background: linear-gradient(to top,@mainBlueColor, #FFFFFF);
+      padding: 40rpx 30rpx 0;
+      color: @mainBlueColor;
+      box-sizing: border-box;
 
-          .fz24();
+      .container-card {
+        background: #ffffff;
+        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+        border: 1px solid @borderColor;
+        border-radius: 10rpx;
+
+        .card-title {
+          height: 130rpx;
+          padding-top: 24rpx;
+          text-align: center;
+
+          .fz38();
         }
 
-        .tbody{
-          .tr{
-            .td{
-              &:first-child{
-                text-align: right;
-                justify-content: flex-end;
+        .two-column-table {
+          .thead {
+            color: #ffffff;
+            background: @mainYellowColor;
+            padding: 8 rpx 0 7 rpx 28 rpx;
 
-                padding-right: 31rpx;
-              }
-               &:last-child{
-                text-align: left;
-                 justify-content: flex-start;
+            .fz24();
+          }
+
+          .tbody {
+            .tr {
+              .td {
+                &:first-child {
+                  text-align: right;
+                  justify-content: flex-end;
+
+                  padding-right: 31 rpx;
+                }
+                &:last-child {
+                  text-align: left;
+                  justify-content: flex-start;
+                }
               }
             }
           }
@@ -33,91 +53,95 @@
 </style>
 
 <template>
-  <view class="container">
-    <view class="two-column-table">
-      <view class="tbody">
-        <view class="tr">
-          <view class="td">
-            分子结构
+  <view class="container" style="height: {{containerHeight}}px;">
+    <scroll-view scroll-y class="container-card" style="height: {{cardHeight}}px;">
+      <view class="card-title">
+        化工品信息查询（CAS）
+      </view>
+
+      <view class="two-column-table">
+        <view class="tbody">
+          <view class="tr">
+            <view class="td">
+              分子结构
+            </view>
+            <view class="td">
+              9101210010
+            </view>
           </view>
-          <view class="td">
-            9101210010
+          <view class="tr">
+            <view class="td">
+              分子式
+            </view>
+            <view class="td">
+              含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）
+            </view>
           </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            分子式
+          <view class="tr">
+            <view class="td">
+              分子量
+            </view>
+            <view class="td">
+              9101210010
+            </view>
           </view>
-          <view class="td">
-            含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            分子量
-          </view>
-          <view class="td">
-            9101210010
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            CAS登录号
-          </view>
-          <view class="td">
-            9664-93-9
+          <view class="tr">
+            <view class="td">
+              CAS登录号
+            </view>
+            <view class="td">
+              9664-93-9
+            </view>
           </view>
         </view>
       </view>
-    </view>
-    <view class="two-column-table">
-      <view class="thead">
-        安全信息
+      <view class="two-column-table">
+        <view class="thead">
+          安全信息
+        </view>
+
+        <view class="tbody">
+          <view class="tr">
+            <view class="td">
+              安全说明
+            </view>
+            <view class="td">
+              S26:万一解除眼睛，立即使用大量清水冲洗并
+              送医诊治。
+              S30:千万不可将水加入此产品。
+              S45：出现意外或者感到不适，立刻到医生那里
+              寻求帮助（最好带去产品容器标签）。
+            </view>
+          </view>
+          <view class="tr">
+            <view class="td">
+              分子式
+            </view>
+            <view class="td">
+              含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）
+            </view>
+          </view>
+          <view class="tr">
+            <view class="td">
+              危险品标志
+            </view>
+            <view class="td">
+              <image src="../../images/star_full.png"></image>C:腐蚀性物质
+            </view>
+          </view>
+          <view class="tr">
+            <view class="td">
+              CAS登录号
+            </view>
+            <view class="td">
+              9664-93-9
+            </view>
+          </view>
+        </view>
       </view>
-
-      <view class="tbody">
-        <view class="tr">
-          <view class="td">
-            安全说明
-          </view>
-          <view class="td">
-            S26:万一解除眼睛，立即使用大量清水冲洗并
-            送医诊治。
-            S30:千万不可将水加入此产品。
-            S45：出现意外或者感到不适，立刻到医生那里
-            寻求帮助（最好带去产品容器标签）。
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            分子式
-          </view>
-          <view class="td">
-            含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            危险品标志
-          </view>
-          <view class="td">
-            <image src="../../images/star_full.png"></image>C:腐蚀性物质
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            CAS登录号
-          </view>
-          <view class="td">
-            9664-93-9
-          </view>
-        </view>
-      </view>
-    </view>
-
-
+    </scroll-view>
   </view>
 
 </template>
@@ -130,7 +154,11 @@
 
     components = {};
 
-    data = {};
+    data = {
+      containerHeight: 0,
+      cardHeight: 0,
+    };
+
     computed = {};
 
     methods = {};
@@ -138,7 +166,10 @@
     events = {};
 
     onLoad() {
+      let sysInfo = wx.getSystemInfoSync()
 
+      this.cardHeight = sysInfo.windowHeight*0.9;
+      this.containerHeight = sysInfo.windowHeight;
     }
   }
 </script>

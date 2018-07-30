@@ -2,168 +2,105 @@
   @import "../../styles/table";
 
   .container{
-    .hs-code-table{
-      color: @mainBlueColor;
+    background: linear-gradient(to top,@mainBlueColor, #FFFFFF);
+    padding: 40rpx 30rpx 0;
+    color: @mainBlueColor;
+    box-sizing: border-box;
 
-      .thead{
-        padding:17rpx 0 21rpx 14rpx;
-        height: 40rpx;
-        line-height: 40rpx;
+    .container-card {
+      background: #ffffff;
+      box-shadow: 2rpx 2rpx 1rpx rgba(58, 82, 102, .75);
+      border: 1px solid @borderColor;
+      border-radius: 10rpx;
 
+      .card-title {
+        height: 130rpx;
+        padding-top: 24rpx;
+        text-align: center;
+        box-sizing: border-box;
+
+        .fz38();
       }
-
-      .tbody{
-        .fz24();
-
-        .tr{
-          display: flex;
-          padding-left: 14rpx;
-          padding-right: 14rpx;
-          background: #dfdfdf;
-
-          &:nth-child(even){
-            background: #ebebeb;
-          }
-
-          .td{
-            padding: 15rpx 0;
-            display: flex;
-            align-items: center;
-
-            &:first-child{
-              padding-right: 14rpx;
-              flex: .5;
-            }
-
-            &:last-child{
-              text-align: right;
-
-              flex: 1;
-              border-left: 1px solid #ffffff;
-              padding-left: 30rpx;
-            }
-          }
-        }
-
-      }
-
     }
   }
 </style>
 
 <template>
-  <view class="container">
-    <view class="two-column-table">
-      <view class="thead">
-        基本信息
-
+  <view class="container" style="height: {{containerHeight}}px;">
+    <scroll-view scroll-y class="container-card" style="height: {{cardHeight}}px;">
+      <view class="card-title">
+        HS code查询
       </view>
-      <view class="tbody">
-        <view class="tr">
-          <view class="td">
-              商品编码
-          </view>
-          <view class="td">
-              9101210010
-          </view>
+
+      <view class="two-column-table">
+        <view class="thead">
+          申报要素
+
         </view>
-        <view class="tr">
-          <view class="td">
-              商品名称
+        <view class="tbody">
+          <view class="tr">
+            <view class="td">
+              0
+            </view>
+            <view class="td">
+              9101210010
+            </view>
           </view>
-          <view class="td">
-                含濒危动物皮自动上弦贵金属机械手表
+          <view class="tr">
+            <view class="td">
+              1
+            </view>
+            <view class="td">
+              含濒危动物皮自动上弦贵金属机械手表
               （表壳用贵金属或包贵金属制成）
+            </view>
           </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-              CIQ代码（13位海关编码）
-          </view>
-          <view class="td">
+          <view class="tr">
+            <view class="td">
+              2
+            </view>
+            <view class="td">
               9101210010
+            </view>
           </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-              编码状态
-          </view>
-          <view class="td">
-            正常
+          <view class="tr">
+            <view class="td">
+              3
+            </view>
+            <view class="td">
+              正常
+            </view>
           </view>
         </view>
       </view>
-    </view>
+      <view class="two-column-table">
+        <view class="thead">
+          监管条件
 
-    <view class="hs-code-table">
-      <view class="thead">
-        申报要素
-
-      </view>
-      <view class="tbody">
-        <view class="tr">
-          <view class="td">
-            0
-          </view>
-          <view class="td">
-            9101210010
-          </view>
         </view>
-        <view class="tr">
-          <view class="td">
-            1
+        <view class="tbody">
+          <view class="tr">
+            <view class="td">
+               E
+            </view>
+            <view class="td">
+              9101210010
+            </view>
           </view>
-          <view class="td">
-            含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            2
-          </view>
-          <view class="td">
-            9101210010
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td">
-            3
-          </view>
-          <view class="td">
-            正常
+          <view class="tr">
+            <view class="td" style="">
+              F
+            </view>
+            <view class="td">
+              含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）
+            </view>
           </view>
         </view>
       </view>
-    </view>
-
-    <view class="hs-code-table">
-      <view class="thead">
-        监管条件
-
-      </view>
-      <view class="tbody">
-        <view class="tr">
-          <view class="td">
-             E
-          </view>
-          <view class="td">
-            9101210010
-          </view>
-        </view>
-        <view class="tr">
-          <view class="td" style="">
-            F
-          </view>
-          <view class="td">
-            含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
-            （表壳用贵金属或包贵金属制成）
-          </view>
-        </view>
-      </view>
-    </view>
+    </scroll-view>
   </view>
 
 </template>
@@ -176,7 +113,11 @@
 
     components = {};
 
-    data = {};
+    data = {
+      containerHeight: 0,
+      cardHeight: 0,
+    };
+
     computed = {};
 
     methods = {};
@@ -184,7 +125,10 @@
     events = {};
 
     onLoad() {
+      let sysInfo = wx.getSystemInfoSync()
 
+      this.cardHeight = sysInfo.windowHeight*0.9;
+      this.containerHeight = sysInfo.windowHeight;
     }
   }
 </script>
