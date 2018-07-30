@@ -41,7 +41,6 @@
             width: 36rpx;
             height: 33rpx;
             margin-right: 5rpx;
-
           }
 
           .text-number{
@@ -69,6 +68,9 @@
           margin-bottom: 12rpx;
 
           .hd-left{
+            display: flex;
+            align-items: flex-end;
+
             .check-type{
               color: @mainBlueColor;
               margin-right: 12rpx;
@@ -84,9 +86,13 @@
           }
 
           .hd-right{
+            display: flex;
+            align-items: center;
+
             .check-staff{
               color: #a0afba;
               margin-right: 6rpx;
+              text-decoration: underline
             }
 
             .check-img{
@@ -147,7 +153,7 @@
             <text>目的港:</text>
           </view>
           <view class="item-value">
-            LON
+            LONLON
           </view>
         </view>
       </view>
@@ -206,7 +212,7 @@
             <text class="check-time">2018/07/18 17:35:12</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff">资深工匠:李师傅</text>
+            <text class="check-staff" @tap="goClerkInfo">资深工匠:李师傅</text>
             <image class="check-img" src="../../images/staff_check.png"></image>
           </view>
 
@@ -226,7 +232,7 @@
             <text class="check-time">2018/07/18 17:35:12</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff">资深工匠:陈师傅</text>
+            <text class="check-staff" @tap="goClerkInfo">资深工匠:陈师傅</text>
             <image class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
 
@@ -285,6 +291,10 @@
     methods = {
       goConfirmConsignment(){
         this.$navigate('/pages/track/confirmConsignment')
+      },
+
+      goClerkInfo(){
+        this.$navigate('/pages/track/stockClerkInfo')
       }
     };
 

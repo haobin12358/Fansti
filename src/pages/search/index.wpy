@@ -44,6 +44,7 @@
         }
       }
 
+      /*航班时刻独立布局*/
       .form-item-flight{
         .form-item-label{
           color: @mainBlueColor;
@@ -92,7 +93,20 @@
         }
 
       }
+
+
+
     }
+    .footer{
+       text-align: center;
+       margin-top: 54rpx;
+
+       image{
+         width: 131rpx;
+         height: 54rpx;
+       }
+    }
+
   }
 </style>form-item-flight
 
@@ -106,7 +120,7 @@
 
         <view class="form-item-main">
             <input class="form-item-input" type="text"></input>
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn"  @tap="goSearchResult('dgr')">查询</button>
         </view>
       </view>
       <view class="form-item">
@@ -137,9 +151,9 @@
         </view>
 
         <view class="form-item-main">
-          <input class="form-item-input" type="text"></input>
+          <input class="form-item-input" type="text" value="{{hsCode}}" @input="inputHsCodeHandler"/>
 
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn" @tap="goSearchResult('hsCode',{{hsCode}})">查询</button>
         </view>
       </view>
       <view class="form-item">
@@ -148,9 +162,9 @@
         </view>
 
         <view class="form-item-main">
-          <input class="form-item-input" type="text"></input>
+          <input class="form-item-input" type="text" value="{{cas}}" @input="inputCasHandler"></input>
 
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn" @tap="goSearchResult('cas',{{cas}})">查询</button>
         </view>
       </view>
       <view class="form-item-flight ">
@@ -167,9 +181,10 @@
           <button class="form-item-btn">查询</button>
         </view>
       </view>
-
     </view>
-
+    <view class="footer" >
+      <image src="../../images/paper_plane.png"></image>
+    </view>
   </view>
 </template>
 
@@ -183,10 +198,48 @@
 
     components = {}
 
-    data = {}
+    data = {
+      dgr: '',
+      surveyReport: '',
+      tact: '',
+      hsCode: '',
+      cas: '',
+      flightStart: '',
+      flightEnd: '',
+    }
     computed = {}
 
-    methods = {}
+    methods = {
+      goSearchResult(type, param1,param2){
+        console.log(type, param1, param2);
+        switch (type){
+          case 'hsCode':
+            this.$navigate('/pages/search/hsCodeSearch');
+
+            break;
+          case 'cas':
+            this.$navigate('/pages/search/casSearch');
+
+            break;
+
+          case 'dgr':
+            this.$navigate('/pages/search/dgrSearch');
+
+            break;
+
+
+
+        }
+      },
+
+      inputHsCodeHandler(e){
+        this.hsCode = e.detail.value;
+      },
+
+      inputCasHandler(e){
+        this.cas = e.detail.value;
+      }
+    }
 
     events = {}
 

@@ -1,0 +1,191 @@
+<style scoped lang="less">
+  @import "../../styles/table";
+
+  .container{
+    .hs-code-table{
+      color: @mainBlueColor;
+
+      .thead{
+        padding:17rpx 0 21rpx 14rpx;
+        height: 40rpx;
+        line-height: 40rpx;
+
+      }
+
+      .tbody{
+        .fz24();
+
+        .tr{
+          display: flex;
+          padding-left: 14rpx;
+          padding-right: 14rpx;
+          background: #dfdfdf;
+
+          &:nth-child(even){
+            background: #ebebeb;
+          }
+
+          .td{
+            padding: 15rpx 0;
+            display: flex;
+            align-items: center;
+
+            &:first-child{
+              padding-right: 14rpx;
+              flex: .5;
+            }
+
+            &:last-child{
+              text-align: right;
+
+              flex: 1;
+              border-left: 1px solid #ffffff;
+              padding-left: 30rpx;
+            }
+          }
+        }
+
+      }
+
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="two-column-table">
+      <view class="thead">
+        基本信息
+
+      </view>
+      <view class="tbody">
+        <view class="tr">
+          <view class="td">
+              商品编码
+          </view>
+          <view class="td">
+              9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+              商品名称
+          </view>
+          <view class="td">
+                含濒危动物皮自动上弦贵金属机械手表
+              （表壳用贵金属或包贵金属制成）
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+              CIQ代码（13位海关编码）
+          </view>
+          <view class="td">
+              9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+              编码状态
+          </view>
+          <view class="td">
+            正常
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="hs-code-table">
+      <view class="thead">
+        申报要素
+
+      </view>
+      <view class="tbody">
+        <view class="tr">
+          <view class="td">
+            0
+          </view>
+          <view class="td">
+            9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            1
+          </view>
+          <view class="td">
+            含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            2
+          </view>
+          <view class="td">
+            9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            3
+          </view>
+          <view class="td">
+            正常
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="hs-code-table">
+      <view class="thead">
+        监管条件
+
+      </view>
+      <view class="tbody">
+        <view class="tr">
+          <view class="td">
+             E
+          </view>
+          <view class="td">
+            9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td" style="">
+            F
+          </view>
+          <view class="td">
+            含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class HsCode extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

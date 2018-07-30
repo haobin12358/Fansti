@@ -86,7 +86,7 @@
   <view class="container">
 
     <view class="container-hd">
-      <image src="../../images/track_paper_plane2.png"></image>
+      <image src="../../images/paper_plane.png"></image>
     </view>
     <form bindsubmit="formSubmit">
 

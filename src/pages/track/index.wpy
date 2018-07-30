@@ -29,7 +29,6 @@
     }
 
     .container-bd{
-      padding: 11rpx 20rpx 0;
 
     }
   }

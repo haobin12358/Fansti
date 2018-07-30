@@ -1,0 +1,59 @@
+@import "base";
+@firstColumnFlex: 0.5;
+@firstColumnAlign: left;
+@secondColumnAlign: right;
+
+.two-column-table{
+    color: @mainBlueColor;
+
+    .thead{
+      padding:17rpx 0 21rpx 14rpx;
+      height: 40rpx;
+      line-height: 40rpx;
+
+    }
+
+    .tbody{
+      .fz24();
+
+      .tr{
+        display: flex;
+        padding-left: 14rpx;
+        padding-right: 14rpx;
+        background: #dfdfdf;
+
+        &:nth-child(even){
+          background: #ebebeb;
+        }
+
+        .td{
+          padding: 15rpx 0;
+          display: flex;
+          align-items: center;
+
+          &:first-child{
+            padding-right: 14rpx;
+            flex: @firstColumnFlex;
+            text-align: @firstColumnAlign;
+          }
+
+          &:last-child{
+            justify-content: flex-end;
+            text-align: @secondColumnAlign;
+
+            flex: 1;
+            border-left: 1px solid #ffffff;
+            padding-left: 14rpx;
+
+            image{
+              height: 80rpx;
+              width: 80rpx;
+              margin: 0 10rpx;
+            }
+          }
+        }
+      }
+
+    }
+
+}

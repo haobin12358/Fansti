@@ -1,0 +1,145 @@
+<style scoped lang="less">
+    @import "../../styles/table";
+
+    .container{
+      .two-column-table{
+        .thead{
+          color: #ffffff;
+          background: @mainYellowColor;
+          padding:8rpx 0 7rpx 28rpx;
+
+          .fz24();
+        }
+
+        .tbody{
+          .tr{
+            .td{
+              &:first-child{
+                text-align: right;
+                justify-content: flex-end;
+
+                padding-right: 31rpx;
+              }
+               &:last-child{
+                text-align: left;
+                 justify-content: flex-start;
+              }
+            }
+          }
+        }
+      }
+    }
+
+</style>
+
+<template>
+  <view class="container">
+    <view class="two-column-table">
+      <view class="tbody">
+        <view class="tr">
+          <view class="td">
+            分子结构
+          </view>
+          <view class="td">
+            9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            分子式
+          </view>
+          <view class="td">
+            含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            分子量
+          </view>
+          <view class="td">
+            9101210010
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            CAS登录号
+          </view>
+          <view class="td">
+            9664-93-9
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="two-column-table">
+      <view class="thead">
+        安全信息
+      </view>
+
+      <view class="tbody">
+        <view class="tr">
+          <view class="td">
+            安全说明
+          </view>
+          <view class="td">
+            S26:万一解除眼睛，立即使用大量清水冲洗并
+            送医诊治。
+            S30:千万不可将水加入此产品。
+            S45：出现意外或者感到不适，立刻到医生那里
+            寻求帮助（最好带去产品容器标签）。
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            分子式
+          </view>
+          <view class="td">
+            含濒危动物皮自动上弦贵金属机械手表
+            （表壳用贵金属或包贵金属制成）
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            危险品标志
+          </view>
+          <view class="td">
+            <image src="../../images/star_full.png"></image>C:腐蚀性物质
+          </view>
+        </view>
+        <view class="tr">
+          <view class="td">
+            CAS登录号
+          </view>
+          <view class="td">
+            9664-93-9
+          </view>
+        </view>
+      </view>
+    </view>
+
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class CasSearch extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+
