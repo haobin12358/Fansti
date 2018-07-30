@@ -127,11 +127,10 @@
         <view class="form-item-label">
           鉴定报告
         </view>
-
         <view class="form-item-main">
-          <input class="form-item-input" type="text"></input>
+          <input class="form-item-input" type="text" value="{{surveyReport}}" @input="inputSurveyReportHandler"></input>
 
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn" @tap="goSearchResult('surveyReport',{{surveyReport}})">查询</button>
         </view>
       </view>
       <view class="form-item">
@@ -140,9 +139,9 @@
         </view>
 
         <view class="form-item-main">
-          <input class="form-item-input" type="text"></input>
+          <input class="form-item-input" type="text" value="{{tcat}}" @input="inputTcatHandler"></input>
 
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn" @tap="goSearchResult('tcat',{{tcat}})">查询</button>
         </view>
       </view>
       <view class="form-item">
@@ -178,7 +177,7 @@
             <image class="flight-img" src="../../images/search_airplane1.png"></image>
             <input type="text" class="form-item-input flight-start"></input>
           </view>
-          <button class="form-item-btn">查询</button>
+          <button class="form-item-btn" @tap="goSearchResult('flight')">查询</button>
         </view>
       </view>
     </view>
@@ -215,19 +214,22 @@
         switch (type){
           case 'hsCode':
             this.$navigate('/pages/search/hsCodeSearch');
-
             break;
           case 'cas':
             this.$navigate('/pages/search/casSearch');
-
             break;
-
           case 'dgr':
             this.$navigate('/pages/search/dgrSearch');
-
             break;
-
-
+          case 'surveyReport':
+            this.$navigate('/pages/search/surveyReportSearch');
+            break;
+          case 'tcat':
+            this.$navigate('/pages/search/tcatSearch');
+            break;
+          case 'flight':
+            this.$navigate('/pages/search/flightSearch');
+            break;
 
         }
       },
@@ -238,7 +240,17 @@
 
       inputCasHandler(e){
         this.cas = e.detail.value;
-      }
+      },
+
+      inputSurveyReportHandler(e){
+        this.surveyReport = e.detail.value;
+      },
+
+      inputTcatHandler(e){
+        this.tcat = e.detail.value;
+      },
+
+
     }
 
     events = {}

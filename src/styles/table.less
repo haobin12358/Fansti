@@ -3,6 +3,7 @@
 @firstColumnAlign: left;
 @secondColumnAlign: right;
 
+//  两列的表格  表头不规范
 .two-column-table{
     color: @mainBlueColor;
 
@@ -57,3 +58,37 @@
     }
 
 }
+
+//  标准的表格
+.standard-table{
+  text-align: center;
+
+  .thead{
+    background: @mainYellowColor;
+    color: #ffffff;
+
+    .tr{
+      display: flex;
+
+      .td{
+        flex: 1;
+        padding: 23rpx 0 19rpx 0;
+
+      }
+    }
+  }
+
+  .tbody{
+    .tr{
+      display: flex;
+
+      .td{
+        border-bottom: 1px solid @borderColor;
+        border-right: 1px solid @borderColor;
+        flex: 1;
+        padding: 33rpx 0;
+      }
+    }
+  }
+}
+

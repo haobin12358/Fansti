@@ -1,0 +1,102 @@
+<style scoped lang="less">
+    @import "../../styles/card";
+    @import "../../styles/table";
+
+    .container {
+      .container-card {
+        background: #a1afba;
+
+        .card-title{
+          background: #ffffff;
+        }
+
+        .standard-table{
+          .thead{
+
+            .fz24();
+
+            .tr{
+              .td{
+                padding: 11rpx 0;
+              }
+            }
+          }
+
+          .tbody{
+
+            .fz21();
+
+            .tr{
+              background: @mainBlueColor;
+              color: #ffffff;
+
+              &:nth-child(even){
+                background: #a1afba;
+              }
+
+              .td{
+                padding: 11rpx 0;
+
+              }
+            }
+          }
+        }
+
+      }
+    }
+</style>
+
+<template>
+  <view class="container" style="height: {{containerHeight}}px;">
+    <scroll-view scroll-y class="container-card" style="height: {{cardHeight}}px;">
+      <view class="card-title">
+        航班时刻查询
+      </view>
+
+      <view class="standard-table">
+        <view class="thead">
+          <view class="tr">
+            <view class="td">M/N/Q</view>
+            <view class="td">重量</view>
+            <view class="td">价格</view>
+          </view>
+        </view>
+        <view class="tbody">
+          <view class="tr" wx:for="1234">
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
+          </view>
+        </view>
+
+      </view>
+    </scroll-view>
+  </view>
+
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CardMixin from '../../mixins/cardMixin';
+
+  export default class FlightSearch extends wepy.page {
+    config = {};
+
+    components = {};
+
+    mixins = [CardMixin]
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

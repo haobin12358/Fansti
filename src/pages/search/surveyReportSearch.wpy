@@ -1,0 +1,109 @@
+<style scoped lang="less">
+    @import "../../styles/card";
+
+  .container{
+    .container-card{
+      .card-detail{
+        padding: 0 50rpx;
+
+        .card-detail-section{
+          padding-left: 20rpx;
+          padding-bottom: 50rpx;
+
+          .section-title{
+            font-weight: bold;
+            margin-bottom: 20rpx;
+
+          }
+          .section-info{
+
+          }
+
+        }
+
+        .card-detail-section-img{
+          padding-left: 0;
+
+          image{
+            width: 100%;
+
+            border-radius: 10rpx;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container" style="height: {{containerHeight}}px;">
+    <scroll-view scroll-y class="container-card" style="height: {{cardHeight}}px;">
+      <view class="card-title">
+        鉴定报告查询
+      </view>
+
+      <view class="card-detail">
+        <view class="card-detail-section card-detail-section-img">
+          <image mode="widthFix" src="../../images/test_survey_report.jpeg"></image>
+        </view>
+        <view class="card-detail-section">
+          <view class="section-title">
+            中文品名:
+          </view>
+          <view class="section-info">
+            亚硫酸钠假
+          </view>
+        </view>
+        <view class="card-detail-section">
+          <view class="section-title">
+            英文品名:
+          </view>
+          <view class="section-info">
+            MENADIONE SODIUM BISULFITE
+          </view>
+        </view>
+        <view class="card-detail-section">
+          <view class="section-title">
+            UN信息:
+          </view>
+          <view class="section-info">
+            UN3077/9/111
+          </view>
+        </view>
+        <view class="card-detail-section">
+          <view class="section-title">
+            颜色状态:
+          </view>
+          <view class="section-info">
+            白色粉末
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CardMixin from '../../mixins/cardMixin';
+
+  export default class SurveyReportSearch extends wepy.page {
+    config = {};
+
+    components = {};
+    mixins = [CardMixin]
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

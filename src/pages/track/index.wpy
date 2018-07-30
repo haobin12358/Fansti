@@ -106,8 +106,8 @@
 
     onLoad() {
       let token = wx.getStorageSync('token');
-      // this.isLogin = !!token;
-      this.isLogin = true;
+      this.isLogin = !!token;
+      // this.isLogin = true;
 
       console.log('isLogin',this.isLogin)
     }

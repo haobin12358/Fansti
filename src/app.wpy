@@ -10,8 +10,11 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/search/surveyReportSearch', //鉴定报告
+      'pages/search/flightSearch', //航班时刻
+      'pages/search/tcatSearch', //tcac
       'pages/search/index', //查询首页
-      'pages/search/dgrSearch', //cas
+      'pages/search/dgrSearch', //dgr
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
 

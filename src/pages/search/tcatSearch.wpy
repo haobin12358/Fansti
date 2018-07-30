@@ -1,0 +1,89 @@
+<style scoped lang="less">
+    @import "../../styles/card";
+    @import "../../styles/table";
+
+  .container{
+    .container-card{
+      .destination{
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        margin-bottom: 55rpx;
+
+        image{
+          height: 33rpx;
+          width: 81rpx;
+          min-width: 81rpx;
+          margin-right: 33rpx;
+        }
+
+        .destination-en{
+          /*margin-right: 33rpx;*/
+        }
+
+        view{
+          flex: 1;
+        }
+      }
+
+    }
+  }
+</style>
+
+<template>
+  <view class="container" style="height: {{containerHeight}}px;">
+    <scroll-view scroll-y class="container-card" style="height: {{cardHeight}}px;">
+      <view class="card-title">
+        TACT信息查询
+      </view>
+
+      <view class="destination">
+        <view class="destination-en">目的港: ORD</view>
+        <view>目的港名称: 芝加哥芝</view>
+      </view>
+      <view class="standard-table">
+        <view class="thead">
+          <view class="tr">
+            <view class="td">M/N/Q</view>
+            <view class="td">重量</view>
+            <view class="td">价格</view>
+          </view>
+        </view>
+        <view class="tbody">
+          <view class="tr" wx:for="1234">
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
+          </view>
+        </view>
+
+      </view>
+    </scroll-view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CardMixin from '../../mixins/cardMixin';
+
+  export default class TcatSearch extends wepy.page {
+    config = {};
+
+    components = {};
+
+    mixins = [CardMixin]
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+
