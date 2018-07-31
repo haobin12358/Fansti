@@ -1,0 +1,76 @@
+<style scoped lang="less">
+</style>
+
+<template>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '../api/api';
+  import tip from '../utils/tip';
+
+  export default class BindingMixin extends wepy.mixin {
+
+    data = {
+      openid: '',
+      isBinding: false,
+    };
+
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    async checkBingding(code){
+      let res =await api.getOpenid({query:{code}});
+
+      if(res.data.status == 200){
+        let openid = res.data.data.openid
+        this.openid = openid;
+        let res2 =await api.getBinding({query:{openid}});
+        console.log(res2);
+
+        if(res2.data.status == 200){
+          this.isBinding = res2.data.message == '已绑定';
+          this.$apply();
+
+          //  绑定后的微信账号直接修改绑定状态为已绑定
+          if(this.isBinding && !wx.getStorageSync('token')){
+            wx.setStorageSync('token', res2.data.data.login_name);
+          }
+        }else{
+          tip.error(res.data.message);
+        }
+      }else{
+        tip.error(res.data.message);
+      }
+    }
+
+    onShow(){
+      let loginName = wx.getStorageSync('token');
+      let that = this;
+
+      this.isBinding = !!loginName;
+      console.log('show',this.isBinding);
+
+      // this.isLogin = true;
+
+      if(!this.isBinding){
+        wx.login({
+          success: function(res) {
+            that.checkBingding(res.code);
+          }
+        })
+      }
+
+      console.log('isBinding',this.isBinding)
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>
+

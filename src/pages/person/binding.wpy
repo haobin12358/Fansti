@@ -1,12 +1,7 @@
-<style lang="less">
+<style scoped lang="less">
   @import "../../styles/base";
 
-  page{
-    height: 100%;
-  }
-
   .container{
-    height: 100%;
     background: linear-gradient(to top,@mainBlueColor, #FFFFFF);
 
     display: flex;
@@ -60,6 +55,7 @@
       }
 
     }
+
     .container-ft{
       flex: 1;
 
@@ -83,15 +79,13 @@
 </style>
 
 <template>
-  <view class="container">
-
-    <view class="container-hd">
-      <image src="../../images/paper_plane.png"></image>
-    </view>
-    <form bindsubmit="formSubmit">
-
+  <form @submit="formSubmit">
+    <view bindsubmit="formSubmit" class="container" style="height: {{containerHeight}}px;">
+      <view class="container-hd">
+        <image src="../../images/paper_plane.png"></image>
+      </view>
       <view class="container-bd">
-          <view class="form-list">
+        <view class="form-list">
           <view class="form-item">
             <view class="form-item-hd">
               <image src="../../images/people.png"></image>
@@ -117,41 +111,71 @@
             </view>
           </view>
         </view>
-
       </view>
       <view class="container-ft">
         <button class="confirm-btn" form-type="submit">绑 定</button>
       </view>
-    </form>
+    </view>
 
-  </view>
+  </form>
 
 
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy';
+  import CardMixin from '../../mixins/cardMixin';
+  import BindingMixin from '../../mixins/bindingMixin';
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
 
-    export default class Binding extends wepy.page {
-        config = {}
+  export default class Binding extends wepy.page {
+    config = {};
 
-        components = {}
+    components = {};
 
-        data = {
+    mixins = [CardMixin,BindingMixin];
+
+    data = {};
+    computed = {};
+
+    methods = {
+      formSubmit(e) {
+        let formData = e.detail.value
+
+        if(formData.username && formData.password && formData.phone){
+          this.doBinding(formData);
+
+        }else{
+          tip.alert('请填写完整')
         }
-        computed = {}
 
-        methods = {
-          formSubmit(e){
-            console.log(e.detail.value);
-          }
-        }
 
-        events = {}
+      }
+    };
 
-        onLoad() {
+    async doBinding(params){
+      let query= {
+        login_name: params.username,
+        login_password: params.password,
+        phone: params.phone,
+        openid: this.openid,
+      }
+      let res =await api.userBinding({method: 'POST', query});
 
-        }
+      if(res.data.status == 200){
+        wx.setStorageSync('loginName', params.username);
+        wx.navigateBack();
+      }else{
+        tip.alert(res.data.message)
+      }
     }
+
+    events = {};
+
+    onLoad() {
+
+    }
+  }
 </script>
 

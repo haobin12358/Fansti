@@ -2,7 +2,7 @@ import {
   wxRequest
 } from '@/utils/wxRequest';
 
-const host = 'http://10.0.0.130:7444/fansti';
+const host = 'https://h878.cn:7444/fansti';
 
 //  绑定用户  POST
 const userBinding = params => wxRequest(params, host+'/users/user_binding');

@@ -10,28 +10,26 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/search/surveyReportSearch', //鉴定报告
-      'pages/search/flightSearch', //航班时刻
-      'pages/search/tcatSearch', //tcac
-      'pages/search/index', //查询首页
-      'pages/search/dgrSearch', //dgr
-      'pages/search/casSearch', //cas
-      'pages/search/hsCodeSearch', //hs code
-
       'pages/track/index',  //跟踪首页
       'pages/track/consignmentDetail',  //托运详情
       'pages/track/stockClerkInfo',  //仓库人员信息
       'pages/track/confirmConsignment',  //确认托运照片
 
+      'pages/person/index', //个人首页
+      'pages/person/binding', //绑定页
 
-
-
+      'pages/search/index', //查询首页
+      'pages/search/surveyReportSearch', //鉴定报告
+      'pages/search/flightSearch', //航班时刻
+      'pages/search/tcatSearch', //tcac
+      'pages/search/dgrSearch', //dgr
+      'pages/search/casSearch', //cas
+      'pages/search/hsCodeSearch', //hs code
 
       'pages/index/index',  //首页
       'pages/index/newsDetail', //新闻详情
 
-      'pages/person/index', //个人首页
-      'pages/person/binding', //绑定页
+
 
     ],
     window: {
@@ -65,7 +63,10 @@ export default class extends wepy.app {
         iconPath: "images/tabbar_person.png",
         selectedIconPath: "images/tabbar_person_active.png"
       }]
-    }
+    },
+    networkTimeout: {
+      request: 10000, //  wx.request超时时间
+    },
   }
 
   globalData = {

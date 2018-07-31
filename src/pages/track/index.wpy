@@ -35,7 +35,7 @@
 </style>
 
 <template>
-  <block wx:if="{{isLogin}}">
+  <block wx:if="{{isBinding}}">
     <view class="container">
       <view class="progress-chart">
         <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
@@ -55,6 +55,10 @@
   import wepy from 'wepy'
   import Placeholder from '@/components/common/placeholder'
   import FreightConsignmentList from '@/components/freightConsignmentList'
+  import api from '../../api/api';
+  import tip from '../../utils/tip';
+  import BindingMixin from '../../mixins/bindingMixin';
+
 
   export default class Index extends wepy.page {
     config = {}
@@ -63,6 +67,8 @@
       placeholder: Placeholder,
       'freight-consignment-list': FreightConsignmentList
     }
+
+    mixins = [BindingMixin]
 
     data = {
       isLogin: true,
@@ -102,14 +108,20 @@
       }
     }
 
+    async getGoodsList(){
+      let res =await api.getGoodsList({query: {login_name: wx.getStorageSync('token')}})
+
+      if(res.data.status == 200){
+        console.log(res);
+      }
+    }
+
     events = {}
 
     onLoad() {
-      let token = wx.getStorageSync('token');
-      this.isLogin = !!token;
-      // this.isLogin = true;
+      console.log(wx.getStorageSync('token'));
+      this.getGoodsList();
 
-      console.log('isLogin',this.isLogin)
     }
   }
 </script>
