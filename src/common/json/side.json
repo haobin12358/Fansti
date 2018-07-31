@@ -1,0 +1,34 @@
+{
+  "side":[
+    {
+      "MNname":"新闻上传编辑",
+      "MNurl":"/upload_new",
+      "MNicon":"icon",
+      "children":[]
+    },
+    {
+      "MNname":"客户信息编辑",
+      "MNurl":"/customer_information",
+      "MNicon":"icon",
+      "children":[]
+    },
+    {
+      "MNname":"信息查询上传",
+      "MNurl":"/search_info",
+      "MNicon":"icon",
+      "children":[]
+    },
+    {
+      "MNname":"用户查询记录",
+      "MNurl":"/user_query",
+      "MNicon":"icon",
+      "children":[]
+    },
+    {
+      "MNname":"用户留言记录",
+      "MNurl":"/user_message",
+      "MNicon":"icon",
+      "children":[]
+    }
+  ]
+}
