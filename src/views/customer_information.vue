@@ -1,10 +1,41 @@
 <template>
-    <div></div>
+    <div class="m-customer">
+        <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
+    </div>
 </template>
 
 <script>
+  import tabs from '../components/common/tabs';
     export default {
-        name: "customer_information"
+      data(){
+          return {
+            tabs_data:[
+              {
+                name:'上传',
+                click:true,
+                url:''
+              },
+              {
+                name:'编辑',
+                click:false,
+                url:''
+              }
+            ]
+          }
+      },
+      components:{
+        tabs
+      },
+      methods:{
+        tabClick(index){
+          let _arr = this.tabs_data;
+          for(let i =0;i<_arr.length;i++){
+            _arr[i].click = false;
+          }
+          _arr[index].click = true;
+          this.tabs_data = [].concat(_arr);
+        }
+      }
     }
 </script>
 

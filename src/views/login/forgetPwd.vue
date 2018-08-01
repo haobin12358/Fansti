@@ -42,16 +42,10 @@
 </template>
 
 <script>
-  import loginHead from '../../components/common/header';
-  import foot from '../../components/common/footer';
   import api from '../../api/api';
   import { MessageBox } from 'element-ui';
   import axios from 'axios';
   export default {
-    components:{
-      loginHead,
-      foot
-    },
     data() {
       return {
         ruleForm: {
