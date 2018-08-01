@@ -55,6 +55,7 @@
         }
         _arr[index].click = true;
         this.tabs_data = [].concat(_arr);
+        console.log(index)
       }
     },
     created() {
@@ -68,7 +69,8 @@
   .news-manage {
     .news-container {
       display: flex;
-      margin: 0.2rem 0;
+      margin: 0.2rem 0.5rem 0.2rem 0;
+      border-radius: 10px;
       border: solid 1px #707070;
       .news-image {
         margin: 0.2rem;
@@ -82,17 +84,18 @@
         margin: 0.2rem 0;
         .news-title {
           color: #545454;
-          font-size: 24px;
+          font-size: 20px;
           font-weight: bold;
         }
         .news-from-date {
           color: #545454;
           margin: 0.15rem 0;
+          font-size: 14px;
         }
         .news-body {
           width: 95%;
           height: 0.6rem;
-          font-size: 18px;
+          font-size: 14px;
           line-height: 30px;
           display: -webkit-box;
           -webkit-box-orient: vertical;
@@ -104,6 +107,7 @@
       .news-edit {
         min-width: 1rem;
         font-size: 20px;
+        border-radius: 0 10px 10px 0;
         color: @bgMainColor;
         background-color: @btnActiveColor;
         display: flex;
