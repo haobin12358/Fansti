@@ -1,6 +1,10 @@
 <template>
     <div class="m-customer">
         <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
+        <div>
+          123123
+        </div>
+
     </div>
 </template>
 

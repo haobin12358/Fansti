@@ -40,6 +40,7 @@
   @import "../../common/css/_variate";
   .m-tab{
     font-size: 0.16rem;
+    margin-bottom: 0.3rem;
     .m-tab-link{
       cursor: pointer;
       &.active{
