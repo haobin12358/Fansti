@@ -1,15 +1,44 @@
 <template>
   <div>
     <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
-    <div class="news-manage" v-for="item in news">
-      <div class="news-container">
-        <img class="news-image" v-bind:src="item.imageUrl" />
-        <div class="news-text">
-          <div class="news-title">{{item.title}}</div>
-          <div class="news-from-date">{{item.newsFrom}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.date}}</div>
-          <div class="news-body">摘要：{{item.body}}</div>
+    <div v-if="!newsManage">
+      <div class="news-manage" v-for="item in news">
+        <div class="news-container">
+          <img class="news-image" :src="item.imageUrl" />
+          <div class="news-text">
+            <div class="news-title">{{item.title}}</div>
+            <div class="news-from-date">{{item.newsFrom}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.date}}</div>
+            <div class="news-body">摘要：{{item.body}}</div>
+          </div>
+          <div class="news-edit">编辑</div>
         </div>
-        <div class="news-edit">编辑</div>
+      </div>
+    </div>
+    <div v-if="newsManage">
+      <div class="news-upload">
+        <div class="news-upload-title">
+          <div class="left-text">新闻标题：</div>
+          <el-input v-model="input" placeholder="此处为新闻标题"></el-input>
+        </div>
+        <div class="news-upload-from">
+          <div class="left-text">新闻来源：</div>
+          <el-input v-model="input" placeholder="此处为新闻来源"></el-input>
+        </div>
+        <div class="news-upload-image">
+          <div class="left-text">标题图片：</div>
+          <el-upload
+            class="avatar-uploader"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </div>
+        <div class="news-upload-body">
+          <div class="left-text">新闻正文：</div>
+        </div>
       </div>
     </div>
 
@@ -29,6 +58,7 @@
     data() {
       return {
         news: news,
+        newsManage: true,
         tabs_data:[
           {
             name:'上传',
@@ -41,13 +71,12 @@
             url:''
           }
         ],
+        input: '',
+        imageUrl: ''
       }
     },
     components:{ tabs },
     methods: {
-      goPage() {
-        this.$router.push({ path: '/upload_news' })
-      },
       tabClick(index){
         let _arr = this.tabs_data;
         for(let i =0;i<_arr.length;i++){
@@ -55,7 +84,26 @@
         }
         _arr[index].click = true;
         this.tabs_data = [].concat(_arr);
-        console.log(index)
+        if(index == 0) {
+          this.newsManage = false
+        }else if(index == 1) {
+          this.newsManage = true
+        }
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
       }
     },
     created() {
@@ -74,7 +122,7 @@
       .news-image {
         margin: 0.2rem;
         min-width: 3.5rem;
-        height: 1.4rem;
+        max-height: 1.4rem;
         display: flex;
         -webkit-align-items: center;
         -webkit-justify-content: center;
@@ -112,6 +160,20 @@
         -webkit-align-items: center;
         -webkit-justify-content: center;
       }
+    }
+  }
+  .news-upload {
+    .news-upload-title {
+
+    }
+    .news-upload-from {
+
+    }
+    .news-upload-image {
+
+    }
+    .news-upload-body {
+
     }
   }
 </style>
