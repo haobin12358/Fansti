@@ -7,6 +7,12 @@ import router from './router'
 import promise from 'es6-promise';//解决axios在ie9下不生效的方法
 promise.polyfill();
 
+// 引入UEditor
+import'../static/UEditor/ueditor.config.js'
+import'../static/UEditor/ueditor.all.min.js'
+import'../static/UEditor/lang/zh-cn/zh-cn.js'
+import'../static/UEditor/ueditor.parse.min.js'
+
 //ui选择elementui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
