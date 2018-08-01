@@ -18,26 +18,25 @@
       <div class="news-upload">
         <div class="news-upload-title">
           <div class="left-text">新闻标题：</div>
-          <el-input v-model="input" placeholder="此处为新闻标题"></el-input>
+          <el-input class="right-input" v-model="input" placeholder="此处为新闻标题"></el-input>
         </div>
         <div class="news-upload-from">
           <div class="left-text">新闻来源：</div>
-          <el-input v-model="input" placeholder="此处为新闻来源"></el-input>
+          <el-input class="right-input" v-model="input" placeholder="此处为新闻来源"></el-input>
         </div>
         <div class="news-upload-image">
           <div class="left-text">标题图片：</div>
-          <el-upload
-            class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
+          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </div>
         <div class="news-upload-body">
           <div class="left-text">新闻正文：</div>
+          <div class="ueditor">
+            <UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>
+          </div>
         </div>
       </div>
     </div>
@@ -45,13 +44,14 @@
 
 
 
-    <!--<el-button @click="goPage">新闻编辑</el-button>-->
+    <el-button @click="getUEContent">新闻编辑</el-button>
   </div>
 </template>
 
 <script>
   import news from '../common/json/news';
   import tabs from '../components/common/tabs';
+  import UE from '../components/common/ueditor';
 
   export default {
     name: "news_manage",
@@ -72,10 +72,15 @@
           }
         ],
         input: '',
-        imageUrl: ''
+        imageUrl: '',
+        defaultMsg: '这里是UE测试',
+        config: {
+          initialFrameWidth: null,
+          initialFrameHeight: 350
+        }
       }
     },
-    components:{ tabs },
+    components:{ tabs, UE },
     methods: {
       tabClick(index){
         let _arr = this.tabs_data;
@@ -104,10 +109,19 @@
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
+      },
+      getUEContent() {
+        let content = this.$refs.ue.getUEContent();
+        this.$notify({
+          title: '获取成功，可在控制台查看！',
+          message: content,
+          type: 'success'
+        });
+        console.log(content)
       }
     },
     created() {
-      console.log(this.news)
+      // console.log(this.news)
     }
   }
 </script>
@@ -173,7 +187,18 @@
 
     }
     .news-upload-body {
+      .ueditor {
 
+      }
+    }
+    .left-text {
+      float: left;
+      min-width: 1.3rem;
+      line-height: 0.32rem;
+    }
+    .right-input {
+      width: 6rem;
+      margin-bottom: 0.4rem;
     }
   }
 </style>
