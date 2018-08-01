@@ -151,7 +151,7 @@
     width: 100%;
     height: 100%;
     .login-box{
-      width: 4rem;
+      width: 3.6rem;
        height: 4.6rem;
       padding: 0.6rem;
       position: absolute;
@@ -201,7 +201,7 @@
           background-size: 100% 100%;
         }
         button{
-          width: 4rem;
+          width: 3.6rem;
           height: 0.54rem;
           text-align: center;
           font-size: 0.2rem;
