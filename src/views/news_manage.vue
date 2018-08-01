@@ -6,19 +6,23 @@
 </template>
 
 <script>
-    export default {
-      name: "news_manage",
-      data() {
-        return {
-
-        }
-      },
-      methods: {
-        goPage() {
-          this.$router.push({ path: '/upload_new' })
-        }
+  import news from '../common/json/news'
+  export default {
+    name: "news_manage",
+    data() {
+      return {
+        news: news
       }
+    },
+    methods: {
+      goPage() {
+        this.$router.push({ path: '/upload_new' })
+      }
+    },
+    created() {
+      console.log(this.news)
     }
+  }
 </script>
 
 <style scoped>
