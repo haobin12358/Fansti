@@ -9,22 +9,22 @@
             <!--<i class="icon-person icon"></i>-->
             <!--<el-input v-model="ruleForm.MAname" placeholder="输入账号/邮箱" class="m-input"></el-input>-->
           <!--</el-form-item>-->
-          <el-form-item  prop="MAtelphone">
+          <el-form-item  prop="MAtelphone" label="手机号">
             <i class="icon-tel icon"></i>
             <el-input v-model="ruleForm.MAtelphone" placeholder="输入手机号" class="m-input"></el-input>
           </el-form-item>
-          <el-form-item  prop="MAcode">
+          <el-form-item  prop="MAcode" label="验证码">
             <i class="icon-tel icon"></i>
             <el-input v-model="ruleForm.MAcode" placeholder="验证码" class="m-input-s m-input"></el-input>
             <span class="m-code" v-if="show" @click="getCode">获取验证码</span>
             <span class="m-code active" v-else >重发{{count}}s</span>
           </el-form-item>
-          <el-form-item  prop="MApasswordnew">
+          <el-form-item  prop="MApasswordnew" label="新密码">
             <span class="icon-pwd icon"></span>
             <el-input v-model="ruleForm.MApasswordnew" placeholder="输入新密码" type="password" class="m-input"></el-input>
             <!--<i class="icon-pwd icon-r"></i>-->
           </el-form-item>
-          <el-form-item  prop="MApasswordnewrepeat">
+          <el-form-item  prop="MApasswordnewrepeat" label="旧密码">
             <span class="icon-pwd icon"></span>
             <el-input v-model="ruleForm.MApasswordnewrepeat" placeholder="重复新密码" type="password" class="m-input"></el-input>
             <!--<i class="icon-pwd icon-r"></i>-->
@@ -164,11 +164,11 @@
       height: 100%;
       .login-box{
         width: 3.6rem;
-        height: 4.6rem;
-        padding: 0.2rem;
+        height: 5.2rem;
+        padding: 0.6rem;
         position: absolute;
-        top: 40%;
-        right: 2.2rem;
+        top: 35%;
+        right: 1.2rem;
         background-color: #fff;
         -webkit-transform: translate(0, -1.6rem);
         transform: translate(0,-1.6rem);
@@ -183,7 +183,7 @@
           position: relative;
           /*height: 0.4rem;*/
           .m-input-s{
-            width: 2.05rem;
+            width: 1.40rem;
           }
           .m-code{
             width: 1.4rem;
