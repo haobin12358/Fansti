@@ -1,0 +1,71 @@
+<style scoped lang="less">
+    @import "../../styles/base";
+
+  .popup-screen{
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background: #000000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    opacity: 0.6;
+  }
+
+  .popup-content{
+    position: fixed;
+    z-index: 2000;
+    top: 400rpx;
+    left: 75rpx;
+    width: 600rpx;
+    background: #ffffff;
+  }
+
+
+</style>
+
+<template>
+  <block wx:if="{{show}}">
+    <view class="popup-screen"></view>
+    <view class="popup-content">
+      <slot></slot>
+    </view>
+  </block>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Popup extends wepy.component {
+    props = {
+      show: {
+        //  Object Array String Number Boolean
+        type: Boolean,
+        default: false
+      },
+      postion: {
+        type: String,
+        default: 'center'
+      }
+    };
+
+    data = {};
+
+    computed = {};
+
+    methods = {
+      hidePopup(){
+        console.log('组件 hidePopup');
+        this.show = false;
+        this.$emit('hide')
+      }
+    };
+
+
+    onLoad() {
+      console.log('popup组件',this.show);
+    }
+  }
+</script>
+

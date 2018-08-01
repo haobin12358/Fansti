@@ -1,42 +1,405 @@
 <style scoped lang="less">
+  @import "../../styles/base";
 
+  .container{
+    padding: 38rpx 23rpx 30rpx;
+    box-sizing: border-box;
+    .container-hd{
+      margin-bottom: 48rpx;
+
+      .overview{
+        display: flex;
+
+        .overview-item{
+          width: 228rpx;
+          margin-right: 10rpx;
+          height: 331rpx;
+          color: #ffffff;
+          position: relative;
+
+          &:last-child{
+            margin-right: 0;
+          }
+
+          .overview-item-bg{
+            height: 100%;
+            width: 100%;
+          }
+
+          .overview-item-info{
+            position: absolute;
+            left: 44rpx;
+            top: 38rpx;
+            width: 140rpx;
+            /*height: 140rpx;*/
+            text-align: center;
+
+            .line1{
+              margin-bottom: 20rpx;
+
+              .fz28();
+            }
+            .line2{
+              font-size: 112rpx;
+              font-weight: bold;
+            }
+
+          }
+        }
+      }
+    }
+    .container-bd{
+      color: @mainBlueColor;
+
+      .bd-section{
+        margin-bottom: 20rpx;
+        .bd-section-title{
+          padding-left: 10rpx;
+
+        }
+        .bd-section-content{
+          border: 4rpx solid @borderColor;
+          padding: 40rpx;
+          border-radius: 10rpx;
+        }
+        /*客服信息*/
+        .bd-section-content-info{
+          display: flex;
+          .service-info{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .fz24()
+
+          }
+          .service-img{
+            height: 187rpx;
+            width: 163rpx;
+          }
+
+        }
+
+        /*  在线留言*/
+        .bd-section-content-msg{
+          padding: 20rpx 35rpx 12rpx 20rpx;
+          .fz24();
+
+          .textarea-msg{
+            height: 100rpx;
+            width: 100%;
+          }
+          .confirm-msg{
+            color: @mainFontColor;
+            /*display: inline-block;*/
+            text-align: right;
+          }
+
+        }
+      }
+    }
+    .container-ft{
+      .ft-btns{
+        padding: 0 40rpx;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 34rpx;
+
+        button{
+          color: #ffffff;
+          background: #a1afba;
+          padding: 0 31rpx;
+
+          .fz28();
+        }
+      }
+      .ft-share-list{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        image{
+          width: 25rpx;
+          height: 22rpx;
+          margin-right: 9rpx;
+        }
+
+        text{
+          color: @mainFontColor;
+          .fz24();
+        }
+      }
+    }
+  }
 </style>
 
 <template>
   <block wx:if="{{isBinding}}">
-    个人
+    <view class="container">
+      <view class="container-hd">
+        <view class="overview">
+          <view class="overview-item" @tap="tapWGPHandler">
+            <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
+            <view class="overview-item-info">
+              <view class="line1">待领取红包</view>
+              <view class="line2">5</view>
+            </view>
+          </view>
+          <view class="overview-item" @tap="tapAGPHandler">
+            <image class="overview-item-bg" src="../../images/packet_gray.png"></image>
+            <view class="overview-item-info">
+              <view class="line1">已领取红包</view>
+              <view class="line2">5</view>
+            </view>
+
+          </view>
+          <view class="overview-item"  @tap="tapCTHandler">
+            <image class="overview-item-bg" src="../../images/packet_blue.png"></image>
+            <view class="overview-item-info">
+              <view class="line1">月度统计</view>
+              <view class="line2">15</view>
+            </view>
+
+          </view>
+        </view>
+      </view>
+      <view class="container-bd">
+        <view class="bd-section">
+          <view class="bd-section-title">
+            客服信息
+          </view>
+          <view class="bd-section-content bd-section-content-info">
+            <view class="service-info">
+              <view class="service-info-line">
+                客服名称：{{serviceInfo.name}}
+              </view>
+              <view class="service-info-line">
+                客服QQ：{{serviceInfo.qq}}
+              </view>
+              <view class="service-info-line">
+                客服电话：{{serviceInfo.telphone}}
+              </view>
+              <view class="service-info-line">
+                客服邮箱：{{serviceInfo.email}}
+              </view>
+
+            </view>
+            <image src="../../images/service_people.png" class="service-img"></image>
+
+
+          </view>
+        </view>
+        <view class="bd-section">
+          <view class="bd-section-title">
+            在线留言
+          </view>
+          <view class="bd-section-content bd-section-content-msg">
+            <textarea class="textarea-msg" placeholder="请在这输入" value="{{msg}}" @input="inputMsgHandler"></textarea>
+            <view class="confirm-msg">
+              <text @tap="submitMsg">确认提交</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="container-ft">
+        <view class="ft-btns">
+          <button open-type="share">分享服务号</button>
+          <button @tap="tapCallService">电话沟通</button>
+          <button @tap="bindingAgain">重新绑定</button>
+        </view>
+        <view class="ft-share-list">
+          <image src="../../images/person_share_list.png"></image>
+          <text @tap="goShareList">查看分享列表</text>
+        </view>
+      </view>
+    </view>
   </block>
   <placeholder wx:else></placeholder>
-
+  <waitGetPacket :show.sync="showWGP"></waitGetPacket>
+  <alreadyGetPacket :show.sync="showAGP"></alreadyGetPacket>
+  <alreadyGetTicket :show.sync="showCT" :lineChart.sync="lineChart"></alreadyGetTicket>
 </template>
 
 <script>
   import wepy from 'wepy'
   import BindingMixin from '../../mixins/bindingMixin';
+  import CardMixin from '../../mixins/cardMixin';
   import api from '../../api/api';
   import tip from '../../utils/tip';
   import Placeholder from '@/components/common/placeholder'
+  import AlreadyGetPacket from '@/components/alreadyGetPacket'
+  import WaitGetPacket from '@/components/waitGetPacket'
+  import AlreadyGetTicket from '@/components/alreadyGetTicket'
 
 
   export default class Index extends wepy.page {
     config = {}
 
     components = {
-      placeholder: Placeholder
+      placeholder: Placeholder,
+      alreadyGetPacket: AlreadyGetPacket,
+      waitGetPacket: WaitGetPacket,
+      alreadyGetTicket: AlreadyGetTicket,
     }
 
-    data = {}
+    data = {
+      showWGP: false,//  显示未领取红包
+      showAGP: false, //  显示已领取红包
+      showCT: false,  //  显示已完成票数
+      lineChart: {},
+
+      allPacketInfo: {
+        "month_red": [
+          {
+            "count": 0,
+            "month": 1
+          },
+          {
+            "count": 0,
+            "month": 2
+          },
+          {
+            "count": 0,
+            "month": 3
+          },
+          {
+            "count": 0,
+            "month": 4
+          },
+          {
+            "count": 0,
+            "month": 5
+          },
+          {
+            "count": 0,
+            "month": 6
+          },
+          {
+            "count": 3,
+            "month": 7
+          },
+          {
+            "count": 0,
+            "month": 8
+          },
+          {
+            "count": 0,
+            "month": 9
+          },
+          {
+            "count": 0,
+            "month": 10
+          },
+          {
+            "count": 0,
+            "month": 11
+          },
+          {
+            "count": 0,
+            "month": 12
+          }
+        ],
+        "my_red_coin": 10,
+        "my_red_list": [
+          {
+            "createtime": "2018-07-30",
+            "red_id": "003"
+          }
+        ],
+        "my_red_num": 1,
+        "red_list": [
+          {
+            "status": "0",
+            "red_id": "001"
+          },
+          {
+            "status": "1",
+            "red_id": "002"
+          }
+        ],
+        "red_num": 2
+      },
+
+      serviceInfo: {
+        email: '112233445@qq.com',
+        name: '李小叶',
+        qq: '112233445',
+        telphone: '13811111111',
+      },
+
+      msg: ''
+    }
     mixins = [BindingMixin]
 
     computed = {}
 
-    methods = {}
+    methods = {
+      goShareList(){
+        wx.navigateTo({
+          url: '/pages/person/shareList'
+        })
+      },
+
+      inputMsgHandler(e){
+        this.msg = e.detail.value;
+        console.log(this.msg);
+      },
+
+      submitMsg(){
+        if(this.msg != ''){
+
+        } else{
+          tip.alert('留言不能为空')
+        }
+      },
+
+      bindingAgain(){
+        wx.navigateTo({
+          url: '/pages/person/binding'
+        })
+      },
+      //  显示未领取的红包
+      tapWGPHandler(){
+        this.showWGP = true
+      },
+      //  显示已领取的红包
+      tapAGPHandler(){
+        this.showAGP = true
+      },
+      //  显示已完成票数
+      tapCTHandler(){
+        this.showCT = true
+        this.$invoke('alreadyGetTicket', 'apply');
+
+      },
+      tapCallService(){
+        let phoneNumber = '13811111111';
+
+        wepy.showModal({
+          title: `联系客服`,
+          content: `拨打${phoneNumber}(客服电话)?`,
+        }).then(
+          p => {
+            if (p.confirm) {
+              wx.makePhoneCall({
+                phoneNumber
+              })
+            }
+          }
+        )
+      }
+    }
+
+    onShareAppMessage(){
+
+    }
 
     events = {}
 
 
     onLoad() {
-      console.log(this.isBinding);
+      wx.setStorageSync('token', 'HYTX');
     }
   }
 </script>

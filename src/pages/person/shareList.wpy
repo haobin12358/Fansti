@@ -1,0 +1,115 @@
+<style scoped lang="less">
+    @import "../../styles/table";
+
+  .container{
+    color: @mainBlueColor;
+    padding: 73rpx 30rpx 0;
+
+    .container-title{
+      margin-bottom: 50rpx;
+      font-weight: bold;
+
+      .fz30();
+    }
+
+    .container-content{
+      .fz24();
+
+      .table-title{
+        margin-bottom: 36rpx;
+
+        image{
+          width: 50rpx;
+          height: 30rpx;
+        }
+      }
+
+      .standard-table{
+        margin-bottom: 20rpx;
+
+        .thead{
+          background: #ffffff;
+          color: @mainBlueColor;
+
+        }
+
+        .td{
+          padding: 17rpx 0;
+          border:  1px solid @borderColor;
+        }
+      }
+
+      .show-more{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        text{
+          color: @mainFontColor;
+        }
+
+        image{
+          margin-left: 20rpx;
+          width: 29rpx;
+          height: 14rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="container-title">
+      分享列表
+    </view>
+    <view class="container-content">
+      <view class="table-title">
+        <image src="../../images/person_share_arrow.png"></image>
+        我分享给他人
+      </view>
+      <view class="standard-table">
+        <view class="thead">
+          <view class="tr">
+            <view class="td">序号</view>
+            <view class="td">姓名</view>
+            <view class="td">用户名</view>
+            <view class="td">电话</view>
+          </view>
+        </view>
+        <view class="tbody">
+          <view class="tr" wx:for="123456789">
+            <view class="td">{{item}}</view>
+            <view class="td">xx</view>
+            <view class="td">xx</view>
+            <view class="td">123456789</view>
+          </view>
+        </view>
+
+      </view>
+      <view class="show-more">
+        <text>查看更多</text> <image src="../../images/triangle_down.png"></image>
+      </view>
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class ShareList extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

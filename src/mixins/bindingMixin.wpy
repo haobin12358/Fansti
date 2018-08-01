@@ -30,22 +30,42 @@
         let openid = res.data.data.openid
         this.openid = openid;
         let res2 =await api.getBinding({query:{openid}});
-        console.log(res2);
+        // console.log(res2);
 
         if(res2.data.status == 200){
           this.isBinding = res2.data.message == '已绑定';
           this.$apply();
+          console.log(this.isBinding);
 
           //  绑定后的微信账号直接修改绑定状态为已绑定
           if(this.isBinding && !wx.getStorageSync('token')){
             wx.setStorageSync('token', res2.data.data.login_name);
+
           }
         }else{
-          tip.error(res.data.message);
+          tip.error(res2.data.message);
         }
       }else{
         tip.error(res.data.message);
       }
+    }
+
+    //  tip.loaded();
+    // wepy.hideNavigationBarLoading()
+
+   async getOpenid(code){
+      let  that = this
+     let loginRes = await wx.login({
+          // let {code} = res
+          // let res2 =await api.getOpenid({query:{code}});
+          //
+          // if(res2.data.status == 200) {
+          //   let openid = res.data.data.openid
+          //   that.openid = openid;
+          // }
+      });
+
+      return loginRes
     }
 
     onShow(){
@@ -53,7 +73,7 @@
       let that = this;
 
       this.isBinding = !!loginName;
-      console.log('show',this.isBinding);
+      // console.log('show',this.isBinding);
 
       // this.isLogin = true;
 
@@ -65,7 +85,7 @@
         })
       }
 
-      console.log('isBinding',this.isBinding)
+      // console.log('isBinding',this.isBinding)
     }
 
     onLoad() {

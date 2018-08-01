@@ -1,0 +1,87 @@
+<style scoped lang="less">
+    @import "../styles/base";
+
+  .userinfo-authorize{
+    text-align: center;
+
+    .title{
+      color: black;
+      padding: 20rpx 0;
+      .fz32()
+    }
+    .content{
+      color: gray;
+      padding-bottom: 20rpx;
+
+    }
+    .action-block{
+      border-top: 1px solid #CCCCCC;
+      display: flex;
+
+      button{
+        flex: 1;
+        color: #abe896;
+        border: 0;
+        background: #ffffff;
+      }
+
+    }
+  }
+</style>
+
+<template>
+  <popup :show.sync="showPopup">
+    <view class="userinfo-authorize">
+      <view class="title">
+        提示
+      </view>
+      <view class="content">
+        为了更好地...，请授权给我们您的个人信息。
+      </view>
+      <view class="action-block">
+        <button @tap="hidePopup">取消</button>
+        <button open-type="getUserInfo" bindgetuserinfo="getUserInfo">确认</button>
+      </view>
+    </view>
+  </popup>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Popup from '@/components/common/popup';
+
+  export default class UserinfoAuthorize extends wepy.component {
+    props = {
+      showPopup: {
+        //  Object Array String Number Boolean
+        type: Boolean,
+        default: false
+      }
+    };
+
+    components = {
+      popup: Popup
+    };
+
+    data = {
+    };
+
+    computed = {};
+
+    methods = {
+      getUserInfo(e){
+        this.showPopup = false;
+        this.$emit('getUserInfo', e)
+      },
+      hidePopup(){
+        this.showPopup = false;
+      }
+    };
+
+
+    onLoad() {
+
+    }
+  }
+</script>
+

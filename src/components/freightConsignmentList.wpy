@@ -114,10 +114,10 @@
 
 <template>
   <view class="freight-consignment-list">
-    <view wx:for="{{list}}" class="goods-item" @tap.stop="tapItemHandler">
+    <view wx:for="{{listCmp}}" wx:key="hxno" class="goods-item" @tap.stop="tapItemHandler">
       <view class="line-progress">
-        <block wx:for="{{progressNum}}" wx:key="*this"  wx:for-item="progressItem">
-          <block wx:if="{{item.progress>progressItem}}">
+        <block wx:for="{{item.stateGather}}" wx:key="index"  wx:for-item="stateItem">
+          <block wx:if="{{stateItem == 1}}">
             <view class="circle-big">
               <image src="../images/circle_full.png"></image>
             </view>
@@ -128,13 +128,12 @@
             </view>
           </block>
 
-          <block wx:if="{{index != progressNum.length-1}}">
+          <block wx:if="{{index != item.stateGather.length-1}}">
             <view class="circle-small"></view>
             <view class="circle-small"></view>
             <view class="circle-small"></view>
           </block>
         </block>
-
       </view>
       <view class="line-detail">
         <view class="line-left">
@@ -143,7 +142,7 @@
             <text>运单号:</text>
           </view>
           <view class="item-value">
-            {{item.expressNumber}}
+            {{item.ydno}}
           </view>
         </view>
         <view class="line-right">
@@ -161,10 +160,10 @@
         <view class="line-left">
           <view class="item-label">
             <image class="label-img" src="../images/order.png"></image>
-            <text>运单号:</text>
+            <text>订单号:</text>
           </view>
           <view class="item-value">
-            {{item.orderNumber}}
+            {{item.hxno}}
           </view>
         </view>
         <view class="line-right">
@@ -173,7 +172,7 @@
             <text space="emsp"> 件数:</text>
           </view>
           <view class="item-value">
-            {{item.num}}
+            {{item.jsbzcc}}
           </view>
         </view>
       </view>
@@ -208,7 +207,25 @@
       progressNum: [0,1,2,3,4,5,6,7,8]
     };
 
-    computed = {};
+    computed = {
+      listCmp(){
+        let res = []
+
+        if(this.list.length){
+          for (let i = 0; i < this.list.length; i++) {
+            let item = this.list[i]
+
+            item.stateGather = [item.yupei,item.jincang,item.chucang,item.chengzhong,item.baoguan,item.yundan,item.jiaodan,item.qifei,item.dida];
+          }
+
+        }
+
+        console.log(this.list);
+        return this.list;
+
+      }
+
+    };
 
     methods = {
       tapItemHandler(){

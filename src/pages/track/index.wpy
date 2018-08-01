@@ -2,7 +2,7 @@
   @import "../../styles/base";
 
   .container{
-    padding-top: 51rpx;
+    padding-top: 61rpx;
 
     .progress-chart{
       position: fixed;
@@ -76,25 +76,7 @@
       progressData: ['预配','进仓','出仓','称重','报关','运单','交单','起飞','送达'],
 
       goodsList: [
-        {
-          progress: 5,
-          expressNumber: '020-98214690',
-          destination: 'BRU',
-          orderNumber: '8214690',
-          num: 5
-        },{
-          progress: 0,
-          expressNumber: '020-98214690',
-          destination: 'BRU',
-          orderNumber: '8214690',
-          num: 5
-        },{
-          progress: 9,
-          expressNumber: '020-98214690',
-          destination: 'BRU',
-          orderNumber: '8214690',
-          num: 5
-        },
+
       ],
 
 
@@ -112,16 +94,21 @@
       let res =await api.getGoodsList({query: {login_name: wx.getStorageSync('token')}})
 
       if(res.data.status == 200){
-        console.log(res);
+        this.goodsList = res.data.data;
+        this.$apply();
+      }else{
+        tip.alert(res.data.message)
       }
     }
 
     events = {}
 
     onLoad() {
-      console.log(wx.getStorageSync('token'));
-      this.getGoodsList();
+      console.log('token',wx.getStorageSync('token'));
+      if(!!wx.getStorageSync('token')){
+        // this.getGoodsList();
 
+      }
     }
   }
 </script>
