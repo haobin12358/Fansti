@@ -86,7 +86,7 @@
                 // if(res.data.data.MAidentity.indexOf('管理员') != -1){
                 //   this.$router.push({ path: '/index/adminIndex' });
                 // }else{
-                  this.$router.push({ path: '/upload_new' });
+                  this.$router.push({ path: '/upload_news' });
                 // }
               }else{
                 this.$message.error(res.data.message);

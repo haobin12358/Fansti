@@ -8,7 +8,7 @@
 
 <script>
     export default {
-        name: "upload_new"
+        name: "upload_news"
     }
 </script>
 
