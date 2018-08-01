@@ -1,5 +1,7 @@
 <template>
-    <div></div>
+    <div>
+      用户查询记录
+    </div>
 </template>
 
 <script>

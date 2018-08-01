@@ -2,7 +2,7 @@
   "side":[
     {
       "MNname":"新闻上传编辑",
-      "MNurl":"/upload_new",
+      "MNurl":"/news_manage",
       "MNicon":"icon",
       "children":[]
     },

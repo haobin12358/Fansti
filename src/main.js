@@ -5,6 +5,12 @@ import App from './App'
 import router from './router'
 
 import promise from 'es6-promise';//解决axios在ie9下不生效的方法
+
+// 引入UEditor
+import '../src/assets/UEditor/ueditor.config.js'
+import '../src/assets/UEditor/ueditor.all.min.js'
+import '../src/assets/UEditor/ueditor.parse.min.js'
+
 promise.polyfill();
 
 //ui选择elementui
