@@ -1,10 +1,12 @@
 <template>
-  <div class="m-discount-nav">
-    <template v-for="(item,index) in tab_data" >
-      <span class="m-one-nav" :class="item.show?'active':''"  @click="tabChange(item.url)">{{item.name}}</span>
+  <div class="m-tab">
+    <template v-for="(item,index) in tabs">
+      <span>
+          <span class="m-tab-link" :class="item.click?'active':''" @click="tabClick(index)">{{item.name}}</span>
+          <span class="m-tab-line" v-if="index != tabs.length-1">/</span>
+        </span>
     </template>
   </div>
-
 </template>
 
 <script type="text/ecmascript-6">
@@ -14,16 +16,19 @@
                 name: ''
             }
         },
-        props:{
-          tab_data:{
-            type:Object,
-            default:null
-          }
-        },
+      props:{
+        tabs:{
+          type:Array,
+          default:null
+        }
+      },
         components: {},
         methods: {
-          tabChange(v){
-            this.$emit('tabChange',v)
+          tabClick(index){
+            if(this.tabs[index].click){
+              return false;
+            }
+            this.$emit('tabClick',index);
           }
         },
         created() {
@@ -32,21 +37,18 @@
     }
 </script>
 <style lang="less" rel="stylesheet/less" scoped>
-  .m-discount-nav{
-    background-color: #eeeeee;
-    padding: 0.1rem 0.1rem 0 0;
-    margin-top: 0.1rem;
-    text-align: right;
-    span.m-one-nav{
-      display: inline-block;
-      padding: 0.02rem 0.15rem 0.05rem;
-      font-size: 0.14rem;
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
+  @import "../../common/css/_variate";
+  .m-tab{
+    font-size: 0.16rem;
+    margin-bottom: 0.3rem;
+    .m-tab-link{
       cursor: pointer;
       &.active{
-        background-color: #fff;
+        color: @greyColor;
       }
+    }
+    .m-tab-line{
+      margin: 0 0.2rem;
     }
   }
 </style>
