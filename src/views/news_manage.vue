@@ -70,7 +70,6 @@
     .news-container {
       display: flex;
       margin: 0.2rem 0.5rem 0.2rem 0;
-      border-radius: 10px;
       border: solid 1px #707070;
       .news-image {
         margin: 0.2rem;
@@ -107,7 +106,6 @@
       .news-edit {
         min-width: 1rem;
         font-size: 20px;
-        border-radius: 0 10px 10px 0;
         color: @bgMainColor;
         background-color: @btnActiveColor;
         display: flex;
