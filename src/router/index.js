@@ -30,6 +30,17 @@ export const constantRouterMap = [
   { path: '/forgetPwd', component: () => import('../views/login/forgetPwd'), hidden: true },
   { path: '/error', component: () => import('../views/error/error'), hidden: true },
   {
+    path: '/news_manage',
+    component: Layout,
+    children: [{
+      path: '',
+      component: () => import('../views/news_manage'),
+      name: 'news_manage',
+      meta: { title: 'news_manage', icon: 'news_manage', noCache: true }
+    }
+    ]
+  },
+  {
     path: '/upload_new',
     component: Layout,
     children: [{

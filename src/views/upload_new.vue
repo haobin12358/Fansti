@@ -1,5 +1,9 @@
 <template>
-    <div></div>
+    <div class="news">
+      <div class="news-left">
+         新闻编辑页
+      </div>
+    </div>
 </template>
 
 <script>
