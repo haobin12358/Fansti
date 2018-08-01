@@ -19,7 +19,7 @@ export default {
   /*text-align: center;*/
   color: #2c3e50;
   min-height: 100%;
-  background-color: @sectionBgColor;
+  background-color: #fff;
   /*margin-top: 60px;*/
 }
 </style>
