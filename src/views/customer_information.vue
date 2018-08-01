@@ -32,7 +32,7 @@
           </el-form-item>
 
           <div class="m-bottom-btn m-flex-center">
-            <span class="m-btn active">修改</span>
+            <span class="m-btn active" @click="updateData">修改</span>
           </div>
         </el-form>
       </el-dialog>
@@ -66,17 +66,53 @@
               ]
             },
             showModal:false,
-            customer_data:[
-              {
-
-              }
-            ]
+            customer_data:{
+              name:'',
+              qq:'',
+              telphone:'',
+              email:''
+            }
           }
       },
       methods:{
         show_modal(){
           this.showModal = true;
+          this.from.name = this.customer_data.name;
+          this.from.qq = this.customer_data.qq;
+          this.from.telphone= this.customer_data.telphone;
+          this.from.email = this.customer_data.email;
+        },
+        getData(){
+          axios.get(api.get_custom).then(res => {
+            if(res.data.status == 200){
+              this.customer_data = res.data.data;
+            }else{
+              this.$message.error(res.data.message);
+            }
+          },error => {
+            this.$message.error(error.data.message);
+          })
+        },
+        updateData(){
+          let that = this;
+          this.$refs['form'].validate((valid) => {
+            if (valid) {
+              axios.post(api.update_custom,this.form).then(res => {
+                if(res.data.status == 200){
+                  this.$message({
+                    type:'success',
+                    message:'修改信息成功'
+                  });
+                }else{
+                  this.$message.error(res.data.message);
+                }
+              },error => {
+                this.$message.error(error.data.message);
+              })
+            }
+          })
         }
+
       }
     }
 </script>
