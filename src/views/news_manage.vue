@@ -1,7 +1,7 @@
 <template>
   <div>
     <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
-    <div v-if="!newsManage">
+    <div v-if="newsManage">
       <div class="news-manage" v-for="item in news">
         <div class="news-container">
           <img class="news-image" :src="item.imageUrl" />
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div v-if="newsManage">
+    <div v-if="!newsManage">
       <div class="news-upload">
         <div class="news-upload-title">
           <div class="left-text">新闻标题：</div>
@@ -167,7 +167,7 @@
       }
       .news-edit {
         min-width: 1rem;
-        font-size: 20px;
+        font-size: 18px;
         color: @bgMainColor;
         background-color: @btnActiveColor;
         display: flex;
