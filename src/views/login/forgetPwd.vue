@@ -1,6 +1,6 @@
 <template>
   <div class="login-status">
-    <login-head></login-head>
+    <!--<login-head></login-head>-->
     <div class="login-content">
       <div class="login-box">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm"  >
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <foot></foot>
+    <!--<foot></foot>-->
   </div>
 
 </template>
@@ -158,12 +158,13 @@
     height: 100%;
     .login-content{
       position: fixed;
-      background-color: @mainColor;
+      background: url("../../common/images/login-back.png");
+      background-size: 100% 100%;
       width: 100%;
       height: 100%;
       .login-box{
         width: 3.6rem;
-        height: 5.2rem;
+        height: 4.6rem;
         padding: 0.2rem;
         position: absolute;
         top: 40%;
@@ -171,11 +172,11 @@
         background-color: #fff;
         -webkit-transform: translate(0, -1.6rem);
         transform: translate(0,-1.6rem);
-        border-radius: 5px;
+        /*border-radius: 5px;*/
         .login-head{
           margin-bottom: 0.4rem;
           font-size: 0.25rem;
-          color: @mainColor;
+          color: @mainFont;
         }
         .el-form-item{
           vertical-align: middle;
@@ -186,13 +187,13 @@
           }
           .m-code{
             width: 1.4rem;
-            height: 0.54rem;
-            line-height: 0.54rem;
+            height: 0.44rem;
+            line-height: 0.44rem;
             text-align: center;
             display: inline-block;
             background-color: @btnActiveColor;
             color: #fff;
-            border-radius: 5px;
+            /*border-radius: 5px;*/
             margin-left: 0.1rem;
             cursor: pointer;
             &.active{
@@ -238,6 +239,7 @@
             font-size: 0.2rem;
             background-color: @btnActiveColor;
             border-color: @btnActiveColor;
+            border-radius: 0;
             /*margin-top: 1rem;*/
           }
           .m-forget-pwd{

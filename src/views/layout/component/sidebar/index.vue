@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--<router-link to="/index/adminIndex" key="user">-->
-        <div class="m-system-name" @click="indexClick">
+        <div class="m-system-name" >
           <p>泛思特 </p>
           <p class="m-system-p">医药化工危险品冷链国际空运</p>
         </div>
@@ -52,14 +52,6 @@
           },
           handleClose(key, keyPath) {
             console.log(key, keyPath);
-          },
-          indexClick(){
-            if(this.$store.state.role.indexOf('管理员') != -1){
-              this.$router.push('/index/adminIndex')
-            }else{
-              this.$router.push('/index/userIndex')
-            }
-
           }
         },
         created() {
@@ -82,7 +74,7 @@
 .m-system-name{
   font-size: 0.2rem;
   padding: 0.2rem 0;
-  border-bottom: 1px solid #e7eef1;
+  /*border-bottom: 1px solid #e7eef1;*/
   margin: 0.2rem;
   text-align: center;
   color: #fff;

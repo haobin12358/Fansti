@@ -146,7 +146,8 @@
   height: 100%;
   .login-content{
     position: fixed;
-    background-color: @mainColor;
+    background: url("../../common/images/login-back.png");
+    background-size: 100% 100%;
     width: 100%;
     height: 100%;
     .login-box{
@@ -155,7 +156,7 @@
       padding: 0.6rem;
       position: absolute;
       top: 35%;
-      right: 2.2rem;
+      right: 1.2rem;
       background-color: #fff;
       -webkit-transform: translate(0, -1.6rem);
       transform: translate(0,-1.6rem);
