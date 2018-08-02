@@ -10,13 +10,17 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/person/index', //个人首页
-      'pages/person/shareList', //分享列表
+      'pages/index/index',  //首页
+      'pages/index/newsDetail', //新闻详情
 
       'pages/track/index',  //跟踪首页
       'pages/track/consignmentDetail',  //托运详情
       'pages/track/stockClerkInfo',  //仓库人员信息
       'pages/track/confirmConsignment',  //确认托运照片
+
+      'pages/person/shareList', //分享列表
+
+      'pages/person/index', //个人首页
 
       'pages/person/binding', //绑定页
 
@@ -31,8 +35,7 @@ export default class extends wepy.app {
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
 
-      'pages/index/index',  //首页
-      'pages/index/newsDetail', //新闻详情
+
 
 
 
@@ -70,7 +73,7 @@ export default class extends wepy.app {
       }]
     },
     networkTimeout: {
-      request: 20000, //  wx.request超时时间
+      request: 50000, //  wx.request超时时间
     },
   }
 

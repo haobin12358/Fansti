@@ -170,9 +170,16 @@
         let formData = e.detail.value
 
         if(formData.username && formData.password && formData.phone){
+          tip.alert('老用户绑定')
+
           this.doBinding(formData);
 
-        }else{
+         }else if (!formData.username && !formData.password && formData.phone) {
+          tip.alert('新用户绑定')
+          this.doBinding(formData);
+
+        }
+        else{
           tip.alert('请填写完整')
         }
       },
@@ -207,36 +214,8 @@
     events = {};
 
     onLoad() {
-      // tip.confirm('为了更好地...,请授权给我们您的个人信息.',false)
-      // wx.showModal({
-      //   title: '提示',
-      //   content: '为了更好地...,请在接下来的操作中允许授权给我们您的个人信息',
-      //   confirmText: '我知道了',
-      //   showCancel: false,
-      //   complete: res=>{
-      //     console.log('complete');
-      //   }
-      // })
-      let that = this;
+      this.setOpenid()
 
-      let loginRes =  wx.login({
-        success: function(res) {
-          let {code} = res
-          api.getOpenid({query:{code}}).then(
-            (res2)=>{
-              if(res2.data.status == 200) {
-                let openid = res2.data.data.openid
-
-                that.openid = openid;
-                console.log('openid',openid);
-                that.$apply();
-              }
-            }
-          )
-
-
-        }
-      });
     }
   }
 </script>

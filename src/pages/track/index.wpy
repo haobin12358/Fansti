@@ -10,6 +10,7 @@
       left: 0;
       width: 100%;
       display: flex;
+      z-index: 10;
 
       .progress-item{
         flex: 1;
@@ -55,9 +56,9 @@
   import wepy from 'wepy'
   import Placeholder from '@/components/common/placeholder'
   import FreightConsignmentList from '@/components/freightConsignmentList'
-  import api from '../../api/api';
-  import tip from '../../utils/tip';
-  import BindingMixin from '../../mixins/bindingMixin';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+  import BindingMixin from '@/mixins/bindingMixin';
 
 
   export default class Index extends wepy.page {
@@ -84,9 +85,9 @@
     computed = {}
 
     methods = {
-      goConsignmentDetail(){
-        console.log('页面tapItem');
-        this.$navigate('/pages/track/consignmentDetail')
+      goConsignmentDetail(jcno){
+        console.log('页面tapItem',jcno);
+        this.$navigate('/pages/track/consignmentDetail',{jcno})
       }
     }
 
@@ -95,6 +96,9 @@
 
       if(res.data.status == 200){
         this.goodsList = res.data.data;
+        this.goodsList = this.goodsList.filter(x=>{
+          return x.jcno == 'E99999999';
+        })
         this.$apply();
       }else{
         tip.alert(res.data.message)
@@ -103,10 +107,24 @@
 
     events = {}
 
+    onShow(){
+      let that = this;
+      if(!this.isBinding){
+        wx.login({
+          success: function(res) {
+            that.checkBingding(res.code);
+          }
+        })
+      }
+    }
+
     onLoad() {
+      // wx.setStorageSync('token', 'HYTX');
+
       console.log('token',wx.getStorageSync('token'));
       if(!!wx.getStorageSync('token')){
-        // this.getGoodsList();
+        console.log('getGoodsList');
+        this.getGoodsList();
 
       }
     }

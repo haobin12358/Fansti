@@ -144,7 +144,7 @@
             <text>运单号:</text>
           </view>
           <view class="item-value">
-            123456
+            {{detail.ydno}}
           </view>
         </view>
         <view class="line-right">
@@ -153,7 +153,7 @@
             <text>目的港:</text>
           </view>
           <view class="item-value">
-            LONLON
+            {{detail.destination}}
           </view>
         </view>
       </view>
@@ -164,7 +164,8 @@
             <text>进仓号:</text>
           </view>
           <view class="item-value">
-            E123456
+            {{detail.jcno}}
+
           </view>
         </view>
       </view>
@@ -175,7 +176,7 @@
             <text space="emsp"> 件数:</text>
           </view>
           <view class="item-value">
-            5
+            {{detail.quantity}}
           </view>
         </view>
         <view class="line-right ">
@@ -184,7 +185,7 @@
             <text space="emsp"> 重量:</text>
           </view>
           <view class="item-value">
-            50
+            {{detail.weight}}
           </view>
         </view>
       </view>
@@ -195,9 +196,7 @@
             <text space="emsp"> 品名:</text>
           </view>
           <view class="item-value">
-            3-（4-PHENOXYPHENYL)1H
-            3-（4-PHENOXYPHENYL)1H
-            3-（4-PHENOXYPHENYL)1H
+            {{detail.enhwpm}}
           </view>
         </view>
       </view>
@@ -205,69 +204,78 @@
     </view>
 
     <view class="container-check-section">
+      <!--入仓照片-->
       <view class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
             <text class="check-type">1. 入仓照片</text>
-            <text class="check-time">2018/07/18 17:35:12</text>
+            <text class="check-time">{{detail.in.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff" @tap="goClerkInfo">资深工匠:李师傅</text>
-            <image class="check-img" src="../../images/staff_check.png"></image>
+            <text class="check-staff" wx:if="{{detail.in.czr}}" @tap="goClerkInfo">资深工匠: {{detail.in.czr}}</text>
+            <image wx:if="{{detail.in_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
+            <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
 
         </view>
-        <view class="check-img-section-bd" @tap="goConfirmConsignment">
+
+        <view wx:if="{{detail.in.picture.length}}" class="check-img-section-bd" @tap="goConfirmConsignment('in')">
           <scroll-view scroll-x="true">
-            <image wx:for="{{checkImgs}}" src="{{item}}"></image>
+            <image wx:for="{{detail.in.picture}}" wx:key="*this" src="{{item}}"></image>
 
           </scroll-view>
         </view>
+        <view wx:else class="check-img-section-bd check-img-section-bd-empty">
+          暂未上传照片
+        </view>
 
       </view>
-        <view class="check-img-section">
+
+      <!--出仓照片-->
+      <view class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
             <text class="check-type">2. 出仓照片</text>
-            <text class="check-time">2018/07/18 17:35:12</text>
+            <text class="check-time">{{detail.out.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff" @tap="goClerkInfo">资深工匠:陈师傅</text>
-            <image class="uncheck-img" src="../../images/staff_uncheck.png"></image>
+            <text class="check-staff" wx:if="{{detail.out.czr}}" @tap="goClerkInfo">资深工匠: {{detail.out.czr}}</text>
+            <image wx:if="{{detail.out_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
+            <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
-
         </view>
-        <view class="check-img-section-bd" @tap="goConfirmConsignment">
+        <view wx:if="{{detail.out.picture.length}}" class="check-img-section-bd" @tap="goConfirmConsignment('out')">
           <scroll-view scroll-x="true">
-            <image wx:for="{{checkImgs}}" src="{{item}}"></image>
+            <image wx:for="{{detail.out.picture}}" wx:key="*this" src="{{item}}"></image>
           </scroll-view>
         </view>
-
+        <view wx:else class="check-img-section-bd check-img-section-bd-empty">
+          暂未上传照片
+        </view>
       </view>
-        <view class="check-img-section">
+
+      <!--称重照片-->
+      <view class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
             <text class="check-type">3. 称重照片</text>
-            <text class="check-time"></text>
+            <text class="check-time">{{detail.weight_pic.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff"></text>
-            <image class="uncheck-img" src="../../images/staff_uncheck.png"></image>
+            <text class="check-staff" wx:if="{{detail.weight_pic.czr}}" @tap="goClerkInfo">资深工匠: {{detail.weight_pic.czr}}</text>
+            <image wx:if="{{detail.weight_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
+            <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
-
         </view>
-        <view class="check-img-section-bd check-img-section-bd-empty">
-
-          <!--<scroll-view scroll-x="true">-->
-            <!--<image wx:for="{{checkImgs}}" src="{{item}}"></image>-->
-
-          <!--</scroll-view>-->
-          暂未称重
+        <view wx:if="{{detail.weight_pic.picture.length}}" class="check-img-section-bd" @tap="goConfirmConsignment('weight')">
+          <scroll-view scroll-x="true">
+            <image wx:for="{{detail.weight_pic.picture}}" wx:key="*this" src="{{item}}"></image>
+          </scroll-view>
         </view>
-
+        <view wx:else class="check-img-section-bd check-img-section-bd-empty">
+          暂未上传照片
+        </view>
       </view>
-
-
     </view>
   </view>
 
@@ -275,6 +283,8 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class ConsignmentDetail extends wepy.page {
     config = {};
@@ -282,15 +292,46 @@
     components = {};
 
     data = {
-      checkImgs: ['../../images/test_check_img1.jpg','../../images/test_check_img2.jpg',
-        '../../images/test_check_img3.jpg','../../images/test_check_img4.jpg','../../images/test_check_img5.jpg']
+      detail: {
+
+      },
     };
 
     computed = {};
 
     methods = {
-      goConfirmConsignment(){
-        this.$navigate('/pages/track/confirmConsignment')
+      goConfirmConsignment(type){
+        console.log(type);
+        let params = {
+          jcno: this.detail.jcno,
+          type
+        };
+
+        switch (type){
+          case 'in':
+            params.title = '1. 入仓照片';
+            params.isconfirm = this.detail.in_status == 1;
+            params.createtime = this.detail.in.createtime;
+            params.pic = this.detail.in.picture;
+            break;
+          case 'out':
+            params.title = '2. 出仓照片';
+            params.isconfirm = this.detail.out_status == 1;
+
+            params.createtime = this.detail.out.createtime;
+            params.pic = this.detail.out.picture;
+            break;
+          case 'weight':
+            params.title = '3. 称重照片';
+            params.isconfirm = this.detail.weight_status == 1;
+
+            params.createtime = this.detail.weight_pic.createtime;
+            params.pic = this.detail.weight_pic.picture;
+            break;
+
+        }
+        console.log('详情',params);
+        this.$navigate('/pages/track/confirmConsignment',params)
       },
 
       goClerkInfo(){
@@ -300,7 +341,30 @@
 
     events = {};
 
-    onLoad() {
+    async getJcAbo(jcno){
+      let res =await api.getJcAbo({query: {login_name: wx.getStorageSync('token'),jcno}})
+
+      if(res.data.status == 200){
+        this.detail = res.data.data;
+        console.log(this.detail);
+        this.$apply();
+      }else{
+        tip.alert(res.data.message)
+      }
+    }
+
+    onShow(){
+      //  确认之后回退刷新
+      if (this.detail.jcno) {
+        this.getJcAbo(jcno);
+
+      }
+    }
+
+    onLoad(params) {
+      console.log(params);
+      // this.jcno = params.jcno;
+      this.getJcAbo(params.jcno);
 
     }
   }

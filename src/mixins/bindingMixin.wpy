@@ -50,22 +50,25 @@
       }
     }
 
-    //  tip.loaded();
-    // wepy.hideNavigationBarLoading()
+    //  设置openid  因为已经绑定会跳过设置openid
+    async setOpenid() {
+      let that = this;
 
-   async getOpenid(code){
-      let  that = this
-     let loginRes = await wx.login({
-          // let {code} = res
-          // let res2 =await api.getOpenid({query:{code}});
-          //
-          // if(res2.data.status == 200) {
-          //   let openid = res.data.data.openid
-          //   that.openid = openid;
-          // }
+      wx.login({
+        success: function(res) {
+          let {code} = res
+          api.getOpenid({query:{code}}).then(
+            (res2)=>{
+              if(res2.data.status == 200) {
+                let openid = res2.data.data.openid
+
+                that.openid = openid;
+                that.$apply();
+              }
+            }
+          )
+        }
       });
-
-      return loginRes
     }
 
     onShow(){
@@ -73,19 +76,6 @@
       let that = this;
 
       this.isBinding = !!loginName;
-      // console.log('show',this.isBinding);
-
-      // this.isLogin = true;
-
-      if(!this.isBinding){
-        wx.login({
-          success: function(res) {
-            that.checkBingding(res.code);
-          }
-        })
-      }
-
-      // console.log('isBinding',this.isBinding)
     }
 
     onLoad() {

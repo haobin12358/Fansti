@@ -82,21 +82,21 @@
 
 <template>
   <block wx:if="{{show}}">
-    <view class="popup-screen"></view>
+    <view class="popup-screen" @touchstart.stop=""></view>
     <view class="popup-content" style="height: {{cardHeight}}px;">
       <scroll-view scroll-y class="already-get-packet">
         <view class="container-title">
-          已领红包（{{redNum}}）
+          已领红包（{{list.length}}）
         </view>
         <view class="container-content">
           <view class="red-packet-list">
             <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item">
               <view class="line1">
                 <view class="name">
-                  {{index+1}}.空缺
+                  {{index+1}}.{{item.name}}
                 </view>
                 <view class="money">
-                  空缺元
+                  {{item.price}}元
                 </view>
               </view>
               <view class="line2">
@@ -106,7 +106,7 @@
           </view>
           <view class="list-divide"></view>
           <view class="red-packet-total">
-            合计：{{redCoin}}元
+            合计：{{total}}元
           </view>
         </view>
       </scroll-view>
@@ -127,6 +127,16 @@
         type: Boolean,
         twoWay: true	//双向绑定
       },
+
+      list: {
+        type: Array,
+        default: []
+      },
+
+      total: {
+        type: Number
+      }
+
     };
 
     mixins = [CardMixin]
@@ -136,46 +146,6 @@
     }
 
     data = {
-      list: [
-        {
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },{
-          "createtime": "2018-07-30",
-          "red_id": "003"
-        },
-      ],
-      redNum: 1,
       redCoin: 10
 
     };

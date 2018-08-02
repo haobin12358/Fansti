@@ -90,8 +90,8 @@
   <view class="container">
     <view class="container-card">
       <view class="card-hd">
-        <text class="check-type">2. 出仓照片</text>
-        <text class="check-time">2018/07/20 10:11:01</text>
+        <text class="check-type">{{title}}</text>
+        <text class="check-time">{{createtime}}</text>
       </view>
       <view class="card-bd">
         <!-- 查看的大图 -->
@@ -101,13 +101,13 @@
         <!-- 多图滑动 -->
         <swiper class="check-img-swiper" scroll-x="true"  previous-margin="220rpx" next-margin="220rpx"
                 circular="true" current="{{currentViewIndex}}" bindchange="swiperChange">
-          <swiper-item class="check-img-swiper-item" wx:for="{{checkImgs}}">
+          <swiper-item class="check-img-swiper-item" wx:for="{{checkImgs}}" wx:key="*this">
             <image  class=" {{currentViewIndex == index ?'image-view': ''}}" src="{{item}}" @tap="viewNext({{index}})"></image>
           </swiper-item>
         </swiper>
       </view>
-      <view class="card-ft">
-        <button class="confirm-btn">
+      <view class="card-ft" wx:if="{{isconfirm == 'false'}}">
+        <button class="confirm-btn" @tap="confirmPic">
           确认照片
         </button>
       </view>
@@ -119,6 +119,8 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class ConfirmConsignment extends wepy.page {
     config = {};
@@ -126,9 +128,12 @@
     components = {};
 
     data = {
+      type: '',
+      title: '',
+      createtime: '',
       currentViewIndex: 0,
-      checkImgs: ['../../images/test_check_img1.jpg','../../images/test_check_img2.jpg',
-        '../../images/test_check_img3.jpg','../../images/test_check_img4.jpg','../../images/test_check_img5.jpg']
+      checkImgs: [],
+      isconfirm: 'false'
 
     };
 
@@ -141,13 +146,65 @@
 
       viewNext(index){
         this.currentViewIndex = index;
+      },
+
+      //  确认照片
+      confirmPic(){
+        let that = this
+
+        wx.showModal({
+          title: '提示',
+          content: '确认照片?',
+          success: function(res){
+            if(res.confirm){
+              that.retrueGoods();
+            }
+          }
+        })
       }
     };
 
     events = {};
 
-    onLoad() {
+    //  确认照片
+    async retrueGoods(jcno){
+      let res = await api.retrueGoods({
+        method: 'POST',
+        'login_name': wx.getStorageSync('token'),
+        jcno: this.jcno,
+        query: { 'retrue_name': this.type }
+      });
+      let that = this
 
+      tip.success('已确认照片!', 500).then(
+        ()=>{
+          wx.navigateBack();
+        }
+      )
+      return;
+      if(res.data.status == 200){
+
+
+      }else{
+        tip.alert(res.data.message)
+      }
+    }
+
+    onLoad(params) {
+      console.log(params);
+      this.checkImgs=params.pic.split(',');
+      this.type = params.type;
+      this.title = params.title;
+      this.isconfirm = params.isconfirm;
+      this.createtime = params.createtime;
+      this.jcno = params.jcno;
+
+      // tip.success('已确认照片!', 500).then(
+      //   ()=>{
+      //     this.$redirect('/pages/track/consignmentDetail',{jcno: this.jcno});
+      //   }
+      // )
+      // this.$redirect('/pages/track/consignmentDetail',{jcno: this.jcno});
     }
   }
 </script>

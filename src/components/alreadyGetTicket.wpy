@@ -29,11 +29,13 @@
         top: -25rpx;
         width: 50rpx;
         height: 50rpx;
+        z-index: 3000;
       }
 
       .already-get-ticket{
         height: 100%;
         color: @mainBlueColor;
+        background: #ffffff;
 
         .container-title{
           padding-left: 50rpx;
@@ -65,9 +67,9 @@
 
 <template>
   <block wx:if="{{show}}">
-    <view class="popup-screen"></view>
-    <view class="popup-content" style="height: {{cardHeight}}px;">
-      <scroll-view scroll-y class="already-get-ticket">
+    <view class="popup-screen" @touchstart.stop=""></view>
+    <view class="popup-content" style="height: {{cardHeight}}px;" @touchstart.stop="">
+      <view class="already-get-ticket" >
         <view class="container-title">
           月度统计
         </view>
@@ -80,12 +82,12 @@
           </view>
         </view>
         <view class="container-chart">
-          <canvas canvas-id="lineCanvas" class="canvas" bindtouchstart="touchHandler"></canvas>
+          <canvas canvas-id="lineCanvas" class="canvas" @touchstart="touchHandler"></canvas>
         </view>
 
-      </scroll-view>
+      </view>
 
-      <image src="../images/close.png" class="hide-btn" @tap.stop="hidePopup"></image>
+      <image src="../images/close.png" class="hide-btn" @touchstart.stop="hidePopup"></image>
     </view>
   </block>
 </template>
@@ -104,10 +106,10 @@
         twoWay: true	//双向绑定
       },
 
-      lineChart:{
-        type: Object,
-        twoWay:true
+      list: {
+        type: Array
       }
+
     };
 
     mixins = [CardMixin]
@@ -117,56 +119,6 @@
     }
 
     data = {
-      list: [
-        {
-          "count": 0,
-          "month": 1
-        },
-        {
-          "count": 0,
-          "month": 2
-        },
-        {
-          "count": 0,
-          "month": 3
-        },
-        {
-          "count": 0,
-          "month": 4
-        },
-        {
-          "count": 0,
-          "month": 5
-        },
-        {
-          "count": 0,
-          "month": 6
-        },
-        {
-          "count": 3,
-          "month": 7
-        },
-        {
-          "count": 0,
-          "month": 8
-        },
-        {
-          "count": 0,
-          "month": 9
-        },
-        {
-          "count": 0,
-          "month": 10
-        },
-        {
-          "count": 0,
-          "month": 11
-        },
-        {
-          "count": 0,
-          "month": 12
-        }
-      ],
 
       redCoin: 10,
     };
@@ -197,6 +149,10 @@
         });
       },
 
+      scrollHandler(e){
+        console.log('月度统计 stop');
+      },
+
       apply(){
         //  解决再次显示  没有绘制的bug
         lineChart.updateData({
@@ -211,19 +167,26 @@
 
     onLoad() {
       let windowWidth = 325;
-      console.log();
+      console.log(this.list);
+      let categories = []
+      let data= []
+
+      for (let i = 0; i <this.list.length; i++) {
+        categories.push(this.list[i].month)
+        data.push(this.list[i].count)
+      }
 
       lineChart = new wxCharts({
         canvasId: 'lineCanvas',
         type: 'line',
 
-        width: 325,
+        width: 320,
         height: 200,
         animation: true,
-        categories:[1,2,3,4,5,6,7,8,9,10,11,12],
+        categories,
         series:[{
           name: '红包',
-          data: [1,2,3,4,5,6,7,8,9,10,11,12],
+          data,
           color:"#ffcd42",
         }],
         xAxis: {
@@ -234,6 +197,7 @@
           title: '',
           min: 0,
           fontColor: '#5A738A',
+          disabled: true
         },
         dataItem: {
 

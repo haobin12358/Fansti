@@ -132,6 +132,7 @@
       }
     }
   }
+
 </style>
 
 <template>
@@ -143,14 +144,14 @@
             <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
             <view class="overview-item-info">
               <view class="line1">待领取红包</view>
-              <view class="line2">5</view>
+              <view class="line2">{{allPacketInfo.red_num}}</view>
             </view>
           </view>
           <view class="overview-item" @tap="tapAGPHandler">
             <image class="overview-item-bg" src="../../images/packet_gray.png"></image>
             <view class="overview-item-info">
               <view class="line1">已领取红包</view>
-              <view class="line2">5</view>
+              <view class="line2">{{allPacketInfo.my_red_num}}</view>
             </view>
 
           </view>
@@ -175,7 +176,7 @@
                 客服名称：{{serviceInfo.name}}
               </view>
               <view class="service-info-line">
-                客服QQ：{{serviceInfo.qq}}
+                客服 QQ：{{serviceInfo.qq}}
               </view>
               <view class="service-info-line">
                 客服电话：{{serviceInfo.telphone}}
@@ -195,7 +196,7 @@
             在线留言
           </view>
           <view class="bd-section-content bd-section-content-msg">
-            <textarea class="textarea-msg" placeholder="请在这输入" value="{{msg}}" @input="inputMsgHandler"></textarea>
+            <textarea class="textarea-msg" disabled="{{!textareaEnable}}" value="{{textareaEnable ? msg : ''}}" @input="inputMsgHandler"></textarea>
             <view class="confirm-msg">
               <text @tap="submitMsg">确认提交</text>
             </view>
@@ -216,9 +217,9 @@
     </view>
   </block>
   <placeholder wx:else></placeholder>
-  <waitGetPacket :show.sync="showWGP"></waitGetPacket>
-  <alreadyGetPacket :show.sync="showAGP"></alreadyGetPacket>
-  <alreadyGetTicket :show.sync="showCT" :lineChart.sync="lineChart"></alreadyGetTicket>
+  <waitGetPacket :show.sync="showWGP" :list.sync="redList"></waitGetPacket>
+  <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
+  <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
 </template>
 
 <script>
@@ -234,14 +235,14 @@
 
 
   export default class Index extends wepy.page {
-    config = {}
+    config = {};
 
     components = {
       placeholder: Placeholder,
       alreadyGetPacket: AlreadyGetPacket,
       waitGetPacket: WaitGetPacket,
-      alreadyGetTicket: AlreadyGetTicket,
-    }
+      alreadyGetTicket: AlreadyGetTicket
+    };
 
     data = {
       showWGP: false,//  显示未领取红包
@@ -250,156 +251,228 @@
       lineChart: {},
 
       allPacketInfo: {
-        "month_red": [
+        'month_red': [
           {
-            "count": 0,
-            "month": 1
+            'count': 0,
+            'month': 1
           },
           {
-            "count": 0,
-            "month": 2
+            'count': 0,
+            'month': 2
           },
           {
-            "count": 0,
-            "month": 3
+            'count': 0,
+            'month': 3
           },
           {
-            "count": 0,
-            "month": 4
+            'count': 0,
+            'month': 4
           },
           {
-            "count": 0,
-            "month": 5
+            'count': 0,
+            'month': 5
           },
           {
-            "count": 0,
-            "month": 6
+            'count': 0,
+            'month': 6
           },
           {
-            "count": 3,
-            "month": 7
+            'count': 3,
+            'month': 7
           },
           {
-            "count": 0,
-            "month": 8
+            'count': 0,
+            'month': 8
           },
           {
-            "count": 0,
-            "month": 9
+            'count': 0,
+            'month': 9
           },
           {
-            "count": 0,
-            "month": 10
+            'count': 0,
+            'month': 10
           },
           {
-            "count": 0,
-            "month": 11
+            'count': 0,
+            'month': 11
           },
           {
-            "count": 0,
-            "month": 12
+            'count': 0,
+            'month': 12
           }
         ],
-        "my_red_coin": 10,
-        "my_red_list": [
+        'my_red_coin': 10,
+        'my_red_list': [
           {
-            "createtime": "2018-07-30",
-            "red_id": "003"
+            'createtime': '2018-07-30',
+            'red_id': '003'
           }
         ],
-        "my_red_num": 1,
-        "red_list": [
+        'my_red_num': 1,
+        'red_list': [
           {
-            "status": "0",
-            "red_id": "001"
+            'status': '0',
+            'red_id': '001'
           },
           {
-            "status": "1",
-            "red_id": "002"
+            'status': '1',
+            'red_id': '002'
           }
         ],
-        "red_num": 2
+        'red_num': 2
       },
 
-      serviceInfo: {
-        email: '112233445@qq.com',
-        name: '李小叶',
-        qq: '112233445',
-        telphone: '13811111111',
-      },
+      serviceInfo: {},
 
       msg: ''
-    }
-    mixins = [BindingMixin]
+    };
+    mixins = [BindingMixin];
 
-    computed = {}
-
-    methods = {
-      goShareList(){
-        wx.navigateTo({
-          url: '/pages/person/shareList'
-        })
+    computed = {
+      textareaEnable() {
+        return !this.showWGP && !this.showAGP && !this.showCT;
       },
 
-      inputMsgHandler(e){
+      //  未领取红包
+      redList() {
+        return this.allPacketInfo.red_list;
+      },
+
+      //  已领取红包
+      myRedList() {
+        return this.allPacketInfo.my_red_list;
+      },
+      myRedCoin() {
+        return this.allPacketInfo.my_red_coin;
+      },
+
+      //  月度统计
+      monthRed(){
+        return this.allPacketInfo.month_red;
+      },
+
+    };
+
+    methods = {
+      goShareList() {
+        wx.navigateTo({
+          url: '/pages/person/shareList'
+        });
+      },
+
+      inputMsgHandler(e) {
         this.msg = e.detail.value;
         console.log(this.msg);
       },
 
-      submitMsg(){
-        if(this.msg != ''){
+      submitMsg() {
+        if (this.msg != '') {
+          this.makeUserMessage(this.msg);
 
-        } else{
-          tip.alert('留言不能为空')
+        } else {
+          tip.alert('留言不能为空');
         }
       },
 
-      bindingAgain(){
+      bindingAgain() {
         wx.navigateTo({
           url: '/pages/person/binding'
-        })
+        });
       },
       //  显示未领取的红包
-      tapWGPHandler(){
-        this.showWGP = true
+      tapWGPHandler() {
+        this.showWGP = true;
       },
       //  显示已领取的红包
-      tapAGPHandler(){
-        this.showAGP = true
+      tapAGPHandler() {
+        this.showAGP = true;
       },
       //  显示已完成票数
-      tapCTHandler(){
-        this.showCT = true
+      tapCTHandler() {
+        this.showCT = true;
         this.$invoke('alreadyGetTicket', 'apply');
 
       },
-      tapCallService(){
+      tapCallService() {
         let phoneNumber = '13811111111';
 
         wepy.showModal({
           title: `联系客服`,
-          content: `拨打${phoneNumber}(客服电话)?`,
+          content: `拨打${phoneNumber}(客服电话)?`
         }).then(
           p => {
             if (p.confirm) {
               wx.makePhoneCall({
                 phoneNumber
-              })
+              });
             }
           }
-        )
+        );
+      }
+    };
+
+    onShareAppMessage() {
+
+    }
+
+    events = {};
+
+    //  获取客服信息
+    async getCustom() {
+      let res = await api.getCustom({});
+
+      if (res.data.status == 200) {
+        this.serviceInfo = res.data.data;
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
       }
     }
 
-    onShareAppMessage(){
+    //  留言
+    async makeUserMessage(message) {
+      let res = await api.makeUserMessage({ method: 'POST', openid: this.openid, query: { message } });
 
+      if (res.data.status == 200) {
+        this.message = '';
+        this.$apply();
+        tip.success('留言成功!');
+      } else {
+        tip.alert(res.data.message);
+      }
     }
 
-    events = {}
+    async getAllRed() {
+      let res = await api.getAllRed({ query: { login_name: wx.getStorageSync('token') } });
 
+      if (res.data.status == 200) {
+        this.allPacketInfo = res.data.data;
+        console.log(this.allPacketInfo);
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    onShow() {
+      let that = this;
+      if(!this.isBinding){
+        wx.login({
+          success: function(res) {
+            that.checkBingding(res.code);
+          }
+        })
+      }
+
+        //  TODO 未绑定判断
+      if (JSON.stringify(this.serviceInfo) == '{}') {
+        this.getCustom();
+      }
+    }
 
     onLoad() {
-      wx.setStorageSync('token', 'HYTX');
+      this.setOpenid();
+      this.getAllRed();
     }
   }
 </script>
