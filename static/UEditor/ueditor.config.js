@@ -35,15 +35,16 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         , toolbars: [[
-            'fullscreen', 'source', '|', 'undo', 'redo', '|',
-            'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', '|',
-            'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
-            'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+            'fullscreen', 'preview', '|', 'undo', 'redo', '|',
+            'bold', 'italic', 'underline', 'strikethrough', 'forecolor', 'backcolor', 'superscript', 'subscript', '|',
+            'removeformat', 'formatmatch', 'autotypeset', 'blockquote', '|',
+            'insertorderedlist', 'insertunorderedlist',
+            'rowspacingtop', 'rowspacingbottom', 'lineheight', 'indent',
             'customstyle', 'paragraph', 'fontsize', '|',
-            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'indent', '|',
+            'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
             'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-            'simpleupload', 'emotion', 'scrawl', 'insertvideo', 'music', 'map', 'pagebreak', 'template', '|',
-            'horizontal', 'spechars', 'preview'
+            'simpleupload', 'insertimage', 'insertvideo', 'music', 'map', 'pagebreak', 'template', '|',
+            'horizontal', 'spechars', 'source'
         ]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         //,labelMap:{
@@ -88,7 +89,7 @@
         //首行缩进距离,默认是2em
         // ,indentValue:'2em'
 
-        ,initialFrameWidth: 1350  //初始化编辑器宽度,默认1000
+        ,initialFrameWidth: 350  //初始化编辑器宽度,默认1000
         ,initialFrameHeight: 600  //初始化编辑器高度,默认320
 
         //,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
@@ -96,9 +97,9 @@
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //启用自动保存
-        ,enableAutoSave: true
+        ,enableAutoSave: false
         //自动保存间隔时间， 单位ms
-        //,saveInterval: 500
+        ,saveInterval: 0
 
         //,fullscreen : false //是否开启初始化时即全屏，默认关闭
 
@@ -246,7 +247,7 @@
 
         //elementPathEnabled
         //是否启用元素路径，默认是显示
-        //,elementPathEnabled : true
+        ,elementPathEnabled : false
 
         //wordCount
         //,wordCount:true          //是否开启字数统计
