@@ -38,7 +38,7 @@
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
-        <el-button @click="getUEContent">新闻编辑</el-button>
+        <el-button class="upload-btn" @click="getUEContent">上 传</el-button>
       </div>
     </div>
   </div>
@@ -69,7 +69,7 @@
         ],
         input: '',
         imageUrl: '',
-        defaultMsg: '请在此输入新闻正文',
+        defaultMsg: '',
       }
     },
     components:{ tabs, UE },
@@ -180,8 +180,16 @@
     }
     .news-upload-body {
       .ueditor {
+        max-height: 3rem;
         margin-left: 1.3rem;
       }
+    }
+    .upload-btn {
+      width: 1rem;
+      height: 0.4rem;
+      margin: 4.8rem 0 0 2.6rem;
+      color: @bgMainColor;
+      background-color: @btnActiveColor;
     }
     .left-text {
       float: left;
