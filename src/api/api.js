@@ -9,6 +9,8 @@ const api={
   get_custom:title + 'other/get_custom',//获取客服信息
   update_custom: title + 'other/update_custom',//修改客服信息
   get_user_message: title + 'users/get_user_message',//获取留言信息
+
+  get_news_all: title + 'news/get_all',//获取新闻列表
 }
 
 export default api
