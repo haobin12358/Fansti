@@ -5,8 +5,8 @@
           <h3>{{item.label}}</h3>
           <div class="m-select-input">
             <div class="inputbg">
-              {{item.name || '选择文件上传'}}
-              <input type="file"  accept="" @change="selectFile($event,item,index)">
+              {{item.name || '选择文件上传,只支持excel文件'}}
+              <input type="file"  accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="selectFile($event,item,index)">
             </div>
             <span class="m-btn" @click="uploadFile(index)">上传</span>
             <u class="m-down" @click="downloadFile(index)">点击下载模板</u>
