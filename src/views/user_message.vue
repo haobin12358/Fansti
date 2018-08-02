@@ -55,8 +55,8 @@
                 page_num:Number(v || this.page_data.current_page)
               }}).then(res => {
               if (res.data.status == 200){
-                this.table_data = res.data.data;
-                this.page_data.total_num = res.data.count;
+                this.table_data = res.data.data.message_list;
+                this.page_data.total_num = res.data.data.count;
                 this.page_data.total_page = Math.ceil(this.page_data.total_num / this.page_data.page_size);
               }else{
                 this.$message.error(res.data.message);
