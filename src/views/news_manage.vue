@@ -1,33 +1,37 @@
 <template>
   <div>
     <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
-    <div v-if="newsManage">
+    <div class="page-box">
+      <page :total="total_page"></page>
+    </div>
+    <div v-if="!newsManage">
       <div class="news-manage" v-for="item in news">
         <div class="news-container">
-          <img class="news-image" :src="item.imageUrl" />
+          <img class="news-image" :src="item.news_picture" />
           <div class="news-text">
-            <div class="news-title">{{item.title}}</div>
-            <div class="news-from-date">{{item.newsFrom}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.date}}</div>
-            <div class="news-body">摘要：{{item.body}}</div>
+            <div class="news-title">{{item.news_title}}</div>
+            <div class="news-from-date">{{item.news_from}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.news_time}}</div>
+            <div class="news-body">摘要：{{item.news_all}}</div>
           </div>
           <div class="news-edit">编辑</div>
         </div>
       </div>
     </div>
-    <div v-if="!newsManage">
+    <div v-if="newsManage">
       <div class="news-upload">
         <div class="news-upload-title">
           <div class="left-text">新闻标题：</div>
-          <el-input class="right-input" v-model="input" placeholder="此处为新闻标题"></el-input>
+          <el-input class="right-input" v-model="titleInput" placeholder="此处为新闻标题"></el-input>
         </div>
         <div class="news-upload-from">
           <div class="left-text">新闻来源：</div>
-          <el-input class="right-input" v-model="input" placeholder="此处为新闻来源"></el-input>
+          <el-input class="right-input" v-model="fromInput" placeholder="此处为新闻来源"></el-input>
         </div>
         <div class="news-upload-image">
           <div class="left-text">标题图片：</div>
-          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+          <el-upload class="avatar-uploader" action="http://10.0.0.130:7444/fansti/news/upload_files" :show-file-list="false"
+                     :on-success="handleAvatarSuccess"
+                     :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -38,42 +42,79 @@
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
-        <el-button class="upload-btn" @click="getUEContent">上 传</el-button>
+        <el-button class="upload-btn" @click="newNews">上 传</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import news from '../common/json/news';
   import tabs from '../components/common/tabs';
   import UE from '../components/common/ueditor';
+  import page from '../components/common/page';
+  import api from "../api/api";
+  import axios from 'axios';
 
   export default {
     name: "news_manage",
     data() {
       return {
-        news: news,
+        news: [],
         newsManage: true,
         tabs_data:[
-          {
-            name:'上传',
-            click:false,
-            url:''
-          },
-          {
-            name:'管理',
-            click:true,
-            url:''
-          }
+          { name:'上传', click:false, url:'' },
+          { name:'管理', click:true, url:'' }
         ],
-        input: '',
+        titleInput: '',
+        fromInput: '',
         imageUrl: '',
         defaultMsg: '',
+        page_size:10,
+        total_num:5,
+        current_page:1,
+        total_page: 0,
       }
     },
-    components:{ tabs, UE },
+    components:{ tabs, UE, page },
     methods: {
+      newNews() {
+        let news = {
+          titleInput: this.titleInput,
+          fromInput: this.fromInput,
+          imageUrl: this.imageUrl,
+        }
+        console.log(news)
+      },
+      getData(v){
+        axios.get(api.get_news_all,{params:{
+            page_size:this.page_size,
+            page_num:Number(v || this.current_page)
+          }}).then(res => {
+          if (res.data.status == 200){
+            this.news = res.data.data
+            this.total_num = res.data.data.count;
+            this.total_page = Math.ceil(this.total_num / this.page_size);
+            // console.log('news', this.news)
+          }else{
+            this.$message.error(res.data.message);
+          }
+        },error => {
+          this.$message.error(error.data.message);
+        })
+      },
+      /*分页点击*/
+      pageChange(v){
+        console.log(v)
+        if(v == this.current_page){
+          this.$message({
+            message: '这已经是第' + v + '页数据了',
+            type: 'warning'
+          });
+          return false;
+        }
+        this.current_page = v;
+        this.getData(v);
+      },
       tabClick(index){
         let _arr = this.tabs_data;
         for(let i =0;i<_arr.length;i++){
@@ -88,6 +129,21 @@
         }
       },
       handleAvatarSuccess(res, file) {
+        let form = new FormData();
+        form.append("file", file.raw);
+        form.append("FileType", 'NewsPic');
+        // form.append("contentId",  '123');
+        form.append("index", 1);
+        axios.post(api.upload_files, form).then(res => {
+          if(res.data.status == 200){
+            console.log(res)
+            this.$message({ type: 'success', message: res.data.message });
+          }else{
+            this.$message({ type: 'error', message: res.data.message });
+          }
+        },error =>{
+          this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
+        })
         this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
@@ -113,13 +169,16 @@
       }
     },
     created() {
-      // console.log(this.news)
+      this.getData(1)
     }
   }
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
   @import "../common/css/_variate.less";
+  .page-box {
+    /*margin: -3% 0 0 60%;*/
+  }
   .news-manage {
     .news-container {
       display: flex;
@@ -146,6 +205,7 @@
           font-size: 14px;
         }
         .news-body {
+          min-width: 10rem;
           width: 95%;
           height: 0.6rem;
           font-size: 14px;

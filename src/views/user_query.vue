@@ -22,12 +22,17 @@
           <div class="table-td">{{item.userName}}</div>
         </div>
       </div>
+      <div class="page-box">
+        <page :total="total_page"></page>
+      </div>
     </div>
 </template>
 
 <script>
   import query from '../common/json/query';
   import tabs from '../components/common/tabs';
+  import page from '../components/common/page';
+
   export default {
     name: "user_query",
     data() {
@@ -44,9 +49,13 @@
           { name: 'CAS', click: false, url: '' },
           { name: '航班时刻', click: false, url: '' }
         ],
+        page_size:10,
+        total_num:5,
+        current_page:1,
+        total_page:0
       }
     },
-    components:{ tabs },
+    components:{ tabs, page },
     methods: {
       tabClick(index){
         let _arr = this.tabs_data;
@@ -97,6 +106,9 @@
         text-align: center;
       }
     }
+  }
+  .page-box {
+
   }
   .line {
     width: 1px;

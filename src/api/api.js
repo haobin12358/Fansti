@@ -11,6 +11,9 @@ const api={
   get_user_message: title + 'users/get_user_message',//获取留言信息
 
   get_news_all: title + 'news/get_all',//获取新闻列表
+  new_news: title + 'news/new_news',//创建新闻
+
+  upload_files: title + 'news/upload_files',//上传图片
 }
 
 export default api
