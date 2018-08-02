@@ -1,7 +1,5 @@
-// const title = 'http://10.0.0.197:7443/sharp/manager/';
-// const title = 'http://120.79.182.43:7443/sharp/manager/';
-// const title ='http://192.168.0.100:7443/sharp/manager/';
-const title = 'http://120.79.182.43:7443/fansti/';
+const title = 'http://10.0.0.130:7444/fansti/';
+// const title = 'http://120.79.182.43:7444/fansti/';
 
 const api={
   login: title + 'user/login',//用户登录

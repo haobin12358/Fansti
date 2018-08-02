@@ -4,9 +4,9 @@
         <div class="m-edit-content">
           <ul class="m-card">
             <li @click="show_modal">
-              <img src="" alt="" class="m-img">
-              <p>姓名</p>
-              <p>454512454545</p>
+              <div  class="m-img"></div>
+              <p>{{customer_data.name}}</p>
+              <p>{{customer_data.telphone}}</p>
               <!--<span class="m-close"></span>-->
             </li>
           </ul>
@@ -74,18 +74,22 @@
             }
           }
       },
+      mounted(){
+        this.getData();
+      },
       methods:{
         show_modal(){
           this.showModal = true;
-          this.from.name = this.customer_data.name;
-          this.from.qq = this.customer_data.qq;
-          this.from.telphone= this.customer_data.telphone;
-          this.from.email = this.customer_data.email;
+          this.form.name = this.customer_data.name;
+          this.form.qq = this.customer_data.qq;
+          this.form.telphone= this.customer_data.telphone;
+          this.form.email = this.customer_data.email;
         },
         getData(){
           axios.get(api.get_custom).then(res => {
             if(res.data.status == 200){
               this.customer_data = res.data.data;
+              console.log(this.customer_data)
             }else{
               this.$message.error(res.data.message);
             }
@@ -103,6 +107,8 @@
                     type:'success',
                     message:'修改信息成功'
                   });
+                  this.getData();
+                  this.showModal = false;
                 }else{
                   this.$message.error(res.data.message);
                 }
@@ -147,6 +153,8 @@
           height: 2.6rem;
           border: 1px solid @borderColor;
           margin-bottom: 0.2rem;
+          background: url("../common/images/icon-kefu.png");
+          background-size: 100%;
         }
         p{
           font-size: 0.14rem;
