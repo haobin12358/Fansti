@@ -1,7 +1,7 @@
 <template>
   <div>
     <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
-    <div v-if="newsManage">
+    <div v-if="!newsManage">
       <div class="news-manage" v-for="item in news">
         <div class="news-container">
           <img class="news-image" :src="item.imageUrl" />
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!newsManage">
+    <div v-if="newsManage">
       <div class="news-upload">
         <div class="news-upload-title">
           <div class="left-text">新闻标题：</div>
@@ -35,16 +35,12 @@
         <div class="news-upload-body">
           <div class="left-text">新闻正文：</div>
           <div class="ueditor">
-            <UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>
+            <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
+        <el-button @click="getUEContent">新闻编辑</el-button>
       </div>
     </div>
-
-
-
-
-    <el-button @click="getUEContent">新闻编辑</el-button>
   </div>
 </template>
 
@@ -73,11 +69,7 @@
         ],
         input: '',
         imageUrl: '',
-        defaultMsg: '这里是UE测试',
-        config: {
-          initialFrameWidth: null,
-          initialFrameHeight: 350
-        }
+        defaultMsg: '请在此输入新闻正文',
       }
     },
     components:{ tabs, UE },
@@ -188,7 +180,7 @@
     }
     .news-upload-body {
       .ueditor {
-
+        margin-left: 1.3rem;
       }
     }
     .left-text {
