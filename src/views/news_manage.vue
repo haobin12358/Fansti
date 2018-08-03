@@ -39,10 +39,10 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <div class="image-upload-done" v-if="imageUrlStatus">
-            <p>注意：</p>
-            <p>1、请确认所上传图片的宽高比在2~3之间</p>
-            <p>2、请确认所上传图片为 JPG 或 PNG格式</p>
-            <p>3、请确认所上传图片文件大小不超过 2MB</p>
+            <p>注意：请确认图片</p>
+            <p>1、宽高比在2~3之间</p>
+            <p>2、格式为 JPG 或 PNG</p>
+            <p>3、文件大小不超过 2MB</p>
           </div>
         </div>
         <div class="news-upload-body">
@@ -233,11 +233,12 @@
 
       },
       editNews(news) {
+        this.tabClick(0)
         this.newsManage = false
         this.titleInput = news.news_title
         this.fromInput = news.news_from
         this.imageUrl = news.news_picture
-        this.newsContent = news.news_all
+        this.defaultMsg = this.newsContent
         console.log(news.id)
       },
       closeNews(news) {
@@ -354,7 +355,7 @@
     .image-upload-done {
       color: #7e7e7e;
       font-size: 12px;
-      margin: -1.1rem 0 0.5rem 5rem;
+      margin: -1.1rem 0 0.5rem 5.25rem;
     }
     .right-input {
       width: 6rem;
