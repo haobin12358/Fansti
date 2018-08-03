@@ -12,6 +12,7 @@ const api={
 
   get_news_all: title + 'news/get_all',//获取新闻列表
   new_news: title + 'news/new_news',//创建新闻
+  get_abo: title + 'news/get_abo',//获取新闻详情
   get_all_scrapy: title + 'scrapy/get_all_scrapy',//用户查询记录
 
   upload_files: title + 'news/upload_files',//上传图片

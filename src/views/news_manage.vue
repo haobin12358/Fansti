@@ -15,8 +15,12 @@
             <div class="news-from-date">{{item.news_from}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.news_time}}</div>
             <div class="news-body">摘要：{{item.news_all}}</div>
           </div>
-          <div class="news-edit" v-if="item.newsStatus" @click="editNews(item)">编 辑</div>
-          <div class="news-close" v-if="!item.newsStatus" @click="closeNews(item)">关 闭</div>
+          <el-tooltip content="编辑后可再次上传该新闻" placement="left">
+            <div class="news-edit" v-if="item.newsStatus" @click="editNews(item)">编 辑</div>
+          </el-tooltip>
+          <el-tooltip content="点击关闭将下架该新闻" placement="left">
+            <div class="news-close" v-if="!item.newsStatus" @click="closeNews(item)">关 闭</div>
+          </el-tooltip>
         </div>
       </div>
     </div>
@@ -52,7 +56,15 @@
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
-        <el-button class="upload-btn" @click="uploadNews">上 传</el-button>
+        <div v-if="titleInput == ''">
+          <el-button class="upload-btn" @click="uploadNews">上 传</el-button>
+        </div>
+        <div v-if="titleInput != ''">
+          <el-tooltip content="放弃本次编辑" placement="top">
+            <el-button class="give-up-btn" @click="fiveUpEdit">放弃编辑</el-button>
+          </el-tooltip>
+          <el-button class="upload-two-btn" @click="uploadNews">上 传</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -84,8 +96,20 @@
         total_num:5,
         current_page:1,
         total_page: 0,
-        newsContent: '',
-        imageUrlStatus: true
+        newsContent: "<p>\n" +
+        "    &nbsp; &nbsp; &nbsp; &nbsp;本报讯：今日十点，在萧山区发生一起精神病案\n" +
+        "</p>\n" +
+        "<p>\n" +
+        "    <img src=\"http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg\" width=\"350\" height=\"140\"/>\n" +
+        "</p>\n" +
+        "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
+        "    <span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span>\n" +
+        "</p>\n" +
+        "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
+        "    <br/>\n" +
+        "</p>",
+        imageUrlStatus: true,
+        editor: null
       }
     },
     components:{ tabs, UE, page },
@@ -188,35 +212,17 @@
         }
         return isJPG && isLt2M;
       },
+      fiveUpEdit() {
+        this.titleInput = ''
+        this.fromInput = ''
+        this.imageUrl = ''
+        this.defaultMsg = ''
+        this.tabClick(1)
+        this.newsManage = true
+      },
       uploadNews() {
         // this.newsContent = this.$refs.ue.getUEContent()
-        this.newsContent = "<p>\n" +
-          "    &nbsp; &nbsp; &nbsp; &nbsp;本报讯：今日十点，在萧山区发生一起精神病案\n" +
-          "</p>\n" +
-          "<p>\n" +
-          "    <br/>\n" +
-          "</p>\n" +
-          "<p>\n" +
-          "    <img src=\"http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg\" width=\"350\" height=\"140\"/>\n" +
-          "</p>\n" +
-          "<p>\n" +
-          "    <strong style=\"color: rgb(255, 0, 0); background-color: rgb(255, 255, 255); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; margin: 0px; padding: 0px;\"><br/></strong>\n" +
-          "</p>\n" +
-          "<p>\n" +
-          "    <strong style=\"color: rgb(255, 0, 0); background-color: rgb(255, 255, 255); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; margin: 0px; padding: 0px;\">写在最前面的话：鉴于近期很多的博友讨论，说我按照文章的一步一步来，弄好之后，怎么会提示后端配置项http错误，文件上传会提示上传错误。这里提别申明一点，ueditor在前端配置好后，需要与后端部分配合进行，然后将配置ueditor.config.js 里的serverUrl的前缀改陈你自己的后端访问的请求路径地址，文件上传的后端部分，只提供了demo，具体对接文件服务器的部分需要自己修改完成。</strong>\n" +
-          "</p>\n" +
-          "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-          "    首先，谈下这篇文章中的前后端所涉及到的技术框架内容。\n" +
-          "</p>\n" +
-          "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-          "    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 虽然是后端的管理项目，但整体项目，是采用前后端分离的方式完成，这样做的目的也是产品化的需求；\n" +
-          "</p>\n" +
-          "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-          "    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<strong style=\"margin: 0px; padding: 0px;\">前端，vue+vuex+vue router+webpack+elementUI的方案完成框架的搭建，其中用到了superUI来作为后端登陆之后的主页面框架，中间集成vue的大型单页应用；</strong>\n" +
-          "</p>\n" +
-          "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-          "    <strong style=\"margin: 0px; padding: 0px;\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 后端，springboot+spring+springmvc+spring serurity+mybatis+maven+redis+dubbo</strong>\n" +
-          "</p>"
+        // this.newsContent = ""
         if(this.titleInput == '') {
           this.$message.error('请填写新闻标题');
         }else if(this.fromInput == '') {
@@ -225,30 +231,29 @@
           this.$message.error('请上传标题图片');
         }else if(this.newsContent == '') {
           this.$message.error('请撰写新闻正文');
+        }else {
+          let params = {
+            news_title: this.titleInput,
+            news_from: this.fromInput,
+            news_picture: this.imageUrl,
+            news_all: this.newsContent
+          }
+          axios.post(api.new_news, params).then(res => {
+            if(res.data.status == 200){
+              console.log(res)
+              this.$message({ type: 'success', message: res.data.message });
+              this.newsManage = true
+            }else{
+              this.$message({ type: 'error', message: res.data.message });
+            }
+          },error =>{
+            this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
+          })
         }
         for(let i=0;i<this.news.length;i++) {
           // 去除html中的标签和&nbsp;
           this.news[i].news_all = this.newsContent.replace(/<[^<>]+?>/g, '').replace(/(\s|&nbsp;)+/g,'')
         }
-        let params = {
-          news_title: this.titleInput,
-          news_from: this.fromInput,
-          news_picture: this.imageUrl,
-          news_all: this.newsContent
-        }
-        axios.post(api.new_news, params).then(res => {
-          if(res.data.status == 200){
-            console.log(res)
-            this.$message({ type: 'success', message: res.data.message });
-            this.newsManage = true
-          }else{
-            this.$message({ type: 'error', message: res.data.message });
-          }
-        },error =>{
-          this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
-        })
-
-
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -260,7 +265,7 @@
         this.fromInput = news.news_from
         this.imageUrl = news.news_picture
         this.defaultMsg = this.newsContent
-        console.log(this.defaultMsg)
+        // console.log(this.defaultMsg)
       },
       closeNews(news) {
         console.log(news.id)
@@ -362,9 +367,22 @@
       }
     }
     .upload-btn {
-      width: 1rem;
+      width: 1.2rem;
       height: 0.4rem;
-      margin: 4.8rem 0 0 2.6rem;
+      margin: 4.6rem 0 0.6rem 2.5rem;
+      color: @bgMainColor;
+      background-color: @btnActiveColor;
+    }
+    .give-up-btn {
+      width: 1.2rem;
+      height: 0.4rem;
+      margin: 4.6rem 0 0.6rem 1.6rem;
+      color: #000000;
+    }
+    .upload-two-btn {
+      width: 1.2rem;
+      height: 0.4rem;
+      margin: 4.6rem 0 0.6rem 0.8rem;
       color: @bgMainColor;
       background-color: @btnActiveColor;
     }
