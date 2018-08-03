@@ -34,13 +34,14 @@
           <div class="left-text">标题图片：</div>
           <el-upload class="avatar-uploader" action="http://10.0.0.130:7444/fansti/news/upload_files" :show-file-list="false"
                      :on-success="uploadPicture"
-                     :before-upload="beforeAvatarUpload">
+                     :before-upload="beforeAvatarUpload"
+                     :on-remove="handleRemove">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <div class="image-upload-done" v-if="imageUrlStatus">
             <p>注意：请确认图片</p>
-            <p>1、宽高比在2~3之间</p>
+            <p>1、宽高比为2.1~2.7</p>
             <p>2、格式为 JPG 或 PNG</p>
             <p>3、文件大小不超过 2MB</p>
           </div>
@@ -159,6 +160,23 @@
         this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
+        // 上传前限制图片的宽高比
+        var _this = this;
+        return new Promise(function(resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var image = new Image();
+            image.onload = function () {
+              if(this.width/this.height>2.7 || this.width/this.height<2.1) {
+                _this.$message.error('请上传宽高比为2.1~2.7的图片');
+                reject();
+              }
+              resolve();
+            };
+            image.src = event.target.result;
+          }
+          reader.readAsDataURL(file);
+        });
         const isJPG = file.type === 'image/jpeg' || 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -231,6 +249,9 @@
         })*/
 
 
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
       },
       editNews(news) {
         this.tabClick(0)
