@@ -154,7 +154,8 @@ function emojisInit(reg='',baseSrc="/wxParse/emojis/",emojis){
 module.exports = {
   wxParse: wxParse,
   wxParseTemArray:wxParseTemArray,
-  emojisInit:emojisInit
+  emojisInit:emojisInit,
+  wxParseImgTap: wxParseImgTap
 }
 
 

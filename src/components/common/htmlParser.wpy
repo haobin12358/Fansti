@@ -1,12 +1,18 @@
 <style lang="less">
   @import "../../utils/wxParse/wxParse.wxss";
 
+  .wxParse-p{
+    margin: 20rpx 0;
+    text-indent: 2em;
+  }
+
   .wxParse-img {
     margin: 0 auto;
     width: 100%;
     min-height: ~"200rpx";
     display: block;
     background-color: transparent;
+    border-radius: 10rpx;
   }
 </style>
 
@@ -52,9 +58,10 @@
     }
 
     methods = {
-      htmlParserNotice () {
-        this.htmlParse()
-      }
+      htmlParserNotice (parseContent) {
+        console.log(parseContent);
+        this.htmlParse(parseContent)
+      },
     }
 
     async onLoad () {
@@ -65,7 +72,7 @@
       let imgInfo = image.detail
     };
 
-    htmlParse () {
+    htmlParse (parseContent) {
       /**
        * WxParse.wxParse(bindName , type, data, target,imagePadding)
        * 1.bindName绑定的数据名(必填)
@@ -75,7 +82,8 @@
        * 5.imagePadding为当图片自适应是左右的单一padding(默认为0,可选)
        */
       try {
-        let htmlContent = WxParse.wxParse(this.parserName, this.parserType, this.parserContent || this.props.parserContent.default, this, this.parserPadding)
+        console.log('x',parseContent);
+        let htmlContent = WxParse.wxParse(this.parserName, this.parserType,parseContent|| this.parserContent, this, this.parserPadding)
 //        this.htmlParserTpl = this[this.parserName];
         this.htmlParserTpl = htmlContent[this.parserName]
         this.$apply()
@@ -85,7 +93,8 @@
     }
 
     wxParseImgTap (e) {
-      WxParse.wxParseImgTap(e, this.bindData)
+      console.log(e);
+
     }
 
   }
