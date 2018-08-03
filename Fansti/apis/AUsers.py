@@ -16,7 +16,9 @@ class FSUser(Resource):
 
         apis = {
             "get_binding": "self.cusers.get_binding()",
-            "get_openid": "self.cusers.get_openid()"
+            "get_openid": "self.cusers.get_openid()",
+            "get_invate_list": "self.cusers.get_invate_list()",
+            "get_user_message": "self.cusers.get_user_message()"
         }
 
         if users not in apis:

@@ -196,6 +196,10 @@ class WECHAT_LOGIN(Base):
     login_name = Column(String(40))                     # 登录名
     phone = Column(String(32))                          # 手机号
     status = Column(String(10), default="0")            # 绑定状态，1为已绑定
+    name = Column(String(200))                          # 微信昵称
+    usex = Column(String(200))                          # 微信性别
+    city = Column(String(200))                          # 所在城市
+    province = Column(String(200))                      # 所在省份
 
 class WECHAT_NEWS(Base):
     __tablename__ = "WECHAT_NEWS"
@@ -243,6 +247,7 @@ class SELECT_INFO(Base):
     login_name = Column(String(40))                             # 登录名
     select_name = Column(String(200))                           # 查询名称
     select_value = Column(String(400))                          # 查询内容
+    openid = Column(String(200))                                # 微信id
 
 class AIR_HWYS_LINES(Base):
     __tablename__ = "AIR_HWYS_LINES"
@@ -277,7 +282,7 @@ class GET_RED_COIN(Base):
 class USER_MESSAGE(Base):
     __tablename__ = "USER_MESSAGE"
     id = Column(String(200), primary_key=True)                  # 主键id
-    login_name = Column(String(40))                             # 留言人
+    phone = Column(String(40))                                  # 留言人联系方式
     message = Column(Text)                                      # 留言内容
 
 class USER_INVATE(Base):
@@ -285,3 +290,12 @@ class USER_INVATE(Base):
     id = Column(String(200), primary_key=True)                  # 主键id
     login_name = Column(String(40))                             # 邀请人login_name
     invate_openid = Column(String(200))                         # 被邀请人微信id
+
+class GOODS_RETRUE(Base):
+    __tablename__ = "GOODS_RETRUE"
+    id = Column(String(200), primary_key=True)                  # 主键id
+    login_name = Column(String(40))                             # 登录名
+    jcno = Column(String(1000))                                 # 进仓单号
+    in_pic = Column(String(10))                                 # 入仓确认状态， 0未确认， 1确认
+    out_pic = Column(String(10))                                # 出仓确认状态， 0未确认， 1确认
+    weight_pic = Column(String(10))                             # 称重确认状态， 0未确认， 1确认

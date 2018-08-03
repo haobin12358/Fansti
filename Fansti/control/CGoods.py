@@ -2,12 +2,13 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import json
+import json, uuid
 from flask import request
 from Fansti.config.response import SYSTEM_ERROR
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
 from Fansti.common.import_status import import_status
+from Fansti.common.TransformToList import add_model
 
 class CGoods():
     def __init__(self):
@@ -35,34 +36,39 @@ class CGoods():
                 goods["yupei"] = "1"
             jincang = get_model_return_list(self.sgoods.get_in_order_by_jcno(goods["jcno"]))
             make_log("jincang", jincang)
-            if not jincang or not jincang["photourl"]:
-                goods["jincang"] = "0"
-            else:
-                goods["jincang"] = "1"
+            for row in jincang:
+                if not jincang or not row["photourl"]:
+                    goods["jincang"] = "0"
+                else:
+                    goods["jincang"] = "1"
             chucang = get_model_return_list(self.sgoods.get_out_order_by_jcno(goods["jcno"]))
             make_log("chucang", chucang)
-            if not chucang or not chucang["photourl"]:
-                goods["chucang"] = "0"
-            else:
-                goods["chucang"] = "1"
+            for row in chucang:
+                if not chucang or not row["photourl"]:
+                    goods["chucang"] = "0"
+                else:
+                    goods["chucang"] = "1"
             chengzhong = get_model_return_list(self.sgoods.get_weight_order_by_jcno(goods["jcno"]))
             make_log("chengzhong", chengzhong)
-            if not chengzhong or not chengzhong["photourl"]:
-                goods["chengzhong"] = "0"
-            else:
-                goods["chengzhong"] = "1"
+            for row in chengzhong:
+                if not chengzhong or not row["photourl"]:
+                    goods["chengzhong"] = "0"
+                else:
+                    goods["chengzhong"] = "1"
             baoguan = get_model_return_list(self.sgoods.get_content_by_jcno(goods["jcno"]))
             make_log("baoguan", baoguan)
-            if not baoguan or not baoguan["content"]:
-                goods["baoguan"] = "0"
-            else:
-                goods['baoguan'] = "1"
+            for row in baoguan:
+                if not baoguan or not row["content"]:
+                    goods["baoguan"] = "0"
+                else:
+                    goods['baoguan'] = "1"
             yundan = get_model_return_list(self.sgoods.get_awb_by_jcno(goods["jcno"]))
             make_log("yundan", yundan)
-            if not yundan or not yundan["content"]:
-                goods["yundan"] = "0"
-            else:
-                goods["yundan"] = "1"
+            for row in yundan:
+                if not yundan or not row["content"]:
+                    goods["yundan"] = "0"
+                else:
+                    goods["yundan"] = "1"
             jiaodan = get_model_return_dict(self.sgoods.get_jd_by_jcno(goods["jcno"]))
             make_log("jiaodan", jiaodan)
             if not jiaodan:
@@ -115,8 +121,8 @@ class CGoods():
         jc_abo["in"]["picture"] = []
         jc_abo["out"] = {}
         jc_abo["out"]["picture"] = []
-        jc_abo["weight"] = {}
-        jc_abo["weight"]["picture"] = []
+        jc_abo["weight_pic"] = {}
+        jc_abo["weight_pic"]["picture"] = []
         jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
         make_log("jc_abo_in", jc_abo_in)
         if jc_abo_in:
@@ -135,10 +141,145 @@ class CGoods():
         make_log("jc_abo_weight", jc_abo_weight)
         if jc_abo_weight:
             for weight_order in jc_abo_weight:
-                jc_abo["weight"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
-                jc_abo["weight"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
-                jc_abo["weight"]["picture"].append(weight_order["photourl"])
+                jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
+                jc_abo["weight_pic"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
+                jc_abo["weight_pic"]["picture"].append(weight_order["photourl"])
+
+        in_out_weight_status = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))
+        jc_abo["in_status"] = "0"
+        jc_abo["out_status"] = "0"
+        jc_abo["weight_status"] = "0"
+        for row in in_out_weight_status:
+            if row["in_pic"] == "1":
+                jc_abo["in_status"] = "1"
+            if row["out_pic"] == "1":
+                jc_abo["out_status"] = "1"
+            if row["weight_pic"] == "1":
+                jc_abo["weight_status"] = "1"
 
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
+        return response
+
+    def retrue_goods(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_args = ["login_name", "jcno"]
+        true_data = ["retrue_name"]
+        if judge_keys(true_args, args.keys()) != 200:
+            return judge_keys(true_args, args.keys())
+        if judge_keys(true_data, data.keys()) != 200:
+            return judge_keys(true_data, data.keys())
+        goods_retrue = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))
+        if not goods_retrue:
+            in_pic = "0"
+            out_pic = "0"
+            weight_pic = "0"
+            if data["retrue_name"] == "in":
+                in_pic = "1"
+            if data["retrue_name"] == "out":
+                out_pic = "1"
+            if data["retrue_name"] == "weight":
+                weight_pic = "1"
+            new_goods_retrue = add_model("GOODS_RETRUE",
+                                         **{
+                                             "id": str(uuid.uuid4()),
+                                             "login_name": args["login_name"],
+                                             "in_pic": in_pic,
+                                             "out_pic": out_pic,
+                                             "weight_pic": weight_pic,
+                                             "jcno": args["jcno"]
+                                         })
+            if not new_goods_retrue:
+                return SYSTEM_ERROR
+        else:
+            if data["retrue_name"] == "in":
+                id = get_model_return_dict(self.sgoods.get_retrue_by_jcno_in(args["jcno"]))
+                if id:
+                   return import_status("ERROR_FAIL_RETRUE", "FANSTI_ERROR", "ERROR_FAIL_RETRUE")
+                else:
+                    id_name = get_model_return_dict(self.sgoods.get_retrue_by_jcno_loginname(args["jcno"], args["login_name"]))
+                    if not id_name:
+                        new_goods_retrue = add_model("GOODS",
+                                                     **{
+                                                         "id": str(uuid.uuid4()),
+                                                         "login_name": args["login_name"],
+                                                         "in_pic": "1",
+                                                         "out_pic": "0",
+                                                         "weight_pic": "0",
+                                                         "jcno": args["jcno"]
+                                                     })
+                        if not new_goods_retrue:
+                            return SYSTEM_ERROR
+                    else:
+                        update_goods_retrue = self.sgoods.update_goods_retrue_by_id(id_name["id"], {"in_pic": "1"})
+                        if not update_goods_retrue:
+                            return SYSTEM_ERROR
+            elif data["retrue_name"] == "out":
+                id = get_model_return_dict(self.sgoods.get_retrue_by_jcno_out(args["jcno"]))
+                if id:
+                   return import_status("ERROR_FAIL_RETRUE", "FANSTI_ERROR", "ERROR_FAIL_RETRUE")
+                else:
+                    id_name = get_model_return_dict(self.sgoods.get_retrue_by_jcno_loginname(args["jcno"], args["login_name"]))
+                    if not id_name:
+                        new_goods_retrue = add_model("GOODS",
+                                                     **{
+                                                         "id": str(uuid.uuid4()),
+                                                         "login_name": args["login_name"],
+                                                         "in_pic": "0",
+                                                         "out_pic": "1",
+                                                         "weight_pic": "0",
+                                                         "jcno": args["jcno"]
+                                                     })
+                        if not new_goods_retrue:
+                            return SYSTEM_ERROR
+                    else:
+                        update_goods_retrue = self.sgoods.update_goods_retrue_by_id(id_name["id"], {"out_pic": "1"})
+                        if not update_goods_retrue:
+                            return SYSTEM_ERROR
+            elif data["retrue_name"] == "weight":
+                id = get_model_return_dict(self.sgoods.get_retrue_by_jcno_weight(args["jcno"]))
+                if id:
+                   return import_status("ERROR_FAIL_RETRUE", "FANSTI_ERROR", "ERROR_FAIL_RETRUE")
+                else:
+                    id_name = get_model_return_dict(self.sgoods.get_retrue_by_jcno_loginname(args["jcno"], args["login_name"]))
+                    if not id_name:
+                        new_goods_retrue = add_model("GOODS",
+                                                     **{
+                                                         "id": str(uuid.uuid4()),
+                                                         "login_name": args["login_name"],
+                                                         "in_pic": "0",
+                                                         "out_pic": "0",
+                                                         "weight_pic": "1",
+                                                         "jcno": args["jcno"]
+                                                     })
+                        if not new_goods_retrue:
+                            return SYSTEM_ERROR
+                    else:
+                        update_goods_retrue = self.sgoods.update_goods_retrue_by_id(id_name["id"], {"weight_pic": "1"})
+                        if not update_goods_retrue:
+                            return SYSTEM_ERROR
+            else:
+                return import_status("ERROR_WRONG_VALUE", "FANSTI_ERROR", "ERROR_WRONG_VALUE")
+        # TODO 如果存在红包未领取，则修改红包状态
+        return import_status("SUCCESS_RETRUE_GOODS", "OK")
+
+    def get_retrue_num(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_args = ["login_name"]
+        if judge_keys(true_args, args.keys()) != 200:
+            return judge_keys(true_args, args.keys())
+        if not args["login_name"]:
+            retrue_num = 0
+        all_retrue = get_model_return_list(self.sgoods.get_retrue_by_login_name(args["login_name"]))
+        make_log("all_retrue", all_retrue)
+        if not all_retrue:
+            return SYSTEM_ERROR
+        retrue_num = len(all_retrue)
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
+        response["data"] = {}
+        response["data"]["retrue_num"] = retrue_num
         return response

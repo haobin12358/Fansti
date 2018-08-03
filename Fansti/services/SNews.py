@@ -11,10 +11,15 @@ class SNews(SBase):
     def get_all(self, page_num, page_size):
         return self.session.query(WECHAT_NEWS.id, WECHAT_NEWS.news_title, WECHAT_NEWS.news_all,
                                   WECHAT_NEWS.news_picture, WECHAT_NEWS.news_from, WECHAT_NEWS.news_time)\
-            .offset(page_size * (page_num - 1) + 1).limit(page_size).all()
+            .offset(page_size * (page_num - 1)).limit(page_size).all()
 
     @close_session
     def get_message(self, id):
         return self.session.query(WECHAT_NEWS.id, WECHAT_NEWS.news_title, WECHAT_NEWS.news_all,
                                   WECHAT_NEWS.news_picture, WECHAT_NEWS.news_from, WECHAT_NEWS.news_time)\
             .filter_by(id=id).first()
+
+    @close_session
+    def update_news(self, id, news):
+        self.session.query(WECHAT_NEWS).filter_by(id=id).update(news)
+        return True

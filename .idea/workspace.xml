@@ -2,13 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="772ddb0b-4f29-4ff0-931e-2070dacb3eeb" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/Text.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/Text.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/apis/AGoods.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/apis/AGoods.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/apis/AUsers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/apis/AUsers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/common/Inforsend.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/common/MakeToken.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/common/get_str.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/config/Inforcode.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/config/Inforcode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/config/messages.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/config/messages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/config/status_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/config/status_code.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/control/CGoods.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/CGoods.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/control/CNews.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/CNews.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/control/CReds.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/CReds.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/control/CUsers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/CUsers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/control/Cscrapy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/Cscrapy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/fansticonfig.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/fansticonfig.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/flaskr.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/flaskr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/models/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/models/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/services/SGoods.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/services/SGoods.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/services/SNews.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/services/SNews.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/services/SReds.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/services/SReds.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/services/SUsers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/services/SUsers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fansti/services/Sscrapy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/services/Sscrapy.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,29 +36,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Fansti/models/model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="208" lean-forward="true" selection-start-line="208" selection-end-line="208" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="CNews.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Fansti/control/CNews.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-760">
-              <caret line="15" column="28" lean-forward="true" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+            <state relative-caret-position="537">
+              <caret line="107" column="23" lean-forward="true" selection-start-line="107" selection-start-column="23" selection-end-line="107" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cscrapy.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
+      <file leaf-file-name="Inforcode.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/config/Inforcode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="323" column="43" lean-forward="true" selection-start-line="323" selection-start-column="43" selection-end-line="323" selection-end-column="70" />
+            <state relative-caret-position="266">
+              <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -50,17 +57,53 @@
       <file leaf-file-name="SUsers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Fansti/services/SUsers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
+            <state relative-caret-position="201">
+              <caret line="48" column="59" selection-start-line="48" selection-start-column="59" selection-end-line="48" selection-end-column="59" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SNews.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Fansti/services/SNews.py">
+      <file leaf-file-name="ANews.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/apis/ANews.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="12" column="104" selection-start-line="12" selection-start-column="95" selection-end-line="12" selection-end-column="104" />
+            <state relative-caret-position="187">
+              <caret line="13" column="24" lean-forward="true" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CUsers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/control/CUsers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="79">
+              <caret line="226" column="37" lean-forward="true" selection-start-line="226" selection-start-column="37" selection-end-line="226" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cscrapy.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="334">
+              <caret line="354" column="41" lean-forward="true" selection-start-line="354" selection-start-column="41" selection-end-line="354" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Sscrapy.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/services/Sscrapy.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="277">
+              <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CGoods.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/control/CGoods.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="172" column="53" lean-forward="true" selection-start-line="172" selection-start-column="53" selection-end-line="172" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -68,8 +111,17 @@
       <file leaf-file-name="messages.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Fansti/config/messages.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="16" selection-start-line="18" selection-end-line="18" selection-end-column="16" />
+            <state relative-caret-position="372">
+              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SGoods.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Fansti/services/SGoods.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -83,6 +135,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>FileT</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -95,28 +152,29 @@
         <option value="$PROJECT_DIR$/Fansti/common/Log.py" />
         <option value="$PROJECT_DIR$/Fansti/common/import_status.py" />
         <option value="$PROJECT_DIR$/Fansti/config/status.py" />
-        <option value="$PROJECT_DIR$/Fansti/config/Inforcode.py" />
         <option value="$PROJECT_DIR$/Fansti/config/response.py" />
-        <option value="$PROJECT_DIR$/Fansti/apis/AGoods.py" />
-        <option value="$PROJECT_DIR$/Fansti/services/SNews.py" />
-        <option value="$PROJECT_DIR$/Fansti/config/status_code.py" />
-        <option value="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" />
         <option value="$PROJECT_DIR$/Fansti/fansticonfig.ini" />
         <option value="$PROJECT_DIR$/Fansti/apis/AReds.py" />
-        <option value="$PROJECT_DIR$/Fansti/flaskr.py" />
-        <option value="$PROJECT_DIR$/Fansti/services/SUsers.py" />
         <option value="$PROJECT_DIR$/Fansti/common/TransformToList.py" />
-        <option value="$PROJECT_DIR$/Fansti/services/SGoods.py" />
-        <option value="$PROJECT_DIR$/Fansti/control/CGoods.py" />
         <option value="$PROJECT_DIR$/Fansti/apis/AOther.py" />
-        <option value="$PROJECT_DIR$/Fansti/Text.py" />
         <option value="$PROJECT_DIR$/Fansti/services/SReds.py" />
+        <option value="$PROJECT_DIR$/Fansti/Text.py" />
         <option value="$PROJECT_DIR$/Fansti/control/CReds.py" />
-        <option value="$PROJECT_DIR$/Fansti/services/Sscrapy.py" />
-        <option value="$PROJECT_DIR$/Fansti/control/Cscrapy.py" />
+        <option value="$PROJECT_DIR$/Fansti/flaskr.py" />
+        <option value="$PROJECT_DIR$/Fansti/services/SNews.py" />
+        <option value="$PROJECT_DIR$/Fansti/config/status_code.py" />
+        <option value="$PROJECT_DIR$/Fansti/services/SGoods.py" />
         <option value="$PROJECT_DIR$/Fansti/apis/AUsers.py" />
+        <option value="$PROJECT_DIR$/Fansti/apis/AGoods.py" />
+        <option value="$PROJECT_DIR$/Fansti/config/Inforcode.py" />
+        <option value="$PROJECT_DIR$/Fansti/services/SUsers.py" />
+        <option value="$PROJECT_DIR$/Fansti/control/CGoods.py" />
         <option value="$PROJECT_DIR$/Fansti/control/CUsers.py" />
         <option value="$PROJECT_DIR$/Fansti/models/model.py" />
+        <option value="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" />
+        <option value="$PROJECT_DIR$/Fansti/services/Sscrapy.py" />
+        <option value="$PROJECT_DIR$/Fansti/control/Cscrapy.py" />
+        <option value="$PROJECT_DIR$/Fansti/apis/ANews.py" />
         <option value="$PROJECT_DIR$/Fansti/config/messages.py" />
         <option value="$PROJECT_DIR$/Fansti/control/CNews.py" />
       </list>
@@ -189,7 +247,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="E:/Manager/GroupMeal" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Manager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -211,7 +269,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Text">
+  <component name="RunManager" selected="Python.flaskr">
     <configuration name="CUsers" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Fansti" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -332,61 +390,46 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21268164" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21268164" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32952926" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32952926" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32952926" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.32952926" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3281027" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4550642" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39942938" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32952926" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Fansti/models/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3192">
-          <caret line="169" column="46" lean-forward="true" selection-start-line="169" selection-start-column="46" selection-end-line="169" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/flaskr.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2546">
-          <caret line="135" column="31" selection-start-line="135" selection-start-column="31" selection-end-line="135" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/services/SUsers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
@@ -471,20 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/DBSession.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="11" column="30" lean-forward="true" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/config/dbconfig.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/common/import_status.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
@@ -499,13 +528,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/config/Inforcode.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="29" lean-forward="true" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/config/response.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -513,72 +535,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/common/Log.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/config/status_code.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/fansticonfig">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/SBase.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/SGoods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/AGoods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/fansticonfig.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="20" lean-forward="true" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/apis/AOther.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="817">
           <caret line="44" column="48" lean-forward="true" selection-start-line="44" selection-start-column="48" selection-end-line="44" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/common/TransformToList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/flaskr.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="14" column="41" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="41" />
-          <folding>
-            <element signature="e#20#43#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -596,31 +556,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/Text.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/control/CGoods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="142" column="33" lean-forward="true" selection-start-line="142" selection-start-column="33" selection-end-line="142" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://G:/Python27/Lib/json/encoder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
           <caret line="183" selection-start-line="183" selection-end-line="183" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/SReds.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="15" column="28" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -631,55 +570,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="20" column="51" selection-start-line="20" selection-start-column="51" selection-end-line="20" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/Sscrapy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/AUsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="36" column="32" lean-forward="true" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/control/CUsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1124">
-          <caret line="61" column="55" lean-forward="true" selection-start-line="61" selection-start-column="55" selection-end-line="61" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/SUsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/services/SNews.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="12" column="104" selection-start-line="12" selection-start-column="95" selection-end-line="12" selection-end-column="104" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/control/CReds.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="45" column="47" selection-start-line="45" selection-start-column="37" selection-end-line="45" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/common/timeformate.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="83">
@@ -687,31 +577,200 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/models/model.py">
+    <entry file="file://$PROJECT_DIR$/Fansti/config/dbconfig.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" selection-start-line="1" selection-end-line="7" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/Text.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/DBSession.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/SReds.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/control/CReds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
-          <caret line="208" lean-forward="true" selection-start-line="208" selection-end-line="208" />
+          <caret line="75" column="30" lean-forward="true" selection-start-line="75" selection-start-column="30" selection-end-line="75" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/config/status_code.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/SNews.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="13" column="70" selection-start-line="13" selection-start-column="70" selection-end-line="13" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/AUsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="21" column="9" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/flaskr.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="20" column="43" selection-start-line="20" selection-start-column="43" selection-end-line="20" selection-end-column="43" />
+          <folding>
+            <element signature="e#20#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/Inforsend.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/get_str.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/Log.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/lovebreakfast_error.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/MakeToken.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/common/TransformToList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="722">
+          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/fansticonfig.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="22" lean-forward="true" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/AGoods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="34" column="32" lean-forward="true" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/SBase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/models/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="245" column="60" lean-forward="true" selection-start-line="245" selection-start-column="60" selection-end-line="245" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/Sscrapy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/SGoods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/ANews.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="13" column="24" lean-forward="true" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/config/messages.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" column="16" selection-start-line="18" selection-end-line="18" selection-end-column="16" />
+        <state relative-caret-position="372">
+          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/control/CUsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="226" column="37" lean-forward="true" selection-start-line="226" selection-start-column="37" selection-end-line="226" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/control/CGoods.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="172" column="53" lean-forward="true" selection-start-line="172" selection-start-column="53" selection-end-line="172" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/services/SUsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="48" column="59" selection-start-line="48" selection-start-column="59" selection-end-line="48" selection-end-column="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="323" column="43" lean-forward="true" selection-start-line="323" selection-start-column="43" selection-end-line="323" selection-end-column="70" />
+        <state relative-caret-position="334">
+          <caret line="354" column="41" lean-forward="true" selection-start-line="354" selection-start-column="41" selection-end-line="354" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/config/Inforcode.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="5" lean-forward="true" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/control/CNews.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-760">
-          <caret line="15" column="28" lean-forward="true" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+        <state relative-caret-position="537">
+          <caret line="107" column="23" lean-forward="true" selection-start-line="107" selection-start-column="23" selection-end-line="107" selection-end-column="23" />
         </state>
       </provider>
     </entry>

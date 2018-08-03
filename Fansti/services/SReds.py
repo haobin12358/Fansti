@@ -34,3 +34,17 @@ class SReds(SBase):
     def get_red_by_id(self, red_id):
         return self.session.query(WECHAT_RED_COIN.name, WECHAT_RED_COIN.id, WECHAT_RED_COIN.price)\
             .filter_by(id=red_id).first()
+
+    @close_session
+    def get_id_by_redname(self, red_name):
+        return self.session.query(WECHAT_RED_COIN.id).filter_by(name=red_name).first()
+
+    @close_session
+    def get_myred_by_redid(self, red_id):
+        return self.session.query(GET_RED_COIN.id, GET_RED_COIN.status, GET_RED_COIN.login_name, GET_RED_COIN.createtime)\
+            .filter_by(red_id=red_id).first()
+
+    @close_session
+    def update_myred(self, red_id, myred):
+        self.session.query(GET_RED_COIN).filter_by(red_id=red_id).update(myred)
+        return True

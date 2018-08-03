@@ -32,7 +32,7 @@ class CReds():
             make_log("red_abo", red_abo)
             if not red_abo:
                 return SYSTEM_ERROR
-            red_abo["name"] = red_abo["name"].decode("gbk").encode("utf8")
+            red["name"] = red_abo["name"].decode("gbk").encode("utf8")
             #red["createtime"] = red["createtime"].strftime("%Y-%m-%d")
             response["data"]["red_list"].append(red_abo)
         response["data"]["red_num"] = len(get_model_return_list(self.sred.get_my_red_rereceive(args["login_name"])))
@@ -46,7 +46,8 @@ class CReds():
             red["createtime"] = red["createtime"].strftime("%Y-%m-%d")
             if not a_red:
                 return SYSTEM_ERROR
-            a_red["name"] = a_red["name"].decode("gbk").encode("utf8")
+            red["name"] = a_red["name"].decode("gbk").encode("utf8")
+            red["price"] = a_red["price"]
             all_price = all_price + float(a_red["price"])
 
         response["data"]["my_red_list"] = my_red
@@ -70,5 +71,6 @@ class CReds():
 
     def receive_red(self):
         args = request.args.to_dict()
-
+        make_log("args", args)
         data = json.loads(request.data)
+        make_log("data", data)

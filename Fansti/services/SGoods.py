@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD
+from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, GOODS_RETRUE
 from Fansti.services.SBase import SBase, close_session
 
 class SGoods(SBase):
@@ -66,3 +66,33 @@ class SGoods(SBase):
     @close_session
     def get_accounts_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_WTS.accounts).filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_in_out_weight_by_jcno(self, jcno):
+        return self.session.query(GOODS_RETRUE.in_pic, GOODS_RETRUE.out_pic, GOODS_RETRUE.weight_pic)\
+            .filter_by(jcno=jcno).all()
+
+    @close_session
+    def get_retrue_by_jcno_in(self,jcno):
+        return self.session.query(GOODS_RETRUE.id).filter_by(in_pic="1").filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_retrue_by_jcno_out(self, jcno):
+        return self.session.query(GOODS_RETRUE.id).filter_by(out_pic="1").filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_retrue_by_jcno_weight(self, jcno):
+        return self.session.query(GOODS_RETRUE.id).filter_by(weight_pic="1").filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_retrue_by_jcno_loginname(self, jcno, login_name):
+        return self.session.query(GOODS_RETRUE.id).filter_by(jcno=jcno).filter_by(login_name=login_name).first()
+
+    @close_session
+    def update_goods_retrue_by_id(self, id, goods_retrue):
+        self.session.query(GOODS_RETRUE).filter_by(id=id).update(goods_retrue)
+        return True
+
+    @close_session
+    def get_retrue_by_login_name(self, login_name):
+        return self.session.query(GOODS_RETRUE.id).filter_by(login_name=login_name).all()

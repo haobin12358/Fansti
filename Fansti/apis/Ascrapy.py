@@ -18,7 +18,8 @@ class FSscrapy(Resource):
             "get_hs": "self.cscrapy.get_hs()",
             "get_cas": "self.cscrapy.get_cas()",
             "get_jd": "self.cscrapy.get_jd()",
-            "get_flyno": "self.cscrapy.get_flyno()"
+            "get_flyno": "self.cscrapy.get_flyno()",
+            "get_all_scrapy": "self.cscrapy.get_all_scrapy()"
         }
 
         if scrapy not in apis:

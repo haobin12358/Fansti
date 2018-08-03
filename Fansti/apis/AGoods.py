@@ -22,3 +22,14 @@ class FSGoods(Resource):
         if goods not in apis:
             return APIS_WRONG
         return eval(apis[goods])
+
+    def post(self, goods):
+        print(self.title.format("api is " + goods))
+
+        apis = {
+            "retrue_goods": "self.cgoods.retrue_goods()"
+        }
+
+        if goods not in apis:
+            return APIS_WRONG
+        return eval(apis[goods])

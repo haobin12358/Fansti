@@ -39,7 +39,7 @@ class Cscrapy():
     def get_hs(self):
         args = request.args.to_dict()
         make_log("args", args)
-        true_keys = ["login_name", "hs_name"]
+        true_keys = ["login_name", "hs_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
         new_info = add_model("SELECT_INFO",
@@ -47,7 +47,8 @@ class Cscrapy():
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "HScode",
-                                 "select_value": args["hs_name"]
+                                 "select_value": args["hs_name"],
+                                 "openid": args["openid"]
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -133,7 +134,7 @@ class Cscrapy():
         try:
             args = request.args.to_dict()
             make_log("args", args)
-            true_keys = ["login_name", "cas_name"]
+            true_keys = ["login_name", "cas_name", "openid"]
             if judge_keys(true_keys, args.keys()) != 200:
                 return judge_keys(true_keys, args.keys())
             new_info = add_model("SELECT_INFO",
@@ -141,7 +142,8 @@ class Cscrapy():
                                      "id": str(uuid.uuid4()),
                                      "login_name": args["login_name"],
                                      "select_name": "cas",
-                                     "select_value": args["cas_name"]
+                                     "select_value": args["cas_name"],
+                                     "openid": args["openid"]
                                  })
             if not new_info:
                 return SYSTEM_ERROR
@@ -233,7 +235,7 @@ class Cscrapy():
     def get_jd(self):
         args = request.args.to_dict()
         make_log("args", args)
-        true_keys = ["login_name", "jd_name"]
+        true_keys = ["login_name", "jd_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
         new_info = add_model("SELECT_INFO",
@@ -241,7 +243,8 @@ class Cscrapy():
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "jd",
-                                 "select_value": args["jd_name"]
+                                 "select_value": args["jd_name"],
+                                 "openid": args["openid"]
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -289,7 +292,7 @@ class Cscrapy():
     def get_flyno(self):
         args = request.args.to_dict()
         make_log("args", args)
-        true_param = ["login_name"]
+        true_param = ["login_name", "openid"]
         if judge_keys(true_param, args.keys()) != 200:
             return judge_keys(true_param, args.keys())
         if "depa" not in args and "dest" not in args:
@@ -313,7 +316,8 @@ class Cscrapy():
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "flyno",
-                                 "select_value": select_name
+                                 "select_value": select_name,
+                                 "openid": args["openid"]
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -335,4 +339,19 @@ class Cscrapy():
         # TODO 遍历表格，根据flight参数进行判断，如果数据库中存在，则更新，如果数据库中不存在，则增加一条数据
         pass
 
+    def get_all_scrapy(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_params = ["page_size", "page_num", "select_name"]
+        if judge_keys(true_params, args.keys()) != 200:
+            return judge_keys(true_params, args.keys())
+        all_select = get_model_return_list(self.sscrapy.get_all_select(int(args["page_num"]), int(args["page_size"])
+                                                                       , args["select_name"]))
+        make_log("all_select", all_select)
+        count = len(all_select)
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
+        response["data"] = {}
+        response["data"]["all_select"] = all_select
+        response["data"]["count"] = count
 
+        return response
