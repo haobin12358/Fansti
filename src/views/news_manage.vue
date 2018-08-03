@@ -236,7 +236,7 @@
           news_picture: this.imageUrl,
           news_all: this.newsContent
         }
-  /*      axios.post(api.new_news, params).then(res => {
+        axios.post(api.new_news, params).then(res => {
           if(res.data.status == 200){
             console.log(res)
             this.$message({ type: 'success', message: res.data.message });
@@ -246,7 +246,7 @@
           }
         },error =>{
           this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
-        })*/
+        })
 
 
       },
@@ -260,7 +260,7 @@
         this.fromInput = news.news_from
         this.imageUrl = news.news_picture
         this.defaultMsg = this.newsContent
-        console.log(news.id)
+        console.log(this.defaultMsg)
       },
       closeNews(news) {
         console.log(news.id)
