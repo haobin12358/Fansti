@@ -330,7 +330,6 @@
             break;
 
         }
-        console.log('详情',params);
         this.$navigate('/pages/track/confirmConsignment',params)
       },
 
@@ -346,7 +345,6 @@
 
       if(res.data.status == 200){
         this.detail = res.data.data;
-        console.log(this.detail);
         this.$apply();
       }else{
         tip.alert(res.data.message)
@@ -354,16 +352,17 @@
     }
 
     onShow(){
+      console.log(this.detail);
+      console.log(this.jcno);
       //  确认之后回退刷新
       if (this.detail.jcno) {
-        this.getJcAbo(jcno);
+        this.getJcAbo(this.detail.jcno);
 
       }
     }
 
     onLoad(params) {
-      console.log(params);
-      // this.jcno = params.jcno;
+      this.jcno = params.jcno;
       this.getJcAbo(params.jcno);
 
     }

@@ -26,7 +26,7 @@
 
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;
 
           .line1{
             color: @mainBlueColor;
@@ -35,6 +35,12 @@
             flex: 1;
             color: @mainFontColor;
 
+            text-overflow: -o-ellipsis-lastline;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            align-content: center;
             .fz24();
           }
           .line3{
@@ -66,20 +72,19 @@
       新闻资讯
     </view>
     <view class="list-content">
-      <view wx:for="123456" class="news-item" @tap.stop="tapItemHandler({{item}})">
+      <view wx:for="{{list}}" wx:key="id" class="news-item" @tap.stop="tapItemHandler({{item}})">
         <view class="main-content">
-          <view class="line1">新闻{{item}}</view>
-          <view class="line2">
-            展示行业新闻公司新闻等信息，供普通用户
-            （非绑定）查看。
-          </view>
+          <view class="line1">{{item.news_title}}</view>
+          <text class="line2">
+            {{item.news_all}}
+          </text>
           <view class="line3">
-            <text class="news-source">xx日报</text>
-            <text class="news-time">2018/07/18 21:17</text>
+            <text class="news-source">{{item.news_from}}</text>
+            <text class="news-time">{{item.news_time}}</text>
           </view>
 
         </view>
-        <image class="news-img" src="../images/test-news.png">
+        <image class="news-img" src="{{item.news_picture}}">
         </image>
       </view>
     </view>
@@ -91,9 +96,9 @@
 
     export default class NewsList extends wepy.component {
         props = {
-            xxx: {
+            list: {
                 //  Object Array String Number Boolean
-                type: Object
+                type: Array
             }
         }
 

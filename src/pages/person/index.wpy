@@ -139,7 +139,7 @@
   <block wx:if="{{isBinding}}">
     <view class="container">
       <view class="container-hd">
-        <view class="overview">
+        <view wx:if="{{isOldUser}}" class="overview">
           <view class="overview-item" @tap="tapWGPHandler">
             <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
             <view class="overview-item-info">
@@ -205,11 +205,11 @@
       </view>
       <view class="container-ft">
         <view class="ft-btns">
-          <button open-type="share">分享服务号</button>
+          <button open-type="share" wx:if="{{isOldUser}}">分享服务号</button>
           <button @tap="tapCallService">电话沟通</button>
           <button @tap="bindingAgain">重新绑定</button>
         </view>
-        <view class="ft-share-list">
+        <view class="ft-share-list" wx:if="{{isOldUser}}">
           <image src="../../images/person_share_list.png"></image>
           <text @tap="goShareList">查看分享列表</text>
         </view>
@@ -329,6 +329,10 @@
     mixins = [BindingMixin];
 
     computed = {
+      isBinding() {
+        return this.isOldUser || this.isNewUser;
+      },
+
       textareaEnable() {
         return !this.showWGP && !this.showAGP && !this.showCT;
       },
@@ -394,7 +398,7 @@
 
       },
       tapCallService() {
-        let phoneNumber = '13811111111';
+        let phoneNumber = this.serviceInfo.telphone+'';
 
         wepy.showModal({
           title: `联系客服`,
@@ -434,7 +438,7 @@
       let res = await api.makeUserMessage({ method: 'POST', openid: this.openid, query: { message } });
 
       if (res.data.status == 200) {
-        this.message = '';
+        this.msg = '';
         this.$apply();
         tip.success('留言成功!');
       } else {
@@ -454,25 +458,23 @@
       }
     }
 
-    onShow() {
-      let that = this;
-      if(!this.isBinding){
-        wx.login({
-          success: function(res) {
-            that.checkBingding(res.code);
-          }
-        })
-      }
-
-        //  TODO 未绑定判断
-      if (JSON.stringify(this.serviceInfo) == '{}') {
-        this.getCustom();
+    watch={
+      isBinding(val){
+        if (val) {
+          this.getCustom();
+          this.setOpenid();
+          this.getAllRed();
+        }
       }
     }
 
+    onShow() {
+
+
+    }
+
     onLoad() {
-      this.setOpenid();
-      this.getAllRed();
+
     }
   }
 </script>

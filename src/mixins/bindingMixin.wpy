@@ -14,34 +14,51 @@
 
     data = {
       openid: '',
-      isBinding: false,
-    };
+      isOldUser: false, //  绑定的是否为新用户
+      isNewUser: false, //  绑定的是否为老用户
+  };
 
-    computed = {};
+    computed = {
+      // isBinding() {
+      //   return this.isOldUser || this.isNewUser;
+      // }
+
+    };
 
     methods = {};
 
     events = {};
 
-    async checkBingding(code){
+    async checkBinding(code){
       let res =await api.getOpenid({query:{code}});
 
       if(res.data.status == 200){
         let openid = res.data.data.openid
         this.openid = openid;
         let res2 =await api.getBinding({query:{openid}});
-        // console.log(res2);
 
         if(res2.data.status == 200){
-          this.isBinding = res2.data.message == '已绑定';
-          this.$apply();
-          console.log(this.isBinding);
 
-          //  绑定后的微信账号直接修改绑定状态为已绑定
-          if(this.isBinding && !wx.getStorageSync('token')){
-            wx.setStorageSync('token', res2.data.data.login_name);
-
+          //  新老用户
+          if(res2.data.message == '已绑定'){
+            //  老用户
+            if (res2.data.data.login_name) {
+              //  老用户直接绑定token
+              if (!wx.getStorageSync('token')) {
+                wx.setStorageSync('token', res2.data.data.login_name);
+              }
+              this.isOldUser = true
+            }else{
+              wx.setStorageSync('newUser', true);
+              this.isNewUser = true
+            }
           }
+          this.$apply()
+
+          console.group('now')
+          console.log(wx.getStorageSync('token'),wx.getStorageSync('newUser'));
+          console.groupEnd('now')
+
         }else{
           tip.error(res2.data.message);
         }
@@ -72,10 +89,17 @@
     }
 
     onShow(){
-      let loginName = wx.getStorageSync('token');
       let that = this;
+      this.isOldUser = !!wx.getStorageSync('token')
+      this.isNewUser = !!wx.getStorageSync('newUser')
 
-      this.isBinding = !!loginName;
+      if(!this.isOldUser && !this.isNewUser){
+        wx.login({
+          success: function(res) {
+            that.checkBinding(res.code);
+          }
+        })
+      }
     }
 
     onLoad() {

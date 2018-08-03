@@ -23,13 +23,14 @@
       </swiper-item>
     </swiper>
   </view>
-  <news-list @tapItem.user="goNewsDetail"></news-list>
+  <news-list :list.sync="newsList" @tapItem.user="goNewsDetail"></news-list>
 </template>
 
 <script>
   import wepy from 'wepy'
   import NewsList from '@/components/newsList'
-
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class Index extends wepy.page {
     config = {
@@ -40,11 +41,29 @@
       'news-list': NewsList
     }
 
+    data={
+      newsList: []
+    }
+
     methods={
       goNewsDetail(news){
-        console.log('页面',news)
         this.$navigate('/pages/index/newsDetail', news)
       }
+    }
+
+    async getAllNews(){
+      let res = await api.getAllNews();
+
+      if (res.data.status == 200) {
+        this.newsList = res.data.data;
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    onLoad(){
+      this.getAllNews();
     }
 
   }

@@ -18,9 +18,13 @@ export default class extends wepy.app {
       'pages/track/stockClerkInfo',  //仓库人员信息
       'pages/track/confirmConsignment',  //确认托运照片
 
-      'pages/person/shareList', //分享列表
+
+
 
       'pages/person/index', //个人首页
+
+      'pages/person/shareList', //分享列表
+
 
       'pages/person/binding', //绑定页
 

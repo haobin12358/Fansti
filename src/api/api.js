@@ -1,7 +1,7 @@
 import {
   wxRequest
 } from '@/utils/wxRequest';
-const debug = false;
+const debug = true;
 
 const host =debug? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'http://10.0.0.130:7444/fansti';
 
@@ -11,6 +11,14 @@ const userBinding = params => wxRequest(params, host+'/users/user_binding');
 const getBinding = params => wxRequest(params, host+'/users/get_binding');
 //  获取微信id  POST
 const getOpenid = params => wxRequest(params, host+'/users/get_openid');
+
+//  获取新闻列表  POST
+const getAllNews = params => wxRequest(params, host+'/news/get_all');
+//  获取新闻列表  POST
+const getNewsAbo = params => wxRequest(params, host+`/news/get_abo?id=${params.id}`);
+
+
+
 
 //  获取货物列表
 const getGoodsList = params => wxRequest(params, host+'/goods/get_goods_list');
@@ -39,6 +47,8 @@ export default {
   userBinding,
   getBinding,
   getOpenid,
+  getAllNews,
+  getNewsAbo,
   getGoodsList,
   getJcAbo,
   retrueGoods,

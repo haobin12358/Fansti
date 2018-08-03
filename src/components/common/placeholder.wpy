@@ -28,7 +28,13 @@
   <view class="placeholder">
     <image class="placeholder-icon" src="../../images/paper_plane.png"></image>
     <view class="placeholder-text">
-      去绑定,<navigator url="/pages/person/binding"><text>绑定账户</text></navigator>后即可查看
+      <block wx:if="{{type == 'binding'}}">
+        去绑定,<navigator url="/pages/person/binding"><text>绑定账户</text></navigator>后即可查看
+      </block>
+      <block wx:if="{{type == 'newUser'}}">
+        前往<navigator open-type="switchTab" url="/pages/person/index"><text>个人页</text></navigator>去联系客服,成为我们的合作伙伴!
+      </block>
+
     </view>
   </view>
 </template>
@@ -38,10 +44,10 @@
 
     export default class Placeholder extends wepy.component {
         props = {
-            text: {
-                //  Object Array String Number Boolean
-                type: String
-            }
+          type: {
+              type: String,
+            default: 'binding'
+          }
         }
 
         data = {}

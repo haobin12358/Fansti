@@ -192,14 +192,20 @@
 
     async doBinding(params){
       let query= {
-        login_name: params.username,
-        login_password: params.password,
+
         phone: params.phone,
         openid: this.openid,
         name: this.userInfo.nickName,
         usex: this.userInfo.gender == 1 ?'男':'女' ,
         city: this.userInfo.city,
         province: this.userInfo.province,
+      }
+      //  老用户
+      if (params.username && params.password) {
+        query = Object.assign(query,{
+          login_name: params.username,
+          login_password: params.password
+        })
       }
       let res =await api.userBinding({method: 'POST', query});
 
