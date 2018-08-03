@@ -9,6 +9,7 @@
 
       .overview{
         display: flex;
+        position: relative;
 
         .overview-item{
           width: 228rpx;
@@ -44,6 +45,34 @@
               font-weight: bold;
             }
 
+          }
+        }
+
+        .newuser-shadow{
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: #ffffff;
+          opacity: .7;
+
+          padding-top: 101rpx;
+          padding-bottom:  114rpx;
+          box-sizing: border-box;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+
+          .line1{
+            height: 60rpx;
+            width: 120rpx;
+          }
+
+          .line2{
+            color: @mainBlueColor;
           }
         }
       }
@@ -139,7 +168,7 @@
   <block wx:if="{{isBinding}}">
     <view class="container">
       <view class="container-hd">
-        <view wx:if="{{isOldUser}}" class="overview">
+        <view  class="overview">
           <view class="overview-item" @tap="tapWGPHandler">
             <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
             <view class="overview-item-info">
@@ -159,7 +188,15 @@
             <image class="overview-item-bg" src="../../images/packet_blue.png"></image>
             <view class="overview-item-info">
               <view class="line1">月度统计</view>
-              <view class="line2">15</view>
+              <view class="line2"></view>
+            </view>
+
+          </view>
+
+          <view wx:if="{{isNewUser}}" class="newuser-shadow">
+            <image class="line1" src="../../images/paper_plane.png"></image>
+            <view class="line2">
+              与客服联系如何开启红包
             </view>
 
           </view>
@@ -252,74 +289,17 @@
 
       allPacketInfo: {
         'month_red': [
-          {
-            'count': 0,
-            'month': 1
-          },
-          {
-            'count': 0,
-            'month': 2
-          },
-          {
-            'count': 0,
-            'month': 3
-          },
-          {
-            'count': 0,
-            'month': 4
-          },
-          {
-            'count': 0,
-            'month': 5
-          },
-          {
-            'count': 0,
-            'month': 6
-          },
-          {
-            'count': 3,
-            'month': 7
-          },
-          {
-            'count': 0,
-            'month': 8
-          },
-          {
-            'count': 0,
-            'month': 9
-          },
-          {
-            'count': 0,
-            'month': 10
-          },
-          {
-            'count': 0,
-            'month': 11
-          },
-          {
-            'count': 0,
-            'month': 12
-          }
+
         ],
-        'my_red_coin': 10,
+        'my_red_coin': 0,
         'my_red_list': [
-          {
-            'createtime': '2018-07-30',
-            'red_id': '003'
-          }
+
         ],
-        'my_red_num': 1,
+        'my_red_num': 0,
         'red_list': [
-          {
-            'status': '0',
-            'red_id': '001'
-          },
-          {
-            'status': '1',
-            'red_id': '002'
-          }
+
         ],
-        'red_num': 2
+        'red_num': 0
       },
 
       serviceInfo: {},
@@ -463,18 +443,18 @@
         if (val) {
           this.getCustom();
           this.setOpenid();
-          this.getAllRed();
+          if (this.isOldUser) {
+            this.getAllRed();
+          }
         }
       }
     }
 
     onShow() {
 
-
     }
 
     onLoad() {
-
     }
   }
 </script>
