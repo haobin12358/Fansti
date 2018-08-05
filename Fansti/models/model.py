@@ -29,7 +29,7 @@ class D_MESSAGE_USER(Base):
     account_type = Column(String(2))            #
     wx_post = Column(String(40))                # 微信推送
     login_url = Column(String(200))             # 免登陆URL
-    create_time = Column(String(DATE))          # 创建时间
+    create_time = Column(DATE)                  # 创建时间
     create_user = Column(String(40))            # 创建人
 
 class AIR_HWYS_WTS(Base):
@@ -200,6 +200,13 @@ class WECHAT_LOGIN(Base):
     usex = Column(String(200))                          # 微信性别
     city = Column(String(200))                          # 所在城市
     province = Column(String(200))                      # 所在省份
+    user_name = Column(String(200))                     # 用户名称
+    work_year = Column(String(40))                      # 从业时间
+    work_goodat = Column(String(2000))                  # 经验擅长
+    user_introduction = Column(String(2000))            # 个人简介
+    qq = Column(String(40))                             # 个人QQ
+    wechat = Column(String(200))                        # 个人微信
+    email = Column(String(200))                         # 个人邮箱
 
 class WECHAT_NEWS(Base):
     __tablename__ = "WECHAT_NEWS"
@@ -259,8 +266,8 @@ class AIR_HWYS_LINES(Base):
     depa = Column(String(50))                                   # 起飞地
     dest = Column(String(50))                                   # 目的地
     mydate = Column(String(50))                                 # 航班日期
-    etd = Column(DATETIME)                                      # 起飞时间
-    eta = Column(DATETIME)                                      # 落地时间
+    etd = Column(DATE)                                      # 起飞时间
+    eta = Column(DATE)                                      # 落地时间
     supporttime = Column(String(100))                           # 交单时间
     aircraft = Column(String(200))                              # 机型
     remark = Column(Text)                                       # 备注
@@ -299,3 +306,72 @@ class GOODS_RETRUE(Base):
     in_pic = Column(String(10))                                 # 入仓确认状态， 0未确认， 1确认
     out_pic = Column(String(10))                                # 出仓确认状态， 0未确认， 1确认
     weight_pic = Column(String(10))                             # 称重确认状态， 0未确认， 1确认
+
+class USER_DB_USER(Base):
+    __tablename__ = "USER_DB_USER"
+    user_id = Column(String(40), primary_key=True)
+    user_name = Column(String(40), nullable=False)
+    login_name = Column(String(40), nullable=False)
+    login_password = Column(String(40), nullable=False)
+    is_enable = Column(Integer, nullable=False)
+    gender_id = Column(String(40))
+    birth_date = Column(DATE)
+    memo = Column(String(300))
+    lock_version = Column(Integer, nullable=False)
+    station_id = Column(String(40))
+    dept_id = Column(String(40))
+    duty_id = Column(String(40))
+    work_id = Column(String(40))
+    card_id = Column(String(40))
+    locale_id = Column(String(40))
+    l18n_id = Column(String(100))
+    address = Column(String(300))
+    postalcode = Column(String(40))
+    telephone = Column(String(40))
+    handset = Column(String(40))
+    email = Column(String(40))
+    fax = Column(String(40))
+    notify_mode_id = Column(String(40))
+    timezone_id = Column(String(40))
+    last_login_date = Column(DATE)
+    title_id = Column(String(40))
+    edu_level_id = Column(String(40))
+    skill_level_id = Column(String(40))
+    status_id = Column(String(40))
+    workgroup_id = Column(String(40))
+    work_schedule_id = Column(String(40))
+    qq = Column(String(20))
+    telephone2 = Column(String(40))
+    handset2 = Column(String(40))
+    android_id = Column(String(40))
+
+class AIR_HWYS_DGR(Base):
+    __tablename__ = "AIR_HWYS_DGR"
+    id = Column(String(200), primary_key=True)              # 主键
+    unno = Column(String(200))                              # UN号
+    unname = Column(String(200))                            # 运输专用名称
+    untype = Column(String(40))                             # 类别
+
+class AIR_HWYS_DGR_LEVEL(Base):
+    __tablename__ = "AIR_HWYS_DGR_LEVEL"
+    id = Column(String(200), primary_key=True)              # 主键
+    dgr_id = Column(String(200))                            # 关联外键
+    level = Column(String(200))                             # 等级
+    airliner_capacity = Column(String(200))                 # 客机容量
+    airliner_description_no = Column(String(200))           # 客机说明号
+    airliner_is_single = Column(String(200))                # 客机是否可单一
+    airfreighter_capacity = Column(String(200))             # 货机容量
+    airfreighter_description_no = Column(String(200))       # 货机说明号
+    airfreighter_is_single = Column(String(200))            # 货机是否可单一
+    message = Column(String(2000))                          # 备注
+
+class AIR_HWYS_DGR_CONTAINER(Base):
+    __tablename__ = "AIR_HWYS_DGR_CONTAINER"
+    id = Column(String(200), primary_key=True)              # 主键
+    dgr_level_id = Column(String(200))                      # 关联外键
+    dgr_container = Column(String(200))                     # 容器类型
+    dgr_container_capacity = Column(String(200))            # 容量
+    dgr_type = Column(String(60))                           # 客机/货机
+
+if __name__ == "__main__":
+    Base.metadata.create_all(mysql_engine)

@@ -1,8 +1,8 @@
 
 database = "ORCL"
-host = "localhost"
+host = "123.207.97.185"
 port = "1521"
-username = "C##M"
-password = "root"
+username = "oracle"
+password = "oracle"
 charset = "utf8"
 sqlenginename = 'oracle'

@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from Fansti.models.model import D_MESSAGE_USER, WECHAT_LOGIN, USER_MESSAGE, USER_INVATE
+from Fansti.models.model import D_MESSAGE_USER, WECHAT_LOGIN, USER_MESSAGE, USER_INVATE, USER_DB_USER
 from Fansti.services.SBase import SBase, close_session
 
 class SUsers(SBase):
@@ -55,3 +55,15 @@ class SUsers(SBase):
     @close_session
     def get_invate_abo_by_openid(self, openid):
         return self.session.query(WECHAT_LOGIN.phone, WECHAT_LOGIN.name).filter_by(openid=openid).first()
+
+    @close_session
+    def get_custom_by_xsr(self, xsr):
+        return self.session.query(USER_DB_USER.user_name, USER_DB_USER.telephone, USER_DB_USER.qq, USER_DB_USER.email)\
+            .filter_by(user_name=xsr).first()
+
+    @close_session
+    def get_personal_by_openid(self, openid):
+        return self.session.query(WECHAT_LOGIN.user_name, WECHAT_LOGIN.work_year, WECHAT_LOGIN.work_goodat,
+                                  WECHAT_LOGIN.user_introduction, WECHAT_LOGIN.phone, WECHAT_LOGIN.qq,
+                                  WECHAT_LOGIN.wechat, WECHAT_LOGIN.email)\
+            .filter_by(openid=openid).first()

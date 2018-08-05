@@ -355,3 +355,38 @@ class Cscrapy():
         response["data"]["count"] = count
 
         return response
+
+    def get_dgr(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_keys = ["login_name", "dgr_name", "openid"]
+        if judge_keys(true_keys, args.keys()) != 200:
+            return judge_keys(true_keys, args.keys())
+        new_info = add_model("SELECT_INFO",
+                             **{
+                                 "id": str(uuid.uuid4()),
+                                 "login_name": args["login_name"],
+                                 "select_name": "dgr",
+                                 "select_value": args["dgr_name"],
+                                 "openid": args["openid"]
+                             })
+        if not new_info:
+            return SYSTEM_ERROR
+        dgr = get_model_return_dict(self.sscrapy.get_dgr_by_unno(args["dgr_name"]))
+        make_log("dgr", dgr)
+        if not dgr:
+            return
+        dgr_type = get_model_return_list(self.sscrapy.get_dgr_level_by_dgrid(dgr["id"]))
+        make_log("dgr_type", dgr_type)
+        if not dgr:
+            return
+        for row in dgr_type:
+            dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid["dgr_level_id"])
+            if not dgr_con:
+                return
+            row["dgr_con"] = dgr_con
+        dgr["dgr_type"] = dgr_type
+
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
+        response["data"] = dgr
+        return response
