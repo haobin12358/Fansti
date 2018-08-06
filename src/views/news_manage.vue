@@ -16,7 +16,7 @@
             <div class="news-body">摘要：{{item.abstract}}</div>
           </div>
           <el-tooltip content="编辑后可再次上传该新闻" placement="left">
-            <div class="news-edit" v-if="true" @click="editNews(item)">编 辑</div>
+            <div class="news-edit" v-if="item.newsStatus" @click="editNews(item)">编 辑</div>
           </el-tooltip>
           <el-tooltip content="点击关闭将下架该新闻" placement="left">
             <div class="news-close" v-if="!item.newsStatus" @click="closeNews(item)">关 闭</div>
