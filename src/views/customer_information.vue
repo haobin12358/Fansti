@@ -56,13 +56,13 @@
                 { required: true, message: '请输入客服名称', trigger: 'blur' }
               ],
               qq:[
-                {required:true,message:'请输入客户qq',trigger:'blur'}
+                {required:true,message:'请输入客服qq',trigger:'blur'}
               ],
               telphone:[
-                {required:true,message:'请输入客户电话',trigger:'blur'}
+                {required:true,message:'请输入客服电话',trigger:'blur'}
               ],
               email:[
-                {required:true,message:'请输入客户邮箱',trigger:'blur'}
+                {required:true,message:'请输入客服邮箱',trigger:'blur'}
               ]
             },
             showModal:false,

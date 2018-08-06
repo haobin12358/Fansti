@@ -29,7 +29,6 @@
 </template>
 
 <script>
-  import query from '../common/json/query';
   import tabs from '../components/common/tabs';
   import page from '../components/common/page';
   import api from "../api/api";
@@ -39,7 +38,7 @@
     name: "user_query",
     data() {
       return {
-        query: query,
+        query: [],
         query1: [],
         query2: [],
         query2Status: true,
@@ -51,6 +50,7 @@
           { name: 'CAS', click: false, url: '' },
           { name: '航班时刻', click: false, url: '' }
         ],
+        select_name: 'DGR',
         page_size:20,
         total_num:5,
         current_page:1,
@@ -63,14 +63,15 @@
         let params = {
           page_size: this.page_size,
           page_num: Number(v || this.current_page),
-          select_name: this.tabs_data.name
+          select_name: this.select_name
         }
-        console.log(params)
         axios.get(api.get_all_scrapy, { params: params }).then(res => {
           if (res.data.status == 200){
-            this.news = res.data.data
+            this.query = res.data.data
+            console.log(this.query)
             this.total_num = res.data.data.count;
             this.total_page = Math.ceil(this.total_num / this.page_size);
+            console.log(this.total_page)
           }else{
             this.$message.error(res.data.message);
           }
@@ -98,9 +99,12 @@
         }
         _arr[index].click = true;
         this.tabs_data = [].concat(_arr);
+        this.select_name = this.tabs_data[index].name
+        this.getData(1)
       },
     },
     created() {
+      this.getData(1)
       if(this.query.length <= 10) {
         this.query2Status = false
         this.query1 = this.query
@@ -142,7 +146,7 @@
     }
   }
   .page-box {
-
+    margin: 48% 0 0 -20%;
   }
   .line {
     width: 1px;

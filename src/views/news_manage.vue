@@ -1,22 +1,22 @@
 <template>
   <div>
     <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
-    <div class="page-box">
-      <page :total="total_page"></page>
-    </div>
     <div v-if="newsManage">
+      <div class="page-box">
+        <page :total="total_page"></page>
+      </div>
       <div class="news-manage" v-for="item in news">
         <div class="news-container">
-          <img class="news-image" :src="item.news_picture" />
+          <img class="news-image" :src="item.news_picture" :onerror="errorImg"/>
           <div class="news-text">
             <div class="news-title">{{item.news_title}}</div>
             <div class="news-status" v-if="item.newsStatus">该新闻已关闭</div>
             <div class="news-status" v-if="!item.newsStatus">该新闻已上传</div>
             <div class="news-from-date">{{item.news_from}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.news_time}}</div>
-            <div class="news-body">摘要：{{item.news_all}}</div>
+            <div class="news-body">摘要：{{item.abstract}}</div>
           </div>
           <el-tooltip content="编辑后可再次上传该新闻" placement="left">
-            <div class="news-edit" v-if="item.newsStatus" @click="editNews(item)">编 辑</div>
+            <div class="news-edit" v-if="true" @click="editNews(item)">编 辑</div>
           </el-tooltip>
           <el-tooltip content="点击关闭将下架该新闻" placement="left">
             <div class="news-close" v-if="!item.newsStatus" @click="closeNews(item)">关 闭</div>
@@ -44,10 +44,10 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <div class="image-upload-done" v-if="imageUrlStatus">
-            <p>注意：请确认图片</p>
-            <p>1、宽高比为2.1~2.7</p>
-            <p>2、格式为 JPG 或 PNG</p>
-            <p>3、文件大小不超过 2MB</p>
+            <p>注意：</p>
+            <p>1、图片文件大小不超过 2MB</p>
+            <p>2、图片的格式须为 JPG 或 PNG</p>
+            <p>3、图片宽高比的适宜范围为 2.1~2.7</p>
           </div>
         </div>
         <div class="news-upload-body">
@@ -71,7 +71,6 @@
 </template>
 
 <script>
-  import news from '../common/json/news'
   import tabs from '../components/common/tabs';
   import UE from '../components/common/ueditor';
   import page from '../components/common/page';
@@ -96,42 +95,30 @@
         total_num:5,
         current_page:1,
         total_page: 0,
-        newsContent: "<p>\n" +
-        "    &nbsp; &nbsp; &nbsp; &nbsp;本报讯：今日十点，在萧山区发生一起精神病案\n" +
-        "</p>\n" +
-        "<p>\n" +
-        "    <img src=\"http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg\" width=\"350\" height=\"140\"/>\n" +
-        "</p>\n" +
-        "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-        "    <span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span><span style=\"color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);\">首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</span>\n" +
-        "</p>\n" +
-        "<p style=\"margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);\">\n" +
-        "    <br/>\n" +
-        "</p>",
+        newsContent: '',
         imageUrlStatus: true,
-        editor: null
+        // editor: null
+        errorImg: 'this.src="' + require('../assets/images/newsPic.jpg') + '"',
+        abstract: ''
       }
     },
     components:{ tabs, UE, page },
     methods: {
-      newNews() {
-        let news = {
-          titleInput: this.titleInput,
-          fromInput: this.fromInput,
-          imageUrl: this.imageUrl,
-        }
-        console.log(news)
-      },
       getData(v){
         axios.get(api.get_news_all,{params:{
-            page_size:this.page_size,
-            page_num:Number(v || this.current_page)
+            page_size: this.page_size,
+            page_num: Number(v || this.current_page)
           }}).then(res => {
           if (res.data.status == 200){
             this.news = res.data.data
-            this.total_num = res.data.data.count;
+            for(let i=0;i<this.news.length;i++) {
+              // 去除html中的标签和&nbsp;
+              this.abstract = this.news[i].news_all.replace(/<[^<>]+?>/g, '').replace(/(\s|&nbsp;)+/g,'')
+              this.news[i].abstract = this.abstract
+            }
+            console.log(this.news)
+            this.total_num = res.data.data.length;
             this.total_page = Math.ceil(this.total_num / this.page_size);
-            // console.log('news', this.news)
           }else{
             this.$message.error(res.data.message);
           }
@@ -169,7 +156,6 @@
         let form = new FormData();
         form.append("file", file.raw);
         form.append("FileType", 'NewsPic');
-        // form.append("contentId",  '123');
         form.append("index", 1);
         axios.post(api.upload_files, form).then(res => {
           if(res.data.status == 200){
@@ -192,8 +178,9 @@
             var image = new Image();
             image.onload = function () {
               if(this.width/this.height>2.7 || this.width/this.height<2.1) {
-                _this.$message.error('请上传宽高比为2.1~2.7的图片');
-                reject();
+                // _this.$message.warning('请上传宽高比为2.1~2.7的图片');
+                _this.$notify({ title: '提示', message: '建议上传宽高比为2.1~2.7的图片', type: 'warning' });
+                // reject();
               }
               resolve();
             };
@@ -213,16 +200,21 @@
         return isJPG && isLt2M;
       },
       fiveUpEdit() {
-        this.titleInput = ''
-        this.fromInput = ''
-        this.imageUrl = ''
-        this.defaultMsg = ''
-        this.tabClick(1)
-        this.newsManage = true
+        this.$confirm('此操作将不保存本页的变化内容', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.titleInput = ''
+          this.fromInput = ''
+          this.imageUrl = ''
+          this.defaultMsg = ''
+          this.tabClick(1)
+          this.newsManage = true
+        });
       },
       uploadNews() {
-        // this.newsContent = this.$refs.ue.getUEContent()
-        // this.newsContent = ""
+        this.newsContent = this.$refs.ue.getUEContent()
         if(this.titleInput == '') {
           this.$message.error('请填写新闻标题');
         }else if(this.fromInput == '') {
@@ -238,10 +230,12 @@
             news_picture: this.imageUrl,
             news_all: this.newsContent
           }
+          console.log(params)
           axios.post(api.new_news, params).then(res => {
             if(res.data.status == 200){
               console.log(res)
               this.$message({ type: 'success', message: res.data.message });
+              this.getData(1)
               this.newsManage = true
             }else{
               this.$message({ type: 'error', message: res.data.message });
@@ -249,10 +243,6 @@
           },error =>{
             this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
           })
-        }
-        for(let i=0;i<this.news.length;i++) {
-          // 去除html中的标签和&nbsp;
-          this.news[i].news_all = this.newsContent.replace(/<[^<>]+?>/g, '').replace(/(\s|&nbsp;)+/g,'')
         }
       },
       handleRemove(file, fileList) {
@@ -264,16 +254,15 @@
         this.titleInput = news.news_title
         this.fromInput = news.news_from
         this.imageUrl = news.news_picture
-        this.defaultMsg = this.newsContent
-        // console.log(this.defaultMsg)
+        console.log(news)
+        this.defaultMsg = news.news_all
       },
       closeNews(news) {
         console.log(news.id)
       }
     },
     created() {
-      this.news = news
-      // this.getData(1)
+      this.getData(1)
     }
   }
 </script>
@@ -281,7 +270,7 @@
 <style lang="less" rel="stylesheet/less" scoped>
   @import "../common/css/_variate.less";
   .page-box {
-    /*margin: -3% 0 0 60%;*/
+    margin: -3% 0 0 71%;
   }
   .news-manage {
     .news-container {
@@ -290,9 +279,8 @@
       border: solid 1px #707070;
       .news-image {
         margin: 0.2rem;
-        /*min-width: 3.5rem;*/
+        min-width: 3.5rem;
         max-height: 1.4rem;
-        width: 20%;
         display: flex;
         -webkit-align-items: center;
         -webkit-justify-content: center;
