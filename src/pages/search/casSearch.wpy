@@ -139,7 +139,9 @@
 
 
   export default class CasSearch extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '泛思特'
+    }
 
     components = {};
 

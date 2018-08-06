@@ -90,7 +90,7 @@
         <view class="container-content">
           <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item">
             <view class="column1">{{index+1}}.{{item.name}}</view>
-            <view class="column2">空缺元</view>
+            <view class="column2">{{item.price}}元</view>
             <view class="column3 {{item.status == 0 ? 'column3-disable':''}}" @tap.stop="tapReceiveHandler({{item}})">
               领取
             </view>

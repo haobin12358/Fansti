@@ -89,7 +89,9 @@
   import CardMixin from '@/mixins/cardMixin';
 
   export default class SurveyReportSearch extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '泛思特'
+    }
 
     components = {};
     mixins = [CardMixin]

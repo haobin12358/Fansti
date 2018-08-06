@@ -36,22 +36,19 @@
 </style>
 
 <template>
-  <block wx:if="{{isOldUser}}">
-    <view class="container">
-      <view class="progress-chart">
-        <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
-          {{item}}
-        </view>
-      </view>
-      <view class="container-bd">
-        <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
+  <view wx:if="{{isOldUser}}" class="container">
+    <view class="progress-chart">
+      <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
+        {{item}}
       </view>
     </view>
+    <view class="container-bd">
+      <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
+    </view>
+  </view>
 
-  </block>
   <block wx:elif="{{isNewUser}}">
     <placeholder :type="type"></placeholder>
-
   </block>
 
   <placeholder wx:else></placeholder>
@@ -63,18 +60,20 @@
   import FreightConsignmentList from '@/components/freightConsignmentList'
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import BindingMixin from '@/mixins/bindingMixin';
+  import BindingMixin from '@/mixins/bindingMixin'
 
 
   export default class Index extends wepy.page {
-    config = {}
+    config = {
+      navigationBarTitleText: '跟踪'
+    }
+
+    mixins = [BindingMixin];
 
     components = {
       placeholder: Placeholder,
       'freight-consignment-list': FreightConsignmentList
     }
-
-    mixins = [BindingMixin]
 
     data = {
       type: 'newUser',
@@ -85,12 +84,11 @@
 
       ],
 
-
+      isBinding: false,
+      isOldUser:false,
+      isNewUser:false,
     }
     computed = {
-      isBinding() {
-        return this.isOldUser || this.isNewUser;
-      }
     }
 
     methods = {
@@ -104,33 +102,51 @@
 
       if(res.data.status == 200){
         this.goodsList = res.data.data;
-        // this.goodsList = this.goodsList.filter(x=>{
-        //   return x.jcno == 'E99999999';
-        // })
+        this.goodsList = this.goodsList.filter(x=>{
+          return x.jcno == 'E99999999';
+        })
         this.$apply();
       }else{
         tip.alert(res.data.message)
       }
     }
 
-    events = {}
-
-    onShow(){
-
+    watch={
     }
 
-    watch={
-      isOldUser(val){
-        this.getGoodsList();
+    events = {}
+
+    async onShow(){
+      console.log('show','跟踪');
+      let that = this
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser= !!wx.getStorageSync('isNewUser');
+
+      this.isBinding = this.isOldUser || this.isNewUser;
+      console.log(this.isBinding);
+      if(!this.isBinding){
+        await this.checkBinding(wx.getStorageSync('code'))
+
+        // 绑定成功  res结果无意义就是个字符串
+        console.log('新老用户',this.isOldUser, this.isNewUser);
+
+        this.init()
       }
     }
 
     init(){
+      if(this.isOldUser){
+        this.getGoodsList();
+      }
     }
 
-
     onLoad() {
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser= !!wx.getStorageSync('isNewUser');
 
+      this.isBinding = this.isOldUser || this.isNewUser;
+
+      this.init();
     }
   }
 </script>

@@ -69,6 +69,10 @@
           padding: 31rpx 20rpx;
           border-bottom: 1px solid @borderColor;
 
+          &:last-child{
+            border-bottom: 0;
+          }
+
           .introduce-item-title{
             display: flex;
             align-items: flex-end;
@@ -78,6 +82,11 @@
               width: 60rpx;
               height: 28rpx;
               margin-right: 26rpx;
+            }
+
+            .title-img-people{
+              width: 32rpx;
+              height: 35rpx;
             }
 
             .title-img-experience{
@@ -107,7 +116,7 @@
 
             .detail-item{
               display: flex;
-              margin-bottom: 52rpx;
+              margin-bottom: 23rpx;
 
               &:last-child{
                 margin-bottom: 0;
@@ -115,8 +124,8 @@
 
               .detail-label{
                 width: 50rpx;
-                line-height: 24rpx;
-                height: 24rpx;
+                line-height: 40rpx;
+                height: 40rpx;
                 text-align: right;
                 margin-right: 10rpx;
 
@@ -131,11 +140,23 @@
 
                 line-height: 2;
               }
+
+              .detail-text-name{
+                padding-left: 70rpx;
+              }
             }
           }
         }
       }
 
+    }
+
+    .container-ft{
+      text-align: center;
+      margin-top: 105rpx;
+      color: @mainFontColor;
+
+      .fz24();
     }
   }
 </style>
@@ -143,32 +164,45 @@
 <template>
 
   <view class="container">
-    <view class="container-hd">
-      <view class="clerk-card">
-        <image class="clerk-headimg" src="../../images/test_clerk_headimg.jpg"></image>
-        <view class="clerk-text-info">
-          <view class="line1">李师傅</view>
-          <view class="line2">
-            <view class="label-val-group">
-              <view class="rate-label">好评度</view>
-              <rate :key.sync="rateKey" :starSize="rateStarSize" :readonly="rateReadonly"></rate>
-            </view>
-            <view class="label-val-group">
-              <view class="advisory-num-label">资讯人数</view>
-              <view class="advisory-num-value">5</view>
-            </view>
-          </view>
-          <view class="line3">
-            <view class="experience">危险品、空运</view>
-            <view class="company-name">北京泛思特国际运输代理有限公司</view>
-          </view>
-      </view>
+    <!--<view class="container-hd">-->
+      <!--<view class="clerk-card">-->
+        <!--<image class="clerk-headimg" src="../../images/test_clerk_headimg.jpg"></image>-->
+        <!--<view class="clerk-text-info">-->
+          <!--<view class="line1">李师傅</view>-->
+          <!--<view class="line2">-->
+            <!--<view class="label-val-group">-->
+              <!--<view class="rate-label">好评度</view>-->
+              <!--<rate :key.sync="rateKey" :starSize="rateStarSize" :readonly="rateReadonly"></rate>-->
+            <!--</view>-->
+            <!--<view class="label-val-group">-->
+              <!--<view class="advisory-num-label">资讯人数</view>-->
+              <!--<view class="advisory-num-value">5</view>-->
+            <!--</view>-->
+          <!--</view>-->
+          <!--<view class="line3">-->
+            <!--<view class="experience">危险品、空运</view>-->
+            <!--<view class="company-name">北京泛思特国际运输代理有限公司</view>-->
+          <!--</view>-->
+      <!--</view>-->
 
-      </view>
+      <!--</view>-->
 
-    </view>
+    <!--</view>-->
     <view class="container-bd">
       <view class="introduce-list">
+        <view class="introduce-item">
+          <view class="introduce-item-title">
+            <image class="title-img title-img-people" src="../../images/people.png"></image>
+            <view class="title-text">资深工匠</view>
+          </view>
+          <view class="introduce-item-detail">
+            <view class="detail-item">
+              <view class="detail-text detail-text-name">
+                {{cardInfo.user_name ? cardInfo.user_name : '暂无'}}
+              </view>
+            </view>
+          </view>
+        </view>
         <view class="introduce-item">
           <view class="introduce-item-title">
             <image class="title-img title-img-experience" src="../../images/staff_experience.png"></image>
@@ -180,7 +214,7 @@
                 <image src="../../images/circle_full.png"></image>
               </view>
               <view class="detail-text">
-                从业经验：10年
+                从业经验：{{cardInfo.work_year ? cardInfo.work_year : '0'}}年
               </view>
             </view>
             <view class="detail-item">
@@ -188,16 +222,30 @@
                 <image src="../../images/circle_full.png"></image>
               </view>
               <view class="detail-text">
-                专业化工品、医药品、危险品等货物国际空运，十年以上操作服务经验。
+                {{cardInfo.work_goodat ? cardInfo.work_goodat : '暂无'}}
               </view>
-
-
             </view>
           </view>
         </view>
         <view class="introduce-item">
           <view class="introduce-item-title">
             <image class="title-img title-img-info" src="../../images/staff_info.png"></image>
+            <view class="title-text">专家简介</view>
+          </view>
+          <view class="introduce-item-detail">
+            <view class="detail-item">
+              <view class="detail-label">
+                <image src="../../images/circle_full.png"></image>
+              </view>
+              <view class="detail-text">
+                {{cardInfo.user_introduction ? cardInfo.user_introduction : '暂无'}}
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="introduce-item">
+          <view class="introduce-item-title">
+            <image class="title-img title-img-phone" src="../../images/phone.png"></image>
             <view class="title-text">联系方式</view>
           </view>
           <view class="introduce-item-detail">
@@ -206,35 +254,40 @@
                 <image src="../../images/circle_full.png"></image>
               </view>
               <view class="detail-text">
-                2008年进入公司，初始两年从事库管及危险品包装工作，
-                第三年开始学习做危险品文件，对化工品、危险品的货物
-                如何分类、包装、申报、出运等拥有丰富的操作经验，第
-                四年开始接触到销售工作，个人现已为客户操作超过2000 票以上的危化品货物，全部安全出运，无一事故。
+                QQ: {{cardInfo.qq ? cardInfo.qq : '暂无'}}
               </view>
             </view>
-          </view>
-        </view>
-        <view class="introduce-item">
-          <view class="introduce-item-title">
-            <image class="title-img title-img-phone" src="../../images/phone.png"></image>
-            <view class="title-text">经验擅长</view>
-          </view>
-          <view class="introduce-item-detail">
             <view class="detail-item">
               <view class="detail-label">
                 <image src="../../images/circle_full.png"></image>
               </view>
               <view class="detail-text">
-                专业化工品、医药品、危险品等货物国际空运，十年以上操作服务经验。
+                电话: {{cardInfo.phone}}
               </view>
-
-
             </view>
+            <view class="detail-item">
+              <view class="detail-label">
+                <image src="../../images/circle_full.png"></image>
+              </view>
+              <view class="detail-text">
+                微信: {{cardInfo.wechat ? cardInfo.wechat : '暂无'}}
+              </view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">
+                <image src="../../images/circle_full.png"></image>
+              </view>
+              <view class="detail-text">
+                邮箱: {{cardInfo.email ? cardInfo.email : '暂无'}}
+              </view>
+            </view>
+
           </view>
         </view>
-
       </view>
-
+    </view>
+    <view class="container-ft" @tap="">
+      编辑
     </view>
   </view>
 </template>
@@ -242,9 +295,14 @@
 <script>
   import wepy from 'wepy';
   import Rate from '@/components/common/rate';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
+  //  个人名片
   export default class StockClerkInfo extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '个人名片'
+    };
 
     components = {
       rate: Rate
@@ -253,7 +311,11 @@
     data = {
       rateKey: 4.7,
       rateStarSize: 27,
-      rateReadonly: true
+      rateReadonly: true,
+
+      cardInfo: {
+
+      }
     };
     computed = {};
 
@@ -261,8 +323,21 @@
 
     events = {};
 
-    onLoad() {
+    //  获取个人名片
+    async getMyInfo(){
+      let res = await api.getMyInfo({openid: wx.getStorageSync('openid')});
 
+      if (res.data.status == 200) {
+        this.cardInfo = res.data.data;
+        console.log('cardInfo',this.cardInfo);
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    onShow() {
+      this.getMyInfo();
     }
   }
 </script>

@@ -123,7 +123,9 @@
   import tip from '@/utils/tip';
 
   export default class ConfirmConsignment extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '泛思特'
+    }
 
     components = {};
 

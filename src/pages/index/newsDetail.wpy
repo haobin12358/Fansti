@@ -93,11 +93,11 @@
     import HtmlParser from '@/components/common/htmlParser';
 
     export default class NewsDetail extends wepy.page {
-        config = {}
-
+      config = {
+        navigationBarTitleText: '泛思特'
+      }
         components = {
           'html-parser': HtmlParser,
-
         }
 
         data = {
@@ -131,12 +131,10 @@
           }
         }
 
-        onLoad() {
-          this.getNewsAbo();
-
-          // console.log(this.'html-parser');
-
-        }
+      onLoad(params) {
+        console.log(params);
+        this.getNewsAbo(params.id);
+      }
     }
 </script>
 

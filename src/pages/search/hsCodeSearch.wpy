@@ -89,7 +89,9 @@
   import CardMixin from '../../mixins/cardMixin';
 
   export default class HsCode extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '泛思特'
+    }
 
     components = {};
 

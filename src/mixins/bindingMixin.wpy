@@ -15,8 +15,8 @@
     data = {
       openid: '',
       isOldUser: false, //  绑定的是否为新用户
-      isNewUser: false, //  绑定的是否为老用户
-  };
+      isNewUser: false //  绑定的是否为老用户
+    };
 
     computed = {
       // isBinding() {
@@ -29,77 +29,61 @@
 
     events = {};
 
-    async checkBinding(code){
-      let res =await api.getOpenid({query:{code}});
+    async checkBinding() {
+      let openid = wx.getStorageSync('openid');
+      let res2 = await api.getBinding({ query: { openid } });
 
-      if(res.data.status == 200){
-        let openid = res.data.data.openid
-        this.openid = openid;
-        let res2 =await api.getBinding({query:{openid}});
+      if (res2.data.status == 200) {
 
-        if(res2.data.status == 200){
+        //  新老用户
+        if (res2.data.message == '已绑定') {
+          this.isBinding = true;
 
-          //  新老用户
-          if(res2.data.message == '已绑定'){
-            //  老用户
-            if (res2.data.data.login_name) {
-              //  老用户直接绑定token
-              if (!wx.getStorageSync('token')) {
-                wx.setStorageSync('token', res2.data.data.login_name);
-              }
-              this.isOldUser = true
-            }else{
-              wx.setStorageSync('newUser', true);
-              this.isNewUser = true
+          //  老用户
+          if (res2.data.data.login_name) {
+            //  老用户直接绑定token
+            if (!wx.getStorageSync('token')) {
+              wx.setStorageSync('token', res2.data.data.login_name);
             }
+            this.isOldUser = true;
+          } else {
+            wx.setStorageSync('newUser', true);
+            this.isNewUser = true;
           }
-          this.$apply()
-
-          console.group('now')
-          console.log(wx.getStorageSync('token'),wx.getStorageSync('newUser'));
-          console.groupEnd('now')
-
-        }else{
-          tip.error(res2.data.message);
         }
-      }else{
-        tip.error(res.data.message);
+        this.$apply();
+
+        console.group('now');
+        console.log(wx.getStorageSync('token'), wx.getStorageSync('newUser'));
+        console.groupEnd('now');
+
+        return 'over';
+      } else {
+        tip.error(res2.data.message);
       }
+
     }
 
     //  设置openid  因为已经绑定会跳过设置openid
-    async setOpenid() {
+    setOpenid() {
       let that = this;
 
       wx.login({
         success: function(res) {
-          let {code} = res
-          api.getOpenid({query:{code}}).then(
-            (res2)=>{
-              if(res2.data.status == 200) {
-                let openid = res2.data.data.openid
+          let { code } = res;
 
-                that.openid = openid;
-                that.$apply();
+          wx.setStorageSync('code', code);
+          api.getOpenid({ query: { code } }).then(
+            (res2) => {
+              if (res2.data.status == 200) {
+                let openid = res2.data.data.openid;
+
+                wx.setStorageSync('openid', openid);
               }
             }
-          )
+          );
         }
       });
-    }
-
-    onShow(){
-      let that = this;
-      this.isOldUser = !!wx.getStorageSync('token')
-      this.isNewUser = !!wx.getStorageSync('newUser')
-
-      if(!this.isOldUser && !this.isNewUser){
-        wx.login({
-          success: function(res) {
-            that.checkBinding(res.code);
-          }
-        })
-      }
     }
 
     onLoad() {

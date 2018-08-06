@@ -165,8 +165,7 @@
 </style>
 
 <template>
-  <block wx:if="{{isBinding}}">
-    <view class="container">
+    <view wx:if="{{isBinding}}" class="container">
       <view class="container-hd">
         <view  class="overview">
           <view class="overview-item" @tap="tapWGPHandler">
@@ -188,7 +187,7 @@
             <image class="overview-item-bg" src="../../images/packet_blue.png"></image>
             <view class="overview-item-info">
               <view class="line1">月度统计</view>
-              <view class="line2"></view>
+              <view class="line2">{{myRedCoin}}</view>
             </view>
 
           </view>
@@ -198,7 +197,6 @@
             <view class="line2">
               与客服联系如何开启红包
             </view>
-
           </view>
         </view>
       </view>
@@ -210,13 +208,13 @@
           <view class="bd-section-content bd-section-content-info">
             <view class="service-info">
               <view class="service-info-line">
-                客服名称：{{serviceInfo.name}}
+                客服名称：{{serviceInfo.user_name}}
               </view>
               <view class="service-info-line">
                 客服 QQ：{{serviceInfo.qq}}
               </view>
               <view class="service-info-line">
-                客服电话：{{serviceInfo.telphone}}
+                客服电话：{{serviceInfo.telephone}}
               </view>
               <view class="service-info-line">
                 客服邮箱：{{serviceInfo.email}}
@@ -224,9 +222,7 @@
 
             </view>
             <image src="../../images/service_people.png" class="service-img"></image>
-
-
-          </view>
+        </view>
         </view>
         <view class="bd-section">
           <view class="bd-section-title">
@@ -242,18 +238,17 @@
       </view>
       <view class="container-ft">
         <view class="ft-btns">
-          <button open-type="share" wx:if="{{isOldUser}}">分享服务号</button>
+          <button @tap="goPersonCard">分享服务号</button>
           <button @tap="tapCallService">电话沟通</button>
           <button @tap="bindingAgain">重新绑定</button>
         </view>
-        <view class="ft-share-list" wx:if="{{isOldUser}}">
+        <view class="ft-share-list">
           <image src="../../images/person_share_list.png"></image>
           <text @tap="goShareList">查看分享列表</text>
         </view>
       </view>
     </view>
-  </block>
-  <placeholder wx:else></placeholder>
+  <!--<placeholder wx:else></placeholder>-->
   <waitGetPacket :show.sync="showWGP" :list.sync="redList"></waitGetPacket>
   <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
   <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
@@ -261,25 +256,26 @@
 
 <script>
   import wepy from 'wepy'
-  import BindingMixin from '../../mixins/bindingMixin';
-  import CardMixin from '../../mixins/cardMixin';
-  import api from '../../api/api';
-  import tip from '../../utils/tip';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
   import Placeholder from '@/components/common/placeholder'
   import AlreadyGetPacket from '@/components/alreadyGetPacket'
   import WaitGetPacket from '@/components/waitGetPacket'
   import AlreadyGetTicket from '@/components/alreadyGetTicket'
-
+  import BindingMixin from '@/mixins/bindingMixin'
 
   export default class Index extends wepy.page {
-    config = {};
-
+    config = {
+      navigationBarTitleText: '个人'
+    }
     components = {
       placeholder: Placeholder,
       alreadyGetPacket: AlreadyGetPacket,
       waitGetPacket: WaitGetPacket,
       alreadyGetTicket: AlreadyGetTicket
     };
+
+    mixins = [BindingMixin];
 
     data = {
       showWGP: false,//  显示未领取红包
@@ -302,42 +298,31 @@
         'red_num': 0
       },
 
-      serviceInfo: {},
+      redList:[],
+      myRedList:[],
+      myRedCoin:0,
+      monthRed:[],
 
-      msg: ''
+      serviceInfo: {},
+      msg: '',
+
+      isBinding: false,
+      isOldUser:false,
+      isNewUser:false,
     };
-    mixins = [BindingMixin];
 
     computed = {
-      isBinding() {
-        return this.isOldUser || this.isNewUser;
-      },
-
       textareaEnable() {
         return !this.showWGP && !this.showAGP && !this.showCT;
       },
-
-      //  未领取红包
-      redList() {
-        return this.allPacketInfo.red_list;
-      },
-
-      //  已领取红包
-      myRedList() {
-        return this.allPacketInfo.my_red_list;
-      },
-      myRedCoin() {
-        return this.allPacketInfo.my_red_coin;
-      },
-
-      //  月度统计
-      monthRed(){
-        return this.allPacketInfo.month_red;
-      },
-
     };
 
     methods = {
+      goPersonCard(){
+        wx.navigateTo({
+          url: '/pages/track/stockClerkInfo'
+        });
+      },
       goShareList() {
         wx.navigateTo({
           url: '/pages/person/shareList'
@@ -346,13 +331,11 @@
 
       inputMsgHandler(e) {
         this.msg = e.detail.value;
-        console.log(this.msg);
       },
 
       submitMsg() {
         if (this.msg != '') {
           this.makeUserMessage(this.msg);
-
         } else {
           tip.alert('留言不能为空');
         }
@@ -380,7 +363,7 @@
       tapCallService() {
         let phoneNumber = this.serviceInfo.telphone+'';
 
-        wepy.showModal({
+        wx.showModal({
           title: `联系客服`,
           content: `拨打${phoneNumber}(客服电话)?`
         }).then(
@@ -403,7 +386,8 @@
 
     //  获取客服信息
     async getCustom() {
-      let res = await api.getCustom({});
+      //  token可空,新老用户
+      let res = await api.getCustom({login_name: wx.getStorageSync('token')});
 
       if (res.data.status == 200) {
         this.serviceInfo = res.data.data;
@@ -415,7 +399,7 @@
 
     //  留言
     async makeUserMessage(message) {
-      let res = await api.makeUserMessage({ method: 'POST', openid: this.openid, query: { message } });
+      let res = await api.makeUserMessage({ method: 'POST', openid: wx.getStorageSync('openid'), query: { message } });
 
       if (res.data.status == 200) {
         this.msg = '';
@@ -431,30 +415,52 @@
 
       if (res.data.status == 200) {
         this.allPacketInfo = res.data.data;
-        console.log(this.allPacketInfo);
+        this.redList = res.data.data.red_list;
+        this.myRedList = res.data.data.my_red_list;
+        this.myRedCoin = res.data.data.my_red_coin;
+        this.monthRed = res.data.data.month_red;
         this.$apply();
       } else {
         tip.alert(res.data.message);
       }
     }
 
-    watch={
-      isBinding(val){
-        if (val) {
-          this.getCustom();
-          this.setOpenid();
-          if (this.isOldUser) {
-            this.getAllRed();
-          }
+
+    async onShow() {
+      console.log('showxxxx','个人');
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser= !!wx.getStorageSync('isNewUser');
+
+      this.isBinding = this.isOldUser || this.isNewUser;
+      // console.log(this.isBinding);
+      if(!this.isBinding){
+        let res =await this.checkBinding(wx.getStorageSync('code'))
+
+        // 绑定成功  res结果无意义就是个字符串
+        // console.log('新老用户',this.isOldUser, this.isNewUser);
+        this.init()
+      }
+
+
+    }
+
+    init(){
+      if(this.isBinding){
+        this.getCustom();
+
+        if(this.isOldUser){
+          this.getAllRed();
         }
       }
     }
 
-    onShow() {
-
-    }
-
     onLoad() {
+      console.log('load','个人');
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser= !!wx.getStorageSync('isNewUser');
+
+      this.isBinding = this.isOldUser || this.isNewUser;
+      this.init()
     }
   }
 </script>

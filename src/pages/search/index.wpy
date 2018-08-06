@@ -249,11 +249,14 @@
       inputTcatHandler(e){
         this.tcat = e.detail.value;
       },
-
-
     }
 
     events = {}
+
+    onShow(){
+      console.log('show','查询');
+
+    }
 
     onLoad() {
 

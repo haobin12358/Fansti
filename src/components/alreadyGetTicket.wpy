@@ -131,6 +131,7 @@
           count += this.list[i].count;
         }
 
+        console.log(count);
         return count;
       }
     };
@@ -154,9 +155,23 @@
       },
 
       apply(){
-        //  解决再次显示  没有绘制的bug
+        //  解决再次显示  没有绘制的bug  TODO
+        let categories = [1]
+        let data= [0]
+
+        for (let i = 0; i <this.list.length; i++) {
+          categories.push(this.list[i].month)
+          data.push(this.list[i].count)
+        }
+
         lineChart.updateData({
-          title: ''
+          title: '',
+          categories,
+          series:[{
+            name: '红包',
+            data,
+            color:"#ffcd42",
+          }],
         });
       }
     };
@@ -168,13 +183,8 @@
     onLoad() {
       let windowWidth = 325;
       console.log(this.list);
-      let categories = []
-      let data= []
-
-      for (let i = 0; i <this.list.length; i++) {
-        categories.push(this.list[i].month)
-        data.push(this.list[i].count)
-      }
+      let categories = [1]
+      let data= [1]
 
       lineChart = new wxCharts({
         canvasId: 'lineCanvas',

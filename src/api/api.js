@@ -1,7 +1,7 @@
 import {
   wxRequest
 } from '@/utils/wxRequest';
-const debug = true;
+const debug = false;
 
 const host =debug? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'http://10.0.0.130:7444/fansti';
 
@@ -13,7 +13,7 @@ const getBinding = params => wxRequest(params, host+'/users/get_binding');
 const getOpenid = params => wxRequest(params, host+'/users/get_openid');
 
 //  获取新闻列表  POST
-const getAllNews = params => wxRequest(params, host+'/news/get_all');
+const getAllNews = params => wxRequest(params, host+`/news/get_all?page_size=${params.page_size}&page_num=${params.page_num}`);
 //  获取新闻列表  POST
 const getNewsAbo = params => wxRequest(params, host+`/news/get_abo?id=${params.id}`);
 
@@ -27,10 +27,6 @@ const getJcAbo = params => wxRequest(params, host+'/goods/get_jc_abo');
 //  确认照片  POST
 const retrueGoods = params => wxRequest(params, host+`/goods/retrue_goods?login_name=${params.login_name}&jcno=${params.jcno}`);
 
-
-//  获取客服信息
-const getCustom = params => wxRequest(params, host+'/other/get_custom');
-
 //  查询cas
 const getCas = params => wxRequest(params, host+'/scrapy/get_cas');
 //  查询hscode
@@ -40,6 +36,12 @@ const getHs = params => wxRequest(params, host+'/scrapy/get_hs');
 const getAllRed = params => wxRequest(params, host+'/reds/get_all_red');
 //  留言
 const makeUserMessage = params => wxRequest(params, host+`/users/make_user_message?openid=${params.openid}`);
+//  获取客服信息
+const getCustom = params => wxRequest(params, host+`/other/get_custom?login_name=${params.login_name}`);
+//  获取个人名片
+const getMyInfo = params => wxRequest(params, host+`/users/get_my_info?openid=${params.openid}`);
+//  更新个人名片
+const updateMyInfo = params => wxRequest(params, host+`/users/update_my_info?openid=${params.openid}`);
 
 
 
@@ -56,5 +58,7 @@ export default {
   getCas,
   getHs,
   getAllRed,
-  makeUserMessage
+  makeUserMessage,
+  getMyInfo,
+  updateMyInfo,
 }

@@ -118,7 +118,6 @@
 
 <script>
   import wepy from 'wepy';
-  import Popup from "@/components/common/popup"
   import CardMixin from '@/mixins/cardMixin';
 
   export default class AlreadyGetPacket extends wepy.component {
@@ -142,7 +141,6 @@
     mixins = [CardMixin]
 
     components={
-      popup: Popup
     }
 
     data = {
