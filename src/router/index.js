@@ -41,13 +41,13 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/upload_news',
+    path: '/white_list',
     component: Layout,
     children: [{
       path: '',
-      component: () => import('../views/upload_news'),
-      name: 'upload_news',
-      meta: { title: 'upload_news', icon: 'upload_news', noCache: true }
+      component: () => import('../views/white_list'),
+      name: 'white_list',
+      meta: { title: 'white_list', icon: 'white_list', noCache: true }
     }
     ]
   },

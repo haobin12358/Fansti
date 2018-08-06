@@ -29,6 +29,12 @@
       "MNurl":"/user_message",
       "MNicon":"icon",
       "children":[]
+    },
+    {
+      "MNname":"联系人白名单",
+      "MNurl":"/white_list",
+      "MNicon":"icon",
+      "children":[]
     }
   ]
 }
