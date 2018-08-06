@@ -83,10 +83,7 @@
       pageChange(v){
         console.log(v)
         if(v == this.current_page){
-          this.$message({
-            message: '这已经是第' + v + '页数据了',
-            type: 'warning'
-          });
+          this.$message({ message: '这已经是第' + v + '页数据了', type: 'warning' });
           return false;
         }
         this.current_page = v;
