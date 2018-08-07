@@ -30,10 +30,10 @@
       <el-button class="add-btn" @click="dialogFormVisible = true">添加白名单</el-button>
       <el-dialog title="添加白名单" :visible.sync="dialogFormVisible">
         <el-form :model="form" :rules="rules" ref="form">
-          <el-form-item label="姓 名：" :label-width="formLabelWidth">
+          <el-form-item label="姓 名：" prop="name" :label-width="formLabelWidth">
             <el-input v-model="form.name" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="手机号：" :label-width="formLabelWidth">
+          <el-form-item label="手机号：" prop="telephone" :label-width="formLabelWidth">
             <el-input v-model="form.telephone" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -81,7 +81,7 @@
             { required: true, message: '请输入姓名', trigger: 'blur' }
           ],
           telephone:[
-            { required: true, message: '请输入手机号', trigger: 'blur' }
+            { required: true, message: '请输入手机号', trigger: 'change' }
           ]
         },
         formLabelWidth: '120px'
@@ -130,32 +130,18 @@
         let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            axios.post(api.forget_password,that.ruleForm).
+            /*axios.post(api.forget_password, that.ruleForm).
             then(res=>{
               if(res.data.status == 200){
-                this.$router.push('/login');
-                //清空Cookie
-
-                let exdate = new Date(); //获取时间
-                exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * -1); //保存的天数
-                //字符串拼接cookie
-                window.document.cookie = "userName" + "=" + '' + ";path=/;expires=" + exdate.toGMTString();
-                window.document.cookie = "userPwd" + "=" + '' + ";path=/;expires=" + exdate.toGMTString();
-
+                this.$message({ type: 'success', message: res.data.message });
               }else{
-                MessageBox({ title:'提示', message:res.data.message,
-                  callback: action => {
-
-                  }
-                })
+                this.$message.error(res.data.message);
               }
             }, res=>{
-              MessageBox({ title:'提示', message:res.data.message,
-                callback: action => {
-
-                }
-              })
-            });
+              this.$message.error(res.data.message);
+            });*//*,error => {
+              this.$message.error(error.data.message);
+            })*/
           } else {
             console.log('error submit!!');
             return false;
