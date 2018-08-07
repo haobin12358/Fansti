@@ -18,7 +18,8 @@ class FSUser(Resource):
             "get_binding": "self.cusers.get_binding()",
             "get_openid": "self.cusers.get_openid()",
             "get_invate_list": "self.cusers.get_invate_list()",
-            "get_user_message": "self.cusers.get_user_message()"
+            "get_user_message": "self.cusers.get_user_message()",
+            "get_my_info": "self.cusers.get_my_info()"
         }
 
         if users not in apis:
@@ -31,7 +32,8 @@ class FSUser(Resource):
         apis = {
             "user_binding": "self.cusers.user_binding()",
             "make_user_message": "self.cusers.make_user_message()",
-            "add_invate": "self.cusers.add_invate()"
+            "add_invate": "self.cusers.add_invate()",
+            "update_my_info": "self.cusers.update_my_info()"
         }
 
         if users not in apis:

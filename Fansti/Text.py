@@ -1,50 +1,35 @@
-# *- coding:utf8 *-
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, create_engine, String, DATE
-from sqlalchemy.orm import sessionmaker
-database = "ORCL"
-host = "122.233.181.49"
-port = "1521"
-username = "C##M"
-password = "root"
-charset = "utf8"
-sqlenginename = 'oracle'
-
-DB_PARAMS = "{0}://{1}:{2}@{3}:{4}/{5}".format(
-    sqlenginename, username, password, host, port, database)
-mysql_engine = create_engine(DB_PARAMS, echo=False)
-Base = declarative_base()
-
-class D_MESSAGE_USER(Base):
-    __tablename__ = 'D_MESSAGE_USER'
-    id = Column(String(32), primary_key=True)   # ID主键
-    compnay = Column(String(200))               # 客户所在公司
-    username = Column(String(100))              # 客户名称
-    czr = Column(String(100))                   # 负责客服
-    phone = Column(String(32))                  # 客户电话
-    pet_name = Column(String(40))               # 客户昵称
-    user_wx = Column(String(40))                # 客户微信号
-    xsr = Column(String(100))                   # 负责销售
-    login_name = Column(String(40))             # 登录名
-    login_password = Column(String(60))         # 登录密码
-    account_id = Column(String(40))             #
-    user_type = Column(String(2))               # 用户类型
-    account_type = Column(String(2))            #
-    wx_post = Column(String(40))                # 微信推送
-    login_url = Column(String(200))             # 免登陆URL
-    create_time = Column(String(DATE))          # 创建时间
-    create_user = Column(String(40))            # 创建人
-
-db_session = sessionmaker(bind=mysql_engine)
+import requests
+import re
+import json
 
 
-class SUsers():
-    def __init__(self):
-        self.session = db_session()
+class WechatSprot(object):
+    def __init__(self, openid):
+        self.openid = openid
 
-    def get_name_password_phone(self):
-        return self.session.query(D_MESSAGE_USER.login_name, D_MESSAGE_USER.login_password, D_MESSAGE_USER.phone).first()
+    def getInfo(self):
+        url = "http://hw.weixin.qq.com/steprank/step/personal"
+
+        querystring = {"openid": self.openid}
+
+        headers = {
+            "host": "hw.weixin.qq.com",
+            "connection": "keep-alive",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36 MicroMessenger/6.5.2.501 NetType/WIFI WindowsWechat QBCore/3.43.691.400 QQBrowser/9.0.2524.400",
+            "accept-encoding": "gzip, deflate",
+            "accept-language": "zh-CN,zh;q=0.8,en-us;q=0.6,en;q=0.5;q=0.4",
+            "cookie": "hwstepranksk=JxMBWw1sxQhxnMgsJnnLh-r0VFzLH6RtJWv5b_j3z8MPs6-J; pass_ticket=p9R%2FqjIh%2BlXt%2BoxP7GIWrqm3Sbf1Minisk%2FNUz5zra4ReETR2ATI8H57zkEERCvG",
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+
+        res = re.findall("window.json = (.+);", response.text)
+        print(res)
+        # exit()
+        return json.loads(res[0])
+
 
 if __name__ == "__main__":
-    suser = SUsers()
-    print suser.get_name_password_phone()
+    obj = WechatSprot("o-hg346mUYVyJPolSYrO-UIqXTAs")
+    print(obj.getInfo())

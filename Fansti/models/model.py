@@ -295,7 +295,7 @@ class USER_MESSAGE(Base):
 class USER_INVATE(Base):
     __tablename__ = "USER_INVATE"
     id = Column(String(200), primary_key=True)                  # 主键id
-    login_name = Column(String(40))                             # 邀请人login_name
+    args_openid = Column(String(200))                            # 邀请人微信id
     invate_openid = Column(String(200))                         # 被邀请人微信id
 
 class GOODS_RETRUE(Base):
@@ -356,7 +356,7 @@ class AIR_HWYS_DGR_LEVEL(Base):
     __tablename__ = "AIR_HWYS_DGR_LEVEL"
     id = Column(String(200), primary_key=True)              # 主键
     dgr_id = Column(String(200))                            # 关联外键
-    level = Column(String(200))                             # 等级
+    dgr_level = Column(String(200))                         # 等级
     airliner_capacity = Column(String(200))                 # 客机容量
     airliner_description_no = Column(String(200))           # 客机说明号
     airliner_is_single = Column(String(200))                # 客机是否可单一
@@ -372,6 +372,16 @@ class AIR_HWYS_DGR_CONTAINER(Base):
     dgr_container = Column(String(200))                     # 容器类型
     dgr_container_capacity = Column(String(200))            # 容量
     dgr_type = Column(String(60))                           # 客机/货机
+
+class AIR_HWYS_TACT(Base):
+    __tablename__ = "AIR_HWYS_TACT"
+    id = Column(String(200), primary_key=True)
+    three_code = Column(String(200))                        # 三字码
+    city = Column(String(200))                              # 城市名
+    state = Column(String(200))                             # 州名
+    country = Column(String(200))                           # 国家名
+    freight = Column(String(2000))                          # 运费
+    chinese_position = Column(String(2000))                 # 中文名称及地理位置
 
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)

@@ -244,7 +244,7 @@ class CUsers():
         make_log("args", args)
         data = json.loads(request.data)
         make_log("data", data)
-        true_args = ["login_name"]
+        true_args = ["openid"]
         true_data = ["openid"]
         if judge_keys(true_args, args.keys()) != 200:
             return judge_keys(true_args, args.keys())
@@ -253,11 +253,12 @@ class CUsers():
         new_user_invate = add_model("USER_INVATE",
                                     **{
                                         "id": str(uuid.uuid4()),
-                                        "login_name": args["login_name"],
-                                        "openid": data["openid"]
+                                        "args_openid": args["openid"],
+                                        "invate_openid": data["openid"]
                                     })
         if not new_user_invate:
             return SYSTEM_ERROR
+        """
         red_name = "分享服务号"
         id = get_model_return_dict(self.sreds.get_id_by_redname(red_name))
         make_log("id", id)
@@ -269,18 +270,19 @@ class CUsers():
             update_status = self.sreds.update_myred(status_id["id"], {"status": "1"})
             if not update_status:
                 return SYSTEM_ERROR
+        """
         return import_status("SUCCESS_NEW_INVATE", "OK")
 
     def get_invate_list(self):
         args = request.args.to_dict()
         make_log("args", args)
-        true_args = ["login_name"]
+        true_args = ["openid"]
         if judge_keys(true_args, args.keys()) != 200:
             return judge_keys(true_args, args.keys())
-        all_invate = get_model_return_list(self.susers.get_invate_by_login_name(args["login_name"]))
+        all_invate = get_model_return_list(self.susers.get_invate_by_login_name(args["openid"]))
         make_log("all_invate", all_invate)
         for row in all_invate:
-            a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(row["openid"]))
+            a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(row["invate_openid"]))
             make_log("a_invate", a_invate)
             if not a_invate:
                 return SYSTEM_ERROR
@@ -288,5 +290,57 @@ class CUsers():
             row["phone"] = all_invate["phone"]
         response = import_status("SUCCESS_GET_INVATE", "OK")
         response["data"] = all_invate
+        return response
+
+    def get_my_info(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_args = ["openid"]
+        if judge_keys(true_args, args.keys()) != 200:
+            return judge_keys(true_args, args.keys())
+        my_info = get_model_return_dict(self.susers.get_personal_by_openid(args["openid"]))
+        make_log("my_info", my_info)
+        for row in my_info.keys():
+            my_info[row] = my_info[row].decode("gbk").encode("utf8")
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
+        response["data"] = my_info
+        return response
+
+    def update_my_info(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_args = ["openid"]
+        if judge_keys(true_args, args.keys()) != 200:
+            return judge_keys(true_args, args.keys())
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_data = ["user_name"]
+        null_data = ["work_year", "work_goodat", "user_introduction", "qq", "wechat", "email"]
+        if judge_keys(true_data, data.keys(), null_data) != 200:
+            return judge_keys(true_data, data.keys(), null_data)
+        phone = get_model_return_dict(self.susers.get_wechat_login(args["openid"]))["phone"]
+        make_log("phone", phone)
+        if not phone:
+            return SYSTEM_ERROR
+        my_info = get_model_return_dict(self.susers.get_personal_by_openid(args["openid"]))
+        make_log("myinfo", my_info)
+        if not my_info:
+            return SYSTEM_ERROR
+        for key in null_data:
+            if key not in data.keys():
+                data[key] = None
+        update_info = self.susers.update_wechat_login(args["openid"],
+                                                      {
+                                                          "user_name": data["user_name"],
+                                                          "work_year": data["work_year"],
+                                                          "work_goodat": data["work_goodat"],
+                                                          "user_introduction": data["user_introduction"],
+                                                          "qq": data["qq"],
+                                                          "wechat": data["wechat"],
+                                                          "email": data["email"]
+                                                      })
+        if not update_info:
+            return SYSTEM_ERROR
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
         return response
 
