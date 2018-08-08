@@ -15,12 +15,7 @@
             <div class="news-from-date">{{item.news_from}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.news_time}}</div>
             <div class="news-body">摘要：{{item.abstract}}</div>
           </div>
-          <el-tooltip content="编辑后可再次上传该新闻" placement="left">
-            <div class="news-edit" v-if="item.newsStatus" @click="editNews(item)">编 辑</div>
-          </el-tooltip>
-          <el-tooltip content="点击关闭将下架该新闻" placement="left">
-            <div class="news-close" v-if="!item.newsStatus" @click="closeNews(item)">关 闭</div>
-          </el-tooltip>
+          <div class="news-close" @click="closeNews(item)">删 除</div>
         </div>
       </div>
     </div>
@@ -38,8 +33,8 @@
           <div class="left-text">标题图片：</div>
           <el-upload class="avatar-uploader" action="http://10.0.0.130:7444/fansti/news/upload_files" :show-file-list="false"
                      :on-success="uploadPicture"
-                     :before-upload="beforeAvatarUpload"
-                     :on-remove="handleRemove">
+                     :before-upload="beforeAvatarUpload">
+                     <!--:on-remove="handleRemove"-->
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -61,7 +56,7 @@
         </div>
         <div v-if="titleInput != ''">
           <el-tooltip content="放弃本次编辑" placement="top">
-            <el-button class="give-up-btn" @click="fiveUpEdit">放弃编辑</el-button>
+            <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
           </el-tooltip>
           <el-button class="upload-two-btn" @click="uploadNews">上 传</el-button>
         </div>
@@ -136,6 +131,7 @@
         this.current_page = v;
         this.getData(v);
       },
+      // 顶部的tab标签
       tabClick(index){
         let _arr = this.tabs_data;
         for(let i =0;i<_arr.length;i++){
@@ -149,6 +145,7 @@
           this.newsManage = true
         }
       },
+      // 上传标题图片
       uploadPicture(res, file) {
         let form = new FormData();
         form.append("file", file.raw);
@@ -156,7 +153,6 @@
         form.append("index", 1);
         axios.post(api.upload_files, form).then(res => {
           if(res.data.status == 200){
-            console.log(res)
             this.$message({ type: 'success', message: res.data.message });
           }else{
             this.$message({ type: 'error', message: res.data.message });
@@ -166,6 +162,7 @@
         })
         this.imageUrl = URL.createObjectURL(file.raw);
       },
+      // 上传图片前的限制方法
       beforeAvatarUpload(file) {
         // 上传前限制图片的宽高比
         var _this = this;
@@ -196,7 +193,8 @@
         }
         return isJPG && isLt2M;
       },
-      fiveUpEdit() {
+      // 放弃编辑
+      giveUpEdit() {
         this.$confirm('此操作将不保存本页的变化内容', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -210,6 +208,7 @@
           this.newsManage = true
         });
       },
+      // 上传新闻
       uploadNews() {
         this.newsContent = this.$refs.ue.getUEContent()
         if(this.titleInput == '') {
@@ -227,10 +226,8 @@
             news_picture: this.imageUrl,
             news_all: this.newsContent
           }
-          console.log(params)
           axios.post(api.new_news, params).then(res => {
             if(res.data.status == 200){
-              console.log(res)
               this.$message({ type: 'success', message: res.data.message });
               this.getData(1)
               this.newsManage = true
@@ -242,20 +239,32 @@
           })
         }
       },
-      handleRemove(file, fileList) {
+      /*handleRemove(file, fileList) {
         console.log(file, fileList);
-      },
-      editNews(news) {
-        this.tabClick(0)
-        this.newsManage = false
-        this.titleInput = news.news_title
-        this.fromInput = news.news_from
-        this.imageUrl = news.news_picture
-        console.log(news)
-        this.defaultMsg = news.news_all
-      },
+      },*/
+      // 关闭新闻
       closeNews(news) {
-        console.log(news.id)
+        this.$confirm('此操作将删除该新闻', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {
+            news_status: 0
+          }
+          axios.post(api.update_status+'?id='+news.id, params).then(res=>{
+            if(res.data.status == 200){
+              this.getData(1)
+              this.$message({ type: 'success', message: res.data.message });
+            }else{
+              this.$message.error(res.data.message);
+            }
+          }, error=>{
+            console.log(123)
+            // this.$message.error(error.data.message);
+            console.log(error)
+          });
+        });
       }
     },
     created() {

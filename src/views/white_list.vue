@@ -109,10 +109,8 @@
           axios.post(api.update_phone, params).then(res=>{
             console.log(res)
             if(res.data.status == 200){
-              // this.getData()
-              // this.dialogFormVisible = false
+              this.getData()
               this.$message({ type: 'success', message: res.data.message });
-              // this.$refs[formName].resetFields();
             }else{
               this.$message.error(res.data.message);
             }
