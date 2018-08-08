@@ -13,9 +13,14 @@ const api={
   get_news_all: title + 'news/get_all',//获取新闻列表
   new_news: title + 'news/new_news',//创建新闻
   get_abo: title + 'news/get_abo',//获取新闻详情
+  update_status: title + 'news/update_status',//改变新闻状态
+
   get_all_scrapy: title + 'scrapy/get_all_scrapy',//用户查询记录
 
   upload_files: title + 'news/upload_files',//上传图片
+
+  get_phone: title + 'other/get_phone',//查看白名单列表
+  update_phone: title + 'other/update_phone',//增/删白名单电话
 }
 
 export default api

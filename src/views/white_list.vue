@@ -1,11 +1,32 @@
 <template>
   <div>
+    <div class="page-box">
+      <el-button class="add-btn" @click="dialogFormVisible = true">添加白名单</el-button>
+      <el-dialog title="添加白名单" :visible.sync="dialogFormVisible">
+        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
+          <el-form-item prop="phone" label="手机号："
+                        :rules="[
+                          { required: true, message: '请输入手机号', trigger: 'blur' }
+                        ]">
+            <el-input v-model="dynamicValidateForm.phone" class="phone-input"></el-input>
+          </el-form-item>
+          <el-form-item v-for="(domain, index) in dynamicValidateForm.phones" label="手机号：" :key="domain.key" :prop="'phones.' + index + '.value'"
+            :rules="{ required: true, message: '请输入手机号', trigger: 'blur' }">
+            <el-input v-model="domain.value" class="phone-input"></el-input>
+            <el-button @click.prevent="removeDomain(domain)" class="cancel-btn" size="small">删除</el-button>
+          </el-form-item>
+          <el-form-item class="bottom-button">
+            <el-button @click="addDomain" class="cancel-btn" size="medium">新增</el-button>
+            <el-button @click="editPhone('dynamicValidateForm', 'add')" class="add-done" size="medium">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </div>
     <div class="m-table">
       <table width="100%">
         <thead>
         <tr>
-          <td width="15%">序号</td>
-          <td width="35%">姓名</td>
+          <td width="35%">序号</td>
           <td width="35%">手机号</td>
           <td>操作</td>
         </tr>
@@ -14,34 +35,14 @@
         <template v-for="(item,index) in query">
           <tr>
             <td>{{index+1}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.telephone}}</td>
+            <td>{{item}}</td>
             <td>
-              <div class="edit-btn" @click="editPhone(item)">编辑</div>
-              <div @click="deletePhone(item)" style="color: #5A738A">删除</div>
+              <div @click="editPhone(item, 'delete')" style="color: #5A738A">删除</div>
             </td>
           </tr>
         </template>
         </tbody>
       </table>
-    </div>
-    <div class="page-box">
-      <page :total="total_page"></page>
-      <el-button class="add-btn" @click="dialogFormVisible = true">添加白名单</el-button>
-      <el-dialog title="添加白名单" :visible.sync="dialogFormVisible">
-        <el-form :model="form" :rules="rules" ref="form">
-          <el-form-item label="姓 名：" prop="name" :label-width="formLabelWidth">
-            <el-input v-model="form.name" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号：" prop="telephone" :label-width="formLabelWidth">
-            <el-input v-model="form.telephone" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false" class="cancel-btn">取 消</el-button>
-          <el-button @click="addDone('form')" class="add-done">确 定</el-button>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -55,103 +56,98 @@
     name: "white_list",
     data() {
       return {
-        query: [
-          { name: '张三', telephone: '17756978822' },
-          { name: '李四', telephone: '17756978822' },
-          { name: '王五', telephone: '17756978822' },
-          { name: '李四', telephone: '17756978822' },
-          { name: '王五', telephone: '17756978822' },
-          { name: '李四', telephone: '17756978822' },
-          { name: '王五', telephone: '17756978822' },
-          { name: '李四', telephone: '17756978822' },
-          { name: '王五', telephone: '17756978822' },
-          { name: '李四', telephone: '17756978822' }
-        ],
-        page_size:10,
-        total_num:5,
-        current_page:1,
-        total_page:0,
+        query: [],
         dialogFormVisible: false,
-        form: {
-          name: '',
-          telephone: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' }
+        dynamicValidateForm: {
+          phones: [
+            // { value: '' }
           ],
-          telephone:[
-            { required: true, message: '请输入手机号', trigger: 'change' }
-          ]
+          phone: ''
         },
-        formLabelWidth: '120px'
       }
     },
     components:{ page },
     methods: {
-      getData(v){
-        let params = {
-          page_size: this.page_size,
-          page_num: Number(v || this.current_page),
-          select_name: this.select_name
+      editPhone(formName, control) {
+        if(control == 'add') {
+          let that = this
+          let phoneList = []
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              phoneList.push(that.dynamicValidateForm.phone)
+              for(let i=0;i<that.dynamicValidateForm.phones.length;i++) {
+                phoneList.push(that.dynamicValidateForm.phones[i].value)
+              }
+              let params = {
+                control: control,
+                phone_list: phoneList
+              }
+              axios.post(api.update_phone, params).then(res=>{
+                if(res.data.status == 200){
+                  this.getData()
+                  this.dialogFormVisible = false
+                  this.$message({ type: 'success', message: res.data.message });
+                  this.$refs[formName].resetFields();
+                }else{
+                  this.$message.error(res.data.message);
+                }
+              }, res=>{
+                this.$message.error(res.data.message);
+              });
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        }else if(control == 'delete') {
+          let phone_list = []
+          phone_list[0] = formName
+          let params = {
+            control: control,
+            phone_list: phone_list
+          }
+          axios.post(api.update_phone, params).then(res=>{
+            console.log(res)
+            if(res.data.status == 200){
+              // this.getData()
+              // this.dialogFormVisible = false
+              this.$message({ type: 'success', message: res.data.message });
+              // this.$refs[formName].resetFields();
+            }else{
+              this.$message.error(res.data.message);
+            }
+          }, res=>{
+            this.$message.error(res.data.message);
+          });
         }
-        /*axios.get(api.get_all_scrapy, { params: params }).then(res => {
+      },
+      removeDomain(item) {
+        var index = this.dynamicValidateForm.phones.indexOf(item)
+        if (index !== -1) {
+          this.dynamicValidateForm.phones.splice(index, 1)
+        }
+      },
+      addDomain() {
+        this.dynamicValidateForm.phones.push({
+          value: '',
+          key: Date.now()
+        });
+      },
+      getData(){
+        axios.get(api.get_phone).then(res => {
           if (res.data.status == 200){
             this.query = res.data.data
-            console.log(this.query)
-            this.total_num = res.data.data.count;
-            this.total_page = Math.ceil(this.total_num / this.page_size);
-            console.log(this.total_page)
+            // console.log(this.query)
           }else{
             this.$message.error(res.data.message);
           }
         },error => {
           this.$message.error(error.data.message);
-        })*/
-      },
-      /*分页点击*/
-      pageChange(v){
-        console.log(v)
-        if(v == this.current_page){
-          this.$message({ message: '这已经是第' + v + '页数据了', type: 'warning' });
-          return false;
-        }
-        this.current_page = v;
-        this.getData(v);
-      },
-      editPhone(item) {
-        console.log('editPhone', item)
-      },
-      deletePhone(item) {
-        console.log('deletePhone', item)
-      },
-      addDone(formName) {
-        // this.dialogFormVisible = false
-        let that = this;
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            /*axios.post(api.forget_password, that.ruleForm).
-            then(res=>{
-              if(res.data.status == 200){
-                this.$message({ type: 'success', message: res.data.message });
-              }else{
-                this.$message.error(res.data.message);
-              }
-            }, res=>{
-              this.$message.error(res.data.message);
-            });*//*,error => {
-              this.$message.error(error.data.message);
-            })*/
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+        })
       }
     },
     created() {
-      this.getData(1)
-      this.total_page = 10
+      this.getData()
     }
   }
 </script>
@@ -175,30 +171,31 @@
           border-bottom: 1px solid @borderColor;
           padding: 0.23rem 0;
         }
-        .edit-btn {
-          width: 50%;
-          float: left;
-          color: @sidebarBgColor;
-        }
       }
     }
   }
   .page-box{
     .add-btn {
-      margin: -2% 0 0 86%;
+      margin: 0 0 1% 86%;
       color: @bgMainColor;
       background-color: @btnActiveColor;
     }
-    .dialog-footer {
-      .cancel-btn {
-        color: #000000;
-        border-color: @blueBorderColor;
-        background-color: #ffffff;
-      }
+    .bottom-button {
+      margin-bottom: 0;
+      margin-left: 42%;
       .add-done {
         color: @bgMainColor;
         background-color: @btnActiveColor;
       }
+    }
+    .phone-input {
+      width: 78%;
+    }
+    .cancel-btn {
+      color: #000000;
+      margin-left: 5%;
+      border-color: @blueBorderColor;
+      background-color: #ffffff;
     }
   }
 </style>
