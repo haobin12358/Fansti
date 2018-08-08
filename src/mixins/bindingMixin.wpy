@@ -13,16 +13,10 @@
   export default class BindingMixin extends wepy.mixin {
 
     data = {
-      openid: '',
-      isOldUser: false, //  绑定的是否为新用户
-      isNewUser: false //  绑定的是否为老用户
+      openid: ''
     };
 
     computed = {
-      // isBinding() {
-      //   return this.isOldUser || this.isNewUser;
-      // }
-
     };
 
     methods = {};
@@ -47,14 +41,14 @@
             }
             this.isOldUser = true;
           } else {
-            wx.setStorageSync('newUser', true);
+            wx.setStorageSync('isNewUser', true);
             this.isNewUser = true;
           }
         }
         this.$apply();
 
         console.group('now');
-        console.log(wx.getStorageSync('token'), wx.getStorageSync('newUser'));
+        console.log(wx.getStorageSync('token'), wx.getStorageSync('isNewUser'));
         console.groupEnd('now');
 
         return 'over';

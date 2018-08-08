@@ -54,15 +54,22 @@
       </view>
 
       <view class="standard-table">
+
         <view class="thead">
           <view class="tr">
-            <view class="td">M/N/Q</view>
-            <view class="td">重量</view>
-            <view class="td">价格</view>
+            <view class="td">目的机场</view>
+            <view class="td">航班号</view>
+            <view class="td">航班</view>
+            <view class="td">机型</view>
+            <view class="td">起飞时间</view>
+            <view class="td">到达时间</view>
           </view>
         </view>
         <view class="tbody">
           <view class="tr" wx:for="1234">
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
+            <view class="td">{{item}}</view>
             <view class="td">{{item}}</view>
             <view class="td">{{item}}</view>
             <view class="td">{{item}}</view>
@@ -96,8 +103,8 @@
 
     events = {};
 
-    onLoad() {
-
+    onLoad(params, data) {
+      console.log('preload',data.preload.res);
     }
   }
 </script>

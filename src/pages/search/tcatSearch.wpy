@@ -38,8 +38,8 @@
       </view>
 
       <view class="destination">
-        <view class="destination-en">目的港: ORD</view>
-        <view>目的港名称: 芝加哥芝</view>
+        <view class="destination-en">目的港: {{res.three_code}}</view>
+        <view>目的港名称: {{res.chinese_position}}</view>
       </view>
       <view class="standard-table">
         <view class="thead">
@@ -76,15 +76,18 @@
 
     mixins = [CardMixin]
 
-    data = {};
+    data = {
+      res:{}
+    };
     computed = {};
 
     methods = {};
 
     events = {};
 
-    onLoad() {
-
+    onLoad(params, data) {
+      console.log('preload',data.preload.res);
+      this.res = data.preload.res;
     }
   }
 </script>

@@ -35,209 +35,100 @@
         <view class="tbody">
           <view class="tr">
             <view class="td">
-              联合国正确运输名称（中文）：
+              联合国正确运输编号:
             </view>
             <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
+              {{res.unno}}
             </view>
           </view>
           <view class="tr">
             <view class="td">
-              分子式
+              联合国正确运输名称:
             </view>
             <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
+              {{res.unname}}
             </view>
           </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
+          <block wx:for="{{res.dgr_type}}" wx:key="id">
+            <view class="tr">
+              <view class="td">
+                型号等级:
+              </view>
+              <view class="td">
+                {{item.dgr_level}}
+              </view>
             </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
-        </view>
 
-      </view>
-      <view class="two-column-table">
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-              联合国正确运输名称（中文）：
+            <!--固定货机3个-->
+            <view class="tr">
+              <view class="td">
+                货机容量:
+              </view>
+              <view class="td">
+                {{item.airfreighter_capacity}}
+              </view>
             </view>
-            <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
+            <view class="tr">
+              <view class="td">
+                货机说明号:
+              </view>
+              <view class="td">
+                {{item.airfreighter_description_no}}
+              </view>
             </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
+            <view class="tr">
+              <view class="td">
+                货机是否可单一:
+              </view>
+              <view class="td">
+                {{item.airfreighter_is_single}}
+              </view>
             </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
+            <!--固定客机3个-->
+            <view class="tr">
+              <view class="td">
+                客机容量:
+              </view>
+              <view class="td">
+                {{item.airliner_capacity}}
+              </view>
             </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
+            <view class="tr">
+              <view class="td">
+                客机说明号:
+              </view>
+              <view class="td">
+                {{item.airliner_description_no}}
+              </view>
             </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
+            <view class="tr">
+              <view class="td">
+                客机是否可单一:
+              </view>
+              <view class="td">
+                {{item.airliner_is_single}}
+              </view>
             </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
-        </view>
 
-      </view>
-      <view class="two-column-table">
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-              联合国正确运输名称（中文）：
+            <view class="tr">
+              <view class="td">
+                型号备注:
+              </view>
+              <view class="td">
+                {{item.message?item.message:''}}
+              </view>
             </view>
-            <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
-            </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
-        </view>
-
-      </view>
-      <view class="two-column-table">
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-              联合国正确运输名称（中文）：
-            </view>
-            <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
-            </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
-        </view>
-
-      </view>
-      <view class="two-column-table">
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-              联合国正确运输名称（中文）：
-            </view>
-            <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
-            </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
+            <block wx:for="{{item.dgr_con}}" wx:for-item="conType">
+              <view class="tr">
+                <view class="td">
+                  {{conType.dgr_container}}-{{conType.dgr_type}}:
+                </view>
+                <view class="td">
+                  {{conType.dgr_container_capacity}}
+                </view>
+              </view>
+            </block>
+          </block>
         </view>
 
       </view>
@@ -258,6 +149,8 @@
     components = {};
 
     data = {
+      res: {},
+      list: []
     };
 
     mixins = [CardMixin]
@@ -269,7 +162,18 @@
     events = {};
 
     onLoad(params, data) {
-      console.log('preload',data.preload.xxx);
+      console.log('preload',data.preload.res);
+      this.res = data.preload.res;
+      // let list = [
+      //   {
+      //
+      //   }
+      // ]
+      //
+      // list.push({
+      //   name: '联合国正确运输名称',
+      //   value: res.unname,
+      // })
     }
   }
 </script>

@@ -425,12 +425,12 @@
 
 
     async onShow() {
-      console.log('showxxxx','个人');
+      console.log(wx.getStorageSync('token'),wx.getStorageSync('isNewUser'));
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
-      // console.log(this.isBinding);
+      console.log(this.isBinding);
       if(!this.isBinding){
         let res =await this.checkBinding(wx.getStorageSync('code'))
 
@@ -466,7 +466,6 @@
 
     onLoad(params) {
       this.setOpenid();
-      console.log('load','个人');
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');
 

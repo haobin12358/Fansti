@@ -9,6 +9,7 @@
         .card-detail-section{
           padding-left: 20rpx;
           padding-bottom: 50rpx;
+          /*margin-bottom: 30rpx;*/
 
           .section-title{
             font-weight: bold;
@@ -43,40 +44,13 @@
       </view>
 
       <view class="card-detail">
-        <view class="card-detail-section card-detail-section-img">
-          <image mode="widthFix" src="../../images/test_survey_report.jpeg"></image>
-        </view>
-        <view class="card-detail-section">
-          <view class="section-title">
-            中文品名:
-          </view>
-          <view class="section-info">
-            亚硫酸钠假
-          </view>
-        </view>
-        <view class="card-detail-section">
-          <view class="section-title">
-            英文品名:
-          </view>
-          <view class="section-info">
-            MENADIONE SODIUM BISULFITE
-          </view>
-        </view>
-        <view class="card-detail-section">
-          <view class="section-title">
-            UN信息:
-          </view>
-          <view class="section-info">
-            UN3077/9/111
-          </view>
-        </view>
-        <view class="card-detail-section">
-          <view class="section-title">
-            颜色状态:
-          </view>
-          <view class="section-info">
-            白色粉末
-          </view>
+        <view wx:for="{{res}}" class="card-detail-section">
+            <view class="section-title">
+              {{item.name}}:
+            </view>
+            <view class="section-info">
+              {{item.value}}
+            </view>
         </view>
       </view>
     </scroll-view>
@@ -96,15 +70,18 @@
     components = {};
     mixins = [CardMixin]
 
-    data = {};
+    data = {
+      res: {}
+    };
     computed = {};
 
     methods = {};
 
     events = {};
 
-    onLoad() {
-
+    onLoad(params, data) {
+      console.log('preload',data.preload.res);
+      this.res = data.preload.res;
     }
   }
 </script>
