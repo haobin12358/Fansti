@@ -3,64 +3,8 @@
 
   .container{
     color: @mainBlueColor;
+    margin-bottom: 100rpx;
 
-    .container-hd{
-      padding: 20rpx 20rpx 0;
-
-      .clerk-card{
-        padding: 60rpx 0 95rpx 60rpx;
-
-        border-radius: 10rpx;
-        border: 1px solid @borderColor;
-        box-shadow: 5rpx 5rpx 4rpx rgba(58,82,102,.75);
-
-        display: flex;
-
-        .clerk-headimg{
-          width: 184rpx;
-          height: 246rpx;
-          margin-right: 44rpx;
-        }
-
-        .clerk-text-info{
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .fz24();
-
-          .line1{
-            .fz28();
-          }
-
-          .line2{
-
-            .label-val-group{
-              display: flex;
-
-              .rate-label{
-                margin-right: 25rpx;
-                line-height: 27rpx;
-              }
-              .advisory-num-label{
-                margin-right: 28rpx;
-
-              }
-              .advisory-num-value{
-                color: #ba272d;
-              }
-            }
-
-          }
-          .line3{
-
-
-          }
-
-        }
-      }
-
-    }
     .container-bd{
       .introduce-list{
         padding: 11rpx 20rpx 0;
@@ -124,10 +68,13 @@
 
               .detail-label{
                 width: 50rpx;
-                line-height: 40rpx;
-                height: 40rpx;
+                height: 48rpx;
                 text-align: right;
                 margin-right: 10rpx;
+
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
 
                 image{
                   width: 9rpx;
@@ -153,41 +100,44 @@
 
     .container-ft{
       text-align: center;
-      margin-top: 105rpx;
+      margin-top: 75rpx;
       color: @mainFontColor;
 
-      .fz24();
+      .fz28();
+
+      .action-block{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 0 230rpx;
+
+        .action-go-edit{
+          padding: 0 20rpx;
+          border: 1px solid #CCCCCC;
+          line-height: 2.333;
+
+          border-radius: 10rpx;
+        }
+
+        /*去除button默认样式*/
+        .action-share{
+          color: @mainYellowColor;
+          border: 0;
+          padding: 0 20rpx;
+          margin: 0;
+          background: transparent;
+          /*position: static;*/
+
+          .fz28();
+        }
+      }
     }
   }
 </style>
 
 <template>
-
   <view class="container">
-    <!--<view class="container-hd">-->
-      <!--<view class="clerk-card">-->
-        <!--<image class="clerk-headimg" src="../../images/test_clerk_headimg.jpg"></image>-->
-        <!--<view class="clerk-text-info">-->
-          <!--<view class="line1">李师傅</view>-->
-          <!--<view class="line2">-->
-            <!--<view class="label-val-group">-->
-              <!--<view class="rate-label">好评度</view>-->
-              <!--<rate :key.sync="rateKey" :starSize="rateStarSize" :readonly="rateReadonly"></rate>-->
-            <!--</view>-->
-            <!--<view class="label-val-group">-->
-              <!--<view class="advisory-num-label">资讯人数</view>-->
-              <!--<view class="advisory-num-value">5</view>-->
-            <!--</view>-->
-          <!--</view>-->
-          <!--<view class="line3">-->
-            <!--<view class="experience">危险品、空运</view>-->
-            <!--<view class="company-name">北京泛思特国际运输代理有限公司</view>-->
-          <!--</view>-->
-      <!--</view>-->
-
-      <!--</view>-->
-
-    <!--</view>-->
     <view class="container-bd">
       <view class="introduce-list">
         <view class="introduce-item">
@@ -253,7 +203,7 @@
               <view class="detail-label">
                 <image src="../../images/circle_full.png"></image>
               </view>
-              <view class="detail-text">
+              <view class="detail-text" style="text-indent: 10rpx;">
                 QQ: {{cardInfo.qq ? cardInfo.qq : '暂无'}}
               </view>
             </view>
@@ -286,8 +236,16 @@
         </view>
       </view>
     </view>
-    <view class="container-ft" @tap="">
-      编辑
+    <view class="container-ft" >
+      <view class="action-block">
+        <view class="action-go-edit" @tap="goEdit">
+          编辑
+        </view>
+        <button class="action-share" open-type="share">
+          分享
+        </button>
+      </view>
+
     </view>
   </view>
 </template>
@@ -299,7 +257,7 @@
   import tip from '@/utils/tip';
 
   //  个人名片
-  export default class StockClerkInfo extends wepy.page {
+  export default class PersonCard extends wepy.page {
     config = {
       navigationBarTitleText: '个人名片'
     };
@@ -319,7 +277,16 @@
     };
     computed = {};
 
-    methods = {};
+    methods = {
+      //  前往编辑名片页
+      goEdit(){
+        this.$navigate('/pages/person/editPersonCard')
+      },
+
+      share(){
+
+      }
+    };
 
     events = {};
 
@@ -339,6 +306,14 @@
     onShow() {
       this.getMyInfo();
     }
+
+    onShareAppMessage(){
+      console.log('主','/pages/person/index?share=true&openid='+wx.getStorageSync('openid'))
+      return {
+        path: '/pages/person/index?share=true&openid='+wx.getStorageSync('openid')
+      }
+    }
+
   }
 </script>
 

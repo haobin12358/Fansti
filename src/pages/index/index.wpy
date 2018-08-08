@@ -68,6 +68,7 @@
 
     onLoad(){
       this.getAllNews();
+      //  保存code openid
       this.setOpenid();
     }
 

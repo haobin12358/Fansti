@@ -127,15 +127,8 @@
       <view class="container-ft">
         <button class="confirm-btn" form-type="submit">绑 定</button>
       </view>
-
     </view>
-
   </form>
-  <!--<view class="authorize-userinfo">-->
-    <!--<button open-type="getUserInfo" bindgetuserinfo="getUserInfo">获取微信信息</button>-->
-  <!--</view>-->
-
-  <!--<popup :show.sync="showPopup"></popup>-->
   <userinfoAuthorize :showPopup.sync="showPopup" @getUserInfo.user="getUserInfo"></userinfoAuthorize>
 
 </template>
@@ -175,11 +168,10 @@
           tip.alert('老用户绑定')
 
           this.doBinding(formData);
-
          }else if (!formData.username && !formData.password && formData.phone) {
           tip.alert('新用户绑定')
-          this.doBinding(formData);
 
+          this.doBinding(formData);
         }
         else{
           tip.alert('请填写完整')
@@ -194,7 +186,6 @@
 
     async doBinding(params){
       let query= {
-
         phone: params.phone,
         openid: this.openid,
         name: this.userInfo.nickName,
@@ -222,8 +213,7 @@
     events = {};
 
     onLoad() {
-      this.setOpenid()
-
+      // this.setOpenid()
     }
   }
 </script>

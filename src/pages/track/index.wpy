@@ -98,13 +98,13 @@
     }
 
     async getGoodsList(){
-      let res =await api.getGoodsList({query: {login_name: wx.getStorageSync('token')}})
+      let res =await api.getGoodsList({page_num:1,page_size:10,query: {login_name: wx.getStorageSync('token')}})
 
       if(res.data.status == 200){
         this.goodsList = res.data.data;
-        this.goodsList = this.goodsList.filter(x=>{
-          return x.jcno == 'E99999999';
-        })
+        // this.goodsList = this.goodsList.filter(x=>{
+        //   return x.jcno == 'E99999999';
+        // })
         this.$apply();
       }else{
         tip.alert(res.data.message)

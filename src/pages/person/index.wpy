@@ -165,7 +165,8 @@
 </style>
 
 <template>
-    <view wx:if="{{isBinding}}" class="container">
+  <block wx:if="{{isBinding}}">
+    <view  class="container">
       <view class="container-hd">
         <view  class="overview">
           <view class="overview-item" @tap="tapWGPHandler">
@@ -222,7 +223,7 @@
 
             </view>
             <image src="../../images/service_people.png" class="service-img"></image>
-        </view>
+          </view>
         </view>
         <view class="bd-section">
           <view class="bd-section-title">
@@ -248,10 +249,11 @@
         </view>
       </view>
     </view>
-  <!--<placeholder wx:else></placeholder>-->
-  <waitGetPacket :show.sync="showWGP" :list.sync="redList"></waitGetPacket>
-  <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
-  <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
+    <waitGetPacket :show.sync="showWGP" :list.sync="redList"></waitGetPacket>
+    <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
+    <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
+  </block>
+  <placeholder wx:else></placeholder>
 </template>
 
 <script>
@@ -320,7 +322,7 @@
     methods = {
       goPersonCard(){
         wx.navigateTo({
-          url: '/pages/track/stockClerkInfo'
+          url: '/pages/person/personCard'
         });
       },
       goShareList() {
@@ -440,8 +442,6 @@
         // console.log('新老用户',this.isOldUser, this.isNewUser);
         this.init()
       }
-
-
     }
 
     init(){
@@ -454,13 +454,35 @@
       }
     }
 
-    onLoad() {
+    //  邀请用户
+    async addInvate(openid){
+      let res = await api.addInvate({ method: 'POST', openid: wx.getStorageSync('openid'), query: { openid } });
+      console.group('x');
+      console.log({ method: 'POST', openid: wx.getStorageSync('openid'), query: { openid } });
+      console.groupEnd('x');
+
+      if (res.data.status == 200) {
+        tip.success('接收邀请成功!');
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    onLoad(params) {
+      this.setOpenid();
       console.log('load','个人');
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
       this.init()
+
+      // params.share = 'true';
+      // params.openid= 'o-hg346mUYVyJPolSYrO-UIqXTAs';
+      if(params.share == 'true'){
+        this.addInvate(params.openid)
+        this.$navigate('/pages/person/personCard')
+      }
     }
   }
 </script>

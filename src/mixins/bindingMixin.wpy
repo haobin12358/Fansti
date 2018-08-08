@@ -64,26 +64,28 @@
 
     }
 
-    //  设置openid  因为已经绑定会跳过设置openid
+    //  缓存code,openid
     setOpenid() {
       let that = this;
 
-      wx.login({
-        success: function(res) {
-          let { code } = res;
+      if(wx.getStorageSync('code') == ''||wx.getStorageSync('openid') == ''){
+        wx.login({
+          success: function(res) {
+            let { code } = res;
 
-          wx.setStorageSync('code', code);
-          api.getOpenid({ query: { code } }).then(
-            (res2) => {
-              if (res2.data.status == 200) {
-                let openid = res2.data.data.openid;
+            wx.setStorageSync('code', code);
+            api.getOpenid({ query: { code } }).then(
+              (res2) => {
+                if (res2.data.status == 200) {
+                  let openid = res2.data.data.openid;
 
-                wx.setStorageSync('openid', openid);
+                  wx.setStorageSync('openid', openid);
+                }
               }
-            }
-          );
-        }
-      });
+            );
+          }
+        });
+      }
     }
 
     onLoad() {

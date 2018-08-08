@@ -21,7 +21,7 @@ const getNewsAbo = params => wxRequest(params, host+`/news/get_abo?id=${params.i
 
 
 //  获取货物列表
-const getGoodsList = params => wxRequest(params, host+'/goods/get_goods_list');
+const getGoodsList = params => wxRequest(params, host+`/goods/get_goods_list?page_size=${params.page_size}&page_num=${params.page_num}`);
 //  获取货物详情
 const getJcAbo = params => wxRequest(params, host+'/goods/get_jc_abo');
 //  确认照片  POST
@@ -42,6 +42,8 @@ const getCustom = params => wxRequest(params, host+`/other/get_custom?login_name
 const getMyInfo = params => wxRequest(params, host+`/users/get_my_info?openid=${params.openid}`);
 //  更新个人名片
 const updateMyInfo = params => wxRequest(params, host+`/users/update_my_info?openid=${params.openid}`);
+//  邀请用户
+const addInvate = params => wxRequest(params, host+`/users/add_invate?openid=${params.openid}`);
 
 
 
@@ -61,4 +63,5 @@ export default {
   makeUserMessage,
   getMyInfo,
   updateMyInfo,
+  addInvate
 }

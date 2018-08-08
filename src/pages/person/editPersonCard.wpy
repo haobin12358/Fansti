@@ -1,0 +1,343 @@
+<style scoped lang="less">
+  @import "../../styles/base";
+
+  .container{
+    color: @mainBlueColor;
+    margin-bottom: 100rpx;
+
+    .container-bd{
+      .introduce-list{
+        padding: 11rpx 20rpx 0;
+
+        .introduce-item{
+          padding: 31rpx 20rpx;
+          border-bottom: 1px solid @borderColor;
+
+          input{
+            border: 1px solid @mainBlueColor;
+            border-radius: 10rpx;
+            height: 28rpx;
+            min-height: 1.5em;
+            line-height: 28rpx;
+            margin-left: 26rpx;
+            padding-left: 10rpx;
+
+            .fz28();
+          }
+
+          &:last-child{
+            border-bottom: 0;
+          }
+
+          .introduce-item-title{
+            display: flex;
+            align-items: center;
+            margin-bottom: 35rpx;
+
+            .title-img{
+              width: 60rpx;
+              height: 28rpx;
+              margin-right: 26rpx;
+            }
+
+            /*每一项图片宽高比都不同所以要分别设置*/
+            .title-img-people{
+              width: 32rpx;
+              height: 35rpx;
+            }
+            .title-img-experience{
+              width: 32rpx;
+              height: 45rpx;
+            }
+            .title-img-info{
+              width: 44rpx;
+              height: 28rpx;
+              margin-right: 15rpx;
+            }
+            .title-img-phone{
+              width: 36rpx;
+              height: 37rpx;
+              margin-right: 18rpx;
+            }
+
+            .title-text{
+              line-height: 28rpx;
+              white-space: nowrap;
+            }
+
+
+          }
+
+          .introduce-item-detail{
+            .fz24();
+
+            .detail-item{
+              display: flex;
+              margin-bottom: 23rpx;
+
+              input{
+                margin:0 15rpx;
+                height: 24rpx;
+                line-height: 24rpx;
+
+                .fz24();
+              }
+
+              textarea{
+                border: 1px solid @mainBlueColor;
+                border-radius: 10rpx;
+                padding: 10rpx 20rpx;
+                margin-left: 16rpx;
+                width: 471rpx;
+              }
+
+              &:last-child{
+                margin-bottom: 0;
+              }
+
+              .detail-label{
+                width: 50rpx;
+                height: 36rpx;
+                text-align: right;
+                margin-right: 10rpx;
+
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+
+                image{
+                  width: 9rpx;
+                  height: 9rpx;
+                }
+              }
+
+              .detail-text-hd{
+                white-space: nowrap;
+              }
+              .detail-text-ft{
+                white-space: nowrap;
+              }
+
+
+              .detail-text-name{
+                padding-left: 70rpx;
+              }
+            }
+          }
+        }
+        /*联系方式中的input*/
+        .introduce-item-contact{
+          .introduce-item-detail{
+
+            .detail-item{
+              input{
+                margin-left: 72rpx;
+                width: 300rpx;
+              }
+            }
+
+          }
+        }
+      }
+
+    }
+
+    .container-ft{
+      width: 20%;
+      text-align: center;
+      margin-top: 105rpx;
+      color: @mainFontColor;
+
+
+      .fz24();
+    }
+  }
+</style>
+
+<template>
+  <form @submit="saveCard">
+    <view class="container">
+      <view class="container-bd">
+        <view class="introduce-list">
+          <!--资深工匠-->
+          <view class="introduce-item">
+            <view class="introduce-item-title">
+              <image class="title-img title-img-people" src="../../images/people.png"></image>
+              <view class="title-text">资深工匠</view>
+              <input type="text"   class="input-title-name" style="" value="{{cardInfo.user_name ? cardInfo.user_name : ''}}" name="user_name"/>
+            </view>
+          </view>
+          <!--经验擅长-->
+          <view class="introduce-item">
+            <view class="introduce-item-title">
+              <image class="title-img title-img-experience" src="../../images/staff_experience.png"></image>
+              <view class="title-text">经验擅长</view>
+            </view>
+            <view class="introduce-item-detail">
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  从业经验：
+                </view>
+                <input type="number" value="{{cardInfo.work_year? cardInfo.work_year : ''}}" name="work_year" style="width: 100rpx"/>
+                <view class="detail-text-ft">
+                  年
+                </view>
+              </view>
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  服务经验：
+                </view>
+                <textarea show-confirm-bar="false" style="height: 100rpx;" value="{{cardInfo.work_goodat? cardInfo.work_goodat : ''}}" name="work_goodat"></textarea>
+              </view>
+            </view>
+          </view>
+          <!--专家简介-->
+          <view class="introduce-item">
+            <view class="introduce-item-title">
+              <image class="title-img title-img-info" src="../../images/staff_info.png"></image>
+              <view class="title-text">专家简介</view>
+            </view>
+            <view class="introduce-item-detail">
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  专家简介：
+                </view>
+                <textarea show-confirm-bar="false" value="{{cardInfo.user_introduction? cardInfo.user_introduction : ''}}" name="user_introduction"></textarea>
+              </view>
+            </view>
+          </view>
+          <!--联系方式-->
+          <view class="introduce-item introduce-item-contact ">
+            <view class="introduce-item-title">
+              <image class="title-img title-img-phone" src="../../images/phone.png"></image>
+              <view class="title-text">联系方式</view>
+            </view>
+            <view class="introduce-item-detail">
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd" style="text-indent: 10rpx;">
+                  QQ:
+                </view>
+                <input type="number" value="{{cardInfo.qq ? cardInfo.qq : ''}}" name="qq"/>
+              </view>
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  电话:
+                </view>
+                <!--电话不可修改-->
+                <input type="number" value="{{cardInfo.phone? cardInfo.phone : ''}}" disabled style="background: #CCCCCC"/>
+              </view>
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  微信:
+                </view>
+                <input type="text"  value="{{cardInfo.wechat? cardInfo.wechat : ''}}" name="wechat"/>
+              </view>
+              <view class="detail-item">
+                <view class="detail-label">
+                  <image src="../../images/circle_full.png"></image>
+                </view>
+                <view class="detail-text-hd">
+                  邮箱:
+                </view>
+                <input type="text" value="{{cardInfo.email? cardInfo.email : ''}}" name="email"/>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <button class="container-ft" form-type="submit">
+        保存
+      </button>
+    </view>
+
+  </form>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Rate from '@/components/common/rate';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+
+  //  个人名片
+  export default class PersonCard extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人名片-编辑'
+    };
+
+    components = {
+      rate: Rate
+    };
+
+    data = {
+      rateKey: 4.7,
+      rateStarSize: 27,
+      rateReadonly: true,
+
+      cardInfo: {
+
+      },
+    };
+    computed = {};
+
+    methods = {
+      //  保存数据
+      saveCard(e){
+        console.log(e.detail.value);
+        this.updateMyInfo(e.detail.value);
+      },
+    };
+
+    events = {};
+
+    async updateMyInfo(saveData){
+      let res = await api.updateMyInfo({method:'POST',openid: wx.getStorageSync('openid'),query:saveData});
+
+      if (res.data.status == 200) {
+        tip.success(res.data.message).then(
+          ()=>{
+            wx.navigateBack();
+          }
+        )
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    //  获取个人名片
+    async getMyInfo(){
+      let res = await api.getMyInfo({openid: wx.getStorageSync('openid')});
+
+      if (res.data.status == 200) {
+        this.cardInfo = res.data.data;
+        console.log('cardInfo',this.cardInfo);
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
+
+    onLoad(params) {
+      this.getMyInfo();
+    }
+  }
+</script>
+
