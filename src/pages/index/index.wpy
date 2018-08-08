@@ -24,28 +24,35 @@
     </swiper>
   </view>
   <news-list :list.sync="newsList" @tapItem.user="goNewsDetail"></news-list>
+  <load-more :type.sync="loadingType"></load-more>
 </template>
 
 <script>
   import wepy from 'wepy'
   import NewsList from '@/components/newsList'
+  import LoadMore from '@/components/common/loadMore'
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import BindingMixin from '@/mixins/bindingMixin';
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '泛思特',
     }
 
     mixins=[BindingMixin];
 
     components = {
-      'news-list': NewsList
+      'news-list': NewsList,
+      'load-more': LoadMore,
     }
 
     data={
-      newsList: []
+      newsList: [],
+      pageNum: 1,
+      pageSize: 10,
+
+      loadingType: 'normal', // 加载状态
     }
 
     methods={
@@ -56,13 +63,31 @@
     }
 
     async getAllNews(){
-      let res = await api.getAllNews({page_num:1,page_size:10});
+      this.loadingType = 'loading';
+      this.$apply();
+      let res = await api.getAllNews({_noLoading: true,page_num:this.pageNum,page_size:this.pageSize});
 
       if (res.data.status == 200) {
-        this.newsList = res.data.data;
+        this.newsList =[...this.newsList,...res.data.data];
+
+        for (let i = 0; i < this.newsList.length; i++) {
+
+        }
+        if(res.data.data.length == this.pageSize){
+          this.loadingType = 'normal';
+        }else{
+          this.loadingType = 'nomore';
+        }
+        this.pageNum++;
         this.$apply();
       } else {
         tip.alert(res.data.message);
+      }
+    }
+
+    onReachBottom(){
+      if(this.loadingType != 'nomore'){
+        this.getAllNews();
       }
     }
 

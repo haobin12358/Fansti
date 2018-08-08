@@ -3,7 +3,7 @@
 
   .container{
     color: @mainBlueColor;
-    padding: 73rpx 30rpx 0;
+    padding: 73rpx 30rpx 100rpx;
 
     .container-title{
       margin-bottom: 50rpx;
@@ -36,6 +36,14 @@
         .td{
           padding: 17rpx 0;
           border:  1px solid @borderColor;
+        }
+
+        .td-no{
+          flex: .5;
+        }
+
+        .td-showmore{
+          color: @mainYellowColor;
         }
       }
 
@@ -70,47 +78,110 @@
       <view class="standard-table">
         <view class="thead">
           <view class="tr">
-            <view class="td">序号</view>
-            <view class="td">姓名</view>
-            <view class="td">用户名</view>
+            <view class="td td-no">序号</view>
+            <view class="td">微信昵称</view>
             <view class="td">电话</view>
+            <view class="td">操作(显示二级邀请列表)</view>
           </view>
         </view>
         <view class="tbody">
-          <view class="tr" wx:for="123456789">
-            <view class="td">{{item}}</view>
-            <view class="td">xx</view>
-            <view class="td">xx</view>
-            <view class="td">123456789</view>
+          <view class="tr" wx:for="{{shareList}}" wx:key="invate_openid">
+            <view class="td td-no">{{index+1}}</view>
+            <view class="td">{{item.name}}</view>
+            <view class="td">{{item.phone}}</view>
+            <block wx:if="{{item.second_invate.length}}">
+              <view class="td td-showmore" @tap="showSecondInvate({{item.second_invate}})">
+                显示
+              </view>
+            </block>
+           <block wx:else>
+             <view class="td td-showmore">
+               -
+             </view>
+           </block>
           </view>
         </view>
 
       </view>
-      <view class="show-more">
+
+      <view class="show-more" wx:if="{{showMore}}" @tap="showMore">
         <text>查看更多</text> <image src="../../images/triangle_down.png"></image>
       </view>
     </view>
   </view>
 
+  <second-invate-list :show.sync="showSecondeInvate" :list.sync="secondInvateList"></second-invate-list>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import LoadMore from '@/components/common/loadMore'
+  import SecondInvateList from '@/components/secondInvateList'
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+  import CardMixin from '@/mixins/cardMixin'
 
   export default class ShareList extends wepy.page {
     config = {
       navigationBarTitleText: '泛思特'
     }
 
-    components = {};
+    components = {
+      'load-more': LoadMore,
+      'second-invate-list': SecondInvateList,
+    };
 
-    data = {};
+    mixins= [CardMixin];
+
+    data = {
+      shareList: [
+
+      ],
+      pageNum: 1,
+      pageSize: 10,
+
+      showMore: true,
+
+      showSecondeInvate: false,
+      secondInvateList: []
+    };
     computed = {};
 
-    methods = {};
+    methods = {
+      showMore(){
+        this.getInvateList();
+      },
+
+      showSecondInvate(secondInvateList){
+        console.log(secondInvateList);
+        this.showSecondeInvate = true;
+        this.secondInvateList = secondInvateList;
+      }
+    };
+
+    async getInvateList(){
+      this.loadingType = 'loading';
+      this.$apply();
+      let res = await api.getInvateList({
+        query: { openid: wx.getStorageSync('openid'), page_num: this.pageNum, page_size: this.pageSize }
+      });
+
+      if (res.data.status == 200) {
+        this.shareList =[...this.shareList,...res.data.data];
+
+        if(res.data.data.length != this.pageSize){
+            this.showMore = false;
+        }
+
+        this.pageNum++;
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    }
 
     onLoad() {
-
+      this.getInvateList();
     }
   }
 </script>

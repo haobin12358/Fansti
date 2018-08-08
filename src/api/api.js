@@ -27,10 +27,19 @@ const getJcAbo = params => wxRequest(params, host+'/goods/get_jc_abo');
 //  确认照片  POST
 const retrueGoods = params => wxRequest(params, host+`/goods/retrue_goods?login_name=${params.login_name}&jcno=${params.jcno}`);
 
-//  查询cas
-const getCas = params => wxRequest(params, host+'/scrapy/get_cas');
-//  查询hscode
+//  查询dgr
+const getDgr = params => wxRequest(params, host+'/scrapy/get_dgr');
+//  查询鉴定信息
+const getJd = params => wxRequest(params, host+'/scrapy/get_jd');
+//  查询tact
+const getTact = params => wxRequest(params, host+'/scrapy/get_tact');
+//  查询hscode 爬虫
 const getHs = params => wxRequest(params, host+'/scrapy/get_hs');
+//  查询cas 爬虫
+const getCas = params => wxRequest(params, host+'/scrapy/get_cas');
+//  查询航班信息
+const getFlyno = params => wxRequest(params, host+'/scrapy/get_flyno');
+
 
 //  获取红包全部内容
 const getAllRed = params => wxRequest(params, host+'/reds/get_all_red');
@@ -44,6 +53,8 @@ const getMyInfo = params => wxRequest(params, host+`/users/get_my_info?openid=${
 const updateMyInfo = params => wxRequest(params, host+`/users/update_my_info?openid=${params.openid}`);
 //  邀请用户
 const addInvate = params => wxRequest(params, host+`/users/add_invate?openid=${params.openid}`);
+//  获取邀请人列表
+const getInvateList = params => wxRequest(params, host+`/users/get_invate_list`);
 
 
 
@@ -59,9 +70,14 @@ export default {
   getCustom,
   getCas,
   getHs,
+  getDgr,
+  getJd,
+  getTact,
+  getFlyno,
   getAllRed,
   makeUserMessage,
   getMyInfo,
   updateMyInfo,
-  addInvate
+  addInvate,
+  getInvateList,
 }

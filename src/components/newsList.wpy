@@ -80,7 +80,6 @@
           <view class="line2">
             <!--{{item.news_all}}-->
             "调位史原价提几油联消报规各半育十。"
-
           </view>
           <view class="line3">
             <text class="news-source">{{item.news_from}}</text>

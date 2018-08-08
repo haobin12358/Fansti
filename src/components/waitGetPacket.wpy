@@ -81,7 +81,7 @@
 
 <template>
   <block wx:if="{{show}}">
-    <view class="popup-screen" @touchstart.stop=""></view>
+    <view class="popup-screen" @touchstart.stop="" style="height: {{containerHeight}}px;"></view>
     <view class="popup-content" style="height: {{cardHeight}}px;">
       <scroll-view scroll-y class="wait-get-packet">
         <view class="container-title">

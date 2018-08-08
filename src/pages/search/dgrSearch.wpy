@@ -268,7 +268,8 @@
 
     events = {};
 
-    onLoad() {
+    onLoad(params, data) {
+      console.log('preload',data.preload.xxx);
     }
   }
 </script>

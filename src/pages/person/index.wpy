@@ -380,10 +380,6 @@
       }
     };
 
-    onShareAppMessage() {
-
-    }
-
     events = {};
 
     //  获取客服信息

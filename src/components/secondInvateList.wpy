@@ -1,0 +1,139 @@
+<style scoped lang="less">
+    @import "../styles/table";
+
+    .popup-screen{
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #ffffff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      opacity: 0.7;
+    }
+
+    .popup-content {
+      position: fixed;
+      z-index: 2000;
+      top: 37rpx;
+      left: 50rpx;
+      width: 650rpx;
+      background: #ffffff;
+      border: 4 rpx solid @borderColor;
+      border-radius: 10rpx;
+
+      .hide-btn {
+        position: absolute;
+        right: -25rpx;
+        top: -25rpx;
+        width: 50rpx;
+        height: 50rpx;
+      }
+
+      .second-invate-list{
+        color: @mainBlueColor;
+        padding: 20rpx;
+
+        .container-title{
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 30rpx;
+
+          .fz38();
+
+        }
+
+        .container-bd{
+          .standard-table{
+            margin-bottom: 20rpx;
+
+            .thead{
+              background: #ffffff;
+              color: @mainBlueColor;
+
+            }
+
+            .td{
+              padding: 17rpx 0;
+              border:  1px solid @borderColor;
+            }
+
+            .td-no{
+              flex: .5;
+            }
+          }
+        }
+      }
+    }
+</style>
+
+<template>
+  <block wx:if="{{show}}">
+    <view class="popup-screen" @touchstart.stop=""></view>
+    <view class="popup-content" style="height: {{cardHeight}}px;">
+      <view class="second-invate-list">
+        <view class="container-title">
+          邀请人: {{list[0].invate_name}}
+        </view>
+        <view class="container-bd">
+          <view class="standard-table">
+            <view class="thead">
+              <view class="tr">
+                <view class="td td-no" >序号</view>
+                <view class="td">微信昵称</view>
+                <view class="td">电话</view>
+              </view>
+            </view>
+            <view class="tbody">
+              <view class="tr" wx:for="{{list}}" wx:key="invate_openid">
+                <view class="td td-no">{{index+1}}</view>
+                <view class="td">{{item.name}}</view>
+                <view class="td">{{item.phone}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <image src="../images/close.png" class="hide-btn" @tap.stop="hidePopup"></image>
+    </view>
+  </block>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CardMixin from '@/mixins/cardMixin';
+
+  export default class SecondInvateList extends wepy.component {
+    props = {
+      show: {
+        //  Object Array String Number Boolean
+        type: Boolean,
+        twoWay: true
+      },
+      list: {
+        type: Array,
+
+      }
+    };
+
+    mixins = [CardMixin]
+
+    data = {};
+
+    computed = {};
+
+    methods = {
+      hidePopup(){
+        this.show = false;
+      }
+    };
+
+
+    onLoad() {
+
+      console.log(this.cardHeight);
+    }
+  }
+</script>
+
