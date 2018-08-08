@@ -5,8 +5,8 @@
           <ul class="m-card">
             <li @click="show_modal">
               <div  class="m-img"></div>
-              <p>{{customer_data.name}}</p>
-              <p>{{customer_data.telphone}}</p>
+              <p>{{customer_data.user_name}}</p>
+              <p>{{customer_data.telephone}}</p>
               <!--<span class="m-close"></span>-->
             </li>
           </ul>
@@ -80,13 +80,15 @@
       methods:{
         show_modal(){
           this.showModal = true;
-          this.form.name = this.customer_data.name;
+          this.form.name = this.customer_data.user_name;
           this.form.qq = this.customer_data.qq;
-          this.form.telphone= this.customer_data.telphone;
+          this.form.telphone= this.customer_data.telephone;
           this.form.email = this.customer_data.email;
         },
         getData(){
-          axios.get(api.get_custom).then(res => {
+          axios.get(api.get_custom,{params:{
+              login_name:''
+            }}).then(res => {
             if(res.data.status == 200){
               this.customer_data = res.data.data;
               console.log(this.customer_data)
