@@ -220,6 +220,9 @@ class CUsers():
             return judge_keys(true_args, args.keys())
         if judge_keys(true_data, data.keys()) != 200:
             return judge_keys(true_data, data.keys())
+        wechat_login = get_model_return_dict(self.susers.get_wechat_login_by_openid(data["openid"]))
+        if wechat_login:
+            return import_status("ERROR_HAVE_INVATED", "FANSTI_ERROR", "ERROR_HAVE_INVATED")
         new_user_invate = add_model("USER_INVATE",
                                     **{
                                         "id": str(uuid.uuid4()),
@@ -233,18 +236,52 @@ class CUsers():
     def get_invate_list(self):
         args = request.args.to_dict()
         make_log("args", args)
-        true_args = ["openid"]
+        true_args = ["openid", "page_size", "page_num"]
         if judge_keys(true_args, args.keys()) != 200:
             return judge_keys(true_args, args.keys())
-        all_invate = get_model_return_list(self.susers.get_invate_by_login_name(args["openid"]))
+        all_invate = get_model_return_list(self.susers.get_invate_by_login_name(args["openid"], int(args["page_size"]), int(args["page_num"])))
         make_log("all_invate", all_invate)
         for row in all_invate:
             a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(row["invate_openid"]))
             make_log("a_invate", a_invate)
             if not a_invate:
                 return SYSTEM_ERROR
-            row["name"] = all_invate["name"]
-            row["phone"] = all_invate["phone"]
+            row["name"] = a_invate["name"].decode("gbk").encode("utf8")
+            row["phone"] = a_invate["phone"]
+
+        phone = get_model_return_dict(self.susers.get_wechat_login(args["openid"]))
+        make_log("phone", phone)
+        if not phone:
+            return SYSTEM_ERROR
+        phone = phone["phone"]
+
+        import ConfigParser
+        cf = ConfigParser.ConfigParser()
+        cf.read("../Fansti/fansticonfig.ini")
+        phone_list = cf.get("phone", "whitelist")
+        if str(phone_list) == "[]":
+            phone_list = str(phone_list).replace("[", "").replace("]", "")
+            phone_list = list(phone_list)
+        else:
+            phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+        if phone in phone_list:
+            for row in all_invate:
+                invate_openid = row["invate_openid"]
+                second_all_invate = get_model_return_list(self.susers.get_invate_by_login_name(invate_openid, int(args["page_size"]), int(args["page_num"])))
+                make_log("second_all_invate", second_all_invate)
+                for raw in second_all_invate:
+                    a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(raw["invate_openid"]))
+                    make_log("a_invate", a_invate)
+                    if not a_invate:
+                        return SYSTEM_ERROR
+                    raw["name"] = a_invate["name"].decode("gbk").encode("utf8")
+                    raw["phone"] = a_invate["phone"]
+                    try:
+                        raw["invate_name"] = row["name"].decode("gbk").encode("utf8")
+                    except:
+                        raw["invate_name"] = row["name"]
+                row["second_invate"] = second_all_invate
         response = import_status("SUCCESS_GET_INVATE", "OK")
         response["data"] = all_invate
         return response

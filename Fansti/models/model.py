@@ -216,7 +216,7 @@ class WECHAT_NEWS(Base):
     news_picture = Column(String(200))                  # 新闻主图
     news_from = Column(String(200))                     # 新闻来源
     news_time = Column(DATE)                            # 新闻日期
-    news_status = Column(String(10))                    # 新闻状态
+    news_status = Column(String(10))                    # 新闻状态{0不可用1可用}
 
 class AIR_HWYS_JD(Base):
     __tablename__ = "AIR_HWYS_JD"

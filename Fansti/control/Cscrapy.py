@@ -485,11 +485,11 @@ class Cscrapy():
         dgr = get_model_return_dict(self.sscrapy.get_dgr_by_unno(args["dgr_name"]))
         make_log("dgr", dgr)
         if not dgr:
-            return
+            return SYSTEM_ERROR
         dgr_type = get_model_return_list(self.sscrapy.get_dgr_level_by_dgrid(dgr["id"]))
         make_log("dgr_type", dgr_type)
         if not dgr:
-            return
+            return SYSTEM_ERROR
         for row in dgr_type:
             row["airliner_is_single"] = row["airliner_is_single"].decode("gbk").encode("utf8")
             row["airfreighter_is_single"] = row["airfreighter_is_single"].decode("gbk").encode("utf8")

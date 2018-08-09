@@ -31,7 +31,7 @@ class CGoods():
         for goods in goods_list:
             yupei = get_model_return_dict(self.sgoods.get_dctime_by_jcno(goods["jcno"]))
             make_log("yupei", yupei)
-            if not yupei or not yupei["dctime"]:
+            if not yupei or not yupei["hbdate1"]:
                 goods["yupei"] = "0"
             else:
                 goods["yupei"] = "1"
@@ -81,7 +81,7 @@ class CGoods():
                     goods["jiaodan"] = "1"
             qifei = get_model_return_dict(self.sgoods.get_hbdate_by_jcno(goods["jcno"]))
             make_log("qifei", qifei)
-            if not qifei or not qifei["hbdate1"]:
+            if not qifei or not qifei["mes1"]:
                 goods["qifei"] = "0"
             else:
                 goods["qifei"] = "1"
@@ -111,51 +111,50 @@ class CGoods():
         make_log("jc_abo", jc_abo)
         if not jc_abo:
             return SYSTEM_ERROR
+        jc_abo["enhwpm"] = jc_abo["enhwpm"].decode("gbk").encode("utf8")
         quantity_weight = get_model_return_dict(self.sgoods.get_quantity_weight_by_jcno(args["jcno"]))
-        make_log("quantity_weight", quantity_weight)
-        if not quantity_weight:
-            return SYSTEM_ERROR
-        jc_abo["quantity"] = quantity_weight["quantity"]
-        jc_abo["weight"] = quantity_weight["weight"]
-        jc_abo["in"] = {}
-        jc_abo["in"]["picture"] = []
-        jc_abo["out"] = {}
-        jc_abo["out"]["picture"] = []
-        jc_abo["weight_pic"] = {}
-        jc_abo["weight_pic"]["picture"] = []
-        jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
-        make_log("jc_abo_in", jc_abo_in)
-        if jc_abo_in:
-            for in_order in jc_abo_in:
-                jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d")
-                jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
-                jc_abo["in"]["picture"].append(in_order["photourl"])
-        jc_abo_out = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
-        make_log("jc_abo_out", jc_abo_out)
-        if jc_abo_out:
-            for out_order in jc_abo_out:
-                jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d")
-                jc_abo["out"]["czr"] = out_order["czr"].decode("gbk").encode("utf8")
-                jc_abo["out"]["picture"].append(out_order["photourl"])
-        jc_abo_weight = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
-        make_log("jc_abo_weight", jc_abo_weight)
-        if jc_abo_weight:
-            for weight_order in jc_abo_weight:
-                jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
-                jc_abo["weight_pic"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
-                jc_abo["weight_pic"]["picture"].append(weight_order["photourl"])
+        if quantity_weight:
+            jc_abo["quantity"] = quantity_weight["quantity"]
+            jc_abo["weight"] = quantity_weight["weight"]
+            jc_abo["in"] = {}
+            jc_abo["in"]["picture"] = []
+            jc_abo["out"] = {}
+            jc_abo["out"]["picture"] = []
+            jc_abo["weight_pic"] = {}
+            jc_abo["weight_pic"]["picture"] = []
+            jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
+            make_log("jc_abo_in", jc_abo_in)
+            if jc_abo_in:
+                for in_order in jc_abo_in:
+                    jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["in"]["picture"].append(in_order["photourl"])
+            jc_abo_out = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
+            make_log("jc_abo_out", jc_abo_out)
+            if jc_abo_out:
+                for out_order in jc_abo_out:
+                    jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["out"]["czr"] = out_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["out"]["picture"].append(out_order["photourl"])
+            jc_abo_weight = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
+            make_log("jc_abo_weight", jc_abo_weight)
+            if jc_abo_weight:
+                for weight_order in jc_abo_weight:
+                    jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["weight_pic"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["weight_pic"]["picture"].append(weight_order["photourl"])
 
-        in_out_weight_status = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))
-        jc_abo["in_status"] = "0"
-        jc_abo["out_status"] = "0"
-        jc_abo["weight_status"] = "0"
-        for row in in_out_weight_status:
-            if row["in_pic"] == "1":
-                jc_abo["in_status"] = "1"
-            if row["out_pic"] == "1":
-                jc_abo["out_status"] = "1"
-            if row["weight_pic"] == "1":
-                jc_abo["weight_status"] = "1"
+            in_out_weight_status = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))
+            jc_abo["in_status"] = "0"
+            jc_abo["out_status"] = "0"
+            jc_abo["weight_status"] = "0"
+            for row in in_out_weight_status:
+                if row["in_pic"] == "1":
+                    jc_abo["in_status"] = "1"
+                if row["out_pic"] == "1":
+                    jc_abo["out_status"] = "1"
+                if row["weight_pic"] == "1":
+                    jc_abo["weight_status"] = "1"
 
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo

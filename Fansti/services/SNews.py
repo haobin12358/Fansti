@@ -11,7 +11,7 @@ class SNews(SBase):
     def get_all(self, page_num, page_size):
         return self.session.query(WECHAT_NEWS.id, WECHAT_NEWS.news_title, WECHAT_NEWS.news_all,
                                   WECHAT_NEWS.news_picture, WECHAT_NEWS.news_from, WECHAT_NEWS.news_time)\
-            .offset(page_size * (page_num - 1)).limit(page_size).all()
+            .filter_by(news_status=1).offset(page_size * (page_num - 1)).limit(page_size).all()
 
     @close_session
     def get_message(self, id):
