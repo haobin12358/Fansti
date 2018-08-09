@@ -10,7 +10,8 @@ from Fansti.common.import_status import import_status
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.TransformToList import add_model
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
-from Fansti.common.timeformate import get_db_time_str
+from Fansti.common.timeformate import get_db_time_str, format_forweb_no_second
+
 
 class MyHTMLParser(HTMLParser):
 
@@ -21,6 +22,7 @@ class MyHTMLParser(HTMLParser):
     def handle_data(self, data):
         self.text.append(data.decode("gbk").encode("utf8"))
 
+
 class MyHTMLParser2(HTMLParser):
 
     def __init__(self):
@@ -29,6 +31,7 @@ class MyHTMLParser2(HTMLParser):
 
     def handle_data(self, data):
         self.text.append(data)
+
 
 class Cscrapy():
     def __init__(self):
@@ -364,7 +367,7 @@ class Cscrapy():
         import xlrd
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
-        title_line = sheet1.row_values()
+        title_line = sheet1.row_values(0)
         title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
         make_log("title_line", title_line)
         keydict = {k: v for v, k in enumerate(title_line)}
@@ -397,8 +400,8 @@ class Cscrapy():
                 airname = row_dict.get("airname")
             else:
                 row_dict["airname"] = airname
-            if row_dict.get("aipcompany"):
-                aipcompany = row_dict.get("aipcompany")
+            if row_dict.get("aircompany"):
+                aipcompany = row_dict.get("aircompany")
             else:
                 row_dict["aipcompany"] = aipcompany
 
@@ -423,18 +426,40 @@ class Cscrapy():
                     row_dict[key] = re.sub(r"[\n\t\s]", "", row_dict.get(key))
 
                 # 正则校验
-                if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
-                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
-                    response["data"] = {
-                        "row": row,
-                        "col": key
-                    }
-                    return response
+                try:
+                    if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                        response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                        response["data"] = {
+                            "row": row,
+                            "col": key
+                        }
+                        return response
+                except Exception as e:
+                    print(e.message)
+                    print(AIRLINE_EXCEL_ROLE.get(key))
+                    print(key)
+                    print row_dict.get(key)
                 # 字符编码处理
                 if isinstance(row_dict.get(key), unicode):
                     row_dict[key] = row_dict.get(key).encode("utf8")
 
             make_log("row_dict", row_dict)
+            # eta etd date 修改
+            eta_list = row_dict.get("eta").split("+")
+            eta_data = row_dict.get("mydate") + " " + eta_list[0]
+            eta_data = datetime.datetime.strptime(eta_data, format_forweb_no_second)
+
+            if len(eta_list) > 1 and eta_list[1]:
+                if re.match(r"\d+", eta_list[1]):
+                    eta_data = eta_data + datetime.timedelta(days=int(eta_list[1]))
+
+            etd_list = row_dict.get("etd").split("+")
+            etd_date = row_dict.get("mydate") + " " + etd_list[0]
+            etd_date = datetime.datetime.strptime(etd_date, format_forweb_no_second)
+
+            row_dict["eta"] = eta_data
+            row_dict["etd"] = etd_date
+
             airhwysline = self.sscrapy.get_airline_by_flight(row_dict.get("flight"))
             if airhwysline:
                 update_result = self.sscrapy.update_airline(row_dict.get("flight"), row_dict)
