@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import uuid, datetime
+import uuid, datetime, re
 from flask import request
 from HTMLParser import HTMLParser
 from Fansti.config.response import SYSTEM_ERROR, PARAMS_MISS
@@ -335,9 +335,119 @@ class Cscrapy():
 
     def new_update_airline(self):
         # TODO 上传格式规范的表格，如果格式不规范或者某行某列存在数据异常，提出报错
-        # TODO 将文件存在linux存储在服务器中，最多储存30个文件，超过30个文件则清理掉，文件名称为时间.xls，例：20180729010101.xls
+        # TODO 将文件存在linux存储在服务器中，最多储存10天文件（默认），超过10天的文件则清理掉，文件名称为时间.xls，例：20180729010101.xls
         # TODO 遍历表格，根据flight参数进行判断，如果数据库中存在，则更新，如果数据库中不存在，则增加一条数据
-        pass
+        # D:\teamsystem\Fansti
+        formdata = request.form
+        make_log("formdata", formdata)
+        files = request.files.get("file")
+        import platform
+        from Fansti.config import Inforcode
+        if platform.system() == "Windows":
+            rootdir = os.path.join(Inforcode.WindowsRoot, Inforcode.AIRLINEDIR)
+        else:
+            rootdir = os.path.join(Inforcode.LinuxTMP, Inforcode.AIRLINEDIR)
+        if not os.path.isdir(rootdir):
+            os.mkdir(rootdir)
+        # if "FileType" not in formdata:
+        #     return
+        filessuffix = str(files.filename).split(".")[-1]
+        if filessuffix not in ["xls", "xlsm", "xlsx"]:
+            return import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+
+        filename = get_db_time_str() + "." + filessuffix
+        filepath = os.path.join(rootdir, filename)
+        print(filepath)
+        files.save(filepath)
+        # titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
+        #             'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
+        import xlrd
+        wb = xlrd.open_workbook(filepath)
+        sheet1 = wb.sheet_by_index(0)
+        title_line = sheet1.row_values()
+        title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
+        make_log("title_line", title_line)
+        keydict = {k: v for v, k in enumerate(title_line)}
+        make_log("keydict", keydict)
+        from Fansti.config.staticconfig import AIRLINE_DB_TO_EXCEL, AIRLINE_EXCEL_ROLE
+        keyindex_to_db = {key: keydict.get(AIRLINE_DB_TO_EXCEL.get(key)) for key in AIRLINE_DB_TO_EXCEL}
+
+        make_log("keyindex_to_db", keyindex_to_db)
+
+        make_log("sheet1.nrows", sheet1.nrows)
+        airline = ""
+        airname = ""
+        aipcompany = ""
+        depa = ""
+        dest = ""
+        remark = ""
+        for row in range(1, sheet1.nrows):
+            row_data = sheet1.row_values(row, 0)
+            row_dict = {
+                k: row_data[keyindex_to_db.get(k)] for k in keyindex_to_db
+            }
+
+            # 合并单元格处理
+            if row_dict.get("airline"):
+                airline = row_dict.get("airline")
+            else:
+                row_dict["airline"] = airline
+
+            if row_dict.get("airname"):
+                airname = row_dict.get("airname")
+            else:
+                row_dict["airname"] = airname
+            if row_dict.get("aipcompany"):
+                aipcompany = row_dict.get("aipcompany")
+            else:
+                row_dict["aipcompany"] = aipcompany
+
+            if row_dict.get("depa"):
+                depa = row_dict.get("depa")
+            else:
+                row_dict["depa"] = depa
+
+            if row_dict.get("dest"):
+                dest = row_dict.get("dest")
+            else:
+                row_dict["dest"] = dest
+
+            if row_dict.get("remark"):
+                remark = row_dict.get("remark")
+            else:
+                row_dict["remark"] = remark
+
+            for key in row_dict:
+                # 空格处理
+                if isinstance(row_dict.get(key), unicode):
+                    row_dict[key] = re.sub(r"[\n\t\s]", "", row_dict.get(key))
+
+                # 正则校验
+                if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    response["data"] = {
+                        "row": row,
+                        "col": key
+                    }
+                    return response
+                # 字符编码处理
+                if isinstance(row_dict.get(key), unicode):
+                    row_dict[key] = row_dict.get(key).encode("utf8")
+
+            make_log("row_dict", row_dict)
+            airhwysline = self.sscrapy.get_airline_by_flight(row_dict.get("flight"))
+            if airhwysline:
+                update_result = self.sscrapy.update_airline(row_dict.get("flight"), row_dict)
+                if not update_result:
+                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    response["data"] = row
+                    return response
+            else:
+                row_dict["id"] = str(uuid.uuid1())
+                self.sscrapy.add_model("AIR_HWYS_LINES", **row_dict)
+
+        response = import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+        return response
 
     def get_all_scrapy(self):
         args = request.args.to_dict()
@@ -390,3 +500,20 @@ class Cscrapy():
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = dgr
         return response
+
+
+if __name__ == "__main__":
+    # import re
+    pp = u"我开心就好"
+    # print type(pp)
+    # print re.match(ur"^[\u4e00-\u9fa5]+$", pp)
+    # re.sub()
+    # a = "AIRLINE NAME COMPANY FLIGHT DEPA DEST DATE ETD ETA 交单时间 AIRCRAFT REMARK"
+    # b = a.replace(" ", ",")
+    # print b
+    # b = b.split(",")
+    # b = [key.strip() for key in b if key]
+    # print b
+    #
+    # for key in b:
+    #     print b

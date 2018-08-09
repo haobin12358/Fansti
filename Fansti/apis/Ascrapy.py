@@ -26,3 +26,14 @@ class FSscrapy(Resource):
         if scrapy not in apis:
             return APIS_WRONG
         return eval(apis[scrapy])
+
+    def post(self, scrapy):
+        print(self.title.format("api is" + scrapy))
+
+        apis = {
+            "update_airline": "self.cscrapy.new_update_airline()"
+        }
+
+        if scrapy not in apis:
+            return APIS_WRONG
+        return eval(apis[scrapy])

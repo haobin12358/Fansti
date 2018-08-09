@@ -17,3 +17,9 @@ ip = "http://120.79.182.43:7443/"
 
 # 服务器ip地址
 NETWORK_IP = "123.207.97.185"
+
+# 模板存放地址
+
+LinuxTMP = "/tmp"
+WindowsTMP = "D:\\template"
+AIRLINEDIR = "airline"
