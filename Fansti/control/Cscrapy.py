@@ -427,7 +427,7 @@ class Cscrapy():
 
                 # 正则校验
                 try:
-                    if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
                         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
                         response["data"] = {
                             "row": row,
