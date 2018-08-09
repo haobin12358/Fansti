@@ -2,6 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
+os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 import uuid, datetime, re
 from flask import request
 from HTMLParser import HTMLParser
