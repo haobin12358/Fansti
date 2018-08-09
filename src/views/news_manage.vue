@@ -10,11 +10,10 @@
           <img class="news-image" :src="item.news_picture" :onerror="errorImg"/>
           <div class="news-text">
             <div class="news-title">{{item.news_title}}</div>
-            <div class="news-status" v-if="item.newsStatus">该新闻已关闭</div>
-            <div class="news-status" v-if="!item.newsStatus">该新闻已上传</div>
             <div class="news-from-date">{{item.news_from}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.news_time}}</div>
             <div class="news-body">摘要：{{item.abstract}}</div>
           </div>
+          <div class="news-edit" @click="editNews(item)">编 辑</div>
           <div class="news-close" @click="closeNews(item)">删 除</div>
         </div>
       </div>
@@ -51,10 +50,13 @@
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
-        <div v-if="titleInput == ''">
-          <el-button class="upload-btn" @click="uploadNews">上 传</el-button>
+        <div v-if="editNewsStatus">
+          <el-tooltip content="放弃本次编辑" placement="top">
+            <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
+          </el-tooltip>
+          <el-button class="upload-two-btn" @click="updateNews">保存更改</el-button>
         </div>
-        <div v-if="titleInput != ''">
+        <div v-if="!editNewsStatus">
           <el-tooltip content="放弃本次编辑" placement="top">
             <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
           </el-tooltip>
@@ -94,7 +96,9 @@
         imageUrlStatus: true,
         // editor: null
         errorImg: 'this.src="' + require('../assets/images/newsPic.jpg') + '"',
-        abstract: ''
+        abstract: '',
+        editNewsStatus: false,
+        newsId: ''
       }
     },
     components:{ tabs, UE, page },
@@ -111,7 +115,7 @@
               this.abstract = this.news[i].news_all.replace(/<[^<>]+?>/g, '').replace(/(\s|&nbsp;)+/g,'')
               this.news[i].abstract = this.abstract
             }
-            console.log(this.news)
+            // console.log(this.news)
             this.total_num = res.data.data.length;
             this.total_page = Math.ceil(this.total_num / this.page_size);
           }else{
@@ -123,7 +127,6 @@
       },
       /*分页点击*/
       pageChange(v){
-        console.log(v)
         if(v == this.current_page){
           this.$message({ message: '这已经是第' + v + '页数据了', type: 'warning' });
           return false;
@@ -153,6 +156,7 @@
         form.append("index", 1);
         axios.post(api.upload_files, form).then(res => {
           if(res.data.status == 200){
+            console.log(res)
             this.$message({ type: 'success', message: res.data.message });
           }else{
             this.$message({ type: 'error', message: res.data.message });
@@ -195,18 +199,21 @@
       },
       // 放弃编辑
       giveUpEdit() {
-        this.$confirm('此操作将不保存本页的变化内容', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.titleInput = ''
-          this.fromInput = ''
-          this.imageUrl = ''
-          this.defaultMsg = ''
+        if(this.titleInput == '' && this.fromInput == '' && this.imageUrl == '' && this.defaultMsg == '') {
           this.tabClick(1)
-          this.newsManage = true
-        });
+        }else if(this.titleInput != '' || this.fromInput != '' || this.imageUrl != '' || this.defaultMsg != ''){
+          this.$confirm('此操作将不保存本页的变化内容', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.titleInput = ''
+            this.fromInput = ''
+            this.imageUrl = ''
+            this.defaultMsg = ''
+            this.tabClick(1)
+          });
+        }
       },
       // 上传新闻
       uploadNews() {
@@ -230,7 +237,44 @@
             if(res.data.status == 200){
               this.$message({ type: 'success', message: res.data.message });
               this.getData(1)
-              this.newsManage = true
+              this.tabClick(1)
+              this.titleInput = ''
+              this.fromInput = ''
+              this.imageUrl = ''
+            }else{
+              this.$message({ type: 'error', message: res.data.message });
+            }
+          },error =>{
+            this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
+          })
+        }
+      },
+      updateNews() {
+        this.newsContent = this.$refs.ue.getUEContent()
+        if(this.titleInput == '') {
+          this.$message.error('请填写新闻标题');
+        }else if(this.fromInput == '') {
+          this.$message.error('请填写新闻来源');
+        }else if(this.imageUrl == '') {
+          this.$message.error('请上传标题图片');
+        }else if(this.newsContent == '') {
+          this.$message.error('请撰写新闻正文');
+        }else {
+          let params = {
+            news_title: this.titleInput,
+            news_from: this.fromInput,
+            news_picture: this.imageUrl,
+            news_all: this.newsContent
+          }
+          axios.post(api.update_news+'?id='+this.newsId, params).then(res => {
+            if(res.data.status == 200){
+              this.$message({ type: 'success', message: res.data.message });
+              this.getData(1)
+              this.tabClick(1)
+              this.titleInput = ''
+              this.fromInput = ''
+              this.imageUrl = ''
+              this.defaultMsg = ''
             }else{
               this.$message({ type: 'error', message: res.data.message });
             }
@@ -265,6 +309,17 @@
             console.log(error)
           });
         });
+      },
+      // 编辑新闻
+      editNews(news) {
+        // console.log(news)
+        this.editNewsStatus = true
+        this.newsId = news.id
+        this.tabClick(0)
+        this.titleInput = news.news_title
+        this.fromInput = news.news_from
+        this.imageUrl = news.news_picture
+        this.defaultMsg = news.news_all
       }
     },
     created() {
@@ -299,13 +354,6 @@
           font-size: 20px;
           font-weight: bold;
         }
-        .news-status {
-          float: right;
-          color: #7e7e7e;
-          font-size: 14px;
-          margin-right: 5%;
-          margin-top: -0.23rem;
-        }
         .news-from-date {
           color: #545454;
           margin: 0.15rem 0;
@@ -324,20 +372,24 @@
           color: #7e7e7e;
         }
       }
-      .news-edit {
-        min-width: 1rem;
+      .news-close {
+        height: 0.9rem;
+        min-width: 0.9rem;
         font-size: 18px;
+        margin-top: 0.9rem;
         color: @bgMainColor;
-        background-color: @btnActiveColor;
+        background-color: @mainColor;
         display: flex;
         -webkit-align-items: center;
         -webkit-justify-content: center;
       }
-      .news-close {
-        min-width: 1rem;
+      .news-edit {
+        height: 0.9rem;
+        min-width: 0.9rem;
         font-size: 18px;
+        margin-right: -0.9rem;
         color: @bgMainColor;
-        background-color: @mainColor;
+        background-color: @btnActiveColor;
         display: flex;
         -webkit-align-items: center;
         -webkit-justify-content: center;
@@ -376,7 +428,7 @@
     .upload-two-btn {
       width: 1.2rem;
       height: 0.4rem;
-      margin: 4.6rem 0 0.6rem 0.8rem;
+      margin: 4.6rem 0 0.6rem 0.7rem;
       color: @bgMainColor;
       background-color: @btnActiveColor;
     }

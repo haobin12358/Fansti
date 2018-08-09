@@ -14,6 +14,7 @@ const api={
   new_news: title + 'news/new_news',//创建新闻
   get_abo: title + 'news/get_abo',//获取新闻详情
   update_status: title + 'news/update_status',//改变新闻状态
+  update_news: title + 'news/update_news',//编辑新闻
 
   get_all_scrapy: title + 'scrapy/get_all_scrapy',//用户查询记录
 
