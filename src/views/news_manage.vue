@@ -50,18 +50,18 @@
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
         </div>
-        <div v-if="editNewsStatus">
-          <el-tooltip content="放弃本次编辑" placement="top">
-            <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
-          </el-tooltip>
-          <el-button class="upload-two-btn" @click="updateNews">保存更改</el-button>
-        </div>
-        <div v-if="!editNewsStatus">
+        <!--<div v-if="editNewsStatus">-->
           <el-tooltip content="放弃本次编辑" placement="top">
             <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
           </el-tooltip>
           <el-button class="upload-two-btn" @click="uploadNews">上 传</el-button>
-        </div>
+        <!--</div>-->
+        <!--<div v-if="!editNewsStatus">
+          <el-tooltip content="放弃本次编辑" placement="top">
+            <el-button class="give-up-btn" @click="giveUpEdit">放弃编辑</el-button>
+          </el-tooltip>
+          <el-button class="upload-two-btn" @click="updateNews">上 传</el-button>
+        </div>-->
       </div>
     </div>
   </div>
@@ -202,11 +202,12 @@
         if(this.titleInput == '' && this.fromInput == '' && this.imageUrl == '' && this.defaultMsg == '') {
           this.tabClick(1)
         }else if(this.titleInput != '' || this.fromInput != '' || this.imageUrl != '' || this.defaultMsg != ''){
-          this.$confirm('此操作将不保存本页的变化内容', '提示', {
+          this.$confirm('此操作将不保存本页变化的内容', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
+            this.newsId = ''
             this.titleInput = ''
             this.fromInput = ''
             this.imageUrl = ''
@@ -217,36 +218,40 @@
       },
       // 上传新闻
       uploadNews() {
-        this.newsContent = this.$refs.ue.getUEContent()
-        if(this.titleInput == '') {
-          this.$message.error('请填写新闻标题');
-        }else if(this.fromInput == '') {
-          this.$message.error('请填写新闻来源');
-        }else if(this.imageUrl == '') {
-          this.$message.error('请上传标题图片');
-        }else if(this.newsContent == '') {
-          this.$message.error('请撰写新闻正文');
+        if(this.newsId != '') {
+          this.updateNews()
         }else {
-          let params = {
-            news_title: this.titleInput,
-            news_from: this.fromInput,
-            news_picture: this.imageUrl,
-            news_all: this.newsContent
-          }
-          axios.post(api.new_news, params).then(res => {
-            if(res.data.status == 200){
-              this.$message({ type: 'success', message: res.data.message });
-              this.getData(1)
-              this.tabClick(1)
-              this.titleInput = ''
-              this.fromInput = ''
-              this.imageUrl = ''
-            }else{
-              this.$message({ type: 'error', message: res.data.message });
+          this.newsContent = this.$refs.ue.getUEContent()
+          if(this.titleInput == '') {
+            this.$message.error('请填写新闻标题');
+          }else if(this.fromInput == '') {
+            this.$message.error('请填写新闻来源');
+          }else if(this.imageUrl == '') {
+            this.$message.error('请上传标题图片');
+          }else if(this.newsContent == '') {
+            this.$message.error('请撰写新闻正文');
+          }else {
+            let params = {
+              news_title: this.titleInput,
+              news_from: this.fromInput,
+              news_picture: this.imageUrl,
+              news_all: this.newsContent
             }
-          },error =>{
-            this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
-          })
+            axios.post(api.new_news, params).then(res => {
+              if(res.data.status == 200){
+                this.$message({ type: 'success', message: res.data.message });
+                this.getData(1)
+                this.tabClick(1)
+                this.titleInput = ''
+                this.fromInput = ''
+                this.imageUrl = ''
+              }else{
+                this.$message({ type: 'error', message: res.data.message });
+              }
+            },error =>{
+              this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
+            })
+          }
         }
       },
       updateNews() {
@@ -375,7 +380,7 @@
       .news-close {
         height: 0.9rem;
         min-width: 0.9rem;
-        font-size: 18px;
+        /*font-size: 18px;*/
         margin-top: 0.9rem;
         color: @bgMainColor;
         background-color: @mainColor;
@@ -386,7 +391,7 @@
       .news-edit {
         height: 0.9rem;
         min-width: 0.9rem;
-        font-size: 18px;
+        /*font-size: 18px;*/
         margin-right: -0.9rem;
         color: @bgMainColor;
         background-color: @btnActiveColor;
