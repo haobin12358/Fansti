@@ -404,7 +404,7 @@ class Cscrapy():
             if row_dict.get("aircompany"):
                 aipcompany = row_dict.get("aircompany")
             else:
-                row_dict["aipcompany"] = aipcompany
+                row_dict["aircompany"] = aipcompany
 
             if row_dict.get("depa"):
                 depa = row_dict.get("depa")
