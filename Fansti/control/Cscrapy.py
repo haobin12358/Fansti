@@ -451,7 +451,7 @@ class Cscrapy():
 
             if len(eta_list) > 1 and eta_list[1]:
                 if re.match(r"\d+", eta_list[1]):
-                    eta_date = eta_data + datetime.timedelta(days=int(eta_list[1]))
+                    eta_data = eta_data + datetime.timedelta(days=int(eta_list[1]))
 
             etd_list = row_dict.get("etd").split("+")
             etd_date = row_dict.get("mydate") + " " + etd_list[0]
