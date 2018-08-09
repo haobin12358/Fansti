@@ -19,7 +19,7 @@ class SGoods(SBase):
 
     @close_session
     def get_dctime_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_DCD.dctime).filter_by(jcno=jcno).first()
+        return self.session.query(AIR_HWYS_DCD.hbdate1).filter_by(jcno=jcno).first()
 
     @close_session
     def get_in_order_by_jcno(self, jcno):
@@ -52,7 +52,7 @@ class SGoods(SBase):
 
     @close_session
     def get_hbdate_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_DCD.hbdate1).filter_by(jcno=jcno).first()
+        return self.session.query(AIR_HWYS_DCD_JLD.mes1).filter_by(jcno=jcno).first()
 
     @close_session
     def get_dhmes_by_jcno(self, jcno):

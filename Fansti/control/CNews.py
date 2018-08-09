@@ -80,6 +80,20 @@ class CNews():
             return SYSTEM_ERROR
         return import_status("SUCCESS_UPDATE_NEWS", "OK")
 
+    def update_status(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_data = ["news_status"]
+        if judge_keys(true_data, data.keys()) != 200:
+            return judge_keys(true_data, data.keys())
+        update_news = self.snews.update_news(args["id"], data)
+        make_log("update_news", update_news)
+        if not update_news:
+            return SYSTEM_ERROR
+        return import_status("SUCCESS_UPDATE_NEWS", "OK")
+
     def upload_files(self):
         formdata = request.form
         make_log("formdata", formdata)

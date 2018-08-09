@@ -29,7 +29,8 @@ class FSNews(Resource):
         apis = {
             "new_news": "self.cnews.new_news()",
             "update_news": "self.cnews.update_news()",
-            "upload_files": "self.cnews.upload_files()"
+            "upload_files": "self.cnews.upload_files()",
+            "update_status": "self.cnews.update_status()"
         }
 
         if news not in apis:

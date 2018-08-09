@@ -51,6 +51,21 @@ class FSother(Resource):
             response["data"] = data
             return response
 
+        if other == "get_phone":
+            cf = ConfigParser.ConfigParser()
+            cf.read("../Fansti/fansticonfig.ini")
+            phone_list = cf.get("phone", "whitelist")
+            if str(phone_list) == "[]":
+                phone_list = str(phone_list).replace("[", "").replace("]", "")
+                phone_list = list(phone_list)
+            else:
+                phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                    .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                print(phone_list)
+            response = import_status("SUCCESS_GET_NEWS", "OK")
+            response["data"] = phone_list
+            return response
+
         return APIS_WRONG
 
     def post(self, other):
@@ -67,7 +82,7 @@ class FSother(Resource):
             cf.set("custom", "qq", data["qq"])
             cf.set("custom", "telphone", data["telphone"])
             cf.set("custom", "email", data["email"])
-            cf.write(open("../Fansti/fansticonfig.ini", "r+"))
+            cf.write(open("../Fansti/fansticonfig.ini", "w"))
 
             return import_status("SUCCESS_UPDATE_CUSTOM", "OK")
 
@@ -78,17 +93,32 @@ class FSother(Resource):
                 return judge_keys(true_params, data.keys())
             cf = ConfigParser.ConfigParser()
             cf.read("../Fansti/fansticonfig.ini")
-            phone_list = list(cf.get("phone", "whitelist"))
+            phone_list = cf.get("phone", "whitelist")
             for row in data["phone_list"]:
                 if data["control"] == "delete":
-                    print(phone_list)
+                    if str(phone_list) == "[]":
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\r", "").replace("\n", "")\
+                            .replace("\'", "")
+                        phone_list = list(phone_list)
+                    else:
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "")\
+                            .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                        print(phone_list)
                     if row in phone_list:
-                        phone_list.remove(phone_list[row])
+                        phone_list.remove(row)
                 if data["control"] == "add":
-                    print(phone_list)
+                    if str(phone_list) == "[]":
+                        phone_list = str(phone_list).replace("[", "").replace("]", "")
+                        phone_list = list(phone_list)
+                    else:
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "")\
+                            .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                        print(phone_list)
                     if row not in phone_list:
-                        phone_list.append(phone_list[row])
-
+                        phone_list.append(row)
+            print(phone_list)
             cf.set("phone", "whitelist", phone_list)
+            cf.write(open("../Fansti/fansticonfig.ini", "w"))
 
             return import_status("SUCCESS_UPDATE_PHONE", "OK")
+        return APIS_WRONG
