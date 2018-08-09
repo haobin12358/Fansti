@@ -96,7 +96,7 @@
     tbody{
       td{
         border-bottom: 1px solid @borderColor;
-        padding: 0.1rem 0;
+        padding: 0.23rem 0;
       }
     }
   }
