@@ -43,7 +43,7 @@
             'customstyle', 'paragraph', 'fontsize', '|',
             'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
             'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-            'simpleupload', 'insertimage', 'insertvideo', 'music', 'map', 'pagebreak', 'template', '|',
+            'simpleupload', 'insertimage', 'map', 'pagebreak', 'template', '|',
             'horizontal', 'spechars', 'source'
         ]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
