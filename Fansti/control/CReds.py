@@ -33,6 +33,7 @@ class CReds():
             if not red_abo:
                 return SYSTEM_ERROR
             red["name"] = red_abo["name"].decode("gbk").encode("utf8")
+            red["price"] = red_abo["price"]
             #red["createtime"] = red["createtime"].strftime("%Y-%m-%d")
             response["data"]["red_list"].append(red_abo)
         response["data"]["red_num"] = len(get_model_return_list(self.sred.get_my_red_rereceive(args["login_name"])))

@@ -20,12 +20,13 @@ class CGoods():
     def get_goods_list(self):
         args = request.args.to_dict()
         make_log("args", args)
-        not_null_params = ['login_name']
+        not_null_params = ['login_name', "page_size", "page_num"]
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
         accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
         make_log("accounts", accounts)
-        goods_list = get_model_return_list(self.sgoods.get_all_goods_by_user(accounts["compnay"]))
+        goods_list = get_model_return_list(self.sgoods.get_all_goods_by_user(accounts["compnay"], int(args["page_size"])
+                                                                             , int(args["page_num"])))
         make_log("goods_list", goods_list)
         for goods in goods_list:
             yupei = get_model_return_dict(self.sgoods.get_dctime_by_jcno(goods["jcno"]))
@@ -36,39 +37,39 @@ class CGoods():
                 goods["yupei"] = "1"
             jincang = get_model_return_list(self.sgoods.get_in_order_by_jcno(goods["jcno"]))
             make_log("jincang", jincang)
-            for row in jincang:
-                if not jincang or not row["photourl"]:
-                    goods["jincang"] = "0"
-                else:
-                    goods["jincang"] = "1"
+            #for row in jincang:
+            if not jincang:
+                goods["jincang"] = "0"
+            else:
+                goods["jincang"] = "1"
             chucang = get_model_return_list(self.sgoods.get_out_order_by_jcno(goods["jcno"]))
             make_log("chucang", chucang)
-            for row in chucang:
-                if not chucang or not row["photourl"]:
-                    goods["chucang"] = "0"
-                else:
-                    goods["chucang"] = "1"
+            #for row in chucang:
+            if not chucang:
+                goods["chucang"] = "0"
+            else:
+                goods["chucang"] = "1"
             chengzhong = get_model_return_list(self.sgoods.get_weight_order_by_jcno(goods["jcno"]))
             make_log("chengzhong", chengzhong)
-            for row in chengzhong:
-                if not chengzhong or not row["photourl"]:
-                    goods["chengzhong"] = "0"
-                else:
-                    goods["chengzhong"] = "1"
+            #for row in chengzhong:
+            if not chengzhong:
+                goods["chengzhong"] = "0"
+            else:
+                goods["chengzhong"] = "1"
             baoguan = get_model_return_list(self.sgoods.get_content_by_jcno(goods["jcno"]))
             make_log("baoguan", baoguan)
-            for row in baoguan:
-                if not baoguan or not row["content"]:
-                    goods["baoguan"] = "0"
-                else:
-                    goods['baoguan'] = "1"
+            #for row in baoguan:
+            if not baoguan:
+                goods["baoguan"] = "0"
+            else:
+                goods['baoguan'] = "1"
             yundan = get_model_return_list(self.sgoods.get_awb_by_jcno(goods["jcno"]))
             make_log("yundan", yundan)
-            for row in yundan:
-                if not yundan or not row["content"]:
-                    goods["yundan"] = "0"
-                else:
-                    goods["yundan"] = "1"
+            #for row in yundan:
+            if not yundan:
+                goods["yundan"] = "0"
+            else:
+                goods["yundan"] = "1"
             jiaodan = get_model_return_dict(self.sgoods.get_jd_by_jcno(goods["jcno"]))
             make_log("jiaodan", jiaodan)
             if not jiaodan:
@@ -90,7 +91,6 @@ class CGoods():
                 goods["dida"] = "0"
             else:
                 goods["dida"] = "1"
-        print goods_list
         response = import_status("SUCCESS_GET_GOODS", "OK")
         response["data"] = goods_list
         return response

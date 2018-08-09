@@ -491,7 +491,14 @@ class Cscrapy():
         if not dgr:
             return
         for row in dgr_type:
-            dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid["dgr_level_id"])
+            row["airliner_is_single"] = row["airliner_is_single"].decode("gbk").encode("utf8")
+            row["airfreighter_is_single"] = row["airfreighter_is_single"].decode("gbk").encode("utf8")
+            row["airliner_capacity"] = row["airliner_capacity"].decode("gbk").encode("utf8")
+            row["airfreighter_capacity"] = row["airfreighter_capacity"].decode("gbk").encode("utf8")
+            dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid(row["id"]))
+            for raw in dgr_con:
+                raw["dgr_container"] = raw["dgr_container"].decode("gbk").encode("utf8")
+                raw["dgr_type"] = raw["dgr_type"].decode("gbk").encode("utf8")
             if not dgr_con:
                 return
             row["dgr_con"] = dgr_con
@@ -501,19 +508,29 @@ class Cscrapy():
         response["data"] = dgr
         return response
 
+    def get_tact(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_keys = ["login_name", "tact_name", "openid"]
+        if judge_keys(true_keys, args.keys()) != 200:
+            return judge_keys(true_keys, args.keys())
+        new_info = add_model("SELECT_INFO",
+                             **{
+                                 "id": str(uuid.uuid4()),
+                                 "login_name": args["login_name"],
+                                 "select_name": "dact",
+                                 "select_value": args["tact_name"],
+                                 "openid": args["openid"]
+                             })
+        if not new_info:
+            return SYSTEM_ERROR
 
-if __name__ == "__main__":
-    # import re
-    pp = u"我开心就好"
-    # print type(pp)
-    # print re.match(ur"^[\u4e00-\u9fa5]+$", pp)
-    # re.sub()
-    # a = "AIRLINE NAME COMPANY FLIGHT DEPA DEST DATE ETD ETA 交单时间 AIRCRAFT REMARK"
-    # b = a.replace(" ", ",")
-    # print b
-    # b = b.split(",")
-    # b = [key.strip() for key in b if key]
-    # print b
-    #
-    # for key in b:
-    #     print b
+        tact = get_model_return_dict(self.sscrapy.get_tact_by_three_code(args["tact_name"]))
+        make_log("tact", tact)
+        if not tact:
+            return SYSTEM_ERROR
+        tact["chinese_position"] = tact["chinese_position"].decode("gbk").encode("utf8")
+
+        response = import_status("SUCCESS_GET_RETRUE", "OK")
+        response["data"] = tact
+        return response

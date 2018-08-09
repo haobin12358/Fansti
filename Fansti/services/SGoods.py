@@ -8,10 +8,10 @@ from Fansti.services.SBase import SBase, close_session
 class SGoods(SBase):
 
     @close_session
-    def get_all_goods_by_user(self, accounts):
+    def get_all_goods_by_user(self, accounts, page_size, page_num):
         return self.session.query(AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno,
                                   AIR_HWYS_WTS.jsbzcc)\
-            .filter_by(accounts=accounts).all()
+            .filter_by(accounts=accounts).offset((page_num - 1) * page_size).limit(page_size).all()
 
     @close_session
     def get_xsr_by_user(self, accounts):

@@ -2,7 +2,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from Fansti.models.model import AIR_HWYS_JD, AIR_HWYS_LINES, SELECT_INFO, AIR_HWYS_DGR, AIR_HWYS_DGR_LEVEL, AIR_HWYS_DGR_CONTAINER
+from Fansti.models.model import AIR_HWYS_JD, AIR_HWYS_LINES, SELECT_INFO, AIR_HWYS_DGR, AIR_HWYS_DGR_LEVEL, \
+    AIR_HWYS_DGR_CONTAINER, AIR_HWYS_TACT
 from Fansti.services.SBase import SBase, close_session
 
 class Sscrapy(SBase):
@@ -39,7 +40,7 @@ class Sscrapy(SBase):
                                   AIR_HWYS_DGR_LEVEL.airfreighter_description_no,
                                   AIR_HWYS_DGR_LEVEL.airfreighter_is_single, AIR_HWYS_DGR_LEVEL.airliner_capacity,
                                   AIR_HWYS_DGR_LEVEL.airliner_description_no, AIR_HWYS_DGR_LEVEL.airliner_is_single,
-                                  AIR_HWYS_DGR_LEVEL.message, AIR_HWYS_DGR_LEVEL.level)\
+                                  AIR_HWYS_DGR_LEVEL.message, AIR_HWYS_DGR_LEVEL.dgr_level)\
             .filter_by(dgr_id=dgr_id).all()
 
     @close_session
@@ -59,3 +60,10 @@ class Sscrapy(SBase):
     @close_session
     def update_airline(self, airflight, airlines):
         return self.session.query(AIR_HWYS_LINES).filter(AIR_HWYS_LINES.flight == airflight).update(airlines)
+
+    @close_session
+    def get_tact_by_three_code(self, three_code):
+        return self.session.query(AIR_HWYS_TACT.three_code, AIR_HWYS_TACT.city, AIR_HWYS_TACT.state,
+                                  AIR_HWYS_TACT.country, AIR_HWYS_TACT.freight, AIR_HWYS_TACT.chinese_position)\
+            .filter_by(three_code=three_code).first()
+

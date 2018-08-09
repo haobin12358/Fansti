@@ -49,8 +49,8 @@ class SUsers(SBase):
         return self.session.query(USER_MESSAGE.phone).all()
 
     @close_session
-    def get_invate_by_login_name(self, login_name):
-        return self.session.query(USER_INVATE.login_name).filter_by(login_name=login_name).all()
+    def get_invate_by_login_name(self, openid):
+        return self.session.query(USER_INVATE.invate_openid).filter_by(args_openid=openid).all()
 
     @close_session
     def get_invate_abo_by_openid(self, openid):
