@@ -45,85 +45,17 @@
       <view class="card-title">
         化工品信息查询（CAS）
       </view>
-
-      <view class="two-column-table">
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-              分子结构
-            </view>
-            <view class="td">
-              9101210010
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子量
-            </view>
-            <view class="td">
-              9101210010
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="two-column-table">
+      <view wx:for="{{res}}" wx:key="name" class="two-column-table">
         <view class="thead">
-          安全信息
+          {{item.key}}
         </view>
-
         <view class="tbody">
-          <view class="tr">
+          <view wx:for="{{item.value}}" wx:key="name" wx:for-item="secItem" class="tr">
             <view class="td">
-              安全说明
+              {{secItem.name}}
             </view>
             <view class="td">
-              S26:万一解除眼睛，立即使用大量清水冲洗并
-              送医诊治。
-              S30:千万不可将水加入此产品。
-              S45：出现意外或者感到不适，立刻到医生那里
-              寻求帮助（最好带去产品容器标签）。
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              分子式
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              危险品标志
-            </view>
-            <view class="td">
-              <image src="../../images/star_full.png"></image>C:腐蚀性物质
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              CAS登录号
-            </view>
-            <view class="td">
-              9664-93-9
+              {{secItem.value}}
             </view>
           </view>
         </view>
@@ -146,6 +78,7 @@
     components = {};
 
     data = {
+      res: []
     };
 
     mixins = [CardMixin]
@@ -156,7 +89,9 @@
 
     events = {};
 
-    onLoad() {
+    onLoad(params, data) {
+      this.res = data.preload.res
+
     }
   }
 </script>

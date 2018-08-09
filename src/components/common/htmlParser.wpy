@@ -85,6 +85,7 @@
         console.log('x',parseContent);
         let htmlContent = WxParse.wxParse(this.parserName, this.parserType,parseContent|| this.parserContent, this, this.parserPadding)
 //        this.htmlParserTpl = this[this.parserName];
+        this.bindData = htmlContent;
         this.htmlParserTpl = htmlContent[this.parserName]
         this.$apply()
       } catch (e) {
@@ -93,7 +94,7 @@
     }
 
     wxParseImgTap (e) {
-      console.log(e);
+      WxParse.wxParseImgTap(e,this.bindData)
 
     }
 

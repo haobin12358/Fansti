@@ -45,15 +45,13 @@
         <view class="thead">
           <view class="tr">
             <view class="td">M/N/Q</view>
-            <view class="td">重量</view>
-            <view class="td">价格</view>
+            <view class="td">运费</view>
           </view>
         </view>
         <view class="tbody">
-          <view class="tr" wx:for="1234">
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
+          <view class="tr" wx:for="{{list}}">
+            <view class="td">{{item.name}}</view>
+            <view class="td">{{item.value}}</view>
           </view>
         </view>
 
@@ -77,7 +75,8 @@
     mixins = [CardMixin]
 
     data = {
-      res:{}
+      res:{},
+      list: []
     };
     computed = {};
 
@@ -88,6 +87,22 @@
     onLoad(params, data) {
       console.log('preload',data.preload.res);
       this.res = data.preload.res;
+      // return;
+      let res = data.preload.res;
+      let arr = [],
+      list = [];
+
+      arr = res.freight.split('\r\n')
+      console.log(arr);
+      for (let i = 0; i < arr.length; i++) {
+        list.push({
+          i,
+          name: arr[i].split(':')[0],
+          value: arr[i].split(':')[1],
+        })
+      }
+      console.log(list);
+      this.list = list;
     }
   }
 </script>

@@ -66,13 +66,13 @@
           </view>
         </view>
         <view class="tbody">
-          <view class="tr" wx:for="1234">
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
-            <view class="td">{{item}}</view>
+          <view class="tr" wx:for="{{res}}" wx:key="flight">
+            <view class="td">{{item.dest}}</view>
+            <view class="td">{{item.flight}}</view>
+            <view class="td">{{item.mydate}}</view>
+            <view class="td">{{item.aircraft}}</view>
+            <view class="td">{{item.etd}}</view>
+            <view class="td">{{item.eta}}</view>
           </view>
         </view>
 
@@ -96,7 +96,9 @@
 
     mixins = [CardMixin]
 
-    data = {};
+    data = {
+      res: []
+    };
     computed = {};
 
     methods = {};
@@ -105,6 +107,7 @@
 
     onLoad(params, data) {
       console.log('preload',data.preload.res);
+      this.res = data.preload.res
     }
   }
 </script>

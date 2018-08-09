@@ -10,71 +10,17 @@
       <view class="card-title">
         HS code查询
       </view>
-
-      <view class="two-column-table">
+      <view wx:for="{{res}}" wx:key="name" class="two-column-table">
         <view class="thead">
-          申报要素
-
+          {{item.name}}
         </view>
         <view class="tbody">
-          <view class="tr">
+          <view wx:for="{{item.value}}" wx:key="name" wx:for-item="secItem" class="tr">
             <view class="td">
-              0
+              {{secItem.name}}
             </view>
             <view class="td">
-              9101210010
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              1
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              2
-            </view>
-            <view class="td">
-              9101210010
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td">
-              3
-            </view>
-            <view class="td">
-              正常
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="two-column-table">
-        <view class="thead">
-          监管条件
-
-        </view>
-        <view class="tbody">
-          <view class="tr">
-            <view class="td">
-               E
-            </view>
-            <view class="td">
-              9101210010
-            </view>
-          </view>
-          <view class="tr">
-            <view class="td" style="">
-              F
-            </view>
-            <view class="td">
-              含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）含濒危动物皮自动上弦贵金属机械手表
-              （表壳用贵金属或包贵金属制成）
+              {{secItem.value}}
             </view>
           </view>
         </view>
@@ -96,7 +42,7 @@
     components = {};
 
     data = {
-
+      res: []
     };
 
     mixins = [CardMixin]
@@ -107,7 +53,8 @@
 
     events = {};
 
-    onLoad() {
+    onLoad(params, data) {
+      this.res = data.preload.res;
 
     }
   }

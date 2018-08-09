@@ -413,7 +413,7 @@
 
 
     async getFlyno(){
-      let res = await api.getDgr({
+      let res = await api.getFlyno({
         query: {
           login_name: wx.getStorageSync('token'),
           openid: wx.getStorageSync('openid'),
