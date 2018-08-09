@@ -52,7 +52,7 @@ class Sscrapy(SBase):
     @close_session
     def get_airline_by_flight(self, airflight):
         return self.session.query(
-            AIR_HWYS_LINES.id, AIR_HWYS_LINES.airline, AIR_HWYS_LINES.aipcompany, AIR_HWYS_LINES.airname,
+            AIR_HWYS_LINES.id, AIR_HWYS_LINES.airline, AIR_HWYS_LINES.aircompany, AIR_HWYS_LINES.airname,
             AIR_HWYS_LINES.flight, AIR_HWYS_LINES.depa, AIR_HWYS_LINES.dest, AIR_HWYS_LINES.mydate, AIR_HWYS_LINES.etd,
             AIR_HWYS_LINES.eta, AIR_HWYS_LINES.supporttime, AIR_HWYS_LINES.aircraft, AIR_HWYS_LINES.remark
         ).filter(AIR_HWYS_LINES.flight == airflight).first()

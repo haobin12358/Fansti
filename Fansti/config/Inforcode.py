@@ -1,7 +1,7 @@
 # *- coding:utf8 *-
 # 小程序id和secret
-APP_ID = "wx35ed4f2e78e42ecf"
-APP_SECRET_KEY = "9dbf17fb3f61077bcb06d046917ff069"
+APP_ID = "wxad55d967c5abf395"
+APP_SECRET_KEY = "rqiuV51HfXX9dBC7yG1DHr2lbHIatkUr"
 
 # 商家id和商家key
 mch_id = "1505464141"

@@ -364,7 +364,7 @@ class Cscrapy():
         import xlrd
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
-        title_line = sheet1.row_values()
+        title_line = sheet1.row_values(0)
         title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
         make_log("title_line", title_line)
         keydict = {k: v for v, k in enumerate(title_line)}
@@ -397,8 +397,8 @@ class Cscrapy():
                 airname = row_dict.get("airname")
             else:
                 row_dict["airname"] = airname
-            if row_dict.get("aipcompany"):
-                aipcompany = row_dict.get("aipcompany")
+            if row_dict.get("aircompany"):
+                aipcompany = row_dict.get("aircompany")
             else:
                 row_dict["aipcompany"] = aipcompany
 
@@ -423,13 +423,21 @@ class Cscrapy():
                     row_dict[key] = re.sub(r"[\n\t\s]", "", row_dict.get(key))
 
                 # 正则校验
-                if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
-                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
-                    response["data"] = {
-                        "row": row,
-                        "col": key
-                    }
-                    return response
+
+
+                try:
+                    if AIRLINE_EXCEL_ROLE.get(key) and not re.match(AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                        response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                        response["data"] = {
+                            "row": row,
+                            "col": key
+                        }
+                        return response
+                except Exception as e:
+                    print(e.message)
+                    print(AIRLINE_EXCEL_ROLE.get(key))
+                    print(key)
+                    print row_dict.get(key)
                 # 字符编码处理
                 if isinstance(row_dict.get(key), unicode):
                     row_dict[key] = row_dict.get(key).encode("utf8")

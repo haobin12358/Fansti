@@ -9,7 +9,7 @@ import datetime
 
 DB_PARAMS = "{0}://{1}:{2}@{3}:{4}/{5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.port, cfg.database)
-mysql_engine = create_engine(DB_PARAMS, echo=False)
+mysql_engine = create_engine(DB_PARAMS, echo=True)
 Base = declarative_base()
 
 class D_MESSAGE_USER(Base):
@@ -260,7 +260,7 @@ class AIR_HWYS_LINES(Base):
     __tablename__ = "AIR_HWYS_LINES"
     id = Column(String(200), primary_key=True)                  # 主键id
     airline = Column(String(200))                               # 航线编号
-    aipcompany = Column(String(200))                            # 航空公司
+    aircompany = Column(String(200))                            # 航空公司
     airname = Column(String(200))                               # 航空类型
     flight = Column(String(200))                                # 航班编号
     depa = Column(String(50))                                   # 起飞地
