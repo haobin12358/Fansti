@@ -3,13 +3,16 @@
 
   .container{
     padding: 59rpx 30rpx 0;
+    background: linear-gradient(to top,@mainFontColor, #FFFFFF);
+    color: @mainBlueColor;
+    box-sizing: border-box;
 
     .news-card{
       width: 690rpx;
-      height: 1054rpx;
       border: 1px solid @borderColor;
       border-radius: 10rpx;
       box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+      background: #FFFFFF;
 
       display: flex;
       flex-direction: column;
@@ -63,8 +66,8 @@
 </style>
 
 <template>
-  <view class="container">
-    <view class="news-card">
+  <view class="container" style="height: {{containerHeight}}px;">
+    <view class="news-card" style="height: {{cardHeight}}px;">
       <view class="news-card-head-img">
         <image src="{{news.news_picture}}"></image>
       </view>
@@ -91,6 +94,7 @@
     import api from '@/api/api';
     import tip from '@/utils/tip';
     import HtmlParser from '@/components/common/htmlParser';
+    import CardMixin from '@/mixins/cardMixin';
 
     export default class NewsDetail extends wepy.page {
       config = {
@@ -100,7 +104,9 @@
           'html-parser': HtmlParser,
         }
 
-        data = {
+      mixins = [CardMixin]
+
+      data = {
           news: {},
           // news_content:'<p> &nbsp; &nbsp; &nbsp; &nbsp;本报讯：今日十点，在萧山区发生一起精神病案 </p ><p><img src="http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg" width="350" height="140"/><strong style="color: rgb(255, 0, 0); background-color: rgb(255, 255, 255); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; margin: 0px; padding: 0px;">写在最前面的话：鉴于近期很多的博友讨论，说我按照文章的一步一步来，弄好之后，怎么会提示后端配置项http错误，文件上传会提示上传错误。这里提别申明一点，ueditor在前端配置好后，需要与后端部分配合进行，然后将配置ueditor.config.js 里的serverUrl的前缀改陈你自己的后端访问的请求路径地址，文件上传的后端部分，只提供了demo，具体对接文件服务器的部分需要自己修改完成。</strong></p ><p><img src="http://img10.360buyimg.com/img/s600x600_jfs/t3586/215/2086933702/144606/c5885c8b/583e2f08N13aa7762.png"/><strong><br/></strong></p> <p style="margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"> <span style="margin: 0px; padding: 0px; color: rgb(255, 0, 0);"><strong style="margin: 0px; padding: 0px;">写在最前面的话：鉴于近期很多的博友讨论，说我按照文章的一步一步来，弄好之后，怎么会提示后端配置项http错误，文件上传会提示上传错误。这里提别申明一点，ueditor在前端配置好后，需要与后端部分配合进行，然后将配置ueditor.config.js 里的serverUrl的前缀改陈你自己的后端访问的请求路径地址，文件上传的后端部分，只提供了demo，具体对接文件服务器的部分需要自己修改完成。</strong></span> </p > <p style="margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"> 首先，谈下这篇文章中的前后端所涉及到的技术框架内容。</p > <p style="margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 虽然是后端的管理项目，但整体项目，是采用前后端分离的方式完成，这样做的目的也是产品化的需求；</p > <p style="margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<strong style="margin: 0px; padding: 0px;">前端，vue+vuex+vue router+webpack+elementUI的方案完成框架的搭建，其中用到了superUI来作为后端登陆之后的主页面框架，中间集成vue的大型单页应用；</strong> </p > <p style="margin: 10px auto; padding: 0px; color: rgb(51, 51, 51); font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);"><strong style="margin: 0px; padding: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 后端，springboot+spring+springmvc+spring serurity+mybatis+maven+redis+dubbo</strong> </p >',
           name1: 'myHtmlParserKiner1',

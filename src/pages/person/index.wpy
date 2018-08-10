@@ -363,7 +363,7 @@
 
       },
       tapCallService() {
-        let phoneNumber = this.serviceInfo.telphone+'';
+        let phoneNumber = this.serviceInfo.telephone+'';
 
         wx.showModal({
           title: `联系客服`,
@@ -432,6 +432,7 @@
       this.isBinding = this.isOldUser || this.isNewUser;
       console.log(this.isBinding);
       if(!this.isBinding){
+        //  自动绑定后再自动获取数据
         let res =await this.checkBinding(wx.getStorageSync('code'))
 
         // 绑定成功  res结果无意义就是个字符串
@@ -453,9 +454,6 @@
     //  邀请用户
     async addInvate(openid){
       let res = await api.addInvate({ method: 'POST', openid: wx.getStorageSync('openid'), query: { openid } });
-      console.group('x');
-      console.log({ method: 'POST', openid: wx.getStorageSync('openid'), query: { openid } });
-      console.groupEnd('x');
 
       if (res.data.status == 200) {
         tip.success('接收邀请成功!');
@@ -472,8 +470,7 @@
       this.isBinding = this.isOldUser || this.isNewUser;
       this.init()
 
-      // params.share = 'true';
-      // params.openid= 'o-hg346mUYVyJPolSYrO-UIqXTAs';
+      // 分享
       if(params.share == 'true'){
         this.addInvate(params.openid)
         this.$navigate('/pages/person/personCard')

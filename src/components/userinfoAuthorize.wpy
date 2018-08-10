@@ -21,8 +21,13 @@
       button{
         flex: 1;
         color: #abe896;
-        border: 0;
         background: #ffffff;
+        border: 1px solid #CCCCCC;
+        border-radius: 0;
+
+        &:after{
+          border: none;
+        }
       }
 
     }
@@ -36,7 +41,7 @@
         提示
       </view>
       <view class="content">
-        为了更好地...，请授权给我们您的个人信息。
+        请授权给我们您的微信公开信息。
       </view>
       <view class="action-block">
         <button @tap="hidePopup">取消</button>

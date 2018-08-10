@@ -103,7 +103,7 @@
               <image src="../../images/people.png"></image>
             </view>
             <view class="form-item-bd">
-              <input type="text" name="username" placeholder="请输入用户名"/>
+              <input type="text" name="username" placeholder="请输入用户名(选填)"/>
             </view>
           </view>
           <view class="form-item">
@@ -119,7 +119,7 @@
               <image src="../../images/lock.png"></image>
             </view>
             <view class="form-item-bd">
-              <input type="text" name="password" password="true" placeholder="请输入密码"/>
+              <input type="text" name="password" password="true" placeholder="请输入密码(选填)"/>
             </view>
           </view>
         </view>
@@ -135,7 +135,6 @@
 
 <script>
   import wepy from 'wepy';
-  import Popup from '@/components/common/popup';
   import UserinfoAuthorize from '@/components/userinfoAuthorize';
   import CardMixin from '@/mixins/cardMixin';
   import BindingMixin from '@/mixins/bindingMixin';
@@ -148,7 +147,6 @@
     }
 
     components = {
-      popup: Popup,
       userinfoAuthorize: UserinfoAuthorize,
     };
 
@@ -156,7 +154,7 @@
 
     data = {
       userInfo: {},
-      showPopup: true
+      showPopup: false
     };
     computed = {};
 
@@ -179,7 +177,6 @@
       },
 
       getUserInfo(e){
-        console.log(e);
         this.userInfo = e.detail.userInfo;
       }
     };
@@ -187,7 +184,7 @@
     async doBinding(params){
       let query= {
         phone: params.phone,
-        openid: this.openid,
+        openid: wx.getStorageSync('openid'),
         name: this.userInfo.nickName,
         usex: this.userInfo.gender == 1 ?'男':'女' ,
         city: this.userInfo.city,
@@ -203,8 +200,14 @@
       let res =await api.userBinding({method: 'POST', query});
 
       if(res.data.status == 200){
+        wx.setStorageSync('isNewUser', params.username ? false: true);
         wx.setStorageSync('token', params.username);
-        wx.navigateBack();
+        wx.reLaunch({
+          url: '/pages/index/index'
+        });
+        // wx.switchTab({
+        //   url: '/pages/index/index'
+        // });
       }else{
         tip.alert(res.data.message)
       }
@@ -213,7 +216,21 @@
     events = {};
 
     onLoad() {
-      // this.setOpenid()
+      let that = this
+
+
+      wx.getUserInfo({
+        success: res => {
+          this.userInfo = res.userInfo;
+          console.log(res);
+          that.$apply();
+
+        },
+        fail: res => {
+          that.showPopup = true;
+          that.$apply();
+        }
+      });
     }
   }
 </script>

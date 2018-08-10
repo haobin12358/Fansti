@@ -137,7 +137,7 @@
     // }
 
     onReachBottom(){
-      if(this.loadingType != 'nomore'){
+      if(this.isOldUser && this.loadingType != 'nomore'){
         this.getGoodsList();
       }
     }
@@ -148,7 +148,6 @@
     events = {}
 
     async onShow(){
-      console.log('show','跟踪');
       let that = this
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');
@@ -172,6 +171,7 @@
     }
 
     onLoad() {
+      console.log('track load');
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');
 

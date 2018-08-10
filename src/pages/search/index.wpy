@@ -231,7 +231,6 @@
             }else{
               tip.alert('请输入查询内容')
             }
-            this.$navigate('/pages/search/hsCodeSearch');
             break;
           case 'cas':
             if(this.cas != '' ){
@@ -337,7 +336,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
@@ -355,7 +354,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
@@ -372,7 +371,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
@@ -389,7 +388,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
@@ -406,7 +405,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
@@ -426,7 +425,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert('未查询到结果')
+        tip.alert(res.data.message)
       }
     }
 
