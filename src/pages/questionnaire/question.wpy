@@ -1,0 +1,150 @@
+<style scoped lang="less">
+    @import "../../styles/base";
+    .my-question{
+      color: #fff;
+      padding: 180rpx 90rpx 0;
+      font-size: 35rpx;
+      position: relative;;
+      .m-one-question{
+
+        .m-title{
+          font-weight: bold;
+          line-height: 60rpx;
+        }
+        .m-question-content{
+          margin-top: 100rpx;
+          height: 500rpx;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          align-content: center;
+        }
+      }
+      .m-one{
+        flex: 1;
+        .m-label{
+          display: inline-block;
+          width: 80rpx;
+        }
+        .m-input-box{
+          margin-bottom: 20rpx;
+        }
+        .m-input{
+          width: 420rpx;
+          height: 56rpx;
+          line-height: 56rpx;
+          background-color: #fff;
+          border: 1px solid #eee;
+          color: #c1c1c1;
+          margin-left: 30rpx;
+          margin-right: 20rpx;
+          padding: 0 20rpx ;
+          font-size: 24rpx;
+          &.m-other{
+            margin-left: 80rpx;
+          }
+        }
+        .m-alert{
+          width: 420rpx;
+          margin-left: 30rpx;
+        }
+        .active{
+          color: #f6d500;
+        }
+        .m-submit-btn{
+          text-align: center;
+          span{
+            display: inline-block;
+            width: 200rpx;
+            height: 56rpx;
+            line-height: 56rpx;
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #eee;
+            color: #000;
+            margin-top: 70rpx;
+          }
+        }
+        .m-last-content{
+          position: fixed;
+          bottom: 70rpx;
+          right: 10rpx;
+          width: 290rpx;
+          line-height: 60rpx;
+        }
+      }
+      .m-back{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top:0;
+        left: 0;
+        z-index: -2;
+      }
+      .m-mark{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top:0;
+        left: 0;
+        z-index: -1;
+        background-color: rgba(0,0,0,0.4);
+      }
+      .m-icon-next{
+        position: fixed;
+        right: 20rpx;
+        top: 50%;
+        transform: translateY(-32rpx);
+        width: 66rpx;
+        height: 66rpx;
+      }
+      .m-progress{
+        border-radius: 5px;
+        margin-top: 60rpx;
+      }
+    }
+
+</style>
+
+<template>
+  <view class="my-question">
+    <image src="{{back}}" class="m-back"></image>
+    <view class="m-mark"></view>
+    <view class="m-content">
+      <view wx:if="{{!show_last}}">
+        <!--<mInput wx:if="{{question_data.VOtype == '填空题'}}" :list.sync="question_data" @inputChange.user="inputChange"></mInput>-->
+        <!--<mCheck wx:if="{{question_data.VOtype == '单选题' || question_data.VOtype == '多选题'}}" :select.sync="now_select" :list.sync="question_data" @oneSelect.user="oneSelect" @selectInput.user="selectInput"></mCheck>-->
+      </view>
+
+      <mLast wx:if="{{show_last}}" @submitTap.user="submitTap"></mLast>
+
+    </view>
+
+    <image src="../../images/icon-next.png" class="m-icon-next" @tap="nextTap" wx:if="{{!show_last}}"></image>
+    <view class="m-progress" wx:if="{{!show_last}}">
+      <progress percent="{{}}" color="#fff" activeColor="#f6d500"/>
+    </view>
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Question extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+
+    }
+  }
+</script>
+

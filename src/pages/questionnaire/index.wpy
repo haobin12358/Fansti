@@ -1,0 +1,67 @@
+<style scoped lang="less">
+    @import "../../styles/base";
+
+  .container{
+    display: flex;
+    flex-direction: column;
+
+    .container-bd{
+      height: 800rpx;
+    }
+    .container-ft{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .go-question{
+        width: 60%;
+        padding: 10rpx 0;
+        text-align: center;
+        border-radius: 20rpx;
+
+        .type-blue();
+      }
+    }
+  }
+</style>
+
+<template>
+
+  <view class="container">
+    <view class="container-bd">
+      问卷首页
+    </view>
+    <view class="container-ft">
+      <view class="go-question" @tap="goQuestion">去答题</view>
+    </view>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Index extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+    computed = {};
+
+    methods = {
+      goQuestion(){
+        wx.navigateTo({
+          url: '/pages/questionnaire/question'
+        })
+      }
+    };
+
+    onLoad() {
+
+    }
+  }
+</script>
+

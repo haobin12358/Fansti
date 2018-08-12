@@ -463,6 +463,8 @@
     }
 
     onLoad(params) {
+      console.log('person onload');
+
       this.setOpenid();
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser= !!wx.getStorageSync('isNewUser');

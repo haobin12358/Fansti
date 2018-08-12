@@ -18,7 +18,7 @@
 <template>
   <view class="container">
     <swiper class="swiper">
-      <swiper-item>
+      <swiper-item @tap="goQuestionnaire">
         <image src="../../images/test_swiper.png"></image>
       </swiper-item>
     </swiper>
@@ -59,6 +59,11 @@
       goNewsDetail(news){
         console.log('页面跳转',news);
         this.$navigate('/pages/index/newsDetail', news)
+      },
+
+      goQuestionnaire(){
+        this.$navigate('/pages/questionnaire/index')
+
       }
     }
 
@@ -91,7 +96,7 @@
       }
     }
 
-    onLoad(){
+    async onLoad() {
       this.getAllNews();
       //  保存code openid
       this.setOpenid();
