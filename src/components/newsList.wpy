@@ -36,6 +36,7 @@
 
             height: 99rpx;
             line-height: 33rpx;
+            word-break: break-all;
             /*text-overflow: -o-ellipsis-lastline;*/
             overflow: hidden;
             /*text-overflow: ellipsis;*/
@@ -77,9 +78,9 @@
       <view wx:for="{{list}}" wx:key="id" class="news-item" @tap.stop="tapItemHandler({{item}})">
         <view class="main-content">
           <view class="line1">{{item.news_title}}</view>
-          <view class="line2">
-            <!--{{item.news_all}}-->
-            "调位史原价提几油联消报规各半育十。"
+          <view class="line2" >
+            {{item.news_all}}
+            <!--111111111111111111111111111111111111111111111111111111111111111-->
           </view>
           <view class="line3">
             <text class="news-source">{{item.news_from}}</text>

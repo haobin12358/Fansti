@@ -68,7 +68,8 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '跟踪'
+      navigationBarTitleText: '跟踪',
+      onReachBottomDistance: 30
     }
 
     mixins = [BindingMixin];
@@ -97,6 +98,7 @@
       isNewUser:false,
     }
     computed = {
+
     }
 
     methods = {
@@ -147,37 +149,28 @@
 
     events = {}
 
-    async onShow(){
-      let that = this
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser= !!wx.getStorageSync('isNewUser');
+    init(){
 
-      this.isBinding = this.isOldUser || this.isNewUser;
-      console.log(this.isBinding);
-      if(!this.isBinding){
-        await this.checkBinding(wx.getStorageSync('code'))
-
-        // 绑定成功  res结果无意义就是个字符串
-        console.log('新老用户',this.isOldUser, this.isNewUser);
-
-        this.init()
-      }
     }
 
-    init(){
+    async onLoad() {
+      console.log('track load');
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser = !!wx.getStorageSync('isNewUser');
+
+      this.isBinding = this.isOldUser || this.isNewUser;
+      //  只需要在onload中判断 及 进行自动登录   这样可以将这些代码写在mixin的onload中了
+      if (!this.isBinding) {
+
+        await this.checkBinding(wx.getStorageSync('code'));
+
+        // 绑定成功  res结果无意义就是个字符串
+        console.log('新老用户', this.isOldUser, this.isNewUser);
+      }
+
       if(this.isOldUser){
         this.getGoodsList();
       }
-    }
-
-    onLoad() {
-      console.log('track load');
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser= !!wx.getStorageSync('isNewUser');
-
-      this.isBinding = this.isOldUser || this.isNewUser;
-
-      this.init();
     }
   }
 </script>

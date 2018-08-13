@@ -59,33 +59,18 @@
     }
 
     //  缓存code,openid
-    setOpenid() {
-      let that = this;
-
-      console.log(wx.getStorageSync('code'),wx.getStorageSync('openid'));
+   async setOpenid() {
+      console.log('setOpenid');
       if(wx.getStorageSync('code') == ''||wx.getStorageSync('openid') == ''){
-        wx.login({
-          success: function(res) {
-            let { code } = res;
+        let { code }  = await wepy.login();
+        wx.setStorageSync('code', code);
 
-            wx.setStorageSync('code', code);
-            api.getOpenid({ query: { code } }).then(
-              (res2) => {
-                if (res2.data.status == 200) {
-                  let openid = res2.data.data.openid;
-
-                  wx.setStorageSync('openid', openid);
-                }
-              }
-            );
-          }
-        });
+        let res = await    api.getOpenid({ query: { code } });
+        let openid = res.data.data.openid;
+        wx.setStorageSync('openid', openid);
       }
     }
 
-    onLoad() {
-
-    }
   }
 </script>
 

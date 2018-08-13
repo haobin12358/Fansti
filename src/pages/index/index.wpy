@@ -73,11 +73,16 @@
       let res = await api.getAllNews({_noLoading: true,page_num:this.pageNum,page_size:this.pageSize});
 
       if (res.data.status == 200) {
+
+        //去除标签 空格等
+        for (let i = 0; i < res.data.data.length; i++) {
+          let news = res.data.data[i].news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
+          res.data.data[i].news_all = news;
+        }
+
         this.newsList =[...this.newsList,...res.data.data];
 
-        for (let i = 0; i < this.newsList.length; i++) {
 
-        }
         if(res.data.data.length == this.pageSize){
           this.loadingType = 'normal';
         }else{
@@ -96,7 +101,7 @@
       }
     }
 
-    async onLoad() {
+    onLoad() {
       this.getAllNews();
       //  保存code openid
       this.setOpenid();

@@ -423,24 +423,6 @@
       }
     }
 
-
-    async onShow() {
-      console.log(wx.getStorageSync('token'),wx.getStorageSync('isNewUser'));
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser= !!wx.getStorageSync('isNewUser');
-
-      this.isBinding = this.isOldUser || this.isNewUser;
-      console.log(this.isBinding);
-      if(!this.isBinding){
-        //  自动绑定后再自动获取数据
-        let res =await this.checkBinding(wx.getStorageSync('code'))
-
-        // 绑定成功  res结果无意义就是个字符串
-        // console.log('新老用户',this.isOldUser, this.isNewUser);
-        this.init()
-      }
-    }
-
     init(){
       if(this.isBinding){
         this.getCustom();
@@ -462,20 +444,30 @@
       }
     }
 
-    onLoad(params) {
+    async onLoad(params) {
       console.log('person onload');
 
-      this.setOpenid();
+      // 方法在bindingMixin中
+      await this.setOpenid();
       this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser= !!wx.getStorageSync('isNewUser');
+      this.isNewUser = !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
-      this.init()
+
+      if (!this.isBinding) {
+        //  自动绑定后再自动获取数据
+        let res = await this.checkBinding(wx.getStorageSync('code'));
+
+        // 绑定成功  res结果无意义就是个字符串
+        // console.log('新老用户',this.isOldUser, this.isNewUser);
+      }
+
+      this.init();
 
       // 分享
-      if(params.share == 'true'){
-        this.addInvate(params.openid)
-        this.$navigate('/pages/person/personCard')
+      if (params.share == 'true') {
+        this.addInvate(params.openid);
+        this.$navigate('/pages/person/personCard');
       }
     }
   }

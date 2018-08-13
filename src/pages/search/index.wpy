@@ -431,12 +431,19 @@
 
     events = {}
 
-    onShow() {
+   async onLoad() {
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
 
+      if (!this.isBinding) {
+
+        await this.checkBinding(wx.getStorageSync('code'));
+
+        // 绑定成功  res结果无意义就是个字符串
+        console.log('新老用户', this.isOldUser, this.isNewUser);
+      }
     }
   }
 </script>
