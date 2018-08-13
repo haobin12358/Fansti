@@ -69,7 +69,7 @@
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '跟踪',
-      onReachBottomDistance: 30
+      onReachBottomDistance: 40
     }
 
     mixins = [BindingMixin];

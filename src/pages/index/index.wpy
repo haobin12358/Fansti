@@ -38,6 +38,7 @@
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '泛思特',
+      onReachBottomDistance: 40
     }
 
     mixins=[BindingMixin];

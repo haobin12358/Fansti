@@ -6,7 +6,14 @@
     flex-direction: column;
 
     .container-bd{
-      height: 800rpx;
+      padding: 300rpx 200rpx;
+      text-align: center;
+
+      .fz32();
+
+      .bd-section{
+        margin: 50rpx 0;
+      }
     }
     .container-ft{
       flex: 1;
@@ -29,12 +36,18 @@
 
 <template>
 
-  <view class="container">
+  <view class="container" style="height: {{containerHeight}}px;">
     <view class="container-bd">
-      问卷首页
+      <view class="bd-section">
+        问卷首页
+      </view>
+      <view class="bd-section">
+        这里是泛思特问卷
+      </view>
+
     </view>
     <view class="container-ft">
-      <view class="go-question" @tap="goQuestion">去答题</view>
+      <view class="go-question" @tap="goQuestion">去填问卷</view>
     </view>
   </view>
 
@@ -42,11 +55,14 @@
 
 <script>
   import wepy from 'wepy';
+  import CardMixin from '@/mixins/cardMixin';
 
   export default class Index extends wepy.page {
     config = {};
 
     components = {};
+
+    mixins = [CardMixin]
 
     data = {};
     computed = {};

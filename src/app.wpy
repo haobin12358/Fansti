@@ -15,8 +15,6 @@ export default class extends wepy.app {
 
       'pages/questionnaire/index', //问卷首页
       'pages/questionnaire/question', //问卷
-      'pages/questionnaire/result', //问卷
-
 
       'pages/search/index', //查询首页
       'pages/search/surveyReportSearch', //鉴定报告

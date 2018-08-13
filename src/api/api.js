@@ -56,6 +56,13 @@ const addInvate = params => wxRequest(params, host+`/users/add_invate?openid=${p
 //  获取邀请人列表
 const getInvateList = params => wxRequest(params, host+`/users/get_invate_list`);
 
+//  查询问卷
+const getVote = params => wxRequest(params, host+`/votes/get_vote?VSid=${params.VSid}&VOno=${params.VOno}`);
+//  做问卷 POST
+const makeVote = params => wxRequest(params, host+`/votes/make_vote?VSid=${params.VSid}&VOno=${params.VOno}`);
+
+
+
 
 
 export default {
@@ -80,4 +87,6 @@ export default {
   updateMyInfo,
   addInvate,
   getInvateList,
+  getVote,
+  makeVote,
 }
