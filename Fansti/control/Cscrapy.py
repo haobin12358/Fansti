@@ -46,13 +46,16 @@ class Cscrapy():
         true_keys = ["login_name", "hs_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
+        if args["login_name"] == "" and self.get_count("HScode", args["openid"]) >= 10:
+            return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "HScode",
                                  "select_value": args["hs_name"],
-                                 "openid": args["openid"]
+                                 "openid": args["openid"],
+                                 "create_time": str(datetime.datetime.now().date()).replace("-", "")
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -141,13 +144,16 @@ class Cscrapy():
             true_keys = ["login_name", "cas_name", "openid"]
             if judge_keys(true_keys, args.keys()) != 200:
                 return judge_keys(true_keys, args.keys())
+            if args["login_name"] == "" and self.get_count("cas", args["openid"]) >= 10:
+                return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
             new_info = add_model("SELECT_INFO",
                                  **{
                                      "id": str(uuid.uuid4()),
                                      "login_name": args["login_name"],
                                      "select_name": "cas",
                                      "select_value": args["cas_name"],
-                                     "openid": args["openid"]
+                                     "openid": args["openid"],
+                                     "create_time": str(datetime.datetime.now().date()).replace("-", "")
                                  })
             if not new_info:
                 return SYSTEM_ERROR
@@ -242,13 +248,16 @@ class Cscrapy():
         true_keys = ["login_name", "jd_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
+        if args["login_name"] == "" and self.get_count("jd", args["openid"]) >= 10:
+            return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "jd",
                                  "select_value": args["jd_name"],
-                                 "openid": args["openid"]
+                                 "openid": args["openid"],
+                                 "create_time": str(datetime.datetime.now().date()).replace("-", "")
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -264,17 +273,17 @@ class Cscrapy():
             if not jd_report["appearance2"]:
                 appearance = "暂无信息"
             else:
-                appearance = jd_report["appearance2"].decode("gbk").encode("utf8")
+                appearance = jd_report["appearance2"]
         else:
             if not jd_report["appearance2"]:
-                appearance = jd_report["appearance"].decode("gbk").encode("utf8")
+                appearance = jd_report["appearance"]
             else:
-                appearance = jd_report["appearance"].decode("gbk").encode("utf8") \
-                             + jd_report["appearance2"].decode("gbk").encode("utf8")
+                appearance = jd_report["appearance"] \
+                             + jd_report["appearance2"]
         data = [
             {
                 "name": "中文品名",
-                "value": jd_report["chinesename"].decode("gbk").encode("utf8")
+                "value": self.make_code(jd_report["chinesename"])
             },
             {
                 "name": "英文品名",
@@ -282,7 +291,7 @@ class Cscrapy():
             },
             {
                 "name": "UN信息",
-                "value": jd_report["unno"].decode("gbk").encode("utf8")
+                "value": self.make_code(jd_report["unno"])
             },
             {
                 "name": "颜色状态",
@@ -315,20 +324,23 @@ class Cscrapy():
                 select_name = "depa:" + str(args["depa"])
             else:
                 select_name = "depa:" + str(args["depa"]) + "dest:" + str(args["dest"])
+        if args["login_name"] == "" and self.get_count("flyno", args["openid"]) >= 10:
+            return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "flyno",
                                  "select_value": select_name,
-                                 "openid": args["openid"]
+                                 "openid": args["openid"],
+                                 "create_time": str(datetime.datetime.now().date()).replace("-", "")
                              })
         if not new_info:
             return SYSTEM_ERROR
         all_airline = get_model_return_list(self.sscrapy.get_all_by_depa_dest(args["depa"], args["dest"]))
         make_log("all_airline", all_airline)
         for airline in all_airline:
-            airline["mydate"] = datetime.datetime.strptime(airline["mydate"], '%Y%m%d').strftime("%Y-%m-%d")
+            airline["mydate"] = datetime.datetime.strptime(airline["mydate"], '%Y-%m-%d').strftime("%Y-%m-%d")
             airline["etd"] = airline["etd"].strftime("%Y-%m-%d %H:%M")
             airline["eta"] = airline["eta"].strftime("%Y-%m-%d %H:%M")
         if not all_airline:
@@ -498,13 +510,16 @@ class Cscrapy():
         true_keys = ["login_name", "dgr_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
+        if args["login_name"] == "" and self.get_count("dgr", args["openid"]) >= 10:
+            return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
                                  "select_name": "dgr",
                                  "select_value": args["dgr_name"],
-                                 "openid": args["openid"]
+                                 "openid": args["openid"],
+                                 "create_time": str(datetime.datetime.now().date()).replace("-", "")
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -517,14 +532,12 @@ class Cscrapy():
         if not dgr:
             return SYSTEM_ERROR
         for row in dgr_type:
-            row["airliner_is_single"] = row["airliner_is_single"].decode("gbk").encode("utf8")
-            row["airfreighter_is_single"] = row["airfreighter_is_single"].decode("gbk").encode("utf8")
-            row["airliner_capacity"] = row["airliner_capacity"].decode("gbk").encode("utf8")
-            row["airfreighter_capacity"] = row["airfreighter_capacity"].decode("gbk").encode("utf8")
+            row["airliner_is_single"] = self.make_code(row["airliner_is_single"])
+            row["airfreighter_is_single"] = self.make_code(row["airfreighter_is_single"])
             dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid(row["id"]))
             for raw in dgr_con:
-                raw["dgr_container"] = raw["dgr_container"].decode("gbk").encode("utf8")
-                raw["dgr_type"] = raw["dgr_type"].decode("gbk").encode("utf8")
+                raw["dgr_container"] = raw["dgr_container"]
+                raw["dgr_type"] = raw["dgr_type"]
             if not dgr_con:
                 return
             row["dgr_con"] = dgr_con
@@ -540,13 +553,16 @@ class Cscrapy():
         true_keys = ["login_name", "tact_name", "openid"]
         if judge_keys(true_keys, args.keys()) != 200:
             return judge_keys(true_keys, args.keys())
+        if args["login_name"] == "" and self.get_count("tact", args["openid"]) >= 10:
+            return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
                                  "login_name": args["login_name"],
-                                 "select_name": "dact",
+                                 "select_name": "tact",
                                  "select_value": args["tact_name"],
-                                 "openid": args["openid"]
+                                 "openid": args["openid"],
+                                 "create_time": str(datetime.datetime.now().date()).replace("-", "")
                              })
         if not new_info:
             return SYSTEM_ERROR
@@ -555,8 +571,20 @@ class Cscrapy():
         make_log("tact", tact)
         if not tact:
             return SYSTEM_ERROR
-        tact["chinese_position"] = tact["chinese_position"].decode("gbk").encode("utf8")
+        tact["chinese_position"] = self.make_code(tact["chinese_position"])
 
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = tact
         return response
+
+    def get_count(self, select_name, openid):
+        date = str(datetime.datetime.now().date()).replace("-", "")
+        count = len(get_model_return_list(self.sscrapy.get_id_by_time(date, select_name, openid)))
+        return count
+
+    def make_code(self, str_word):
+        try:
+            str_word = str_word.decode("gbk").encode("utf8")
+        except:
+            str_word = str(str_word)
+        return str_word

@@ -67,3 +67,6 @@ class Sscrapy(SBase):
                                   AIR_HWYS_TACT.country, AIR_HWYS_TACT.freight, AIR_HWYS_TACT.chinese_position)\
             .filter_by(three_code=three_code).first()
 
+    @close_session
+    def get_id_by_time(self, date, name, openid):
+        return self.session.query(SELECT_INFO.id).filter_by(create_time=date).filter_by(select_name=name).filter_by(openid=openid).all()

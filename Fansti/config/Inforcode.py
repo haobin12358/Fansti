@@ -1,11 +1,11 @@
 # *- coding:utf8 *-
 # 小程序id和secret
 APP_ID = "wxad55d967c5abf395"
-APP_SECRET_KEY = "rqiuV51HfXX9dBC7yG1DHr2lbHIatkUr"
+APP_SECRET_KEY = "ba77eaa590f149b9d444eb44cdcd0a65"
 
 # 商家id和商家key
 mch_id = "1505464141"
-mch_key = "hangzhouweiyikejhangzhouweiyikej"
+mch_key = "8ecWB0VuVAtwqnQsAG0FAdjDlhZWmY88"
 
 # 图片存储地址
 LinuxRoot = "/opt/"

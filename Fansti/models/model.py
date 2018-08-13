@@ -9,8 +9,9 @@ import datetime
 
 DB_PARAMS = "{0}://{1}:{2}@{3}:{4}/{5}".format(
     cfg.sqlenginename, cfg.username, cfg.password, cfg.host, cfg.port, cfg.database)
-mysql_engine = create_engine(DB_PARAMS, echo=True)
+mysql_engine = create_engine(DB_PARAMS, echo=False)
 Base = declarative_base()
+
 
 class D_MESSAGE_USER(Base):
     __tablename__ = 'D_MESSAGE_USER'
@@ -255,6 +256,7 @@ class SELECT_INFO(Base):
     select_name = Column(String(200))                           # 查询名称
     select_value = Column(String(400))                          # 查询内容
     openid = Column(String(200))                                # 微信id
+    create_time = Column(String(100))                           # 创建日期
 
 class AIR_HWYS_LINES(Base):
     __tablename__ = "AIR_HWYS_LINES"
