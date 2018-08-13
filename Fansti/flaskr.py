@@ -17,7 +17,7 @@ api.add_resource(FSGoods, "/fansti/goods/<string:goods>")
 api.add_resource(FSother, "/fansti/other/<string:other>")
 api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
-api.add_resource(FSVotes, "/fansti/news/<string:votes>")
+api.add_resource(FSVotes, "/fansti/votes/<string:votes>")
 
 if __name__ == '__main__':
     fansti.run('0.0.0.0', 7444, debug=True)

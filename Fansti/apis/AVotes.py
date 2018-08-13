@@ -10,6 +10,7 @@ from Fansti.config.response import APIS_WRONG
 class FSVotes(Resource):
     def __init__(self):
         self.cvote = CVotes()
+        self.title = "=========={0}=========="
 
     def post(self, votes):
         print(self.title.format("api is" + votes))

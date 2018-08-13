@@ -7,8 +7,7 @@ import json
 import uuid
 from Fansti.config.response import SYSTEM_ERROR, PARAMS_MISS
 from Fansti.common.import_status import import_status
-# from LoveBreakfast.common.TransformToList import add_model
-from Fansti.common.timeformate import get_db_time_str, get_web_time_str, format_forweb_no_HMS
+from Fansti.common.timeformate import get_db_time_str
 from Fansti.common.get_model_return_list import get_model_return_dict as todict, get_model_return_list as tolist
 
 
@@ -45,37 +44,32 @@ class CVotes():
             print(self.title.format('count'))
             print(count)
             print(self.title.format('count'))
-            time_now = get_db_time_str()
-            # 答题时间判断
-            if votes.VSstartTime and votes.VSstartTime > time_now:
-                return import_status("error_vote_time", "LOVEBREAKFAST_ERROR", "error_vote_time_start")
-            if votes.VSendTime and votes.VSendTime < time_now:
-                return import_status("error_vote_time", "LOVEBREAKFAST_ERROR", "error_vote_time_end")
-
             vote = todict(self.svotes.get_vote(vsid, vono))
+            vote["votext"] = vote["votext"].decode("gbk").encode("utf8")
             print(self.title.format("vote"))
             print(vote)
             print(self.title.format("vote"))
             # 获取下一题no
-            if int(vote.get("VOno")) < count:
-                if vote.get("VOtype") < 1003:
-                    votechoice_list = tolist(self.svotes.get_votechoisce(vote.get("VOid")))
-                    if vote.get("VOtype") < 1002:
+            if int(vote.get("vono")) <= count:
+                if vote.get("votype") < 1003:
+                    votechoice_list = tolist(self.svotes.get_votechoisce(vote.get("void")))
+                    if vote.get("votype") < 1002:
                         for votechoice in votechoice_list:
-                            if not votechoice.get("VCnext"):
-                                votechoice["VCnext"] = int(vote.get("VOno")) + 1
+                            votechoice["vctext"] = votechoice["vctext"].decode("gbk").encode("utf8")
+                            if not votechoice.get("vcnext"):
+                                votechoice["vcnext"] = int(vote.get("vono")) + 1
                     else:
-                        vote["VCnext"] = int(vote.get("VOno")) + 1
+                        vote["vcnext"] = int(vote.get("vono")) + 1
                     vote["votechoice"] = votechoice_list
                 else:
-                    vote["VCnext"] = int(vote.get("VOno")) + 1
+                    vote["vcnext"] = int(vote.get("vono")) + 1
             else:
-                vote["VCnext"] = ""
-            vote["VOunit"] = self.conversion_VOunit.get(vote.get("VOunit"))
-            vote["VOtype"] = self.conversion_VOtype.get(vote.get('VOtype', 1001))
+                vote["vcnext"] = ""
+            vote["vounit"] = self.conversion_VOunit.get(vote.get("vounit"))
+            vote["votype"] = self.conversion_VOtype.get(vote.get('votype', 1001))
             response = import_status("SUCCESS_MESSAGE_GET_VOTE", "OK")
 
-            vote["progress"] = int(float(vote.get("VOno")) / float(count) * 100)
+            vote["progress"] = int(float(vote.get("vono")) / float(count) * 100)
             response["data"] = vote
             return response
         except Exception as e:
@@ -83,53 +77,6 @@ class CVotes():
             print(e.message)
             print(self.title.format("get vote"))
             return SYSTEM_ERROR
-
-    def get_host(self):
-        args = request.args.to_dict()
-        print(self.title.format('args'))
-        print(args)
-        print(self.title.format('args'))
-
-        if "VSid" not in args:
-            return PARAMS_MISS
-        vsid = args.get("VSid")
-        votes = todict(self.svotes.get_votes(vsid))
-        print(self.title.format('votes'))
-        print(votes)
-        print(self.title.format('votes'))
-
-        # votes.pop("VSstartTime")
-        # votes.pop("VSendTime")
-        time_now = get_db_time_str()
-        time_status = "时间没问题"
-        time_status_code = 200
-        if votes.get("VSstartTime") and time_now < votes.get("VSstartTime"):
-            time_status_code = 405601
-            time_status = "答题时间未到"
-        if votes.get("VSendTime") and time_now > votes.get("VSendTime"):
-            time_status_code = 405602
-            time_status = "答题时间已超"
-
-        votes["VSstartTime"] = get_web_time_str(votes.get("VSstartTime"), format_forweb_no_HMS)
-
-        votes["VSendTime"] = get_web_time_str(votes.get("VSendTime"), format_forweb_no_HMS)
-        votes["VStime"] = "2018-08-10"
-        votes["TimeStatus"] = time_status
-        votes["TimeStatusCode"] = time_status_code
-        response = import_status("SUCCESS_MESSAGE_GET_VOTE", "OK")
-        response["data"] = votes
-        return response
-
-    def make_password(self):
-        return self.make_random_code(3, 8)
-
-    def make_invate_code(self):
-        USinvate = self.susers.get_all_invate_code()
-        while True:
-            invate_code = self.make_random_code(3, 7)
-            if invate_code not in USinvate:
-                break
-        return invate_code
 
     def make_random_code(self, m, n):
         import random
@@ -148,47 +95,15 @@ class CVotes():
         print(self.title.format('data'))
         print(data)
         print(self.title.format('data'))
-        usertel = data.get("UStelphone")
-        username = data.get("USname")
+        openid = data.get("openid")
 
-        user = self.susers.get_uid_by_utel(usertel)
-
-        print(self.title.format('data'))
-        print(data)
-        print(self.title.format('data'))
-
-        if not user:
-            # 注册+免单优惠券
-            USinvate = self.make_invate_code()
-            print(self.title.format('USinvate'))
-            print(USinvate)
-            print(self.title.format('USinvate'))
-
-            USpassword = self.make_password()
-
-            print(self.title.format('USpassword'))
-            print(USpassword)
-            print(self.title.format('USpassword'))
-
-            user = str(uuid.uuid1())
-            self.susers.add_model("Users", **{
-                "USid": user,
-                "UStelphone": usertel,
-                "USpassword": USpassword,
-                "USname": username,
-                "UScoin": 999.99,
-                "USinvatecode": USinvate
-            })
-        vn = self.svotes.get_Votenotes(data.get("VSid"), user)
-        if vn:
-            return import_status("ERROR_MESSAGE_REPEAT_VOTE", "LOVEBREAKFAST_ERROR", "ERROR_CODE_REPEAT_VOTE")
         vntime = get_db_time_str()
-        vnid = str(uuid.uuid1())
+        vnid = str(uuid.uuid4())
         self.svotes.add_model("Votenotes", **{
-            "VNid": vnid,
-            "VSid": data.get("VSid"),
-            "USid": user,
-            "VNtime": vntime
+            "vnid": vnid,
+            "vsid": data.get("VSid"),
+            "openid": openid,
+            "vntime": vntime
         })
         VoteResult = data.get("USchoose")
         for vr in VoteResult:
@@ -196,24 +111,13 @@ class CVotes():
                 vr["VRchoice"] = json.dumps(vr.get("VRchoice"))
 
             self.svotes.add_model("VoteResult", **{
-                "VRid": str(uuid.uuid1()),
-                "VNid": vnid,
-                "VOid": vr.get("VOid"),
-                "VRchoice": vr.get("VRchoice"),
-                "VRabo": vr.get("VRabo")
+                "vrid": str(uuid.uuid1()),
+                "vnid": vnid,
+                "void": vr.get("VOid"),
+                "vrchoice": vr.get("VRchoice"),
+                "vrabo": vr.get("VRabo")
             })
 
-        self.susers.add_model("Cardpackage", **{
-            "CAid": str(uuid.uuid1()),
-            "USid": user,
-            "CAstatus": 2,
-            "CAstart": get_db_time_str(),
-            "CAend": "20181231235959",
-            "COid": "123",
-        })
+        # TODO 更新红包状态
         response = import_status("SUCCESS_MESSAGE_NEW_VOTE", "OK")
-        response["data"] = {
-            "UStelphone": usertel,
-            "USpassword": self.susers.get_upwd_by_utel(usertel),
-        }
         return response

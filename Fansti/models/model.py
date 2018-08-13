@@ -385,5 +385,56 @@ class AIR_HWYS_TACT(Base):
     freight = Column(String(2000))                          # 运费
     chinese_position = Column(String(2000))                 # 中文名称及地理位置
 
+class Votes(Base):
+    __tablename__ = "Votes"
+    vsid = Column(String(64), primary_key=True)
+    vsname = Column(Text, nullable=False)  # 问卷名称
+    vscontent = Column(Text)               # 问卷描述
+    vsstarttime = Column(String(14))       # 起始时间
+    vsendtime = Column(String(14))         # 结束时间
+    vsurl = Column(Text)                   # 前端路由
+    vshead = Column(Text)                  # 问卷icon
+    vsbannel = Column(Text)                # 问卷宣传banner
+
+
+class Vote(Base):
+    __tablename__ = "Vote"
+    void = Column(String(64), primary_key=True)
+    votext = Column(Text, nullable=False)
+    votype = Column(Integer, nullable=False)    # 问题类型 {1001：单选题，1002： 多选题， 1003： 填空题}
+    vono = Column(String(2), nullable=False)    # 问题编号
+    voisnull = Column(Integer, nullable=False)  # 是否可空 {1100： 不可空， 1101：可空}
+    vounit = Column(Integer)                    # 填空题后可能涉及的单位 {1300: 站}
+    voappend = Column(Text)                     # 如果是填空题，后面的补充内容
+    vsid = Column(String(64), nullable=False)   # 问卷id
+    vobackground = Column(Text)                  # 背景图
+
+
+class VoteChoice(Base):
+    __tablename__ = "VoteChoice"
+    vcid = Column(String(64), primary_key=True)
+    vcno = Column(String(2), nullable=False)   # 选项编号
+    vctext = Column(Text, nullable=False)      # 选项描述
+    vcnext = Column(String(2))                 # 选项对应下一题，可空，默认为VOid对应VOno+1
+    vctype = Column(Integer)                   # 选项类型 是否需要增加文本框{1200: 不需要，1201：需要}
+    void = Column(String(64))                  # 问题id
+
+
+class Votenotes(Base):
+    __tablename__ = "Votenotes"
+    vnid = Column(String(64), primary_key=True)
+    vsid = Column(String(64))
+    openid = Column(String(200))    # 用户ID
+    vntime = Column(String(14))  # 答题时间
+
+
+class VoteResult(Base):
+    __tablename__ = "VoteResult"
+    vrid = Column(String(64), primary_key=True)
+    vnid = Column(String(64))     # 答题记录id
+    void = Column(String(64))     # 问题id
+    vrchoice = Column(String(16))  # 选项
+    vrabo = Column(Text)          # 详情： 填空和其他用
+
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)
