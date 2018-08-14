@@ -144,7 +144,7 @@
             <text>运单号:</text>
           </view>
           <view class="item-value">
-            {{detail.ydno}}
+            {{detail.ydno || '暂无'}}
           </view>
         </view>
         <view class="line-right">
@@ -153,7 +153,7 @@
             <text>目的港:</text>
           </view>
           <view class="item-value">
-            {{detail.destination}}
+            {{detail.destination || '暂无'}}
           </view>
         </view>
       </view>
@@ -164,7 +164,7 @@
             <text>进仓号:</text>
           </view>
           <view class="item-value">
-            {{detail.jcno}}
+            {{detail.jcno || '暂无'}}
 
           </view>
         </view>
@@ -176,7 +176,7 @@
             <text space="emsp"> 件数:</text>
           </view>
           <view class="item-value">
-            {{detail.quantity}}
+            {{detail.quantity || '暂无'}}
           </view>
         </view>
         <view class="line-right ">
@@ -185,7 +185,7 @@
             <text space="emsp"> 重量:</text>
           </view>
           <view class="item-value">
-            {{detail.weight}}
+            {{detail.weight || '暂无'}}
           </view>
         </view>
       </view>
@@ -196,7 +196,7 @@
             <text space="emsp"> 品名:</text>
           </view>
           <view class="item-value">
-            {{detail.enhwpm}}
+            {{detail.enhwpm || '暂无'}}
           </view>
         </view>
       </view>
