@@ -191,6 +191,8 @@
   import wepy from 'wepy'
   import api from '@/api/api';
   import tip from '@/utils/tip';
+  import Placeholder from '@/components/common/placeholder'
+  import BindingMixin from '@/mixins/bindingMixin'
 
 
   export default class Index extends wepy.page {
@@ -198,7 +200,9 @@
       navigationBarTitleText: '查询'
     }
 
-    components = {}
+    components = {
+      placeholder: Placeholder,
+    }
 
     data = {
       dgr: '',
@@ -213,6 +217,9 @@
       isOldUser:false,
       isNewUser:false,
     }
+
+    mixins = [BindingMixin];
+
     computed = {}
 
     methods = {
@@ -437,9 +444,10 @@
 
       this.isBinding = this.isOldUser || this.isNewUser;
 
+      // console.log(this.isOldUser,this.isNewUser,this.isBinding);
       if (!this.isBinding) {
 
-        await this.checkBinding(wx.getStorageSync('code'));
+        await this.checkBinding();
 
         // 绑定成功  res结果无意义就是个字符串
         console.log('新老用户', this.isOldUser, this.isNewUser);

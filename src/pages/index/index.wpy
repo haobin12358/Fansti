@@ -18,9 +18,13 @@
 <template>
   <view class="container">
     <swiper class="swiper">
-      <swiper-item @tap="goQuestionnaire">
+      <swiper-item>
         <image src="../../images/test_swiper.png"></image>
       </swiper-item>
+      <swiper-item @tap="goQuestionnaire">
+        <image src="../../images/questionnaire_banner.png"></image>
+      </swiper-item>
+
     </swiper>
   </view>
   <news-list :list.sync="newsList" @tapItem.user="goNewsDetail"></news-list>
@@ -80,6 +84,10 @@
           let news = res.data.data[i].news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
           res.data.data[i].news_all = news;
         }
+
+        // res.data.data.map((x)=>{
+        //   return x.news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
+        // })
 
         this.newsList =[...this.newsList,...res.data.data];
 

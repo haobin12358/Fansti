@@ -249,7 +249,7 @@
         </view>
       </view>
     </view>
-    <waitGetPacket :show.sync="showWGP" :list.sync="redList"></waitGetPacket>
+    <waitGetPacket :show.sync="showWGP" :list.sync="redList" @receive.user="receiveRed"></waitGetPacket>
     <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
     <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
   </block>
@@ -352,6 +352,10 @@
       tapWGPHandler() {
         this.showWGP = true;
       },
+      receiveRed(item){
+          // console.log('领取红包',item);
+        tip.confirm('该功能暂不可用!', false)
+      },
       //  显示已领取的红包
       tapAGPHandler() {
         this.showAGP = true;
@@ -435,7 +439,7 @@
 
     //  邀请用户
     async addInvate(openid){
-      let res = await api.addInvate({ method: 'POST', openid: wx.getStorageSync('openid'), query: { openid } });
+      let res = await api.addInvate({ method: 'POST', openid, query: { openid: wx.getStorageSync('openid') } });
 
       if (res.data.status == 200) {
         tip.success('接收邀请成功!');
@@ -456,7 +460,7 @@
 
       if (!this.isBinding) {
         //  自动绑定后再自动获取数据
-        let res = await this.checkBinding(wx.getStorageSync('code'));
+        let res = await this.checkBinding();
 
         // 绑定成功  res结果无意义就是个字符串
         // console.log('新老用户',this.isOldUser, this.isNewUser);
@@ -464,6 +468,10 @@
 
       this.init();
 
+      // params = {
+      //   openid: 'o_3il5Lbz4VYZOO8KI91P1Mqeanc',
+      //   share: 'true'
+      // }
       // 分享
       if (params.share == 'true') {
         this.addInvate(params.openid);
