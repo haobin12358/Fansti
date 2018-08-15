@@ -69,7 +69,8 @@
   <view class="container" style="height: {{containerHeight}}px;">
     <view class="news-card" style="height: {{cardHeight}}px;">
       <view class="news-card-head-img">
-        <image src="{{news.news_picture}}"></image>
+        <!--<image src="{{news.news_picture}}"></image>-->
+        <image src="http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg"></image>
       </view>
       <view class="height-maintain">
         <scroll-view scroll-y="true" class="news-card-content">

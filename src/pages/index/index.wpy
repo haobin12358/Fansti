@@ -17,7 +17,7 @@
 </style>
 <template>
   <view class="container">
-    <swiper class="swiper">
+    <swiper class="swiper" indicator-dots="true" circular="true">
       <swiper-item>
         <image src="../../images/test_swiper.png"></image>
       </swiper-item>

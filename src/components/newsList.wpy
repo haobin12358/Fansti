@@ -88,7 +88,8 @@
           </view>
 
         </view>
-        <image class="news-img" src="{{item.news_picture}}">
+        <!--<image class="news-img" src="{{item.news_picture}}">-->
+        <image class="news-img"  src="../images/test_news.jpg">
         </image>
       </view>
     </view>

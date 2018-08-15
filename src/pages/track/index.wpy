@@ -89,7 +89,7 @@
 
       ],
       pageNum: 1,
-      pageSize: 100,
+      pageSize: 10,
 
       loadingType: 'normal', // 加载状态
 
@@ -113,8 +113,8 @@
       let res =await api.getGoodsList({_noLoading: true,page_num:this.pageNum,page_size:this.pageSize,query: {login_name: wx.getStorageSync('token')}})
 
       if(res.data.status == 200){
-        this.goodsList= res.data.data.filter(x => x.jcno == 'E99999999')
-        // this.goodsList = [...this.goodsList,...res.data.data];
+        // this.goodsList= res.data.data.filter(x => x.jcno == 'E99999999')
+        this.goodsList = [...this.goodsList,...res.data.data];
 
 
         if(res.data.data.length == this.pageSize){
