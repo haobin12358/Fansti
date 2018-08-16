@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
-import uuid, datetime, re
+import uuid, datetime, re, xlrd
 from flask import request
 from HTMLParser import HTMLParser
 from Fansti.config.response import SYSTEM_ERROR, PARAMS_MISS
@@ -350,34 +350,16 @@ class Cscrapy():
         return response
 
     def new_update_airline(self):
-        # TODO 上传格式规范的表格，如果格式不规范或者某行某列存在数据异常，提出报错
-        # TODO 将文件存在linux存储在服务器中，最多储存10天文件（默认），超过10天的文件则清理掉，文件名称为时间.xls，例：20180729010101.xls
-        # TODO 遍历表格，根据flight参数进行判断，如果数据库中存在，则更新，如果数据库中不存在，则增加一条数据
+        # 上传格式规范的表格，如果格式不规范或者某行某列存在数据异常，提出报错
+        # 将文件存在linux存储在服务器中，最多储存10天文件（默认），超过10天的文件则清理掉，文件名称为时间.xls，例：20180729010101.xls
+        # 遍历表格，根据flight参数进行判断，如果数据库中存在，则更新，如果数据库中不存在，则增加一条数据
         # D:\teamsystem\Fansti
-        formdata = request.form
-        make_log("formdata", formdata)
-        files = request.files.get("file")
-        import platform
-        from Fansti.config import Inforcode
-        if platform.system() == "Windows":
-            rootdir = os.path.join(Inforcode.WindowsRoot, Inforcode.AIRLINEDIR)
-        else:
-            rootdir = os.path.join(Inforcode.LinuxTMP, Inforcode.AIRLINEDIR)
-        if not os.path.isdir(rootdir):
-            os.mkdir(rootdir)
-        # if "FileType" not in formdata:
-        #     return
-        filessuffix = str(files.filename).split(".")[-1]
-        if filessuffix not in ["xls", "xlsm", "xlsx"]:
-            return import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
-
-        filename = get_db_time_str() + "." + filessuffix
-        filepath = os.path.join(rootdir, filename)
-        print(filepath)
-        files.save(filepath)
+        filepath = self.save_file("AIRLINE")
+        if not isinstance(filepath, str):
+            return filepath
         # titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
         #             'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
-        import xlrd
+
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
@@ -590,3 +572,234 @@ class Cscrapy():
         except:
             str_word = str(str_word)
         return str_word
+
+    def upload_template_dgr(self):
+        filepath = self.save_file("DGR")
+        if not isinstance(filepath, str):
+            return filepath
+
+        wb = xlrd.open_workbook(filepath)
+        sheet1 = wb.sheet_by_index(0)
+        title_line = sheet1.row_values(0)
+        title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
+        make_log("title_line", title_line)
+        from Fansti.config.staticconfig import DGR_DB_TO_EXCEL, CONTAINER_KEY,\
+            DGR_KEY, DGR_LEVEL_KEY, DGR_LEVEL_DB_TO_EXCEL
+        dgr_key_dict = {k: v for v, k in enumerate(title_line) if k in DGR_KEY}
+        dgr_level_dict = {k: v for v, k in enumerate(title_line) if k in DGR_LEVEL_KEY}
+        dgr_container_dict = {k: v for v, k in enumerate(title_line) if k in CONTAINER_KEY}
+        # check title key
+        for key in CONTAINER_KEY + DGR_LEVEL_KEY + DGR_KEY:
+            if key not in title_line:
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                response['data'] = {
+                    "row": 0,
+                    "key": key,
+                    "reason": "the title is not right need {0} necessary".format(key)
+                }
+                return response
+
+        make_log("dgr_key_dict", dgr_key_dict)
+        make_log("dgr_level_dict", dgr_level_dict)
+        make_log("dgr_container_dict", dgr_container_dict)
+
+        dgr_key_index_to_db = {key: dgr_key_dict.get(DGR_DB_TO_EXCEL.get(key)) for key in DGR_DB_TO_EXCEL}
+        dgr_level_index_to_db = {
+            key: dgr_level_dict.get(DGR_LEVEL_DB_TO_EXCEL.get(key)) for key in DGR_LEVEL_DB_TO_EXCEL}
+
+        make_log("dgr_key_index_to_db", dgr_key_index_to_db)
+        make_log("dgr_level_index_to_db", dgr_level_index_to_db)
+
+        make_log("sheet1.nrows", sheet1.nrows)
+
+        # init
+        dgrid = str(uuid.uuid1())
+        dgrlevelid = str(uuid.uuid1())
+
+        for dgr_row in range(1, sheet1.nrows):
+            dgr_row_value = sheet1.row_values(dgr_row)
+
+            # dgr model
+            if dgr_row_value[dgr_key_index_to_db.get("unno")]:
+                dgrid = str(uuid.uuid1())
+                dgr_model_dict = {
+                    "id": dgrid,
+                    "unno": dgr_row_value[dgr_key_index_to_db.get("unno")],
+                    "unname": dgr_row_value[dgr_key_index_to_db.get("unname")],
+                    "untype": dgr_row_value[dgr_key_index_to_db.get("untype")],
+                }
+                # 内容格式编码处理以及去空格处理+ TODO 正则校验
+                for key in dgr_model_dict:
+                    # 空格处理
+                    if isinstance(dgr_model_dict.get(key), unicode):
+                        dgr_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_model_dict.get(key))
+
+                    # # 正则校验
+                    # try:
+                    #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
+                    #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    #         response["data"] = {
+                    #             "row": row,
+                    #             "col": key
+                    #         }
+                    #         return response
+                    # except Exception as e:
+                    #     print(e.message)
+                    #     print(AIRLINE_EXCEL_ROLE.get(key))
+                    #     print(key)
+                    #     print row_dict.get(key)
+                    # 字符编码处理
+                    if isinstance(dgr_model_dict.get(key), unicode):
+                        dgr_model_dict[key] = dgr_model_dict.get(key).encode("utf8")
+
+                make_log("dgr_model_dict", dgr_model_dict)
+                self.sscrapy.add_model("AIR_HWYS_DGR", **dgr_model_dict)
+
+            # dgr level model
+            if dgr_row_value[dgr_level_index_to_db.get("dgr_level")]:
+                dgrlevelid = str(uuid.uuid1())
+                dgr_level_model_dict = {
+                    "id": dgrlevelid,
+                    "dgr_id": dgrid,
+                    "dgr_level": dgr_row_value[dgr_level_index_to_db.get("dgr_level")],
+                    "airliner_capacity": dgr_row_value[dgr_level_index_to_db.get("airliner_capacity")],
+                    "airliner_description_no": dgr_row_value[dgr_level_index_to_db.get("airliner_description_no")],
+                    "airliner_is_single": dgr_row_value[dgr_level_index_to_db.get("airliner_is_single")],
+                    "airfreighter_capacity": dgr_row_value[dgr_level_index_to_db.get("airfreighter_capacity")],
+                    "airfreighter_description_no": dgr_row_value[dgr_level_index_to_db.get("airfreighter_description_no")],
+                    "airfreighter_is_single": dgr_row_value[dgr_level_index_to_db.get("airfreighter_is_single")],
+                    "message": dgr_row_value[dgr_level_index_to_db.get("message")],
+                }
+
+                # 内容格式编码处理以及去空格处理+ TODO 正则校验
+                for key in dgr_level_model_dict:
+                    # 空格处理
+                    if isinstance(dgr_level_model_dict.get(key), unicode):
+                        dgr_level_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_level_model_dict.get(key))
+
+                    # # 正则校验
+                    # try:
+                    #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
+                    #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    #         response["data"] = {
+                    #             "row": row,
+                    #             "col": key
+                    #         }
+                    #         return response
+                    # except Exception as e:
+                    #     print(e.message)
+                    #     print(AIRLINE_EXCEL_ROLE.get(key))
+                    #     print(key)
+                    #     print row_dict.get(key)
+                    # 字符编码处理
+                    if isinstance(dgr_level_model_dict.get(key), unicode):
+                        dgr_level_model_dict[key] = dgr_level_model_dict.get(key).encode("utf8")
+
+                make_log("dgr_level_model_dict", dgr_level_model_dict)
+                self.sscrapy.add_model("AIR_HWYS_DGR_LEVEL", **dgr_level_model_dict)
+
+            # dgr container model
+            if dgr_row_value[dgr_container_dict.get("客机容器类型")]:
+                airliner_container_dict = {
+                    "id": str(uuid.uuid1()),
+                    "dgr_level_id": dgrlevelid,
+                    "dgr_container": dgr_row_value[dgr_container_dict.get("客机容器类型")],
+                    "dgr_container_capacity": dgr_row_value[dgr_container_dict.get("客机容器类型对应容量")],
+                    "dgr_type": "客机",
+                }
+
+                # 内容格式编码处理以及去空格处理+ TODO 正则校验
+                for key in airliner_container_dict:
+                    # 空格处理
+                    if isinstance(airliner_container_dict.get(key), unicode):
+                        airliner_container_dict[key] = re.sub(r"[\n\t\s]", "", airliner_container_dict.get(key))
+
+                    # # 正则校验
+                    # try:
+                    #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
+                    #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    #         response["data"] = {
+                    #             "row": row,
+                    #             "col": key
+                    #         }
+                    #         return response
+                    # except Exception as e:
+                    #     print(e.message)
+                    #     print(AIRLINE_EXCEL_ROLE.get(key))
+                    #     print(key)
+                    #     print row_dict.get(key)
+                    # 字符编码处理
+                    if isinstance(airliner_container_dict.get(key), unicode):
+                        airliner_container_dict[key] = airliner_container_dict.get(key).encode("utf8")
+                make_log("airliner_container_dict", airliner_container_dict)
+                self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airliner_container_dict)
+
+            if dgr_row_value[dgr_container_dict.get("货机容器类型")]:
+                airfreighter_container_dict = {
+                    "id": str(uuid.uuid1()),
+                    "dgr_level_id": dgrlevelid,
+                    "dgr_container": dgr_row_value[dgr_container_dict.get("货机容器类型")],
+                    "dgr_container_capacity": dgr_row_value[dgr_container_dict.get("货机容器类型对应容量")],
+                    "dgr_type": "客机",
+                }
+
+                # 内容格式编码处理以及去空格处理+ TODO 正则校验
+                for key in airfreighter_container_dict:
+                    # 空格处理
+                    if isinstance(airfreighter_container_dict.get(key), unicode):
+                        airfreighter_container_dict[key] = re.sub(r"[\n\t\s]", "", airfreighter_container_dict.get(key))
+
+                    # # 正则校验
+                    # try:
+                    #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
+                    #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                    #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    #         response["data"] = {
+                    #             "row": row,
+                    #             "col": key
+                    #         }
+                    #         return response
+                    # except Exception as e:
+                    #     print(e.message)
+                    #     print(AIRLINE_EXCEL_ROLE.get(key))
+                    #     print(key)
+                    #     print row_dict.get(key)
+                    # 字符编码处理
+                    if isinstance(airfreighter_container_dict.get(key), unicode):
+                        airfreighter_container_dict[key] = airfreighter_container_dict.get(key).encode("utf8")
+                make_log("airfreighter_container_dict", airfreighter_container_dict)
+                self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airfreighter_container_dict)
+
+
+        response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+        return response
+
+    def save_file(self, file_type):
+        formdata = request.form
+        make_log("formdata", formdata)
+        files = request.files.get("file")
+        import platform
+        from Fansti.config import Inforcode
+
+        file_dir = Inforcode.template_type_dir.get(file_type)
+
+        if platform.system() == "Windows":
+            rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
+        else:
+            rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
+        if not os.path.isdir(rootdir):
+            os.mkdir(rootdir)
+        # if "FileType" not in formdata:
+        #     return
+        filessuffix = str(files.filename).split(".")[-1]
+        if filessuffix not in ["xls", "xlsm", "xlsx"]:
+            return import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+
+        filename = get_db_time_str() + "." + filessuffix
+        filepath = os.path.join(rootdir, filename)
+        print(filepath)
+        files.save(filepath)
+        return filepath

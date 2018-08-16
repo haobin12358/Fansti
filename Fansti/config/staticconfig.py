@@ -32,3 +32,31 @@ AIRLINE_EXCEL_ROLE = {
     "aircraft": r"^[A-Z0-9]{3,4}[/-]{0,1}[A-Z0-9/]*$",
     "remark": ""
 }
+
+
+DGR_DB_TO_EXCEL = {
+    "unno": "UN号",
+    "unname": "运输专用名称",
+    "untype": "类别",
+    }
+
+
+DGR_LEVEL_DB_TO_EXCEL = {
+    "dgr_level": "等级",
+    "airliner_capacity": "客机容量",
+    "airliner_description_no": "客机说明号",
+    "airliner_is_single": "客机是否可单一",
+    "airfreighter_capacity": "货机容量",
+    "airfreighter_description_no": "货机说明号",
+    "airfreighter_is_single": "货机是否可单一",
+    "message": "备注",
+    # "dgr_container": "容器类型",
+    # "dgr_container_capacity": "容量",
+    # "dgr_type": "客机/货机",
+}
+
+DGR_KEY = ["UN号", "运输专用名称", "类别"]
+
+DGR_LEVEL_KEY = ["等级", "客机容量", "客机说明号", "客机是否可单一", "货机容量", "货机说明号", "货机是否可单一", "备注"]
+
+CONTAINER_KEY = ['客机容器类型', '客机容器类型对应容量', '货机容器类型', '货机容器类型对应容量']
