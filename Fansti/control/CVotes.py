@@ -45,7 +45,7 @@ class CVotes():
             print(count)
             print(self.title.format('count'))
             vote = todict(self.svotes.get_vote(vsid, vono))
-            vote["votext"] = vote["votext"].decode("gbk").encode("utf8")
+            # vote["votext"] = vote["votext"].decode("gbk").encode("utf8")
             print(self.title.format("vote"))
             print(vote)
             print(self.title.format("vote"))
@@ -55,7 +55,7 @@ class CVotes():
                     votechoice_list = tolist(self.svotes.get_votechoisce(vote.get("void")))
                     if vote.get("votype") < 1002:
                         for votechoice in votechoice_list:
-                            votechoice["vctext"] = votechoice["vctext"].decode("gbk").encode("utf8")
+                            # votechoice["vctext"] = votechoice["vctext"].decode("gbk").encode("utf8")
                             if not votechoice.get("vcnext"):
                                 votechoice["vcnext"] = int(vote.get("vono")) + 1
                     else:
@@ -74,7 +74,7 @@ class CVotes():
             return response
         except Exception as e:
             print(self.title.format("get vote"))
-            print(e.message)
+            print(e)
             print(self.title.format("get vote"))
             return SYSTEM_ERROR
 
@@ -107,8 +107,6 @@ class CVotes():
         })
         VoteResult = data.get("USchoose")
         for vr in VoteResult:
-            if not isinstance(vr.get("VRchoice"), basestring):
-                vr["VRchoice"] = json.dumps(vr.get("VRchoice"))
 
             self.svotes.add_model("VoteResult", **{
                 "vrid": str(uuid.uuid1()),

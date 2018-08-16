@@ -2,7 +2,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import ConfigParser, json
+import json
+import configparser
 from flask_restful import Resource, request
 from Fansti.config.response import APIS_WRONG
 from Fansti.common.import_status import import_status
@@ -29,13 +30,13 @@ class FSother(Resource):
                 accounts = get_model_return_dict(self.suser.get_compnay_by_loginname(args["login_name"]))
                 make_log("accounts", accounts)
                 xsr = get_model_return_dict(self.sgoods.get_xsr_by_user(accounts["compnay"]))["xsr"]
-                make_log("xsr", xsr.decode("gbk"))
-                user_abo = get_model_return_dict(self.suser.get_custom_by_xsr(xsr.decode("gbk")))
-                user_abo["user_name"] = user_abo["user_name"].decode("gbk").encode("utf8")
+                make_log("xsr", xsr)
+                user_abo = get_model_return_dict(self.suser.get_custom_by_xsr(xsr))
+                user_abo["user_name"] = user_abo["user_name"]
                 make_log("user_abo", user_abo)
                 data = user_abo
             else:
-                cf = ConfigParser.ConfigParser()
+                cf = configparser.ConfigParser()
                 cf.read("../Fansti/fansticonfig.ini")
                 name = cf.get("custom", "name")
                 qq = cf.get("custom", "qq")
@@ -52,7 +53,7 @@ class FSother(Resource):
             return response
 
         if other == "get_phone":
-            cf = ConfigParser.ConfigParser()
+            cf = configparser.ConfigParser()
             cf.read("../Fansti/fansticonfig.ini")
             phone_list = cf.get("phone", "whitelist")
             if str(phone_list) == "[]":
@@ -76,7 +77,7 @@ class FSother(Resource):
             true_params = ["name", "qq", "telphone", "email"]
             if judge_keys(true_params, data.keys()) != 200:
                 return judge_keys(true_params, data.keys())
-            cf = ConfigParser.ConfigParser()
+            cf = configparser.ConfigParser()
             cf.read("../Fansti/fansticonfig.ini")
             cf.set("custom", "name", data["name"])
             cf.set("custom", "qq", data["qq"])
@@ -91,7 +92,7 @@ class FSother(Resource):
             true_params = ["control", "phone_list"]
             if judge_keys(true_params, data.keys()) != 200:
                 return judge_keys(true_params, data.keys())
-            cf = ConfigParser.ConfigParser()
+            cf = configparser.ConfigParser()
             cf.read("../Fansti/fansticonfig.ini")
             phone_list = cf.get("phone", "whitelist")
             for row in data["phone_list"]:
