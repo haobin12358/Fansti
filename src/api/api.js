@@ -3,7 +3,7 @@ import {
 } from '@/utils/wxRequest';
 const mock = false;
 
-const host =mock? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'http://120.25.217.87:7444/fansti';
+const host =mock? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'https://fstwechat.com/fansti';
 
 //  绑定用户  POST
 const userBinding = params => wxRequest(params, host+'/users/user_binding');

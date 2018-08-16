@@ -60,6 +60,7 @@
 
             .detail-item{
               display: flex;
+              align-items: center;
               margin-bottom: 23rpx;
 
               &:last-child{
@@ -67,19 +68,9 @@
               }
 
               .detail-label{
-                width: 50rpx;
-                height: 48rpx;
-                text-align: right;
+                width: 9rpx;
+                height: 9rpx;
                 margin-right: 10rpx;
-
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-
-                image{
-                  width: 9rpx;
-                  height: 9rpx;
-                }
               }
 
               .detail-text{
@@ -160,17 +151,14 @@
           </view>
           <view class="introduce-item-detail">
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
               <view class="detail-text">
                 从业经验：{{cardInfo.work_year || 0}}年
               </view>
             </view>
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text">
                 {{cardInfo.work_goodat || '暂无'}}
               </view>
@@ -184,9 +172,8 @@
           </view>
           <view class="introduce-item-detail">
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text">
                 {{cardInfo.user_introduction || '暂无'}}
               </view>
@@ -200,33 +187,29 @@
           </view>
           <view class="introduce-item-detail">
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text" style="text-indent: 10rpx;">
                 QQ: {{cardInfo.qq || '暂无'}}
               </view>
             </view>
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text">
                 电话: {{cardInfo.phone}}
               </view>
             </view>
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text">
                 微信: {{cardInfo.wechat || '暂无'}}
               </view>
             </view>
             <view class="detail-item">
-              <view class="detail-label">
-                <image src="../../images/circle_full.png"></image>
-              </view>
+              <image class="detail-label" src="../../images/circle_full.png"></image>
+
               <view class="detail-text">
                 邮箱: {{cardInfo.email || '暂无'}}
               </view>

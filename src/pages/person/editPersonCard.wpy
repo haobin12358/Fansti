@@ -73,6 +73,7 @@
 
             .detail-item{
               display: flex;
+              align-items: center;
               margin-bottom: 23rpx;
 
               input{
@@ -96,19 +97,9 @@
               }
 
               .detail-label{
-                width: 50rpx;
-                height: 36rpx;
-                text-align: right;
+                width: 9rpx;
+                height: 9rpx;
                 margin-right: 10rpx;
-
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-
-                image{
-                  width: 9rpx;
-                  height: 9rpx;
-                }
               }
 
               .detail-text-hd{
@@ -175,9 +166,8 @@
             </view>
             <view class="introduce-item-detail">
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   从业经验：
                 </view>
@@ -187,9 +177,8 @@
                 </view>
               </view>
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   服务经验：
                 </view>
@@ -205,9 +194,8 @@
             </view>
             <view class="introduce-item-detail">
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   专家简介：
                 </view>
@@ -223,18 +211,16 @@
             </view>
             <view class="introduce-item-detail">
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd" style="text-indent: 10rpx;">
                   QQ:
                 </view>
                 <input type="number" value="{{cardInfo.qq ? cardInfo.qq : ''}}" name="qq"/>
               </view>
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   电话:
                 </view>
@@ -242,18 +228,16 @@
                 <input type="number" value="{{cardInfo.phone? cardInfo.phone : ''}}" disabled style="background: #CCCCCC"/>
               </view>
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   微信:
                 </view>
                 <input type="text"  value="{{cardInfo.wechat? cardInfo.wechat : ''}}" name="wechat"/>
               </view>
               <view class="detail-item">
-                <view class="detail-label">
-                  <image src="../../images/circle_full.png"></image>
-                </view>
+                <image class="detail-label" src="../../images/circle_full.png"></image>
+
                 <view class="detail-text-hd">
                   邮箱:
                 </view>
