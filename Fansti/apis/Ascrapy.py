@@ -32,7 +32,8 @@ class FSscrapy(Resource):
         print(self.title.format("api is" + scrapy))
 
         apis = {
-            "update_airline": "self.cscrapy.new_update_airline()"
+            "update_airline": "self.cscrapy.new_update_airline()",
+            "upload_dgr": "self.cscrapy.upload_template_dgr()",
         }
 
         if scrapy not in apis:
