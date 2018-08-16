@@ -286,7 +286,8 @@ class CUsers():
                     a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(raw["invate_openid"]))
                     make_log("a_invate", a_invate)
                     if a_invate:
-                        raw["name"] = a_invate["name"].decode("gbk").encode("utf8")
+                        raw["name"] = a_invate["name"]
+                        # .decode("gbk").encode("utf8")
                         raw["phone"] = a_invate["phone"]
                         try:
                             raw["invate_name"] = row["name"].decode("gbk").encode("utf8")
