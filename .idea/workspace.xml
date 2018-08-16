@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="772ddb0b-4f29-4ff0-931e-2070dacb3eeb" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Fansti.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Fansti.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fansti/config/staticconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/config/staticconfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fansti/control/Cscrapy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/control/Cscrapy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,25 +25,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="ini" value="1" />
-          <entry key="py" value="37" />
+          <entry key="py" value="40" />
           <entry key="sh" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="37" />
+          <entry key="Python" value="40" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="113" />
-          <entry key="py" value="1692" />
+          <entry key="py" value="1706" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1805" />
+          <entry key="Python" value="1819" />
         </counts>
       </usages-collector>
     </session>
@@ -62,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3836">
-              <caret line="350" column="33" selection-start-line="350" selection-start-column="33" selection-end-line="350" selection-end-column="33" />
+            <state relative-caret-position="325">
+              <caret line="571" column="27" selection-start-line="571" selection-start-column="8" selection-end-line="571" selection-end-column="27" />
               <folding>
                 <element signature="e#666#807#0" />
                 <element signature="e#694#742#0" />
@@ -143,6 +140,15 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="142">
+              <caret line="38" column="30" lean-forward="true" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -182,7 +188,6 @@
         <option value="$PROJECT_DIR$/Fansti/apis/AGoods.py" />
         <option value="$PROJECT_DIR$/Fansti/config/dbconfig.py" />
         <option value="$PROJECT_DIR$/Fansti/apis/AUsers.py" />
-        <option value="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" />
         <option value="$PROJECT_DIR$/Fansti/control/CNews.py" />
         <option value="$PROJECT_DIR$/Fansti/apis/ANews.py" />
         <option value="$PROJECT_DIR$/Fansti/services/SNews.py" />
@@ -211,6 +216,7 @@
         <option value="$PROJECT_DIR$/Fansti/control/CUsers.py" />
         <option value="$PROJECT_DIR$/Fansti/config/staticconfig.py" />
         <option value="$PROJECT_DIR$/Fansti/control/Cscrapy.py" />
+        <option value="$PROJECT_DIR$/Fansti/apis/Ascrapy.py" />
       </list>
     </option>
   </component>
@@ -461,7 +467,7 @@
     <frame x="-4" y="-4" width="1372" height="732" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15711094" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15711094" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -472,7 +478,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32952926" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32789558" />
+      <window_info anchor="bottom" id="Python Console" order="8" weight="0.32626426" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32952926" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -529,20 +535,6 @@
       </provider>
     </entry>
     <entry file="file://G:/Python27/Lib/site-packages/sqlalchemy/ext/declarative/api.py" />
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/AUsers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="39" selection-start-line="39" selection-end-line="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/services/SReds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="178">
@@ -668,13 +660,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/tornado_server.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/tornado/netutil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="539" selection-start-line="539" selection-end-line="539" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/runflask.sh">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -806,10 +791,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/AUsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Fansti/control/Cscrapy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3836">
-          <caret line="350" column="33" selection-start-line="350" selection-start-column="33" selection-end-line="350" selection-end-column="33" />
+        <state relative-caret-position="325">
+          <caret line="571" column="27" selection-start-line="571" selection-start-column="8" selection-end-line="571" selection-end-column="27" />
           <folding>
             <element signature="e#666#807#0" />
             <element signature="e#694#742#0" />
@@ -882,6 +874,20 @@
             <element signature="e#24315#24494#0" />
             <element signature="e#24539#24681#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/tornado/netutil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="167" column="27" lean-forward="true" selection-start-line="167" selection-start-column="27" selection-end-line="167" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fansti/apis/Ascrapy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="38" column="30" lean-forward="true" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
         </state>
       </provider>
     </entry>
