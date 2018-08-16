@@ -19,9 +19,9 @@ from Fansti.apis.AOther import FSother
 from Fansti.apis.AReds import FSRed
 from Fansti.apis.ANews import FSNews
 
-sg = Flask(__name__)
+fansti = Flask(__name__)
 #CORS(sg, resources=r'/*')
-api = flask_restful.Api(sg)
+api = flask_restful.Api(fansti)
 # r'/*' 是通配符，让本服务器所有的URL 都允许跨域请求
 
 #api.add_resource(MSManager, "/sharp/manager/user/<string:manager>")
@@ -40,6 +40,10 @@ api.add_resource(FSother, "/fansti/other/<string:other>")
 api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
 
+@fansti.route("/")
+def index():
+    return "<html><body>Hello world</body></html>"
+
 
 '''
 if __name__ == '__main__':
@@ -49,5 +53,5 @@ if __name__ == '__main__':
 
 '''
 if __name__ == '__main__':
-    sg.run('0.0.0.0', 7443, debug=False)
+    fansti.run('0.0.0.0', 7443, debug=False)
 # '''

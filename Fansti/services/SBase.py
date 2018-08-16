@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import DBSession
+from Fansti.services import DBSession
 from Fansti.common.lovebreakfast_error import dberror
 import Fansti.models.model as models
 

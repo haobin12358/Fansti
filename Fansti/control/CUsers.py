@@ -9,7 +9,8 @@ from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
 from Fansti.common.import_status import import_status
 from Fansti.common.TransformToList import add_model
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
+
 class MyHTMLParser(HTMLParser):
 
     def __init__(self):
@@ -37,11 +38,15 @@ class CUsers():
             return self.get_wechat_phone(data["phone"])
         if "login_name" in data and "login_password" in data:
             # TODO 判断是否存在当前月红包，存在的话
+            import hashlib
+            login_password = hashlib.md5()
+            login_password.update(data["login_password"].encode("utf8"))
+            password = login_password.hexdigest()
             name_password_phone = get_model_return_dict(self.susers.get_name_password_phone(data["login_name"]))
             make_log("name_password_phone", name_password_phone)
             if not name_password_phone:
                 return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
-            if data["login_password"] != name_password_phone["login_password"]:
+            if password != name_password_phone["login_password"]:
                 return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
             else:
                 wechat_login = get_model_return_dict(self.susers.get_wechat_login(data["openid"]))
@@ -98,29 +103,33 @@ class CUsers():
         if "id" in id:
             return import_status("ERROR_SOMEONE_BINDING", "FANSTI_ERROR", "ERROR_SOMEONE_BINDING")
         try:
-            import urllib2
+            import urllib.request
             url = "https://shouji.supfree.net/fish.asp?cat={0}".format(phone)
             headers = {'Content-Type': 'application/xhtml+xml'}
-            req = urllib2.Request(url, headers=headers)
-            url_response = urllib2.urlopen(req)
-            strResult = url_response.read()
+            req = urllib.request.urlopen(url)
+            strResult = req.read()
             parser = MyHTMLParser()
-            parser.feed(strResult)
+            parser.feed(strResult.decode('gbk','ignore'))
             length = len(parser.text)
             while length >= 0:
-                if parser.text[length - 1].replace(" ", "") in ["\r\n", "\r\n\r\n", "\r\n\r\n\r\n", "]", "?", "\r\n\t",
-                                                                "\r\n\t\t", "\r\n\t\t\t", "\r\n\t\t\t\t'", ":", ">",
-                                                                " ", ")"]:
+                # parser.text[length - 1] = parser.text[length - 1].encode("utf8")
+                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("\t", "").replace("\r", "").replace("\n", "")
+                if parser.text[length - 1].replace(" ", "") in ["\\r\\n", "\\r\\n\\r\\n", "\\r\\n\\r\\n\\r\\n", "]", "?", "\\r\\n\\t",
+                                                                "\\r\\n\\t\\t", "\\r\\n\\t\\t\\t", "\\r\\n\\t\\t\\t\\t'", ":", ">",
+                                                                " ", ")", "", "\\r\\n\\t\\t\\t\\t\\t\\t\\t"]:
                     parser.text.remove(parser.text[length - 1])
+                    # parser.text[length - 1] = parser.text[length - 1].replace("", "\\")
                 elif "\r\n" in parser.text[length - 1] or "var" in parser.text[length - 1]:
                     parser.text.remove(parser.text[length - 1])
                 length = length - 1
-
+            # print(parser.text)
             for row in parser.text:
-                if row.decode("gbk").encode("utf8") in ["归属地：", "号码段：", "卡类型：", "运营商："]:
+                if row in ["归属地：", "号码段：", "卡类型：", "运营商："]:
                     sm.append(parser.text[parser.text.index(row) + 1])
         except Exception as e:
-            print(e.message)
+            print(e)
+            if len(phone) == 11:
+                return 200
         if not sm:
             return import_status("ERROR_WRONG_TELPHONE", "FANSTI_ERROR", "ERROR_WRONG_TELPHONE")
         return 200
@@ -153,14 +162,13 @@ class CUsers():
             .format(APP_ID, APP_SECRET_KEY, args["code"], "authorization_code")
         strResult = None
         try:
-            import urllib2
-            req = urllib2.Request(request_url)
-            response = urllib2.urlopen(req)
-            strResult = response.read()
-            response.close()
+            import urllib.request
+            req = urllib.request.urlopen(request_url)
+            strResult = req.read().decode("utf8")
+            req.close()
             make_log("strResult", strResult)
         except Exception as e:
-            print e.message
+            print(e)
             return NETWORK_ERROR
         jsonResult = json.loads(strResult)
         if "openid" not in strResult or "session_key" not in strResult:
@@ -221,6 +229,9 @@ class CUsers():
         if judge_keys(true_data, data.keys()) != 200:
             return judge_keys(true_data, data.keys())
         wechat_login = get_model_return_dict(self.susers.get_wechat_login_by_openid(data["openid"]))
+        user_invate = get_model_return_dict(self.susers.get_id_by_openid(data["openid"]))
+        if user_invate:
+            return import_status("ERROR_MESSAGE_CLICK", "FANSTI_ERROR", "ERROR_HAVE_INVATED")
         if wechat_login:
             return import_status("ERROR_HAVE_INVATED", "FANSTI_ERROR", "ERROR_HAVE_INVATED")
         new_user_invate = add_model("USER_INVATE",
@@ -243,11 +254,11 @@ class CUsers():
         make_log("all_invate", all_invate)
         for row in all_invate:
             a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(row["invate_openid"]))
-            make_log("a_invate", a_invate)
-            if not a_invate:
-                return SYSTEM_ERROR
-            row["name"] = a_invate["name"].decode("gbk").encode("utf8")
-            row["phone"] = a_invate["phone"]
+            if a_invate:
+                make_log("a_invate", a_invate)
+                row["name"] = a_invate["name"]
+                    #.decode("gbk").encode("utf8")
+                row["phone"] = a_invate["phone"]
 
         phone = get_model_return_dict(self.susers.get_wechat_login(args["openid"]))
         make_log("phone", phone)
@@ -255,9 +266,10 @@ class CUsers():
             return SYSTEM_ERROR
         phone = phone["phone"]
 
-        import ConfigParser
-        cf = ConfigParser.ConfigParser()
-        cf.read("../Fansti/fansticonfig.ini")
+        import configparser
+        from Fansti.config.Inforcode import FANSTICONFIG
+        cf = configparser.ConfigParser()
+        cf.read(FANSTICONFIG)
         phone_list = cf.get("phone", "whitelist")
         if str(phone_list) == "[]":
             phone_list = str(phone_list).replace("[", "").replace("]", "")
@@ -273,14 +285,14 @@ class CUsers():
                 for raw in second_all_invate:
                     a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(raw["invate_openid"]))
                     make_log("a_invate", a_invate)
-                    if not a_invate:
-                        return SYSTEM_ERROR
-                    raw["name"] = a_invate["name"].decode("gbk").encode("utf8")
-                    raw["phone"] = a_invate["phone"]
-                    try:
-                        raw["invate_name"] = row["name"].decode("gbk").encode("utf8")
-                    except:
-                        raw["invate_name"] = row["name"]
+                    if a_invate:
+                        raw["name"] = a_invate["name"]
+                        # .decode("gbk").encode("utf8")
+                        raw["phone"] = a_invate["phone"]
+                        try:
+                            raw["invate_name"] = row["name"].decode("gbk").encode("utf8")
+                        except:
+                            raw["invate_name"] = row["name"]
                 row["second_invate"] = second_all_invate
         response = import_status("SUCCESS_GET_INVATE", "OK")
         response["data"] = all_invate
@@ -296,7 +308,7 @@ class CUsers():
         make_log("my_info", my_info)
         for row in my_info.keys():
             if my_info[row]:
-                my_info[row] = my_info[row].decode("gbk").encode("utf8")
+                my_info[row] = my_info[row]
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = my_info
         return response

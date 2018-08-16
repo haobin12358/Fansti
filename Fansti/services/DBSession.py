@@ -12,7 +12,7 @@ def get_session():
         session = db_session()
         status = True
     except Exception as e:
-        print e.message
+        print(e.message)
         session = None
         status = False
     finally:

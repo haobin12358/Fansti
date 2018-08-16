@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 import uuid, datetime, re, xlrd
 from flask import request
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 from Fansti.config.response import SYSTEM_ERROR, PARAMS_MISS
 from Fansti.common.import_status import import_status
 from Fansti.common.Log import make_log, judge_keys
@@ -21,7 +21,7 @@ class MyHTMLParser(HTMLParser):
         self.text = []
 
     def handle_data(self, data):
-        self.text.append(data.decode("gbk").encode("utf8"))
+        self.text.append(data)
 
 
 class MyHTMLParser2(HTMLParser):
@@ -60,19 +60,17 @@ class Cscrapy():
         if not new_info:
             return SYSTEM_ERROR
         try:
-            import urllib2
+            import urllib.request
             url = "https://www.hsbianma.com/Code/{0}.html".format(args["hs_name"])
-            headers = {'Content-Type': 'application/xml'}
-            req = urllib2.Request(url, headers=headers)
-            url_response = urllib2.urlopen(req)
-            strResult = url_response.read()
+            req = urllib.request.urlopen(url)
+            strResult = req.read()
             parser = MyHTMLParser2()
-            parser.feed(strResult)
-            print(parser.text)
+            parser.feed(strResult.decode(encoding="utf-8"))
             length = len(parser.text)
+
             while length >= 0:
-                print(parser.text[length - 1])
-                if parser.text[length - 1].replace(" ", "") in ["\r\n", "\r\n\r\n", "\r\n\r\n\r\n", "]", "?"]:
+                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("b\'", "").replace("\r", "").replace("\n", "").replace("[", "")
+                if parser.text[length - 1] in ["b\'\r\n ", "\\r\\n\\r\\n", "\\r\\n\\r\\n\\r\\n", "]", "?", ""]:
                     parser.text.remove(parser.text[length - 1])
                 length = length - 1
             print(parser.text)
@@ -104,23 +102,24 @@ class Cscrapy():
             ]
             first_key = ["基本信息", "所属章节", "税率信息", "申报要素", "监管条件", "检验检疫类别"]
             for row in parser.text:
+                print(row.encode("utf8"))
                 if row in first_key:
                     key_index = first_key.index(row)
                     row_index = parser.text.index(row)
                     while True:
                         print(self.title.format(""))
-                        print parser.text[row_index + 1]
-                        print parser.text[row_index + 2]
+                        print(parser.text[row_index + 1])
+                        print(parser.text[row_index + 2])
                         print(self.title.format(""))
                         a = {}
-                        if parser.text[row_index + 1] in first_key or parser.text[row_index + 1] == "无" or parser.text[
+                        if parser.text[row_index + 1] in first_key or parser.text[row_index + 1].encode("utf8") == "无" or parser.text[
                             row_index + 1] == "分享" or parser.text[row_index + 1] == "上一条:":
                             break
-                        if parser.text[row_index + 1] == "CIQ代码(13位海关编码)" and parser.text[row_index + 2] == "编码状态":
+                        if parser.text[row_index + 1].encode("utf8") == "CIQ代码(13位海关编码)" and parser.text[row_index + 2].encode("utf8") == "编码状态":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
                             a["value"] = ""
-                        elif parser.text[row_index + 1] == "暂定税率" and parser.text[row_index + 2] == "进口普通税率":
+                        elif parser.text[row_index + 1].encode("utf8") == "暂定税率" and parser.text[row_index + 2].encode("utf8") == "进口普通税率":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
                             a["value"] = ""
@@ -134,7 +133,7 @@ class Cscrapy():
             response["data"] = data
             return response
         except Exception as e:
-            print e.message
+            print(e)
             return SYSTEM_ERROR
 
     def get_cas(self):
@@ -157,18 +156,18 @@ class Cscrapy():
                                  })
             if not new_info:
                 return SYSTEM_ERROR
-            import urllib2
+            import urllib.request
             url = "http://www.ichemistry.cn/chemistry/{0}.htm".format(args["cas_name"])
             headers = {'Content-Type': 'application/xml'}
-            req = urllib2.Request(url, headers=headers)
-            url_response = urllib2.urlopen(req)
-            strResult = url_response.read()
+            req = urllib.request.urlopen(url)
+            strResult = req.read()
             parser = MyHTMLParser()
-            parser.feed(strResult)
+            parser.feed(strResult.decode('gbk','ignore'))
             length = len(parser.text)
             while length >= 0:
+                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("\t", "").replace("\r","").replace("\n", "")
                 if parser.text[length - 1].replace(" ", "") in ["\r\n", "\r\n\r\n", "\r\n\r\n\r\n", "]", "?", "\r\n\t",
-                                                                "\r\n\t\t", "\r\n\t\t\t", "\r\n\t\t\t\t'", ":"]:
+                                                                "\r\n\t\t", "\r\n\t\t\t", "\r\n\t\t\t\t'", ":", ""]:
                     parser.text.remove(parser.text[length - 1])
                 elif "\r\n" in parser.text[length - 1] or "var" in parser.text[length - 1]:
                     parser.text.remove(parser.text[length - 1])
@@ -239,7 +238,7 @@ class Cscrapy():
             response["data"] = data
             return response
         except Exception as e:
-            print e.message
+            print(e)
             return SYSTEM_ERROR
 
     def get_jd(self):
@@ -363,7 +362,7 @@ class Cscrapy():
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
-        title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
+        title_line = [title.encode("utf8") if False else title for title in title_line]
         make_log("title_line", title_line)
         keydict = {k: v for v, k in enumerate(title_line)}
         make_log("keydict", keydict)
@@ -418,9 +417,6 @@ class Cscrapy():
                 row_dict["remark"] = remark
 
             for key in row_dict:
-                # 空格处理
-                if isinstance(row_dict.get(key), unicode):
-                    row_dict[key] = re.sub(r"[\n\t\s]", "", row_dict.get(key))
 
                 # 正则校验
                 try:
@@ -432,13 +428,10 @@ class Cscrapy():
                         }
                         return response
                 except Exception as e:
-                    print(e.message)
+                    print(e)
                     print(AIRLINE_EXCEL_ROLE.get(key))
                     print(key)
-                    print row_dict.get(key)
-                # 字符编码处理
-                if isinstance(row_dict.get(key), unicode):
-                    row_dict[key] = row_dict.get(key).encode("utf8")
+                    print(row_dict.get(key))
 
             make_log("row_dict", row_dict)
             # eta etd date 修改

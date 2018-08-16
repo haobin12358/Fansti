@@ -32,7 +32,7 @@ class CReds():
             make_log("red_abo", red_abo)
             if not red_abo:
                 return SYSTEM_ERROR
-            red["name"] = red_abo["name"].decode("gbk").encode("utf8")
+            red["name"] = red_abo["name"]
             red["price"] = red_abo["price"]
             #red["createtime"] = red["createtime"].strftime("%Y-%m-%d")
             response["data"]["red_list"].append(red_abo)
@@ -47,7 +47,7 @@ class CReds():
             red["createtime"] = red["createtime"].strftime("%Y-%m-%d")
             if not a_red:
                 return SYSTEM_ERROR
-            red["name"] = a_red["name"].decode("gbk").encode("utf8")
+            red["name"] = a_red["name"]
             red["price"] = a_red["price"]
             all_price = all_price + float(a_red["price"])
 

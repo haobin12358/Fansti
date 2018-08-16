@@ -69,3 +69,7 @@ class SUsers(SBase):
                                   WECHAT_LOGIN.user_introduction, WECHAT_LOGIN.phone, WECHAT_LOGIN.qq,
                                   WECHAT_LOGIN.wechat, WECHAT_LOGIN.email)\
             .filter_by(openid=openid).first()
+
+    @close_session
+    def get_id_by_openid(self, invate_openid):
+        return self.session.query(USER_INVATE.id).filter_by(invate_openid=invate_openid).first()
