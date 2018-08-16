@@ -100,7 +100,7 @@ class CUsers():
         id = get_model_return_dict(self.susers.get_wechat_login_by_phone(phone))
         sm = []
         make_log("id", id)
-        if "id" in id:
+        if "id" in id and not id["login_name"]:
             return import_status("ERROR_SOMEONE_BINDING", "FANSTI_ERROR", "ERROR_SOMEONE_BINDING")
         try:
             import urllib.request
