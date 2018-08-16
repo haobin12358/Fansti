@@ -20,8 +20,8 @@ AIRLINE_DB_TO_EXCEL = {
 
 AIRLINE_EXCEL_ROLE = {
     "airline": r"^[A-Z0-9-/]+$",
-    "airname": ur"^[\u4e00-\u9fa5]+$",
-    "aircompany": ur"^[\u4e00-\u9fa5]+$",
+    "airname": r"^[\u4e00-\u9fa5]+$",
+    "aircompany": r"^[\u4e00-\u9fa5]+$",
     "flight": r"^[A-Z0-9]+$",
     "depa": r"^[A-Z]+$",
     "dest": r"^[A-Z/-]+$",

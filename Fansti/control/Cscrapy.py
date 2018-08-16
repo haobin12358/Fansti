@@ -362,7 +362,7 @@ class Cscrapy():
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
-        title_line = [title.encode("utf8") if False else title for title in title_line]
+        # title_line = [title.encode("utf8") if False else title for title in title_line]
         make_log("title_line", title_line)
         keydict = {k: v for v, k in enumerate(title_line)}
         make_log("keydict", keydict)
@@ -417,6 +417,9 @@ class Cscrapy():
                 row_dict["remark"] = remark
 
             for key in row_dict:
+                # 空格处理
+                if isinstance(row_dict.get(key), str):
+                    row_dict[key] = re.sub(r"[\n\t\s]", "", row_dict.get(key))
 
                 # 正则校验
                 try:
@@ -574,7 +577,7 @@ class Cscrapy():
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
-        title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
+        # title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
         make_log("title_line", title_line)
         from Fansti.config.staticconfig import DGR_DB_TO_EXCEL, CONTAINER_KEY,\
             DGR_KEY, DGR_LEVEL_KEY, DGR_LEVEL_DB_TO_EXCEL
@@ -624,7 +627,7 @@ class Cscrapy():
                 # 内容格式编码处理以及去空格处理+ TODO 正则校验
                 for key in dgr_model_dict:
                     # 空格处理
-                    if isinstance(dgr_model_dict.get(key), unicode):
+                    if isinstance(dgr_model_dict.get(key), str):
                         dgr_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_model_dict.get(key))
 
                     # # 正则校验
@@ -643,8 +646,8 @@ class Cscrapy():
                     #     print(key)
                     #     print row_dict.get(key)
                     # 字符编码处理
-                    if isinstance(dgr_model_dict.get(key), unicode):
-                        dgr_model_dict[key] = dgr_model_dict.get(key).encode("utf8")
+                    # if isinstance(dgr_model_dict.get(key), unicode):
+                    #     dgr_model_dict[key] = dgr_model_dict.get(key).encode("utf8")
 
                 make_log("dgr_model_dict", dgr_model_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR", **dgr_model_dict)
@@ -668,7 +671,7 @@ class Cscrapy():
                 # 内容格式编码处理以及去空格处理+ TODO 正则校验
                 for key in dgr_level_model_dict:
                     # 空格处理
-                    if isinstance(dgr_level_model_dict.get(key), unicode):
+                    if isinstance(dgr_level_model_dict.get(key), str):
                         dgr_level_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_level_model_dict.get(key))
 
                     # # 正则校验
@@ -687,8 +690,8 @@ class Cscrapy():
                     #     print(key)
                     #     print row_dict.get(key)
                     # 字符编码处理
-                    if isinstance(dgr_level_model_dict.get(key), unicode):
-                        dgr_level_model_dict[key] = dgr_level_model_dict.get(key).encode("utf8")
+                    # if isinstance(dgr_level_model_dict.get(key), unicode):
+                    #     dgr_level_model_dict[key] = dgr_level_model_dict.get(key).encode("utf8")
 
                 make_log("dgr_level_model_dict", dgr_level_model_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR_LEVEL", **dgr_level_model_dict)
@@ -706,7 +709,7 @@ class Cscrapy():
                 # 内容格式编码处理以及去空格处理+ TODO 正则校验
                 for key in airliner_container_dict:
                     # 空格处理
-                    if isinstance(airliner_container_dict.get(key), unicode):
+                    if isinstance(airliner_container_dict.get(key), str):
                         airliner_container_dict[key] = re.sub(r"[\n\t\s]", "", airliner_container_dict.get(key))
 
                     # # 正则校验
@@ -725,8 +728,8 @@ class Cscrapy():
                     #     print(key)
                     #     print row_dict.get(key)
                     # 字符编码处理
-                    if isinstance(airliner_container_dict.get(key), unicode):
-                        airliner_container_dict[key] = airliner_container_dict.get(key).encode("utf8")
+                    # if isinstance(airliner_container_dict.get(key), unicode):
+                    #     airliner_container_dict[key] = airliner_container_dict.get(key).encode("utf8")
                 make_log("airliner_container_dict", airliner_container_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airliner_container_dict)
 
@@ -742,7 +745,7 @@ class Cscrapy():
                 # 内容格式编码处理以及去空格处理+ TODO 正则校验
                 for key in airfreighter_container_dict:
                     # 空格处理
-                    if isinstance(airfreighter_container_dict.get(key), unicode):
+                    if isinstance(airfreighter_container_dict.get(key), str):
                         airfreighter_container_dict[key] = re.sub(r"[\n\t\s]", "", airfreighter_container_dict.get(key))
 
                     # # 正则校验
@@ -761,8 +764,8 @@ class Cscrapy():
                     #     print(key)
                     #     print row_dict.get(key)
                     # 字符编码处理
-                    if isinstance(airfreighter_container_dict.get(key), unicode):
-                        airfreighter_container_dict[key] = airfreighter_container_dict.get(key).encode("utf8")
+                    # if isinstance(airfreighter_container_dict.get(key), unicode):
+                    #     airfreighter_container_dict[key] = airfreighter_container_dict.get(key).encode("utf8")
                 make_log("airfreighter_container_dict", airfreighter_container_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airfreighter_container_dict)
 
