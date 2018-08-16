@@ -37,7 +37,7 @@ class SUsers(SBase):
 
     @close_session
     def get_wechat_login_by_phone(self, phone):
-        return self.session.query(WECHAT_LOGIN.id).filter_by(phone=phone).first()
+        return self.session.query(WECHAT_LOGIN.id, WECHAT_LOGIN.login_name).filter_by(phone=phone).first()
 
     @close_session
     def get_user_message(self, page_size, page_num, time_start=None, time_end=None):
