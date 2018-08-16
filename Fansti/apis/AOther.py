@@ -9,7 +9,7 @@ from Fansti.config.response import APIS_WRONG
 from Fansti.common.import_status import import_status
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
-
+from Fansti.config.Inforcode import FANSTICONFIG
 class FSother(Resource):
     def __init__(self):
         self.title = "=========={0}=========="
@@ -26,8 +26,11 @@ class FSother(Resource):
             true_params = ["login_name"]
             if judge_keys(true_params, args.keys()) != 200:
                 return judge_keys(true_params, args.keys())
-            if args["login_name"] != "":
+
+            if args["login_name"] not in ["", None]:
                 accounts = get_model_return_dict(self.suser.get_compnay_by_loginname(args["login_name"]))
+                if not accounts:
+                    return import_status("ERROR_GET_CUSTOM", "FANSTI_ERROR", "ERROR_GET_CUSTOM")
                 make_log("accounts", accounts)
                 xsr = get_model_return_dict(self.sgoods.get_xsr_by_user(accounts["compnay"]))["xsr"]
                 make_log("xsr", xsr)
@@ -37,8 +40,10 @@ class FSother(Resource):
                 data = user_abo
             else:
                 cf = configparser.ConfigParser()
-                cf.read("../Fansti/fansticonfig.ini")
+                cf.read(FANSTICONFIG)
+                make_log("selector", cf.sections())
                 name = cf.get("custom", "name")
+
                 qq = cf.get("custom", "qq")
                 telphone = cf.get("custom", "telphone")
                 email = cf.get("custom", "email")
@@ -54,7 +59,7 @@ class FSother(Resource):
 
         if other == "get_phone":
             cf = configparser.ConfigParser()
-            cf.read("../Fansti/fansticonfig.ini")
+            cf.read(FANSTICONFIG)
             phone_list = cf.get("phone", "whitelist")
             if str(phone_list) == "[]":
                 phone_list = str(phone_list).replace("[", "").replace("]", "")
@@ -78,12 +83,12 @@ class FSother(Resource):
             if judge_keys(true_params, data.keys()) != 200:
                 return judge_keys(true_params, data.keys())
             cf = configparser.ConfigParser()
-            cf.read("../Fansti/fansticonfig.ini")
+            cf.read(FANSTICONFIG)
             cf.set("custom", "name", data["name"])
             cf.set("custom", "qq", data["qq"])
             cf.set("custom", "telphone", data["telphone"])
             cf.set("custom", "email", data["email"])
-            cf.write(open("../Fansti/fansticonfig.ini", "w"))
+            cf.write(open(FANSTICONFIG, "w"))
 
             return import_status("SUCCESS_UPDATE_CUSTOM", "OK")
 
@@ -93,7 +98,7 @@ class FSother(Resource):
             if judge_keys(true_params, data.keys()) != 200:
                 return judge_keys(true_params, data.keys())
             cf = configparser.ConfigParser()
-            cf.read("../Fansti/fansticonfig.ini")
+            cf.read(FANSTICONFIG)
             phone_list = cf.get("phone", "whitelist")
             for row in data["phone_list"]:
                 if data["control"] == "delete":
@@ -119,7 +124,7 @@ class FSother(Resource):
                         phone_list.append(row)
             print(phone_list)
             cf.set("phone", "whitelist", phone_list)
-            cf.write(open("../Fansti/fansticonfig.ini", "w"))
+            cf.write(open(FANSTICONFIG, "w"))
 
             return import_status("SUCCESS_UPDATE_PHONE", "OK")
         return APIS_WRONG

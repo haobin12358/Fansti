@@ -267,8 +267,9 @@ class CUsers():
         phone = phone["phone"]
 
         import configparser
+        from Fansti.config.Inforcode import FANSTICONFIG
         cf = configparser.ConfigParser()
-        cf.read("../Fansti/fansticonfig.ini")
+        cf.read(FANSTICONFIG)
         phone_list = cf.get("phone", "whitelist")
         if str(phone_list) == "[]":
             phone_list = str(phone_list).replace("[", "").replace("]", "")

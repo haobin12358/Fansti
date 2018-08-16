@@ -23,3 +23,6 @@ NETWORK_IP = "123.207.97.185"
 LinuxTMP = "/tmp"
 WindowsTMP = "D:\\template"
 AIRLINEDIR = "airline"
+
+# config路径
+FANSTICONFIG = "../Fansti/Fansti/fansticonfig.ini"

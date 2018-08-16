@@ -11,6 +11,7 @@ ERROR_NONE_PERMISSION = "用户无权限"
 SUCCESS_GET_INFO = "获取信息成功"
 ERROR_FIND_JD = "未查到结果"
 SUCCESS_GET_CUSTOM = "获取客服成功"
+ERROR_GET_CUSTOM = '客服名有误'
 SUCCESS_UPDATE_CUSTOM = "修改客服信息成功"
 SUCCESS_GET_RED = "获取红包信息成功"
 SUCCESS_MAKE_MESSAGE = "留言成功"
