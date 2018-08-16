@@ -169,7 +169,7 @@
         <view class="line-right">
           <view class="item-label">
             <image class="label-img" src="../images/number.png"></image>
-            <text space="emsp"> 件数:</text>
+            <text space="emsp">件 数:</text>
           </view>
           <view class="item-value">
             {{item.jsbzcc || '暂无'}}

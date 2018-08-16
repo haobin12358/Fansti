@@ -173,7 +173,7 @@
         <view class="line-left">
           <view class="item-label">
             <image class="label-img" src="../../images/number.png"></image>
-            <text space="emsp"> 件数:</text>
+            <text space="emsp">件 数:</text>
           </view>
           <view class="item-value">
             {{detail.quantity || '暂无'}}
@@ -182,7 +182,7 @@
         <view class="line-right ">
           <view class="item-label">
             <image class="label-img" src="../../images/weight.png"></image>
-            <text space="emsp"> 重量:</text>
+            <text space="emsp">重 量:</text>
           </view>
           <view class="item-value">
             {{detail.weight || '暂无'}}
@@ -193,7 +193,7 @@
         <view class="line-left line-section-rich">
           <view class="item-label">
             <image class="label-img" src="../../images/description.png"></image>
-            <text space="emsp"> 品名:</text>
+            <text space="emsp">品 名:</text>
           </view>
           <view class="item-value">
             {{detail.enhwpm || '暂无'}}

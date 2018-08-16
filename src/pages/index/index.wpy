@@ -17,7 +17,7 @@
 </style>
 <template>
   <view class="container">
-    <swiper class="swiper" indicator-dots="true" circular="true">
+    <swiper class="swiper" indicator-dots="true" circular="true" autoplay="true">
       <swiper-item>
         <image src="../../images/test_swiper.png"></image>
       </swiper-item>
@@ -41,8 +41,7 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特',
-      onReachBottomDistance: 40
+      navigationBarTitleText: '泛思特'
     }
 
     mixins=[BindingMixin];

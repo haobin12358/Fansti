@@ -343,7 +343,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 
@@ -361,7 +361,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 
@@ -378,7 +378,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 
@@ -395,7 +395,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 
@@ -412,7 +412,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 
@@ -432,7 +432,7 @@
         console.log(res.data.data);
         return res.data.data;
       }else{
-        tip.alert(res.data.message)
+        tip.alert('未查到结果');
       }
     }
 

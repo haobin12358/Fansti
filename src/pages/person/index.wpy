@@ -369,7 +369,7 @@
       tapCallService() {
         let phoneNumber = this.serviceInfo.telephone+'';
 
-        wx.showModal({
+        wepy.showModal({
           title: `联系客服`,
           content: `拨打${phoneNumber}(客服电话)?`
         }).then(
