@@ -73,3 +73,7 @@ class SUsers(SBase):
     @close_session
     def get_id_by_openid(self, invate_openid):
         return self.session.query(USER_INVATE.id).filter_by(invate_openid=invate_openid).first()
+
+    @close_session
+    def update_wechat_login_by_phone(self, phone, wl):
+        return self.session.query(WECHAT_LOGIN).filter(WECHAT_LOGIN.phone == phone).update(wl)

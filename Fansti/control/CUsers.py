@@ -32,67 +32,103 @@ class CUsers():
         make_log("data", data)
         true_data = ["phone", "openid"]
         null_data = ["login_name", "login_password", "name", "usex", "city", "province"]
+        wl_key = ['status', 'openid', 'province', 'name', 'user_introduction', 'city',
+                  'work_goodat', 'qq', 'login_name', 'work_year', 'phone', 'email',
+                  'wechat', 'user_name', 'id', 'usex']
+        wl = {k: data.get(k) for k in wl_key if k in data}
+        import configparser
+        from Fansti.config.Inforcode import FANSTICONFIG
+        cfg = configparser.ConfigParser()
+        cfg.read(FANSTICONFIG)
+
+        phone_list = eval(cfg.get("phone", "whitelist"))
+        if str(data.get("phone")) in phone_list:
+            wechat_login_tmp = get_model_return_dict(self.susers.get_wechat_login_by_phone(data.get("phone")))
+            if not wechat_login_tmp:
+                if "login_name" in data and "login_password" in data:
+                    check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
+                    if check_result:
+                        return check_result
+
+                self.susers.add_model("WECHAT_LOGIN", **{
+                    "id": str(uuid.uuid1()),
+                    "openid": data.get("openid", ""),
+                    "login_name": data.get("login_name", ""),
+                    "phone": data.get("phone"),
+                    "status": data.get("status", "1"),
+                    "name": data.get("name", ""),
+                    "usex": data.get("usex", ""),
+                    "city": data.get("city", ""),
+                    "province": data.get("province", ""),
+                    "user_name": data.get("user_name", ""),
+                    "work_year": data.get("work_year", ""),
+                    "work_goodat": data.get("work_goodat", ""),
+                    "user_introduction": data.get("user_introduction", ""),
+                    "qq": data.get("qq", ""),
+                    "wechat": data.get("wechat", ""),
+                    "email": data.get("email", ""),
+                })
+            else:
+                if "login_name" in data and "login_password" in data:
+                    check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
+                    if check_result:
+                        return check_result
+
+                update_result = self.susers.update_wechat_login_by_phone(data.get("phone"), wl)
+                if not update_result:
+                    return import_status("ERROR_UPDATE_DATA", "FANSTI_ERROR", "ERROR_UPDATE_DATA")
+            return import_status("SUCCESS_USER_BINDING", "OK")
+
         if judge_keys(true_data, data.keys(), null_data) != 200:
             return judge_keys(true_data, data.keys(), null_data)
         if self.get_wechat_phone(data["phone"]) != 200:
             return self.get_wechat_phone(data["phone"])
+
         if "login_name" in data and "login_password" in data:
-            # TODO 判断是否存在当前月红包，存在的话
-            import hashlib
-            login_password = hashlib.md5()
-            login_password.update(data["login_password"].encode("utf8"))
-            password = login_password.hexdigest()
-            name_password_phone = get_model_return_dict(self.susers.get_name_password_phone(data["login_name"]))
-            make_log("name_password_phone", name_password_phone)
-            if not name_password_phone:
-                return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
-            if password != name_password_phone["login_password"]:
-                return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
-            else:
-                wechat_login = get_model_return_dict(self.susers.get_wechat_login(data["openid"]))
-                make_log("wechat_login", wechat_login)
-                if "login_name" not in data:
-                    data["login_name"] = None
-                if "name" not in data:
-                    data["name"] = None
-                if "usex" not in data:
-                    data["usex"] = None
-                if "city" not in data:
-                    data["city"] = None
-                if "province" not in data:
-                    data["province"] = None
-                add_wechat_login = add_model("WECHAT_LOGIN",
-                                         **{
-                                             "id": str(uuid.uuid1()),
-                                             "login_name": data["login_name"],
-                                             "openid": data["openid"],
-                                             "status": "1",
-                                             "phone": data["phone"],
-                                             "name": data["name"],
-                                             "usex": data["usex"],
-                                             "city": data["city"],
-                                             "province": data["province"]
-                                         })
-                make_log("add_wechat_login", add_wechat_login)
-                if not add_wechat_login:
-                    return SYSTEM_ERROR
-        else:
-            wechat_login = get_model_return_dict(self.susers.get_wechat_login(data["openid"]))
-            make_log("wechat_login", wechat_login)
-            add_wechat_login = add_model("WECHAT_LOGIN",
-                                         **{
-                                             "id": str(uuid.uuid1()),
-                                             "openid": data["openid"],
-                                             "status": "1",
-                                             "phone": data["phone"],
-                                              "name": data["name"],
-                                              "usex": data["usex"],
-                                              "city": data["city"],
-                                              "province": data["province"]
-                                         })
-            make_log("add_wechat_login", add_wechat_login)
-            if not add_wechat_login:
-                return SYSTEM_ERROR
+            check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
+            if check_result:
+                return check_result
+
+        if "login_name" not in data:
+            data["login_name"] = None
+        if "name" not in data:
+            data["name"] = None
+        if "usex" not in data:
+            data["usex"] = None
+        if "city" not in data:
+            data["city"] = None
+        if "province" not in data:
+            data["province"] = None
+        add_wechat_login = add_model("WECHAT_LOGIN",
+                                 **{
+                                     "id": str(uuid.uuid1()),
+                                     "login_name": data["login_name"],
+                                     "openid": data["openid"],
+                                     "status": "1",
+                                     "phone": data["phone"],
+                                     "name": data["name"],
+                                     "usex": data["usex"],
+                                     "city": data["city"],
+                                     "province": data["province"]
+                                 })
+        make_log("add_wechat_login", add_wechat_login)
+        if not add_wechat_login:
+            return SYSTEM_ERROR
+        # else:
+        #     add_wechat_login = add_model("WECHAT_LOGIN",
+        #                                  **{
+        #                                      "id": str(uuid.uuid1()),
+        #                                      "openid": data["openid"],
+        #                                      "status": "1",
+        #                                      "phone": data["phone"],
+        #                                       "name": data["name"],
+        #                                       "usex": data["usex"],
+        #                                       "city": data["city"],
+        #                                       "province": data["province"]
+        #                                  })
+        #     make_log("add_wechat_login", add_wechat_login)
+        #     if not add_wechat_login:
+        #         return SYSTEM_ERROR
 
         return import_status("SUCCESS_USER_BINDING", "OK")
 
@@ -102,7 +138,6 @@ class CUsers():
         if "id" in id and not id["login_name"]:
             return import_status("ERROR_SOMEONE_BINDING", "FANSTI_ERROR", "ERROR_SOMEONE_BINDING")
         return 200
-
 
     def get_binding(self):
         args = request.args.to_dict()
@@ -320,3 +355,17 @@ class CUsers():
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         return response
 
+    def check_name_password(self, name, password):
+        # TODO 判断是否存在当前月红包，存在的话
+        import hashlib
+        login_password = hashlib.md5()
+        login_password.update(password.encode("utf8"))
+        password = login_password.hexdigest()
+        name_password_phone = get_model_return_dict(self.susers.get_name_password_phone(name))
+        make_log("name_password_phone", name_password_phone)
+        if not name_password_phone:
+            return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
+        if password != name_password_phone["login_password"]:
+            return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
+        else:
+            return False
