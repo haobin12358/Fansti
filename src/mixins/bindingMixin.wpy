@@ -53,7 +53,7 @@
 
         return 'over';
       } else {
-        tip.error(res2.data.message);
+        // tip.error(res2.data.message);
       }
 
     }

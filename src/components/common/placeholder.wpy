@@ -32,7 +32,7 @@
         去绑定,<navigator url="/pages/person/binding"><text>绑定账户</text></navigator>后即可查看
       </block>
       <block wx:if="{{type == 'newUser'}}">
-        前往<navigator open-type="switchTab" url="/pages/person/index"><text>个人页</text></navigator>去联系客服,成为我们的合作伙伴!
+        尚未与泛思特进行货物合作
       </block>
 
     </view>
@@ -43,22 +43,22 @@
     import wepy from 'wepy'
 
     export default class Placeholder extends wepy.component {
-        props = {
-          type: {
-              type: String,
-            default: 'binding'
-          }
+      props = {
+        type: {
+          type: String,
+          default: 'binding'
         }
+      };
 
-        data = {}
+      data = {};
 
-        computed = {}
+      computed = {};
 
-        methods = {}
+      methods = {};
 
-        events = {}
+      events = {};
 
-        onLoad() {
+      onLoad() {
 
         }
     }

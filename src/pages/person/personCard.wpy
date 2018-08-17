@@ -197,7 +197,7 @@
               <image class="detail-label" src="../../images/circle_full.png"></image>
 
               <view class="detail-text">
-                电话: {{cardInfo.phone}}
+                电话: {{cardInfo.phone || '(绑定后显示)'}}
               </view>
             </view>
             <view class="detail-item">

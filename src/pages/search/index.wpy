@@ -110,7 +110,7 @@
 </style>
 
 <template>
-  <view wx:if="{{isBinding}}" class="container">
+  <view  class="container">
     <view class="search-form">
       <view class="form-item">
         <view class="form-item-label">
@@ -184,7 +184,6 @@
       <image src="../../images/paper_plane.png"></image>
     </view>
   </view>
-  <placeholder wx:else></placeholder>
 </template>
 
 <script>

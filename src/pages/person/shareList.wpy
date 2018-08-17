@@ -108,7 +108,7 @@
         <text>查看更多</text> <image src="../../images/triangle_down.png"></image>
       </view>
       <view wx:else style="text-align: center">
-        <text>暂无数据</text>
+        <text>没有更多</text>
       </view>
     </view>
   </view>

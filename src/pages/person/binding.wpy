@@ -106,20 +106,22 @@
               <input type="text" name="username" placeholder="请输入用户名(选填)"/>
             </view>
           </view>
-          <view class="form-item">
-            <view class="form-item-hd">
-              <image src="../../images/phone.png"></image>
-            </view>
-            <view class="form-item-bd">
-              <input type="text" name="phone" type="number" placeholder="请输入手机号码"/>
-            </view>
-          </view>
+
           <view class="form-item">
             <view class="form-item-hd">
               <image src="../../images/lock.png"></image>
             </view>
             <view class="form-item-bd">
               <input type="text" name="password" password="true" placeholder="请输入密码(选填)"/>
+            </view>
+          </view>
+
+          <view class="form-item">
+            <view class="form-item-hd">
+              <image src="../../images/phone.png"></image>
+            </view>
+            <view class="form-item-bd">
+              <input type="text" name="phone" type="number" placeholder="请输入手机号码（绑定本微信的手机号）"/>
             </view>
           </view>
         </view>

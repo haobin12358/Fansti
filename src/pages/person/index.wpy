@@ -165,7 +165,6 @@
 </style>
 
 <template>
-  <block wx:if="{{isBinding}}">
     <view  class="container">
       <view class="container-hd">
         <view  class="overview">
@@ -193,7 +192,7 @@
 
           </view>
 
-          <view wx:if="{{isNewUser}}" class="newuser-shadow">
+          <view wx:if="{{!isOldUser}}" class="newuser-shadow">
             <image class="line1" src="../../images/paper_plane.png"></image>
             <view class="line2">
               与客服联系如何开启红包
@@ -209,16 +208,16 @@
           <view class="bd-section-content bd-section-content-info">
             <view class="service-info">
               <view class="service-info-line">
-                客服名称：{{serviceInfo.user_name}}
+                客服名称：{{serviceInfo.user_name || '暂无'}}
               </view>
               <view class="service-info-line">
-                客服 QQ：{{serviceInfo.qq}}
+                客服 QQ：{{serviceInfo.qq || '暂无'}}
               </view>
               <view class="service-info-line">
-                客服电话：{{serviceInfo.telephone}}
+                客服电话：{{serviceInfo.telephone || '暂无'}}
               </view>
               <view class="service-info-line">
-                客服邮箱：{{serviceInfo.email}}
+                客服邮箱：{{serviceInfo.email || '暂无'}}
               </view>
 
             </view>
@@ -241,7 +240,7 @@
         <view class="ft-btns">
           <button @tap="goPersonCard">分享服务号</button>
           <button @tap="tapCallService">电话沟通</button>
-          <button @tap="bindingAgain">重新绑定</button>
+          <button @tap="bindingAgain">{{isBinding ? '重新绑定' : '开始绑定'}} </button>
         </view>
         <view class="ft-share-list">
           <image src="../../images/person_share_list.png"></image>
@@ -252,8 +251,6 @@
     <waitGetPacket :show.sync="showWGP" :list.sync="redList" @receive.user="receiveRed"></waitGetPacket>
     <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
     <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
-  </block>
-  <placeholder wx:else></placeholder>
 </template>
 
 <script>
@@ -336,11 +333,16 @@
       },
 
       submitMsg() {
-        if (this.msg != '') {
-          this.makeUserMessage(this.msg);
-        } else {
-          tip.alert('留言不能为空');
+        if(this.isBinding){
+          if (this.msg != '') {
+            this.makeUserMessage(this.msg);
+          } else {
+            tip.alert('留言不能为空');
+          }
+        }else{
+          tip.alert('请绑定后操作');
         }
+
       },
 
       bindingAgain() {
@@ -428,8 +430,9 @@
     }
 
     init(){
+      this.getCustom();
+
       if(this.isBinding){
-        this.getCustom();
 
         if(this.isOldUser){
           this.getAllRed();

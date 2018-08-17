@@ -85,7 +85,7 @@
     <view class="popup-content" style="height: {{cardHeight}}px;">
       <scroll-view scroll-y class="wait-get-packet">
         <view class="container-title">
-          待领红包（{{can_receive_num}}）
+          待领红包（{{list.length}}）
         </view>
         <view class="container-content">
           <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item">

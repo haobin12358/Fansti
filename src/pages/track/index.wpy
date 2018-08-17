@@ -50,10 +50,9 @@
     <load-more :type.sync="loadingType"></load-more>
   </block>
   <block wx:elif="{{isNewUser}}">
-    <placeholder :type="type"></placeholder>
+    <placeholder1 :type="type"></placeholder1>
   </block>
-
-  <placeholder wx:else></placeholder>
+  <placeholder2 wx:else></placeholder2>
 </template>
 
 <script>
@@ -75,7 +74,8 @@
     mixins = [BindingMixin];
 
     components = {
-      placeholder: Placeholder,
+      placeholder1: Placeholder,
+      placeholder2: Placeholder,
       'freight-consignment-list': FreightConsignmentList,
       'load-more': LoadMore,
     }
@@ -170,6 +170,7 @@
         console.log('新老用户', this.isOldUser, this.isNewUser);
       }
 
+      console.log(this.isOldUser, this.isNewUser);
       if(this.isOldUser){
         this.getGoodsList();
       }
