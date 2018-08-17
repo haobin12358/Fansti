@@ -98,40 +98,9 @@ class CUsers():
 
     def get_wechat_phone(self, phone):
         id = get_model_return_dict(self.susers.get_wechat_login_by_phone(phone))
-        sm = []
         make_log("id", id)
         if "id" in id and not id["login_name"]:
             return import_status("ERROR_SOMEONE_BINDING", "FANSTI_ERROR", "ERROR_SOMEONE_BINDING")
-        try:
-            import urllib.request
-            url = "https://shouji.supfree.net/fish.asp?cat={0}".format(phone)
-            headers = {'Content-Type': 'application/xhtml+xml'}
-            req = urllib.request.urlopen(url)
-            strResult = req.read()
-            parser = MyHTMLParser()
-            parser.feed(strResult.decode('gbk','ignore'))
-            length = len(parser.text)
-            while length >= 0:
-                # parser.text[length - 1] = parser.text[length - 1].encode("utf8")
-                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("\t", "").replace("\r", "").replace("\n", "")
-                if parser.text[length - 1].replace(" ", "") in ["\\r\\n", "\\r\\n\\r\\n", "\\r\\n\\r\\n\\r\\n", "]", "?", "\\r\\n\\t",
-                                                                "\\r\\n\\t\\t", "\\r\\n\\t\\t\\t", "\\r\\n\\t\\t\\t\\t'", ":", ">",
-                                                                " ", ")", "", "\\r\\n\\t\\t\\t\\t\\t\\t\\t"]:
-                    parser.text.remove(parser.text[length - 1])
-                    # parser.text[length - 1] = parser.text[length - 1].replace("", "\\")
-                elif "\r\n" in parser.text[length - 1] or "var" in parser.text[length - 1]:
-                    parser.text.remove(parser.text[length - 1])
-                length = length - 1
-            # print(parser.text)
-            for row in parser.text:
-                if row in ["归属地：", "号码段：", "卡类型：", "运营商："]:
-                    sm.append(parser.text[parser.text.index(row) + 1])
-        except Exception as e:
-            print(e)
-            if len(phone) == 11:
-                return 200
-        if not sm:
-            return import_status("ERROR_WRONG_TELPHONE", "FANSTI_ERROR", "ERROR_WRONG_TELPHONE")
         return 200
 
 
