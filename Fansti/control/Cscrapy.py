@@ -819,7 +819,7 @@ class Cscrapy():
         # title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
         from Fansti.config.staticconfig import TACT_DB_TO_EXCEL, TACT_KEYS
         print("title_line", title_line)
-        tact_dict = {k: v for v, k in enumerate(title_line) if k in TACT_DB_TO_EXCEL}
+        tact_dict = {k: v for v, k in enumerate(title_line) if k in TACT_KEYS}
         # check title key
         for key in TACT_KEYS:
             if key not in title_line:
@@ -829,24 +829,27 @@ class Cscrapy():
                     "key": key,
                     "reason": "the title is not right need {0} necessary".format(key)
                 }
-                print response
+                return response
 
         tact_key_index_to_db = {key: tact_dict.get(TACT_DB_TO_EXCEL.get(key)) for key in TACT_DB_TO_EXCEL}
 
         for row in range(1, sheet1.nrows):
             row_data = sheet1.row_values(row)
             row_dict = {}
-            for key in TACT_KEYS:
+            for key in tact_key_index_to_db:
                 row_dict[key] = row_data[tact_key_index_to_db.get(key)]
 
             for key in row_dict:
                 if isinstance(row_dict.get(key), str):
-                    row_dict[key] = re.sub(r"[\t\s]", "", row_dict.get(key))
+                    row_dict[key] = re.sub(r"[\x20\t\f]", "", row_dict.get(key))
+                    row_dict[key] = re.sub(r"[\n]", "||chr(13)||chr(10)||", row_dict.get(key))
                 # TODO 增加正则校验
 
             three_code = row_dict.get("three_code")
             tact_tmp = self.sscrapy.get_tact_by_three_code(three_code)
             if tact_tmp:
+                print("three_code")
+                print(three_code)
                 update_result = self.sscrapy.update_tact(tact_tmp.id, row_dict)
                 if not update_result:
                     response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
@@ -857,4 +860,4 @@ class Cscrapy():
                 row_dict['id'] = tactid
                 self.sscrapy.add_model("AIR_HWYS_TACT", **row_dict)
 
-            return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+        return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
