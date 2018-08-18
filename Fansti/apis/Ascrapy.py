@@ -34,6 +34,7 @@ class FSscrapy(Resource):
         apis = {
             "update_airline": "self.cscrapy.new_update_airline()",
             "upload_dgr": "self.cscrapy.upload_template_dgr()",
+            "upload_tact": "self.cscrapy.upload_tact_template()",
         }
 
         if scrapy not in apis:
