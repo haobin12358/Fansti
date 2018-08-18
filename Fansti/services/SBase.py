@@ -14,9 +14,9 @@ def close_session(fn):
             self.session.commit()
             return result
         except Exception as e:
-            print("DBERROR" + e.message)
+            print("DBERROR", e)
             self.session.rollback()
-            raise dberror(e.message.decode('gbk').encode('utf8'))
+            raise dberror(e)
         finally:
             self.session.close()
     return inner

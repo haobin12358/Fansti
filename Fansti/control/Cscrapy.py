@@ -617,40 +617,50 @@ class Cscrapy():
 
             # dgr model
             if dgr_row_value[dgr_key_index_to_db.get("unno")]:
-                dgrid = str(uuid.uuid1())
-                dgr_model_dict = {
-                    "id": dgrid,
-                    "unno": dgr_row_value[dgr_key_index_to_db.get("unno")],
-                    "unname": dgr_row_value[dgr_key_index_to_db.get("unname")],
-                    "untype": dgr_row_value[dgr_key_index_to_db.get("untype")],
-                }
-                # 内容格式编码处理以及去空格处理+ TODO 正则校验
-                for key in dgr_model_dict:
-                    # 空格处理
-                    if isinstance(dgr_model_dict.get(key), str):
-                        dgr_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_model_dict.get(key))
+                dgr_tmp = self.sscrapy.get_dgr_by_unno(dgr_row_value[dgr_key_index_to_db.get("unno")])
+                if dgr_tmp:
+                    dgrid = dgr_tmp.id
 
-                    # # 正则校验
-                    # try:
-                    #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
-                    #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
-                    #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
-                    #         response["data"] = {
-                    #             "row": row,
-                    #             "col": key
-                    #         }
-                    #         return response
-                    # except Exception as e:
-                    #     print(e.message)
-                    #     print(AIRLINE_EXCEL_ROLE.get(key))
-                    #     print(key)
-                    #     print row_dict.get(key)
-                    # 字符编码处理
-                    # if isinstance(dgr_model_dict.get(key), unicode):
-                    #     dgr_model_dict[key] = dgr_model_dict.get(key).encode("utf8")
+                    self.sscrapy.update_dgr(dgrid, {
+                        "unno": dgr_row_value[dgr_key_index_to_db.get("unno")],
+                        "unname": dgr_row_value[dgr_key_index_to_db.get("unname")],
+                        "untype": dgr_row_value[dgr_key_index_to_db.get("untype")],
+                    })
+                else:
+                    dgrid = str(uuid.uuid1())
+                    dgr_model_dict = {
+                        "id": dgrid,
+                        "unno": dgr_row_value[dgr_key_index_to_db.get("unno")],
+                        "unname": dgr_row_value[dgr_key_index_to_db.get("unname")],
+                        "untype": dgr_row_value[dgr_key_index_to_db.get("untype")],
+                    }
+                    # 内容格式编码处理以及去空格处理+ TODO 正则校验
+                    for key in dgr_model_dict:
+                        # 空格处理
+                        if isinstance(dgr_model_dict.get(key), str):
+                            dgr_model_dict[key] = re.sub(r"[\n\t\s]", "", dgr_model_dict.get(key))
 
-                make_log("dgr_model_dict", dgr_model_dict)
-                self.sscrapy.add_model("AIR_HWYS_DGR", **dgr_model_dict)
+                        # # 正则校验
+                        # try:
+                        #     if AIRLINE_EXCEL_ROLE.get(key) and row_dict.get(key) and not re.match(
+                        #             AIRLINE_EXCEL_ROLE.get(key), row_dict.get(key)):
+                        #         response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                        #         response["data"] = {
+                        #             "row": row,
+                        #             "col": key
+                        #         }
+                        #         return response
+                        # except Exception as e:
+                        #     print(e.message)
+                        #     print(AIRLINE_EXCEL_ROLE.get(key))
+                        #     print(key)
+                        #     print row_dict.get(key)
+                        # 字符编码处理
+                        # if isinstance(dgr_model_dict.get(key), unicode):
+                        #     dgr_model_dict[key] = dgr_model_dict.get(key).encode("utf8")
+
+                    make_log("dgr_model_dict", dgr_model_dict)
+                    self.sscrapy.add_model("AIR_HWYS_DGR", **dgr_model_dict)
 
             # dgr level model
             if dgr_row_value[dgr_level_index_to_db.get("dgr_level")]:
@@ -770,8 +780,8 @@ class Cscrapy():
                 self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airfreighter_container_dict)
 
 
-        response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
-        return response
+
+        return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
 
     def save_file(self, file_type):
         formdata = request.form

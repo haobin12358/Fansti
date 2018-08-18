@@ -70,3 +70,14 @@ class Sscrapy(SBase):
     @close_session
     def get_id_by_time(self, date, name, openid):
         return self.session.query(SELECT_INFO.id).filter_by(create_time=date).filter_by(select_name=name).filter_by(openid=openid).all()
+
+    @close_session
+    def update_dgr(self, dgrid, dgr):
+        # 删除关联表内容
+        dgrlevelid_list = self.session.query(AIR_HWYS_DGR_LEVEL.id).filter(AIR_HWYS_DGR_LEVEL.dgr_id == dgrid).all()
+        self.session.query(AIR_HWYS_DGR_LEVEL).filter(AIR_HWYS_DGR_LEVEL.dgr_id == dgrid).delete()
+
+        for dgrlevel in dgrlevelid_list:
+            self.session.query(AIR_HWYS_DGR_CONTAINER).filter(AIR_HWYS_DGR_CONTAINER.dgr_level_id == dgrlevel.id).delete()
+        # 更新
+        return self.session.query(AIR_HWYS_DGR).filter(AIR_HWYS_DGR.id == dgrid).update(dgr)
