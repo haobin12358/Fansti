@@ -63,7 +63,7 @@ class Sscrapy(SBase):
 
     @close_session
     def get_tact_by_three_code(self, three_code):
-        return self.session.query(AIR_HWYS_TACT.three_code, AIR_HWYS_TACT.city, AIR_HWYS_TACT.state,
+        return self.session.query(AIR_HWYS_TACT.three_code, AIR_HWYS_TACT.city, AIR_HWYS_TACT.state, AIR_HWYS_TACT.id,
                                   AIR_HWYS_TACT.country, AIR_HWYS_TACT.freight, AIR_HWYS_TACT.chinese_position)\
             .filter_by(three_code=three_code).first()
 
@@ -81,3 +81,14 @@ class Sscrapy(SBase):
             self.session.query(AIR_HWYS_DGR_CONTAINER).filter(AIR_HWYS_DGR_CONTAINER.dgr_level_id == dgrlevel.id).delete()
         # 更新
         return self.session.query(AIR_HWYS_DGR).filter(AIR_HWYS_DGR.id == dgrid).update(dgr)
+
+    @close_session
+    def get_tact_by_three_code(self, threecode):
+        return self.session.query(
+            AIR_HWYS_TACT.id, AIR_HWYS_TACT.three_code, AIR_HWYS_TACT.city, AIR_HWYS_TACT.state,
+            AIR_HWYS_TACT.country, AIR_HWYS_TACT.freight, AIR_HWYS_TACT.chinese_position)\
+            .filter(AIR_HWYS_TACT.three_code == threecode).first()
+
+    @close_session
+    def update_tact(self, tactid, tact):
+        return self.session.query(AIR_HWYS_TACT).filter(AIR_HWYS_TACT.id == tactid).update(tact)
