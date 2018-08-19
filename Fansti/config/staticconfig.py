@@ -65,9 +65,9 @@ TACT_DB_TO_EXCEL = {
     "three_code": "三字码",
     "city": "城市名",
     "state": "州名",
-    "country": "州名",
+    "country": "国家",
     "freight": "运费",
     "chinese_position": "中文名称及地理位置",
 }
 
-TACT_KEYS = ["城市名", "三字码", "州名", "中文名称及地理位置", "州名", "运费"]
+TACT_KEYS = ["城市名", "三字码", "州名", "中文名称及地理位置", "国家", "运费"]
