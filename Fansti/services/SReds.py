@@ -48,3 +48,7 @@ class SReds(SBase):
     def update_myred(self, red_id, myred):
         self.session.query(GET_RED_COIN).filter_by(red_id=red_id).update(myred)
         return True
+
+    @close_session
+    def get_red_all(self):
+        return self.session.query(WECHAT_RED_COIN.id, WECHAT_RED_COIN.name, WECHAT_RED_COIN.price).all()
