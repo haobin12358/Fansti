@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 import json, uuid
 from flask import request
+from flask import make_response
 from Fansti.config.response import SYSTEM_ERROR, NETWORK_ERROR
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
@@ -81,8 +82,9 @@ class CUsers():
 
         if judge_keys(true_data, data.keys(), null_data) != 200:
             return judge_keys(true_data, data.keys(), null_data)
-        if self.get_wechat_phone(data["phone"]) != 200:
-            return self.get_wechat_phone(data["phone"])
+        # if self.get_wechat_phone(data["phone"]) != 200:
+            # return self.get_wechat_phone(data["phone"]
+        wl_tmp = get_model_return_dict(self.susers.get_wechat_login_by_phone(data["phone"]))
 
         if "login_name" in data and "login_password" in data:
             check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
@@ -99,21 +101,24 @@ class CUsers():
             data["city"] = None
         if "province" not in data:
             data["province"] = None
-        add_wechat_login = add_model("WECHAT_LOGIN",
-                                 **{
-                                     "id": str(uuid.uuid1()),
-                                     "login_name": data["login_name"],
-                                     "openid": data["openid"],
-                                     "status": "1",
-                                     "phone": data["phone"],
-                                     "name": data["name"],
-                                     "usex": data["usex"],
-                                     "city": data["city"],
-                                     "province": data["province"]
-                                 })
-        make_log("add_wechat_login", add_wechat_login)
-        if not add_wechat_login:
-            return SYSTEM_ERROR
+        if "id" in wl_tmp:
+            self.susers.update_wechat_login_by_phone(data['phone'], wl)
+        else:
+            add_wechat_login = add_model("WECHAT_LOGIN",
+                                     **{
+                                         "id": str(uuid.uuid1()),
+                                         "login_name": data["login_name"],
+                                         "openid": data["openid"],
+                                         "status": "1",
+                                         "phone": data["phone"],
+                                         "name": data["name"],
+                                         "usex": data["usex"],
+                                         "city": data["city"],
+                                         "province": data["province"]
+                                     })
+            make_log("add_wechat_login", add_wechat_login)
+            if not add_wechat_login:
+                return SYSTEM_ERROR
         # else:
         #     add_wechat_login = add_model("WECHAT_LOGIN",
         #                                  **{
@@ -269,36 +274,22 @@ class CUsers():
         if not phone:
             return SYSTEM_ERROR
         phone = phone["phone"]
+        response = import_status("SUCCESS_GET_INVATE", "OK")
+        top_phone = args.get("top_phone")
 
-        import configparser
-        from Fansti.config.Inforcode import FANSTICONFIG
-        cf = configparser.ConfigParser()
-        cf.read(FANSTICONFIG)
-        phone_list = cf.get("phone", "whitelist")
-        if str(phone_list) == "[]":
-            phone_list = str(phone_list).replace("[", "").replace("]", "")
-            phone_list = list(phone_list)
-        else:
-            phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
-                .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
-        if phone in phone_list:
+        if top_phone:
+            phone = top_phone
+
+        if self.check_role(phone):
+            response["top_phone"] = phone
             for row in all_invate:
                 invate_openid = row["invate_openid"]
                 second_all_invate = get_model_return_list(self.susers.get_invate_by_login_name(invate_openid, int(args["page_size"]), int(args["page_num"])))
                 make_log("second_all_invate", second_all_invate)
-                for raw in second_all_invate:
-                    a_invate = get_model_return_dict(self.susers.get_invate_abo_by_openid(raw["invate_openid"]))
-                    make_log("a_invate", a_invate)
-                    if a_invate:
-                        raw["name"] = a_invate["name"]
-                        # .decode("gbk").encode("utf8")
-                        raw["phone"] = a_invate["phone"]
-                        try:
-                            raw["invate_name"] = row["name"].decode("gbk").encode("utf8")
-                        except:
-                            raw["invate_name"] = row["name"]
-                row["second_invate"] = second_all_invate
-        response = import_status("SUCCESS_GET_INVATE", "OK")
+                row["second_invate"] = False
+                if second_all_invate:
+                    row["second_invate"] = True
+
         response["data"] = all_invate
         return response
 
@@ -369,8 +360,6 @@ class CUsers():
             return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
         else:
             # 用户名密码没问题 增加红包
-
-
             red_conis = self.sreds.get_red_all()
             for red_coin in red_conis:
                 my_red_coin = self.sreds.get_myred_by_redid(red_coin.id)
@@ -386,3 +375,19 @@ class CUsers():
                 })
 
             return False
+
+
+    def check_role(self, phone):
+        import configparser
+        from Fansti.config.Inforcode import FANSTICONFIG
+        cf = configparser.ConfigParser()
+        cf.read(FANSTICONFIG)
+        phone_list = cf.get("phone", "whitelist")
+        if str(phone_list) == "[]":
+            phone_list = str(phone_list).replace("[", "").replace("]", "")
+            phone_list = list(phone_list)
+        else:
+            phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+
+        return phone in phone_list
