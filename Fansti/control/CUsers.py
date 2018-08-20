@@ -369,15 +369,15 @@ class CUsers():
             return import_status("ERROR_WRONG_PASSWORD", "FANSTI_ERROR", "ERROR_WRONG_PASSWORD")
         else:
             # 用户名密码没问题 增加红包
-            from Fansti.services.SReds import SReds
-            sred = SReds()
-            red_conis = sred.get_red_all()
+
+
+            red_conis = self.sreds.get_red_all()
             for red_coin in red_conis:
-                my_red_coin = sred.get_myred_by_redid(red_coin.id)
+                my_red_coin = self.sreds.get_myred_by_redid(red_coin.id)
                 if my_red_coin:
                     continue
                 import datetime
-                sred.add_model("GET_RED_COIN", **{
+                self.sreds.add_model("GET_RED_COIN", **{
                     "id": str(uuid.uuid1()),
                     "login_name": name,
                     "createtime": datetime.datetime.now(),
