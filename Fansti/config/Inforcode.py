@@ -31,4 +31,5 @@ template_type_dir = {
 }
 
 # config路径
-FANSTICONFIG = "../Fansti/Fansti/fansticonfig.ini"
+FANSTICONFIG = "./fansticonfig.ini"
+# FANSTICONFIG = "../Fansti/Fansti/fansticonfig.ini"

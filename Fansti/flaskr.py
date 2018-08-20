@@ -1,4 +1,6 @@
 # *- coding:utf8 *-
+from gevent import monkey
+monkey.patch_all(thread=False)
 from flask import Flask
 import flask_restful
 from Fansti.apis.Ascrapy import FSscrapy
@@ -8,7 +10,8 @@ from Fansti.apis.AOther import FSother
 from Fansti.apis.AReds import FSRed
 from Fansti.apis.ANews import FSNews
 from Fansti.apis.AVotes import FSVotes
-
+# 处理高并发
+from gevent.pywsgi import WSGIServer
 fansti = Flask(__name__)
 api = flask_restful.Api(fansti)
 api.add_resource(FSscrapy, "/fansti/scrapy/<string:scrapy>")
@@ -24,5 +27,30 @@ def index():
     return "<html><body>Hello world</body></html>"
 
 
-if __name__ == '__main__':
-    fansti.run('0.0.0.0', 7444, debug=True)
+# if __name__ == '__main__':
+#     fansti.run('0.0.0.0', 8001, debug=True)
+WSGIServer(('127.0.0.1', 8001), fansti).serve_forever()
+
+# from gevent import monkey
+# from gevent.pywsgi import WSGIServer
+# monkey.patch_all(thread=False)
+# from flask  import Flask
+# app = Flask(__name__)
+#
+# app.config.update(
+#     DEBUG=True
+# )
+#
+# @app.route('/asyn/1/', methods=['GET'])
+# def test_asyn_one():
+#     return "<html><body>Hello world</body></html>"
+#
+#
+# @app.route('/test/', methods=['GET'])
+# def test():
+#     return 'hello test'
+#
+# if __name__ == "__main__":
+#     # app.run()
+#     http_server = WSGIServer(('', 5000), app)
+#     http_server.serve_forever()
