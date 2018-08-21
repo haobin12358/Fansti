@@ -202,16 +202,11 @@
       let res =await api.userBinding({method: 'POST', query});
 
       if(res.data.status == 200){
-        // wx.setStorageSync('isNewUser', params.username ? false: true);
-        // wx.setStorageSync('token', params.username);
         wx.setStorageSync('isNewUser', false);
         wx.setStorageSync('token', '');
         wx.reLaunch({
           url: '/pages/index/index'
         });
-        // wx.switchTab({
-        //   url: '/pages/index/index'
-        // });
       }else{
         tip.alert(res.data.message)
       }

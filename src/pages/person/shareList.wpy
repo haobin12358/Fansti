@@ -17,10 +17,22 @@
 
       .table-title{
         margin-bottom: 36rpx;
+        display: flex;
 
-        image{
+        .fz32();
+
+        image.share-logo{
           width: 50rpx;
           height: 30rpx;
+        }
+
+        .breadcrumb{
+          display: flex;
+          flex-wrap: wrap;
+
+          .breadcrumb-item{
+            white-space: pre;
+          }
         }
       }
 
@@ -72,8 +84,13 @@
     </view>
     <view class="container-content">
       <view class="table-title">
-        <image src="../../images/person_share_arrow.png"></image>
-        我分享给他人
+        <image class="share-logo" src="../../images/person_share_arrow.png"></image>
+        <view wx:if="{{inWhiteList && breadcrumbList.length > 1}}" class="breadcrumb">
+          <view wx:for="{{breadcrumbList}}" class="breadcrumb-item" @tap="tapBreadcrumbHandler({{item}})"> {{item.name}} /</view>
+        </view>
+        <block wx:else>
+          我分享给他人
+        </block>
       </view>
       <view class="standard-table">
         <view class="thead">
@@ -81,7 +98,7 @@
             <view class="td td-no">序号</view>
             <view class="td">微信昵称</view>
             <view class="td">电话</view>
-            <view class="td">操作(显示二级邀请列表)</view>
+            <view wx:if="{{inWhiteList}}" class="td">操作(显示二级邀请列表)</view>
           </view>
         </view>
         <view class="tbody">
@@ -89,16 +106,18 @@
             <view class="td td-no">{{index+1}}</view>
             <view class="td">{{item.name}}</view>
             <view class="td">{{item.phone}}</view>
-            <block wx:if="{{item.second_invate.length}}">
-              <view class="td td-showmore" @tap="showSecondInvate({{item.second_invate}})">
-                显示
-              </view>
+            <block wx:if="{{inWhiteList}}">
+              <block wx:if="{{item.second_invate}}">
+                <view class="td td-showmore" @tap="showNextLevel({{item}})">
+                  显示
+                </view>
+              </block>
+              <block wx:else>
+                <view class="td td-showmore">
+                  -
+                </view>
+              </block>
             </block>
-           <block wx:else>
-             <view class="td td-showmore">
-               -
-             </view>
-           </block>
           </view>
         </view>
 
@@ -113,7 +132,7 @@
     </view>
   </view>
 
-  <second-invate-list :show.sync="showSecondeInvate" :list.sync="secondInvateList"></second-invate-list>
+  <!--<second-invate-list :show.sync="showSecondeInvate" :list.sync="secondInvateList"></second-invate-list>-->
 </template>
 
 <script>
@@ -137,6 +156,9 @@
     mixins= [CardMixin];
 
     data = {
+      breadcrumbList: [
+        { name: '我', value: '' },
+      ],
       shareList: [
 
       ],
@@ -145,8 +167,10 @@
 
       showMore: true,
 
-      showSecondeInvate: false,
-      secondInvateList: []
+      inWhiteList: false
+
+      // showSecondeInvate: false,
+      // secondInvateList: []
     };
     computed = {};
 
@@ -155,25 +179,55 @@
         this.getInvateList();
       },
 
-      showSecondInvate(secondInvateList){
+      //  白名单 显示下一级
+      showNextLevel(secondInvateList){
         console.log(secondInvateList);
-        this.showSecondeInvate = true;
-        this.secondInvateList = secondInvateList;
+        this.breadcrumbList.push({name:secondInvateList.name, value: secondInvateList.invate_openid});
+        // console.log(this.breadcrumbList.slice(-1));
+        this.getInvateList(true)
+        // this.showSecondeInvate = true;
+        // this.secondInvateList = secondInvateList;
+      },
+
+      //  点击面包屑导航跳转
+      tapBreadcrumbHandler(item){
+        for (let i = 0; i < this.breadcrumbList.length; i++) {
+          if(this.breadcrumbList[i].value == item.value){
+            this.breadcrumbList = this.breadcrumbList.slice(0, i+1);
+            this.getInvateList(true)
+            break;
+          }
+        }
       }
     };
 
-    async getInvateList(){
+    //  显示下一级 和 点击面包屑标题跳转时 参数 replace 为true  表示重新填充列表 而不是显示下一页
+    async getInvateList(replace = false){
       this.loadingType = 'loading';
+      if(replace){
+        this.pageNum = 1;
+      }
       this.$apply();
+
+      // console.log(wx.getStorageSync('openid'), this.breadcrumbList.slice(-1).value);
+      let openid = this.breadcrumbList.length == 1 ? wx.getStorageSync('openid') : this.breadcrumbList.slice(-1)[0].value;
       let res = await api.getInvateList({
-        query: { openid: wx.getStorageSync('openid'), page_num: this.pageNum, page_size: this.pageSize }
+        query: { openid , page_num: this.pageNum, page_size: this.pageSize }
       });
 
       if (res.data.status == 200) {
-        this.shareList =[...this.shareList,...res.data.data];
+        if(replace){
+          this.shareList = res.data.data;
+        }else{
+          this.shareList =[...this.shareList,...res.data.data];
 
-        if(res.data.data.length != this.pageSize){
+          if(res.data.data.length != this.pageSize){
             this.showMore = false;
+          }
+        }
+
+        if(res.data.hasOwnProperty('top_phone')){
+          this.inWhiteList = true;
         }
 
         this.pageNum++;
@@ -185,6 +239,7 @@
 
     onLoad() {
       this.getInvateList();
+      this.breadcrumbList[0].value = wx.getStorageSync('openid');
     }
   }
 </script>

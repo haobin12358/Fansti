@@ -29,6 +29,8 @@
 
       if (res2.data.status == 200) {
 
+        console.log('res2',res2);
+
         //  新老用户
         if (res2.data.message == '已绑定') {
           this.isBinding = true;

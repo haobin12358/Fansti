@@ -96,7 +96,7 @@
       <view class="card-bd">
         <!-- 查看的大图 -->
         <view class="current-view-img">
-          <image src="{{checkImgs[currentViewIndex]}}"></image>
+          <image src="{{checkImgs[currentViewIndex]}}" @tap="previewImgs"></image>
         </view>
         <!-- 多图滑动 -->
         <swiper class="check-img-swiper" scroll-x="true"  previous-margin="220rpx" next-margin="220rpx"
@@ -142,6 +142,13 @@
     computed = {};
 
     methods = {
+      previewImgs(){
+        wx.previewImage({
+          current: this.checkImgs[this.currentViewIndex],
+          urls: this.checkImgs,
+        })
+      },
+
       swiperChange(e){
         this.currentViewIndex = e.detail.current
       },

@@ -172,7 +172,7 @@
             <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
             <view class="overview-item-info">
               <view class="line1">待领取红包</view>
-              <view class="line2">{{allPacketInfo.red_num}}</view>
+              <view class="line2">{{allPacketInfo.red_list.length}}</view>
             </view>
           </view>
           <view class="overview-item" @tap="tapAGPHandler">
@@ -242,7 +242,7 @@
           <button @tap="tapCallService">电话沟通</button>
           <button @tap="bindingAgain">{{isBinding ? '重新绑定' : '开始绑定'}} </button>
         </view>
-        <view class="ft-share-list">
+        <view  class="ft-share-list">
           <image src="../../images/person_share_list.png"></image>
           <text @tap="goShareList">查看分享列表</text>
         </view>
@@ -250,7 +250,7 @@
     </view>
     <waitGetPacket :show.sync="showWGP" :list.sync="redList" @receive.user="receiveRed"></waitGetPacket>
     <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
-    <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed"></alreadyGetTicket>
+    <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed" :redCoin.sync="myRedCoin"></alreadyGetTicket>
 </template>
 
 <script>
@@ -323,9 +323,14 @@
         });
       },
       goShareList() {
-        wx.navigateTo({
-          url: '/pages/person/shareList'
-        });
+        if(this.isBinding){
+          wx.navigateTo({
+            url: '/pages/person/shareList'
+          });
+        }else{
+          tip.confirm('请绑定后使用', false)
+        }
+
       },
 
       inputMsgHandler(e) {
@@ -460,6 +465,7 @@
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
+      // console.log(this.isBinding,this.isOldUser,this.isNewUser);
 
       if (!this.isBinding) {
         //  自动绑定后再自动获取数据

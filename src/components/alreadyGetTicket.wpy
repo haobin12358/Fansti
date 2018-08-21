@@ -108,8 +108,9 @@
 
       list: {
         type: Array
-      }
+      },
 
+      redCoin: [Number,String]
     };
 
     mixins = [CardMixin]
@@ -120,7 +121,6 @@
 
     data = {
 
-      redCoin: 10,
     };
 
     computed = {

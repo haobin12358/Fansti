@@ -109,10 +109,25 @@
       }
     }
 
-    onLoad() {
+    async onLoad() {
       this.getAllNews();
       //  保存code openid
-      this.setOpenid();
+      await this.setOpenid();
+      this.isOldUser = !!wx.getStorageSync('token');
+      this.isNewUser = !!wx.getStorageSync('isNewUser');
+
+      this.isBinding = this.isOldUser || this.isNewUser;
+
+      if (!this.isBinding) {
+        let res = await this.checkBinding();
+      }
+
+      console.log(this.isOldUser);
+      if(this.isOldUser){
+        wx.switchTab({
+          url: '/pages/track/index'
+        })
+      }
     }
 
   }

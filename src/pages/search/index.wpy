@@ -118,7 +118,7 @@
         </view>
 
         <view class="form-item-main">
-          <input class="form-item-input" @input="inputSearchHandler('dgr')" type="text"></input>
+          <input class="form-item-input" value="{{dgr}}" @input="inputSearchHandler('dgr')" type="text"></input>
           <button class="form-item-btn"  @tap="goSearchResult('dgr')">查询</button>
         </view>
       </view>
@@ -204,7 +204,7 @@
     }
 
     data = {
-      dgr: '',
+      dgr: 'UN',
       surveyReport: '',
       tact: '',
       hsCode: '',
