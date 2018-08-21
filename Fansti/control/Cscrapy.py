@@ -48,6 +48,8 @@ class Cscrapy():
             return judge_keys(true_keys, args.keys())
         if args["login_name"] == "" and self.get_count("HScode", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+
+        args["hs_name"] = str(args["hs_name"]).upper()
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
@@ -145,6 +147,7 @@ class Cscrapy():
                 return judge_keys(true_keys, args.keys())
             if args["login_name"] == "" and self.get_count("cas", args["openid"]) >= 10:
                 return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+            args["cas_name"] = str(args.get("cas_name")).upper()
             new_info = add_model("SELECT_INFO",
                                  **{
                                      "id": str(uuid.uuid4()),
@@ -249,6 +252,7 @@ class Cscrapy():
             return judge_keys(true_keys, args.keys())
         if args["login_name"] == "" and self.get_count("jd", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+        args["jd_name"] = str(args.get("jd_name")).upper()
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
@@ -325,6 +329,9 @@ class Cscrapy():
                 select_name = "depa:" + str(args["depa"]) + "dest:" + str(args["dest"])
         if args["login_name"] == "" and self.get_count("flyno", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+        args["depa"] = str(args.get("depa")).upper() if args.get("depa") else None
+        args["dest"] = str(args.get("depa")).upper() if args.get("dest") else None
+
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
@@ -492,6 +499,7 @@ class Cscrapy():
             return judge_keys(true_keys, args.keys())
         if args["login_name"] == "" and self.get_count("dgr", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+        args['dgr_name'] = str(args.get("dgr_name")).upper()
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),
@@ -535,6 +543,8 @@ class Cscrapy():
             return judge_keys(true_keys, args.keys())
         if args["login_name"] == "" and self.get_count("tact", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
+
+        args['tact_name'] = str(args.get("tact_name")).upper()
         new_info = add_model("SELECT_INFO",
                              **{
                                  "id": str(uuid.uuid4()),

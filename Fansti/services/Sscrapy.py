@@ -12,7 +12,7 @@ class Sscrapy(SBase):
     def get_jd_by_name(self, name):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
-            .filter_by(chinesename=name).first()
+            .filter(AIR_HWYS_JD.chinesename.like(name)).first()
 
     @close_session
     def get_chinessname_by_englishname(self, englishname):
