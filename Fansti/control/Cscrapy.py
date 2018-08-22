@@ -789,8 +789,6 @@ class Cscrapy():
                 make_log("airfreighter_container_dict", airfreighter_container_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airfreighter_container_dict)
 
-
-
         return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
 
     def save_file(self, file_type):
@@ -808,6 +806,15 @@ class Cscrapy():
             rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
         if not os.path.isdir(rootdir):
             os.mkdir(rootdir)
+        for datefile in os.listdir(rootdir):
+            tmpfilepath = os.path.join(rootdir, datefile)
+            if not os.path.isdir(tmpfilepath):
+                filetime = datetime.datetime.fromtimestamp(os.stat(tmpfilepath).st_mtime)
+                timenow = datetime.datetime.now()
+                if (timenow - filetime).days >= 10:
+                    make_log("rm file", tmpfilepath)
+                    os.remove(tmpfilepath)
+
         # if "FileType" not in formdata:
         #     return
         filessuffix = str(files.filename).split(".")[-1]
@@ -871,3 +878,44 @@ class Cscrapy():
                 self.sscrapy.add_model("AIR_HWYS_TACT", **row_dict)
 
         return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+
+    def get_jd_names(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        if "jd_name" not in args:
+            return PARAMS_MISS
+        jd_name = args.get("jd_name")
+        try:
+            jds = get_model_return_list(self.sscrapy.get_jds_by_name(jd_name))
+            jd_name_list = [jd.get("chinesename") for jd in jds]
+            response = import_status("SUCCESS_GET_INFO", "OK")
+            # if not jd_name_list:
+            #     jd_name_list = '无查询结果'
+            response['data'] = jd_name_list
+            return response
+        except Exception as e:
+            make_log("get jd names error", e)
+            return SYSTEM_ERROR
+
+    def get_template_file(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        if "filetype" not in args:
+            return PARAMS_MISS
+
+        filetype = args.get("filetype")
+        import platform
+        from Fansti.config import Inforcode
+
+        file_dir = Inforcode.template_type_dir.get(filetype)
+
+        if platform.system() == "Windows":
+            rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
+        else:
+            rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
+        # if not os.path.isdir(rootdir):
+        filename = 'template.xlsx'
+        filepath = os.path.join(rootdir, filename)
+        make_log("template path ", filepath)
+        from flask import send_from_directory
+        return send_from_directory(rootdir, filename, as_attachment=True)

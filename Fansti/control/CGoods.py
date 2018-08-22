@@ -127,6 +127,7 @@ class CGoods():
                 for in_order in jc_abo_in:
                     jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d")
                     # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["in"]["czr"] = in_order["czr"]
                     jc_abo["in"]["picture"].append(in_order["photourl"])
             jc_abo_out = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
             make_log("jc_abo_out", jc_abo_out)
@@ -134,13 +135,15 @@ class CGoods():
                 for out_order in jc_abo_out:
                     jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d")
                     # jc_abo["out"]["czr"] = out_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["out"]["czr"] = out_order["czr"]
                     jc_abo["out"]["picture"].append(out_order["photourl"])
-            jc_abo_weight = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
+            jc_abo_weight = get_model_return_list(self.sgoods.get_weight_order_by_jcno(args["jcno"]))
             make_log("jc_abo_weight", jc_abo_weight)
             if jc_abo_weight:
                 for weight_order in jc_abo_weight:
                     jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
                     # jc_abo["weight_pic"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["weight_pic"]["czr"] = weight_order["czr"]
                     jc_abo["weight_pic"]["picture"].append(weight_order["photourl"])
 
             in_out_weight_status = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))

@@ -12,7 +12,7 @@ class Sscrapy(SBase):
     def get_jd_by_name(self, name):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
-            .filter(AIR_HWYS_JD.chinesename.like(name)).first()
+            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).first()
 
     @close_session
     def get_chinessname_by_englishname(self, englishname):
@@ -92,3 +92,9 @@ class Sscrapy(SBase):
     @close_session
     def update_tact(self, tactid, tact):
         return self.session.query(AIR_HWYS_TACT).filter(AIR_HWYS_TACT.id == tactid).update(tact)
+
+    @close_session
+    def get_jds_by_name(self, name):
+        return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
+                                  AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
+            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).offset(1).limit(20).all()
