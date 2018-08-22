@@ -11,5 +11,6 @@
 	"appid": "wxad55d967c5abf395",
 	"projectname": "fansti",
 	"miniprogramRoot": "./dist",
+	"libVersion": "2.2.3",
 	"condition": {}
 }

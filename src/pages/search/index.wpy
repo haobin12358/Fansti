@@ -42,6 +42,35 @@
 
           }
         }
+
+        .survey-search-result{
+          position: absolute;
+          border: 2px solid @mainFontColor;
+          border-radius: 10rpx;
+          background: #FFFFFF;
+          z-index:10;
+          margin-top: 10rpx;
+          width: 262rpx;
+          padding-left: 20rpx;
+          padding-right: 10rpx;
+          color: @mainFontColor;
+          /*display: none;*/
+
+          scroll-view{
+            height: 325rpx;
+          }
+
+          .search-result-item{
+            padding: 10rpx 0;
+            margin-bottom: 10rpx;
+            border-bottom: 1rpx solid @mainFontColor;
+          }
+
+          .search-result-item-hover{
+            background: @mainFontColor;
+            color: @mainBlueColor;
+          }
+        }
       }
 
       /*航班时刻独立布局*/
@@ -110,7 +139,7 @@
 </style>
 
 <template>
-  <view  class="container">
+  <view class="container" @tap="containerTapHandler">
     <view class="search-form">
       <view class="form-item">
         <view class="form-item-label">
@@ -130,6 +159,12 @@
           <input class="form-item-input" type="text" value="{{surveyReport}}" @input="inputSearchHandler('surveyReport')"></input>
 
           <button class="form-item-btn" @tap="goSearchResult('surveyReport')">查询</button>
+        </view>
+        <view wx:if="{{showJdSearchResult}}" @tap.stop="mytap"  class="survey-search-result">
+          <scroll-view scroll-y >
+            <view wx:for="{{jdSearchResult}}" class="search-result-item" @tap="goJdResult({{item}})" wx:key="*this">{{item}}</view>
+          </scroll-view>
+
         </view>
       </view>
       <view class="form-item">
@@ -212,6 +247,9 @@
       flightStart: '',
       flightEnd: '',
 
+      showJdSearchResult: false,
+      jdSearchResult: [],
+
       isBinding: false,
       isOldUser:false,
       isNewUser:false,
@@ -222,6 +260,19 @@
     computed = {}
 
     methods = {
+      async goJdResult(jdName) {
+        let res = await this.getJd(jdName);
+
+        if (res) {
+          this.showJdSearchResult = false;
+          this.$apply();
+          this.$preload('res', res);
+          this.$navigate('/pages/search/surveyReportSearch');
+        }
+      },
+      containerTapHandler(){
+        this.showJdSearchResult = false;
+      },
       //  点击查询
      async goSearchResult(type){
         let res = {}
@@ -264,12 +315,10 @@
             break;
           case 'surveyReport':
             if(this.surveyReport != '' ){
-              res =await this.getJd();
+              res =await this.getJdList();
 
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/surveyReportSearch');
-              }
+              return
+
             }else{
               tip.alert('请输入查询内容')
             }
@@ -301,28 +350,29 @@
         }
       },
 
-      inputSearchHandler(type, e) {
+      inputSearchHandler(type, {detail: {value: inputValue}}) {
         switch (type) {
           case 'hsCode':
-            this.hsCode = e.detail.value;
+            this.hsCode = inputValue;
             break;
           case 'cas':
-            this.cas = e.detail.value;
+            this.cas = inputValue;
             break;
           case 'dgr':
-            this.dgr = e.detail.value;
+            this.dgr = inputValue;
             break;
           case 'surveyReport':
-            this.surveyReport = e.detail.value;
+            //  鉴定
+            this.surveyReport = inputValue;
             break;
           case 'tact':
-            this.tact = e.detail.value;
+            this.tact = inputValue;
             break;
           case 'flightStart':
-            this.flightStart = e.detail.value;
+            this.flightStart = inputValue;
             break;
           case 'flightEnd':
-            this.flightEnd = e.detail.value;
+            this.flightEnd = inputValue;
             break;
         }
       },
@@ -347,12 +397,12 @@
     }
 
     // 鉴定报告
-    async getJd(){
+    async getJd(jd_name){
       let res = await api.getJd({
         query: {
           login_name: wx.getStorageSync('token'),
-          jd_name: this.surveyReport,
-          openid: wx.getStorageSync('openid')
+          openid: wx.getStorageSync('openid'),
+          jd_name,
         }
       });
 
@@ -363,6 +413,30 @@
         tip.alert('未查到结果');
       }
     }
+
+    // 鉴定报告
+    async getJdList(){
+      let {data: {message,status, data}} = await api.getJdList({
+        query: {
+          jd_name: this.surveyReport,
+        }
+      });
+
+      if(status == 200){
+        if(data.length){
+          this.showJdSearchResult = true;
+        }else{
+          tip.alert('未查到结果');
+        }
+        this.jdSearchResult = data;
+        this.$apply();
+        // return data;
+      }else{
+        tip.alert(message);
+      }
+    }
+
+
 
     async getTact(){
       let res = await api.getTact({

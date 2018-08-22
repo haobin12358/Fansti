@@ -31,6 +31,8 @@ const retrueGoods = params => wxRequest(params, host+`/goods/retrue_goods?login_
 const getDgr = params => wxRequest(params, host+'/scrapy/get_dgr');
 //  查询鉴定信息
 const getJd = params => wxRequest(params, host+'/scrapy/get_jd');
+//  模糊查询鉴定信息
+const getJdList = params => wxRequest(params, host+'/scrapy/get_jd_names');
 //  查询tact
 const getTact = params => wxRequest(params, host+'/scrapy/get_tact');
 //  查询hscode 爬虫
@@ -79,6 +81,7 @@ export default {
   getHs,
   getDgr,
   getJd,
+  getJdList,
   getTact,
   getFlyno,
   getAllRed,
