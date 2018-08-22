@@ -808,7 +808,7 @@ class Cscrapy():
             os.mkdir(rootdir)
         for datefile in os.listdir(rootdir):
             tmpfilepath = os.path.join(rootdir, datefile)
-            if not os.path.isdir(tmpfilepath):
+            if not os.path.isdir(tmpfilepath) and "template" not in tmpfilepath:
                 filetime = datetime.datetime.fromtimestamp(os.stat(tmpfilepath).st_mtime)
                 timenow = datetime.datetime.now()
                 if (timenow - filetime).days >= 10:
