@@ -363,14 +363,24 @@ class Cscrapy():
         filepath = self.save_file("AIRLINE")
         if not isinstance(filepath, str):
             return filepath
-        # titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
-        #             'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
+        titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
+                    'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
 
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
         # title_line = [title.encode("utf8") if False else title for title in title_line]
         make_log("title_line", title_line)
+        for key in titlekey:
+            if key not in title_line:
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                response['data'] = {
+                    "row": 0,
+                    "key": key,
+                    "reason": "the title is not right need {0} necessary".format(key)
+                }
+                return response
+
         keydict = {k: v for v, k in enumerate(title_line)}
         make_log("keydict", keydict)
         from Fansti.config.staticconfig import AIRLINE_DB_TO_EXCEL, AIRLINE_EXCEL_ROLE
@@ -819,7 +829,9 @@ class Cscrapy():
         #     return
         filessuffix = str(files.filename).split(".")[-1]
         if filessuffix not in ["xls", "xlsm", "xlsx"]:
-            return import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+            response =  import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+            response['data'] = ["xls", "xlsm", "xlsx"]
+            return response
 
         filename = get_db_time_str() + "." + filessuffix
         filepath = os.path.join(rootdir, filename)
@@ -840,7 +852,7 @@ class Cscrapy():
         # check title key
         for key in TACT_KEYS:
             if key not in title_line:
-                response = {}
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
                 response['data'] = {
                     "row": 0,
                     "key": key,
