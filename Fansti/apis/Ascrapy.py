@@ -24,6 +24,7 @@ class FSscrapy(Resource):
             "get_tact": "self.cscrapy.get_tact()",
             "get_jd_names": "self.cscrapy.get_jd_names()",
             "get_template_file": "self.cscrapy.get_template_file()",
+            "get_pdf_file": "self.cscrapy.get_pdf_file()",
         }
 
         if scrapy not in apis:

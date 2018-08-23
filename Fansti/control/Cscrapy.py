@@ -938,3 +938,23 @@ class Cscrapy():
         make_log("template path ", filepath)
         from flask import send_from_directory
         return send_from_directory(rootdir, filename, as_attachment=True)
+
+    def get_pdf_file(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        # if "filetype" not in args:
+        #     return PARAMS_MISS
+        import platform
+        from Fansti.config import Inforcode
+        file_dir = "pdf"
+
+        if platform.system() == "Windows":
+            rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
+        else:
+            rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
+        # if not os.path.isdir(rootdir):
+        filename = 'BUG.pdf'
+        filepath = os.path.join(rootdir, filename)
+        make_log("template path ", filepath)
+        from flask import send_from_directory
+        return send_from_directory(rootdir, filename, as_attachment=True)
