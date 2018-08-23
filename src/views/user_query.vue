@@ -85,7 +85,6 @@
       },
       /*分页点击*/
       pageChange(v){
-        console.log(v)
         if(v == this.current_page){
           this.$message({ message: '这已经是第' + v + '页数据了', type: 'warning' });
           return false;
@@ -105,6 +104,8 @@
       },
       // 将获取到的数据分为左右两块
       changeQuery() {
+        this.query1 = [];
+        this.query2 = [];
         if(this.query.length <= 10) {
           this.query2Status = false
           this.query1 = this.query
