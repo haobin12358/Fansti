@@ -22,6 +22,7 @@ NETWORK_IP = "123.207.97.185"
 
 LinuxTMP = "/tmp"
 WindowsTMP = "D:\\template"
+YDFILEROOT = r'E:\fstfile\uploadfile'
 
 # AIRLINEDIR = "airline"
 template_type_dir = {

@@ -41,6 +41,7 @@ class CUsers():
         from Fansti.config.Inforcode import FANSTICONFIG
         cfg = configparser.ConfigParser()
         cfg.read(FANSTICONFIG)
+        usertype = -111
 
         phone_list = eval(cfg.get("phone", "whitelist"))
         if str(data.get("phone")) in phone_list:
@@ -74,12 +75,13 @@ class CUsers():
                     check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
                     if check_result:
                         return check_result
-
+                    usertype = get_model_return_dict(self.susers.get_user_type(data.get("login_name"))).get("user_type")
                 update_result = self.susers.update_wechat_login_by_phone(data.get("phone"), wl)
                 if not update_result:
                     return import_status("ERROR_UPDATE_DATA", "FANSTI_ERROR", "ERROR_UPDATE_DATA")
-            return import_status("SUCCESS_USER_BINDING", "OK")
-
+            response = import_status("SUCCESS_USER_BINDING", "OK")
+            response['data'] = usertype
+            return  response
         if judge_keys(true_data, data.keys(), null_data) != 200:
             return judge_keys(true_data, data.keys(), null_data)
         # if self.get_wechat_phone(data["phone"]) != 200:
@@ -90,6 +92,7 @@ class CUsers():
             check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
             if check_result:
                 return check_result
+            usertype = get_model_return_dict(self.susers.get_user_type(data.get("login_name"))).get("user_type")
 
         if "login_name" not in data:
             data["login_name"] = None
@@ -134,8 +137,10 @@ class CUsers():
         #     make_log("add_wechat_login", add_wechat_login)
         #     if not add_wechat_login:
         #         return SYSTEM_ERROR
+        response = import_status("SUCCESS_USER_BINDING", "OK")
 
-        return import_status("SUCCESS_USER_BINDING", "OK")
+        response['data'] = usertype
+        return response
 
     def get_wechat_phone(self, phone):
         id = get_model_return_dict(self.susers.get_wechat_login_by_phone(phone))

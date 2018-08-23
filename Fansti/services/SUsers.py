@@ -36,6 +36,10 @@ class SUsers(SBase):
         return self.session.query(D_MESSAGE_USER.compnay).filter_by(login_name=login_name).first()
 
     @close_session
+    def get_compnay_by_loginname_super(self, login_name):
+        return self.session.query(D_MESSAGE_USER.compnay).filter_by(login_name=login_name).first()
+
+    @close_session
     def get_wechat_login_by_phone(self, phone):
         return self.session.query(WECHAT_LOGIN.id, WECHAT_LOGIN.login_name).filter_by(phone=phone).first()
 
@@ -77,3 +81,7 @@ class SUsers(SBase):
     @close_session
     def update_wechat_login_by_phone(self, phone, wl):
         return self.session.query(WECHAT_LOGIN).filter(WECHAT_LOGIN.phone == phone).update(wl)
+
+    @close_session
+    def get_user_type(self, login_name):
+        return self.session.query(D_MESSAGE_USER.user_type).filter(D_MESSAGE_USER.login_name == login_name).first()

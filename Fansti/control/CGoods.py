@@ -23,10 +23,24 @@ class CGoods():
         not_null_params = ['login_name', "page_size", "page_num"]
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
-        accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
-        make_log("accounts", accounts)
-        goods_list = get_model_return_list(self.sgoods.get_all_goods_by_user(accounts["compnay"], int(args["page_size"])
-                                                                             , int(args["page_num"])))
+        wts_filter = set()
+        from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD
+        if args.get("ydno"):
+            wts_filter.add(AIR_HWYS_WTS.ydno == args.get('ydno'))
+        if args.get("hxno"):
+            wts_filter.add(AIR_HWYS_WTS.orno == args.get("hxno"))
+        if args.get("destination"):
+            wts_filter.add(AIR_HWYS_WTS.destination == args.get("destination"))
+        if self.susers.get_user_type(args.get("login_name")).user_type == 10:
+            from sqlalchemy import or_
+            wts_filter.add(or_(AIR_HWYS_WTS.czr == args.get("login_name"), AIR_HWYS_WTS.xsr == args.get("login_name")))
+        else:
+            accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
+            make_log("accounts", accounts)
+            wts_filter.add(AIR_HWYS_WTS.accounts == accounts.get("compnay"))
+        goods_list = get_model_return_list(self.sgoods.get_all_goods_by_filter(
+            wts_filter, int(args["page_size"]), int(args["page_num"])))
+
         make_log("goods_list", goods_list)
         for goods in goods_list:
             yupei = get_model_return_dict(self.sgoods.get_dctime_by_jcno(goods["jcno"]))
@@ -158,6 +172,21 @@ class CGoods():
                 if row["weight_pic"] == "1":
                     jc_abo["weight_status"] = "1"
 
+        import datetime
+        # 起飞
+        jc_abo.update(get_model_return_dict(self.sgoods.get_std(args.get("jcno"))))
+        # 预配
+        hbdate1 = self.sgoods.get_dctime_by_jcno(args.get("jcno"))
+        jc_abo["hbdate1"] = hbdate1.hbdate1.strftime( '%Y-%m-%d')
+        # 交单
+        jdtime = self.sgoods.get_jd_by_jcno(args.get("jcno"))
+        jdtime = jdtime.jd_time or jdtime.jd_date
+        jc_abo['supporttime'] = jdtime.strftime( '%Y-%m-%d')
+        # 送达
+        jc_abo.update(get_model_return_dict(self.sgoods.get_dhmes_by_jcno(args.get("jcno"))))
+        # 运单文件
+        ydfile = get_model_return_list(self.sgoods.get_awbfile_by_jcno(args.get("jcno")))
+        jc_abo['ydfile'] = ydfile
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response

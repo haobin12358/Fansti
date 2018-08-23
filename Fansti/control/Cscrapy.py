@@ -942,18 +942,15 @@ class Cscrapy():
     def get_pdf_file(self):
         args = request.args.to_dict()
         make_log("args", args)
-        # if "filetype" not in args:
-        #     return PARAMS_MISS
+        if "jcno" not in args or "filename" not in args:
+            return PARAMS_MISS
         import platform
         from Fansti.config import Inforcode
-        file_dir = "pdf"
+        rootpath = Inforcode.YDFILEROOT
+        rootdir = os.path.join(rootpath, args.get("jcno"))
 
-        if platform.system() == "Windows":
-            rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
-        else:
-            rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
         # if not os.path.isdir(rootdir):
-        filename = 'BUG.pdf'
+        filename = args.get("filename")
         filepath = os.path.join(rootdir, filename)
         make_log("template path ", filepath)
         from flask import send_from_directory

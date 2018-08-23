@@ -14,6 +14,12 @@ class SGoods(SBase):
             .filter_by(accounts=accounts).offset((page_num - 1) * page_size).limit(page_size).all()
 
     @close_session
+    def get_all_goods_by_filter(self, wtsfilter, page_size, page_num):
+        return self.session.query(
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc) \
+            .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
+
+    @close_session
     def get_xsr_by_user(self, accounts):
         return self.session.query(AIR_HWYS_WTS.xsr).filter_by(accounts=accounts).first()
 
@@ -60,8 +66,13 @@ class SGoods(SBase):
 
     @close_session
     def get_goods_abo_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm)\
-            .filter_by(jcno=jcno).first()
+        return self.session.query(
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm,).filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_goods_abo_by_filter(self, dcdfilter):
+        return self.session.query(AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm) \
+            .filter(*dcdfilter).first()
 
     @close_session
     def get_quantity_weight_by_jcno(self, jcno):
@@ -100,3 +111,12 @@ class SGoods(SBase):
     @close_session
     def get_retrue_by_login_name(self, login_name):
         return self.session.query(GOODS_RETRUE.id).filter_by(login_name=login_name).all()
+
+    @close_session
+    def get_std(self, jcno):
+        return self.session.query(AIR_HWYS_DCD_JLD.mes1).filter(AIR_HWYS_DCD_JLD.jcno == jcno).first()
+
+    @close_session
+    def get_awbfile_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_FILE.filename) \
+            .filter_by(content='AWB').filter_by(jcno=jcno).all()
