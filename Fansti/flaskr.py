@@ -3,6 +3,7 @@
 # monkey.patch_all(thread=False)
 from flask import Flask
 import flask_restful
+from flask_cors import CORS
 from Fansti.apis.Ascrapy import FSscrapy
 from Fansti.apis.AUsers import FSUser
 from Fansti.apis.AGoods import FSGoods
@@ -13,6 +14,8 @@ from Fansti.apis.AVotes import FSVotes
 # # 处理高并发
 # from gevent.pywsgi import WSGIServer
 fansti = Flask(__name__)
+# 跨域解决
+CORS(fansti, resources=r'/*')
 api = flask_restful.Api(fansti)
 api.add_resource(FSscrapy, "/fansti/scrapy/<string:scrapy>")
 api.add_resource(FSUser, "/fansti/users/<string:users>")

@@ -490,9 +490,16 @@ class Cscrapy():
         true_params = ["page_size", "page_num", "select_name"]
         if judge_keys(true_params, args.keys()) != 200:
             return judge_keys(true_params, args.keys())
+        from Fansti.config.staticconfig import SELECT_TYPE
+        name = SELECT_TYPE.get(args["select_name"])
+        if not name:
+            return PARAMS_MISS
+
         all_select = get_model_return_list(self.sscrapy.get_all_select(int(args["page_num"]), int(args["page_size"])
-                                                                       , args["select_name"]))
+                                                                       , name))
         make_log("all_select", all_select)
+        for select_info in all_select:
+            select_info['create_time'] = datetime.datetime.strptime(select_info['create_time'], "%Y%m%d").strftime("%Y-%m-%d")
         count = len(all_select)
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = {}

@@ -123,7 +123,7 @@ class FSother(Resource):
                     if row not in phone_list:
                         phone_list.append(row)
             print(phone_list)
-            cf.set("phone", "whitelist", phone_list)
+            cf.set("phone", "whitelist", str(phone_list))
             cf.write(open(FANSTICONFIG, "w"))
 
             return import_status("SUCCESS_UPDATE_PHONE", "OK")

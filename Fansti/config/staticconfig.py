@@ -71,3 +71,12 @@ TACT_DB_TO_EXCEL = {
 }
 
 TACT_KEYS = ["城市名", "三字码", "州名", "中文名称及地理位置", "国家", "运费"]
+
+SELECT_TYPE = {
+    "CAS": "cas",
+    "DGR": "dgr",
+    "鉴定报告": "jd",
+    "TACT": "tact",
+    "HS code": "HScode",
+    "航班时刻": "flyno",
+}
