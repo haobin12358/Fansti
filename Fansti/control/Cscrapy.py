@@ -363,14 +363,24 @@ class Cscrapy():
         filepath = self.save_file("AIRLINE")
         if not isinstance(filepath, str):
             return filepath
-        # titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
-        #             'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
+        titlekey = ['AIRLINE', 'NAME', 'COMPANY', 'FLIGHT', 'DEPA', 'DEST',
+                    'DATE', 'ETD', 'ETA', '交单时间', 'AIRCRAFT', 'REMARK']
 
         wb = xlrd.open_workbook(filepath)
         sheet1 = wb.sheet_by_index(0)
         title_line = sheet1.row_values(0)
         # title_line = [title.encode("utf8") if False else title for title in title_line]
         make_log("title_line", title_line)
+        for key in titlekey:
+            if key not in title_line:
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                response['data'] = {
+                    "row": 0,
+                    "key": key,
+                    "reason": "the title is not right need {0} necessary".format(key)
+                }
+                return response
+
         keydict = {k: v for v, k in enumerate(title_line)}
         make_log("keydict", keydict)
         from Fansti.config.staticconfig import AIRLINE_DB_TO_EXCEL, AIRLINE_EXCEL_ROLE
@@ -480,9 +490,16 @@ class Cscrapy():
         true_params = ["page_size", "page_num", "select_name"]
         if judge_keys(true_params, args.keys()) != 200:
             return judge_keys(true_params, args.keys())
+        from Fansti.config.staticconfig import SELECT_TYPE
+        name = SELECT_TYPE.get(args["select_name"])
+        if not name:
+            return PARAMS_MISS
+
         all_select = get_model_return_list(self.sscrapy.get_all_select(int(args["page_num"]), int(args["page_size"])
-                                                                       , args["select_name"]))
+                                                                       , name))
         make_log("all_select", all_select)
+        for select_info in all_select:
+            select_info['create_time'] = datetime.datetime.strptime(select_info['create_time'], "%Y%m%d").strftime("%Y-%m-%d")
         count = len(all_select)
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = {}
@@ -789,8 +806,6 @@ class Cscrapy():
                 make_log("airfreighter_container_dict", airfreighter_container_dict)
                 self.sscrapy.add_model("AIR_HWYS_DGR_CONTAINER", **airfreighter_container_dict)
 
-
-
         return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
 
     def save_file(self, file_type):
@@ -808,11 +823,22 @@ class Cscrapy():
             rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
         if not os.path.isdir(rootdir):
             os.mkdir(rootdir)
+        for datefile in os.listdir(rootdir):
+            tmpfilepath = os.path.join(rootdir, datefile)
+            if not os.path.isdir(tmpfilepath) and "template" not in tmpfilepath:
+                filetime = datetime.datetime.fromtimestamp(os.stat(tmpfilepath).st_mtime)
+                timenow = datetime.datetime.now()
+                if (timenow - filetime).days >= 10:
+                    make_log("rm file", tmpfilepath)
+                    os.remove(tmpfilepath)
+
         # if "FileType" not in formdata:
         #     return
         filessuffix = str(files.filename).split(".")[-1]
         if filessuffix not in ["xls", "xlsm", "xlsx"]:
-            return import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+            response =  import_status("ERROR_FAIL_TYPE", "FANSTI_ERROR", "ERROR_FAIL_TYPE")
+            response['data'] = ["xls", "xlsm", "xlsx"]
+            return response
 
         filename = get_db_time_str() + "." + filessuffix
         filepath = os.path.join(rootdir, filename)
@@ -833,7 +859,7 @@ class Cscrapy():
         # check title key
         for key in TACT_KEYS:
             if key not in title_line:
-                response = {}
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
                 response['data'] = {
                     "row": 0,
                     "key": key,
@@ -871,3 +897,44 @@ class Cscrapy():
                 self.sscrapy.add_model("AIR_HWYS_TACT", **row_dict)
 
         return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+
+    def get_jd_names(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        if "jd_name" not in args:
+            return PARAMS_MISS
+        jd_name = args.get("jd_name")
+        try:
+            jds = get_model_return_list(self.sscrapy.get_jds_by_name(jd_name))
+            jd_name_list = [jd.get("chinesename") for jd in jds]
+            response = import_status("SUCCESS_GET_INFO", "OK")
+            # if not jd_name_list:
+            #     jd_name_list = '无查询结果'
+            response['data'] = jd_name_list
+            return response
+        except Exception as e:
+            make_log("get jd names error", e)
+            return SYSTEM_ERROR
+
+    def get_template_file(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        if "filetype" not in args:
+            return PARAMS_MISS
+
+        filetype = args.get("filetype")
+        import platform
+        from Fansti.config import Inforcode
+
+        file_dir = Inforcode.template_type_dir.get(filetype)
+
+        if platform.system() == "Windows":
+            rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
+        else:
+            rootdir = os.path.join(Inforcode.LinuxTMP, file_dir)
+        # if not os.path.isdir(rootdir):
+        filename = 'template.xlsx'
+        filepath = os.path.join(rootdir, filename)
+        make_log("template path ", filepath)
+        from flask import send_from_directory
+        return send_from_directory(rootdir, filename, as_attachment=True)
