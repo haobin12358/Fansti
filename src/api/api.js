@@ -1,4 +1,5 @@
-const title = 'http://10.0.0.130:7444/fansti/';
+const title = 'https://fstwechat.com/fansti/';
+// const title = 'http://10.0.0.130:7444/fansti/';
 // const title = 'http://120.79.182.43:7444/fansti/';
 
 const api={

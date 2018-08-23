@@ -5,10 +5,12 @@
         <div class="table-title-tr">
           <div class="table-title">时间</div>
           <div class="table-title">用户名</div>
+          <div class="table-title">查询内容</div>
         </div>
         <div class="table-tr" v-for="item in query1">
-          <div class="table-td">{{item.date}}</div>
-          <div class="table-td">{{item.userName}}</div>
+          <div class="table-td">{{item.create_time}}</div>
+          <div class="table-td">{{item.login_name}}</div>
+          <div class="table-td">{{item.select_name}}</div>
         </div>
       </div>
       <div class="line"></div>
@@ -16,10 +18,12 @@
         <div class="table-title-tr">
           <div class="table-title">时间</div>
           <div class="table-title">用户名</div>
+          <div class="table-title">查询内容</div>
         </div>
         <div class="table-tr" v-for="item in query2">
-          <div class="table-td">{{item.date}}</div>
-          <div class="table-td">{{item.userName}}</div>
+          <div class="table-td">{{item.create_time}}</div>
+          <div class="table-td">{{item.login_name}}</div>
+          <div class="table-td">{{item.select_name}}</div>
         </div>
       </div>
       <div class="page-box">
@@ -67,11 +71,11 @@
         }
         axios.get(api.get_all_scrapy, { params: params }).then(res => {
           if (res.data.status == 200){
-            this.query = res.data.data
-            console.log(this.query)
+            this.query = res.data.data.all_select;
+            // console.log(this.query)
             this.total_num = res.data.data.count;
             this.total_page = Math.ceil(this.total_num / this.page_size);
-            console.log(this.total_page)
+            this.changeQuery();
           }else{
             this.$message.error(res.data.message);
           }
@@ -91,28 +95,31 @@
       },
       tabClick(index){
         let _arr = this.tabs_data;
-        for(let i =0;i<_arr.length;i++){
+        for(let i = 0; i < _arr.length; i ++){
           _arr[i].click = false;
         }
         _arr[index].click = true;
         this.tabs_data = [].concat(_arr);
         this.select_name = this.tabs_data[index].name
-        this.getData(1)
+        this.getData(1);
       },
-    },
-    created() {
-      this.getData(1)
-      if(this.query.length <= 10) {
-        this.query2Status = false
-        this.query1 = this.query
-      }else if(this.query.length > 10) {
-        for(let i=0;i<10;i++) {
-          this.query1.push(this.query[i])
-        }
-        for(let j=10;j<this.query.length;j++) {
-          this.query2.push(this.query[j])
+      // 将获取到的数据分为左右两块
+      changeQuery() {
+        if(this.query.length <= 10) {
+          this.query2Status = false
+          this.query1 = this.query
+        }else if(this.query.length > 10) {
+          for(let i = 0; i < 10; i ++) {
+            this.query1.push(this.query[i])
+          }
+          for(let j = 10; j < this.query.length; j ++) {
+            this.query2.push(this.query[j])
+          }
         }
       }
+    },
+    created() {
+      this.getData(1);
     }
   }
 </script>
@@ -120,12 +127,12 @@
 <style lang="less" rel="stylesheet/less" scoped>
   @import "../common/css/_variate.less";
   .table-container {
-    width: 40%;
+    width: 45%;
     float: left;
     height: 7rem;
     .table-title-tr {
       .table-title {
-        width: 50%;
+        width: 33%;
         float: left;
         color: #545454;
         margin: 0.3rem 0;
@@ -135,7 +142,7 @@
     }
     .table-tr {
       .table-td {
-        width: 50%;
+        width: 33%;
         float: left;
         margin: 0.2rem 0;
         text-align: center;
