@@ -1,5 +1,0 @@
-# *- coding:utf8 *-
-OK = 200
-FANSTI_ERROR = 405
-SYSTEM_ERROR = 404
-NONE_ERROR = 500
