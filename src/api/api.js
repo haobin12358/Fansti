@@ -1,6 +1,5 @@
-const title = 'https://fstwechat.com/fansti/';
 // const title = 'http://10.0.0.130:7444/fansti/';
-// const title = 'http://120.79.182.43:7444/fansti/';
+const title = 'https://fstwechat.com/fansti/';
 
 const api={
   login: title + 'user/login',//用户登录
@@ -23,6 +22,11 @@ const api={
 
   get_phone: title + 'other/get_phone',//查看白名单列表
   update_phone: title + 'other/update_phone',//增/删白名单电话
+
+  upload_tact: title + 'scrapy/upload_tact',//上传模板TACT
+  update_airline:title + 'scrapy/update_airline',//上传航班信息模板
+  upload_dgr: title + 'scrapy/upload_dgr',//上传dgr信息模板
+  get_template_file: title + 'scrapy/get_template_file',//下载模板
 }
 
 export default api

@@ -6,7 +6,7 @@
           <div class="m-select-input">
             <div class="inputbg">
               {{item.name || '选择文件上传,只支持excel文件'}}
-              <input type="file"  accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="selectFile($event,item,index)">
+              <input type="file" :id="item.url" accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="selectFile($event,item,index)">
             </div>
             <span class="m-btn" @click="uploadFile(index)">上传</span>
             <u class="m-down" @click="downloadFile(index)">点击下载模板</u>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+  import api from '../api/api';
     export default {
         data(){
           return{
@@ -26,37 +28,40 @@
                 label:'DGR',
                 name:'',
                 value:null,
-                url:''
+                url:'upload_dgr',
+                down:'DGR'
               },
-              {
-                label:'鉴定报告',
-                name:'',
-                value:null,
-                url:''
-              },
+              // {
+              //   label:'鉴定报告',
+              //   name:'',
+              //   value:null,
+              //   url:''
+              // },
               {
                 label:'TACT',
                 name:'',
                 value:null,
-                url:''
+                url:'upload_tact',
+                down:'TACT'
               },
+              // {
+              //   label:'HS code',
+              //   name:'',
+              //   value:null,
+              //   url:''
+              // },
+              // {
+              //   label:'CAS',
+              //   name:'',
+              //   value:null,
+              //   url:''
+              // },
               {
-                label:'HS code',
+                label:'航班信息',
                 name:'',
                 value:null,
-                url:''
-              },
-              {
-                label:'CAS',
-                name:'',
-                value:null,
-                url:''
-              },
-              {
-                label:'航班时刻',
-                name:'',
-                value:null,
-                url:''
+                url:'update_airline',
+                down:'AIRLINE'
               }
             ]
           }
@@ -66,15 +71,36 @@
           let form = new FormData();
           this.list_data[index].name = e.target.files[0].name;
           form.append("file", e.target.files[0]);
-          form.append("FileType", 'PBimage');
           this.list_data[index].value = form;
-          console.log(this.list_data)
         },
         uploadFile(index){
-
+          if(this.list_data[index].value == null || this.list_data[index].value ==''){
+            this.$message({
+              type:'warning',
+              message:'请先选择文件'
+            });
+            return false;
+          }
+           axios.post(api[this.list_data[index].url],this.list_data[index].value).then(res => {
+             if(res.data.status == 200){
+                this.$message({
+                  type:'success',
+                  message:'上传成功'
+                });
+               // this.list_data[index].value = '';
+               // this.list_data[index].name = '';
+               // let file = document.getElementById(this.list_data[index].url);
+               // file.value = '';
+             }else{
+               this.$message({
+                 type:'error',
+                 message:res.data.message
+               });
+             }
+           })
         },
         downloadFile(index){
-
+            window.open(api.get_template_file + '?filetype=' + this.list_data[index].down)
         }
       }
     }
