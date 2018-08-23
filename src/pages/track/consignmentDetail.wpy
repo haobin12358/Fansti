@@ -92,7 +92,7 @@
             .check-staff{
               color: #a0afba;
               margin-right: 6rpx;
-              text-decoration: underline
+              /*text-decoration: underline*/
             }
 
             .check-img{
@@ -212,7 +212,7 @@
             <text class="check-time">{{detail.in.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff" wx:if="{{detail.in.czr}}" @tap="goClerkInfo">资深工匠: {{detail.in.czr}}</text>
+            <text class="check-staff" wx:if="{{detail.in.czr}}" >资深工匠: {{detail.in.czr}}</text>
             <image wx:if="{{detail.in_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
             <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
@@ -239,7 +239,7 @@
             <text class="check-time">{{detail.out.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff" wx:if="{{detail.out.czr}}" @tap="goClerkInfo">资深工匠: {{detail.out.czr}}</text>
+            <text class="check-staff" wx:if="{{detail.out.czr}}" >资深工匠: {{detail.out.czr}}</text>
             <image wx:if="{{detail.out_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
             <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
@@ -262,7 +262,7 @@
             <text class="check-time">{{detail.weight_pic.createtime}}</text>
           </view>
           <view class="hd-right">
-            <text class="check-staff" wx:if="{{detail.weight_pic.czr}}" @tap="goClerkInfo">资深工匠: {{detail.weight_pic.czr}}</text>
+            <text class="check-staff" wx:if="{{detail.weight_pic.czr}}">资深工匠: {{detail.weight_pic.czr}}</text>
             <image wx:if="{{detail.weight_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
             <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>

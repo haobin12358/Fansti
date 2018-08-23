@@ -187,7 +187,7 @@
             <image class="overview-item-bg" src="../../images/packet_blue.png"></image>
             <view class="overview-item-info">
               <view class="line1">月度统计</view>
-              <view class="line2">{{myRedCoin}}</view>
+              <view class="line2">{{packetCount}}</view>
             </view>
 
           </view>
@@ -229,7 +229,7 @@
             在线留言
           </view>
           <view class="bd-section-content bd-section-content-msg">
-            <textarea class="textarea-msg" disabled="{{!textareaEnable}}" value="{{textareaEnable ? msg : ''}}" @input="inputMsgHandler"></textarea>
+            <textarea class="textarea-msg" cursor-spacing="20" disabled="{{!textareaEnable}}" value="{{textareaEnable ? msg : ''}}" @input="inputMsgHandler"></textarea>
             <view class="confirm-msg">
               <text @tap="submitMsg">确认提交</text>
             </view>
@@ -314,6 +314,16 @@
       textareaEnable() {
         return !this.showWGP && !this.showAGP && !this.showCT;
       },
+      packetCount(){
+        let count = 0
+
+        for (let i = 0; i < this.monthRed.length; i++) {
+          count += this.monthRed[i].count;
+        }
+
+        console.log(count);
+        return count;
+      }
     };
 
     methods = {

@@ -207,7 +207,7 @@
 
         <view class="form-item-main">
           <view class="expand-main">
-            <input type="text" @input="inputSearchHandler('flightStart')" class="form-item-input "></input>
+            <input type="text" @input="inputSearchHandler('flightStart')" value="{{flightStart}}" class="form-item-input "></input>
             <image class="flight-img" src="../../images/search_airplane1.png"></image>
             <input type="text" @input="inputSearchHandler('flightEnd')" class="form-item-input "></input>
           </view>
@@ -244,7 +244,7 @@
       tact: '',
       hsCode: '',
       cas: '',
-      flightStart: '',
+      flightStart: 'PEK',
       flightEnd: '',
 
       showJdSearchResult: false,

@@ -155,7 +155,7 @@
             <view class="introduce-item-title">
               <image class="title-img title-img-people" src="../../images/people.png"></image>
               <view class="title-text">资深工匠</view>
-              <input type="text"   class="input-title-name" style="" value="{{cardInfo.user_name ? cardInfo.user_name : ''}}" name="user_name"/>
+              <input type="text" cursor-spacing="20"  class="input-title-name" style="" value="{{cardInfo.user_name ? cardInfo.user_name : ''}}" name="user_name"/>
             </view>
           </view>
           <!--经验擅长-->
@@ -171,7 +171,7 @@
                 <view class="detail-text-hd">
                   从业经验：
                 </view>
-                <input type="number" value="{{cardInfo.work_year? cardInfo.work_year : ''}}" name="work_year" style="width: 100rpx"/>
+                <input type="number" cursor-spacing="20" value="{{cardInfo.work_year? cardInfo.work_year : ''}}" name="work_year" style="width: 100rpx"/>
                 <view class="detail-text-ft">
                   年
                 </view>
@@ -182,7 +182,7 @@
                 <view class="detail-text-hd">
                   服务经验：
                 </view>
-                <textarea show-confirm-bar="false" style="height: 100rpx;" value="{{cardInfo.work_goodat? cardInfo.work_goodat : ''}}" name="work_goodat"></textarea>
+                <textarea show-confirm-bar="false" cursor-spacing="20" style="height: 100rpx;" value="{{cardInfo.work_goodat|| ''}}" name="work_goodat"></textarea>
               </view>
             </view>
           </view>
@@ -199,7 +199,7 @@
                 <view class="detail-text-hd">
                   专家简介：
                 </view>
-                <textarea show-confirm-bar="false" value="{{cardInfo.user_introduction? cardInfo.user_introduction : ''}}" name="user_introduction"></textarea>
+                <textarea show-confirm-bar="false" cursor-spacing="20" value="{{cardInfo.user_introduction? cardInfo.user_introduction : ''}}" name="user_introduction"></textarea>
               </view>
             </view>
           </view>
@@ -216,7 +216,7 @@
                 <view class="detail-text-hd" style="text-indent: 10rpx;">
                   QQ:
                 </view>
-                <input type="number" value="{{cardInfo.qq ? cardInfo.qq : ''}}" name="qq"/>
+                <input type="number" cursor-spacing="15" value="{{cardInfo.qq ? cardInfo.qq : ''}}" name="qq"/>
               </view>
               <view class="detail-item">
                 <image class="detail-label" src="../../images/circle_full.png"></image>
@@ -225,7 +225,7 @@
                   电话:
                 </view>
                 <!--电话不可修改-->
-                <input type="number" value="{{cardInfo.phone? cardInfo.phone : ''}}" disabled style="background: #CCCCCC"/>
+                <input type="number"  value="{{cardInfo.phone? cardInfo.phone : ''}}" disabled style="background: #CCCCCC"/>
               </view>
               <view class="detail-item">
                 <image class="detail-label" src="../../images/circle_full.png"></image>
@@ -233,7 +233,7 @@
                 <view class="detail-text-hd">
                   微信:
                 </view>
-                <input type="text"  value="{{cardInfo.wechat? cardInfo.wechat : ''}}" name="wechat"/>
+                <input type="text" cursor-spacing="15" value="{{cardInfo.wechat? cardInfo.wechat : ''}}" name="wechat"/>
               </view>
               <view class="detail-item">
                 <image class="detail-label" src="../../images/circle_full.png"></image>
@@ -241,7 +241,7 @@
                 <view class="detail-text-hd">
                   邮箱:
                 </view>
-                <input type="text" value="{{cardInfo.email? cardInfo.email : ''}}" name="email"/>
+                <input type="text" cursor-spacing="15" value="{{cardInfo.email? cardInfo.email : ''}}" name="email"/>
               </view>
             </view>
           </view>
