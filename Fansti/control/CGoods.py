@@ -31,7 +31,10 @@ class CGoods():
             wts_filter.add(AIR_HWYS_WTS.hxno == args.get("hxno"))
         if args.get("destination"):
             wts_filter.add(AIR_HWYS_WTS.destination == args.get("destination"))
-        usertype = self.susers.get_user_type(args.get("login_name")).user_type
+        user = self.susers.get_user_type(args.get("login_name"))
+        if not user:
+            return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
+        usertype = user.user_type
         if usertype:
             try:
                 usertype = int(usertype)
