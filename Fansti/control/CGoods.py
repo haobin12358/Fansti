@@ -24,17 +24,25 @@ class CGoods():
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
         wts_filter = set()
-        from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD
+        from Fansti.models.model import AIR_HWYS_WTS
         if args.get("ydno"):
             wts_filter.add(AIR_HWYS_WTS.ydno == args.get('ydno'))
         if args.get("hxno"):
             wts_filter.add(AIR_HWYS_WTS.hxno == args.get("hxno"))
         if args.get("destination"):
             wts_filter.add(AIR_HWYS_WTS.destination == args.get("destination"))
-        if self.susers.get_user_type(args.get("login_name")).user_type == 10:
+        usertype = self.susers.get_user_type(args.get("login_name")).user_type
+        if usertype:
+            try:
+                usertype = int(usertype)
+            except Exception as e:
+                make_log('get good list error', e)
+                return SYSTEM_ERROR
+
+        if usertype == 10:
             from sqlalchemy import or_
             wts_filter.add(or_(AIR_HWYS_WTS.czr == args.get("login_name"), AIR_HWYS_WTS.xsr == args.get("login_name")))
-        elif self.susers.get_user_type(args.get("login_name")).user_type == 0:
+        elif usertype == 0:
             pass
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
