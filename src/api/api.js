@@ -1,7 +1,7 @@
 import {
   wxRequest
 } from '@/utils/wxRequest';
-const mock = false;
+const mock = true;
 
 const host =mock? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'https://fstwechat.com/fansti';
 
@@ -21,7 +21,7 @@ const getNewsAbo = params => wxRequest(params, host+`/news/get_abo?id=${params.i
 
 
 //  获取货物列表
-const getGoodsList = params => wxRequest(params, host+`/goods/get_goods_list?page_size=${params.page_size}&page_num=${params.page_num}`);
+const getGoodsList = params => wxRequest(params, host+`/goods/get_goods_list`);
 //  获取货物详情
 const getJcAbo = params => wxRequest(params, host+'/goods/get_jc_abo');
 //  确认照片  POST

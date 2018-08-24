@@ -191,12 +191,6 @@
         }
       )
       return;
-      if(res.data.status == 200){
-
-
-      }else{
-        tip.alert(res.data.message)
-      }
     }
 
     onLoad(params) {
@@ -207,13 +201,6 @@
       this.isconfirm = params.isconfirm;
       this.createtime = params.createtime;
       this.jcno = params.jcno;
-
-      // tip.success('已确认照片!', 500).then(
-      //   ()=>{
-      //     this.$redirect('/pages/track/consignmentDetail',{jcno: this.jcno});
-      //   }
-      // )
-      // this.$redirect('/pages/track/consignmentDetail',{jcno: this.jcno});
     }
   }
 </script>

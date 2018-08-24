@@ -55,6 +55,66 @@
 
     }
 
+    .container-consignment-progress{
+      margin: 42rpx 35rpx 34rpx;
+      padding-bottom: 33rpx;
+      box-sizing: border-box;
+      border-bottom: 1px solid @borderColor;
+
+      .progress-title{
+        display: flex;
+        padding: 0 80rpx;
+        justify-content: space-between;
+        color: @mainBlueColor;
+        .fz24();
+
+        .title-item{
+
+        }
+      }
+
+      .progress-img{
+        display: flex;
+        align-items: center;
+        padding: 0 85rpx;
+        margin: 13rpx 0 26rpx;
+
+
+        .circle-big {
+          flex: 1;
+          height: 32rpx;
+          text-align: center;
+
+          image{
+            height: 32rpx;
+            width: 32rpx;
+          }
+        }
+        .circle-small{
+          height: 8rpx;
+          width: 8rpx;
+          background: @mainYellowColor;
+          border-radius: 50%;
+          margin: 0 4rpx;
+        }
+      }
+
+      .progress-time{
+        display: flex;
+        justify-content: space-between;
+        padding: 0 69rpx;
+        color: @mainFontColor;
+
+        .time-item{
+          width: 115rpx;
+          word-break: break-word;
+          text-align: center;
+
+          .fz21();
+        }
+      }
+    }
+
     .container-check-section{
       padding-right: 30rpx;
       padding-left: 40rpx;
@@ -130,6 +190,23 @@
           color: #a0afba;
         }
       }
+
+      .check-action-section{
+        padding: 32rpx 0 59rpx;
+        border-top: 1px solid @borderColor;
+
+        display: flex;
+        justify-content: center;
+
+        .check-btn{
+          padding: 26rpx 47rpx 25rpx 50rpx;
+          display: inline-block;
+          border-radius: 10rpx;
+
+          .type-yellow();
+          .fz28();
+        }
+      }
     }
   }
 </style>
@@ -202,7 +279,39 @@
       </view>
 
     </view>
+    <view class="container-consignment-progress">
+      <view class="progress-title">
+        <view class="title-item">预配时间</view>
+        <view class="title-item">交单时间</view>
+        <view class="title-item">起飞时间</view>
+        <view class="title-item">送达时间</view>
+      </view>
+      <view class="progress-img">
+        <block wx:for="{{progressInfo}}" wx:key="*this">
+          <block wx:if="{{item}}">
+            <view class="circle-big">
+              <image src="../../images/circle_full.png"></image>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="circle-big">
+              <image src="../../images/circle.png"></image>
+            </view>
+          </block>
 
+          <block wx:if="{{index != progressInfo.length-1}}">
+            <view class="circle-small"></view>
+            <view class="circle-small"></view>
+            <view class="circle-small"></view>
+          </block>
+        </block>
+      </view>
+      <view class="progress-time">
+        <block wx:for="{{progressInfo}}" wx:key="*this">
+          <view class="time-item">{{item}}</view>
+        </block>
+      </view>
+    </view>
     <view class="container-check-section">
       <!--入仓照片-->
       <view class="check-img-section">
@@ -276,6 +385,10 @@
           暂未上传照片
         </view>
       </view>
+
+      <view class="check-action-section">
+        <view class="check-btn" @tap="confirmAllImg">全部确认</view>
+      </view>
     </view>
   </view>
 
@@ -299,11 +412,42 @@
       detail: {
 
       },
+      progressInfo: ['', '', '', ''],
     };
 
     computed = {};
 
     methods = {
+      confirmAllImg(){
+        let confirmText = [],
+          confirmType = [];
+
+        if(this.detail.in_status == 0 && this.detail.in.picture && this.detail.in.picture.length){
+          confirmText.push('入库');
+          confirmType.push('in');
+        }
+        if(this.detail.weight_status == 0 && this.detail.weight_pic.picture && this.detail.weight_pic.picture.length){
+          confirmText.push('称重');
+          confirmType.push('weight');
+
+        }
+        if(this.detail.out_status == 0 && this.detail.out.picture && this.detail.out.picture.length){
+          confirmText.push('出库');
+          confirmType.push('out');
+
+        }
+
+        wx.showModal({
+          title: '提示',
+          content: `确认${confirmText.join('、')}的照片`,
+          success: ()=>{
+            confirmType.forEach(async val =>await this.retrueGoods(val));
+            tip.success('确认完毕');
+            this.retrueGoods(this.detail.jcno)
+          }
+        })
+
+      },
       goConfirmConsignment(type){
         console.log(type);
         let params = {
@@ -344,14 +488,36 @@
 
     events = {};
 
-    async getJcAbo(jcno){
-      let res =await api.getJcAbo({query: {login_name: wx.getStorageSync('token'),jcno}})
+    //  确认照片
+    async retrueGoods(type){
+      let res = await api.retrueGoods({
+        method: 'POST',
+        'login_name': wx.getStorageSync('token'),
+        jcno: this.detail.jcno,
+        query: { 'retrue_name': type }
+      });
 
-      if(res.data.status == 200){
-        this.detail = res.data.data;
+      // tip.success('已确认照片!', 500).then(
+      //   ()=>{
+      //     wx.navigateBack();
+      //   }
+      // )
+      return;
+    }
+
+    //  获取货物详情
+    async getJcAbo(jcno){
+      let {data:{status, data,message}} =await api.getJcAbo({query: {login_name: wx.getStorageSync('token'),jcno}})
+
+      if(status == 200){
+        this.detail = data;
+        this.progressInfo[0] = data.mes1
+        this.progressInfo[1] = data.hbdate1
+        this.progressInfo[2] = data.supporttime
+        this.progressInfo[3] = data.dhmes
         this.$apply();
       }else{
-        tip.alert(res.data.message)
+        tip.alert(message)
       }
     }
 

@@ -1,35 +1,94 @@
 <style scoped lang="less">
   @import "../../styles/base";
 
-  .container{
-    padding-top: 61rpx;
+  .container {
+    padding-top: 160rpx;
 
-    .progress-chart{
+    .fix-top {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      display: flex;
       z-index: 10;
+      width: 100%;
+      background: #FFFFFF;
 
-      .progress-item{
-        flex: 1;
-        color: @mainBlueColor;
-        background: @mainYellowColor;
-        text-align: center;
-        height: 51rpx;
-        line-height: 51rpx;
-        border-right: 1px solid #ffffff;
+      .search-bar {
+        width: 100%;
+        padding: 19rpx;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
 
-       .fz26();
+        .search-bar-bd {
+          flex: 1;
 
-        &:last-child{
-          border-right: 0px;
+          border: 1rpx solid @borderColor;
+          margin-right: 20rpx;
+          border-radius: 10rpx;
+          padding-left: 10rpx;
+          box-sizing: border-box;
+
+          display: flex;
+          /*align-items: center;*/
+
+          .classify {
+            margin-right: 20rpx;
+            display: flex;
+            align-items: center;
+            /*padding-top: 10rpx;*/
+            height: 53rpx;
+
+            .classify-checkbox {
+              margin-right: 10rpx;
+              color: @mainBlueColor;
+            }
+            .classify-label {
+              /*align-self: baseline;*/
+              width: 23rpx;
+              height: 23rpx;
+            }
+          }
+
+          .search-bar-input {
+            flex: 1;
+            color: @mainFontColor;
+          }
+        }
+        .search-bar-ft {
+          padding: 0 20rpx;
+          border-radius: 10rpx;
+          height: 2.37em;
+          line-height: 2.37em;
+          .fz24();
+          .type-yellow();
+        }
+
+      }
+
+      .progress-chart {
+        width: 100%;
+        display: flex;
+
+        .progress-item {
+          flex: 1;
+          color: @mainBlueColor;
+          background: @mainYellowColor;
+          text-align: center;
+          height: 51rpx;
+          line-height: 51rpx;
+          border-right: 1px solid #ffffff;
+
+          .fz26();
+
+          &:last-child {
+            border-right: 0px;
+          }
         }
       }
+
     }
 
-    .container-bd{
+    .container-bd {
 
     }
   }
@@ -38,11 +97,30 @@
 <template>
   <block wx:if="{{isOldUser}}">
     <view class="container">
-      <view class="progress-chart">
-        <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
-          {{item}}
+      <view class="fix-top">
+        <view class="search-bar">
+          <!--search-bar-->
+          <view class="search-bar-bd">
+            <picker bindchange="searchPickerChange" value="{{searchPickerIndex}}" range="{{searchPickerArray}}">
+              <view class="classify">
+                <view class="classify-checkbox">
+                  {{searchPickerArray[searchPickerIndex]}}
+                </view>
+                <image src="../../images/arrow_down.jpg" class="classify-label"></image>
+              </view>
+            </picker>
+            <input class="search-bar-input" type="text" placeholder="请输入{{searchPickerArray[searchPickerIndex]}}"
+                   @input="searchBarInput">
+          </view>
+          <view class="search-bar-ft" @tap="doSearch">查询</view>
+        </view>
+        <view class="progress-chart">
+          <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
+            {{item}}
+          </view>
         </view>
       </view>
+
       <view class="container-bd">
         <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
       </view>
@@ -56,20 +134,19 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Placeholder from '@/components/common/placeholder'
-  import LoadMore from '@/components/common/loadMore'
-  import FreightConsignmentList from '@/components/freightConsignmentList'
+  import wepy from 'wepy';
+  import Placeholder from '@/components/common/placeholder';
+  import LoadMore from '@/components/common/loadMore';
+  import FreightConsignmentList from '@/components/freightConsignmentList';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import BindingMixin from '@/mixins/bindingMixin'
+  import BindingMixin from '@/mixins/bindingMixin';
 
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '跟踪',
-      // onReachBottomDistance: 40
-    }
+      navigationBarTitleText: '跟踪'
+    };
 
     mixins = [BindingMixin];
 
@@ -77,81 +154,106 @@
       placeholder1: Placeholder,
       placeholder2: Placeholder,
       'freight-consignment-list': FreightConsignmentList,
-      'load-more': LoadMore,
-    }
+      'load-more': LoadMore
+    };
 
     data = {
       type: 'newUser',
 
-      progressData: ['预配','进仓','出仓','称重','报关','运单','交单','起飞','送达'],
+      searchPickerArray: ['运单号', '订单号', '目的港'],
+      searchPickerIndex: 0,
+      searchContent: '',
+      progressData: ['预配', '进仓', '出仓', '称重', '报关', '运单', '交单', '起飞', '送达'],
 
-      goodsList: [
-
-      ],
+      goodsList: [],
       pageNum: 1,
       pageSize: 15,
 
       loadingType: 'normal', // 加载状态
 
       isBinding: false,
-      isOldUser:false,
-      isNewUser:false,
-    }
-    computed = {
-
-    }
+      isOldUser: false,
+      isNewUser: false
+    };
+    computed = {};
 
     methods = {
-      goConsignmentDetail(jcno){
-        this.$navigate('/pages/track/consignmentDetail',{jcno})
+      doSearch() {
+        this.getGoodsList(true);
+      },
+      searchBarInput({ detail: { value } }) {
+        this.searchContent = value;
+      },
+      searchPickerChange({ detail: { value } }) {
+        this.searchPickerIndex = value;
+      },
+      goConsignmentDetail(jcno) {
+        this.$navigate('/pages/track/consignmentDetail', { jcno });
       }
-    }
+    };
 
-    async getGoodsList(){
+    async getGoodsList(replace = false) {
       this.loadingType = 'loading';
       this.$apply();
-      let res =await api.getGoodsList({_noLoading: true,page_num:this.pageNum,page_size:this.pageSize,query: {login_name: wx.getStorageSync('token')}})
+      let searchParam = {};
+      if (replace) {
+        this.pageNum = 1;
+        switch (this.searchPickerIndex + '') {
+          case '0':
+            searchParam = { ydno: this.searchContent };
+            break;
+          case '1':
+            searchParam = { hxno: this.searchContent };
+            break;
+          case '2':
+            searchParam = { destination: this.searchContent };
+            break;
+        }
+      }
+      console.log('searchParam', searchParam);
+      // return
+      let res = await api.getGoodsList({
+        _noLoading: true,
+        query: {
+          page_num: this.pageNum,
+          page_size: this.pageSize,
+          login_name: wx.getStorageSync('token'),
+          ...searchParam
+        }
+      });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         // this.goodsList= res.data.data.filter(x => x.jcno == 'E18030634')
-        this.goodsList = [...this.goodsList,...res.data.data];
-
-
-        if(res.data.data.length == this.pageSize){
-          this.loadingType = 'normal';
+        if(replace){
+          this.goodsList = res.data.data;
         }else{
+          this.goodsList = [...this.goodsList, ...res.data.data];
+        }
+
+
+        if (res.data.data.length == this.pageSize) {
+          this.loadingType = 'normal';
+        } else {
           this.loadingType = 'nomore';
         }
         this.pageNum++;
         this.$apply();
-      }else{
-        tip.alert(res.data.message)
+      } else {
+        tip.alert(res.data.message);
       }
     }
 
-    // getGoodsList(){
-    //   this.loadingType = 'loading';
-    //
-    //   setTimeout(function() {
-    //     this.goodsList.push({});
-    //     console.log(this.goodsList);
-    //     this.loadingType = 'normal';
-    //     this.$apply();
-    //   }.bind(this),1000)
-    // }
-
-    onReachBottom(){
-      if(this.isOldUser && this.loadingType != 'nomore'){
+    onReachBottom() {
+      if (this.isOldUser && this.loadingType != 'nomore') {
         this.getGoodsList();
       }
     }
 
-    watch={
-    }
+    watch = {};
 
-    events = {}
+    events = {};
 
-    init(){
+    init() {
 
     }
 
@@ -171,7 +273,7 @@
       }
 
       console.log(this.isOldUser, this.isNewUser);
-      if(this.isOldUser){
+      if (this.isOldUser) {
         this.getGoodsList();
       }
     }
