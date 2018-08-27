@@ -30,9 +30,14 @@ class Sscrapy(SBase):
             .filter_by(select_name=select_name).offset(page_size * (page_num - 1)).limit(page_size).all()
 
     @close_session
-    def get_dgr_by_unno(self, unno, unname):
+    def get_dgr_by_unno_unname(self, unno, unname):
         return self.session.query(AIR_HWYS_DGR.id, AIR_HWYS_DGR.unno, AIR_HWYS_DGR.unname, AIR_HWYS_DGR.untype)\
             .filter(AIR_HWYS_DGR.unno==unno, AIR_HWYS_DGR.unname==unname).first()
+
+    @close_session
+    def get_dgr_by_unno2(self, unno):
+        return self.session.query(AIR_HWYS_DGR.id, AIR_HWYS_DGR.unno, AIR_HWYS_DGR.unname, AIR_HWYS_DGR.untype) \
+            .filter(AIR_HWYS_DGR.unno == unno).all()
 
     @close_session
     def get_dgr_level_by_dgrid(self, dgr_id):

@@ -528,28 +528,28 @@ class Cscrapy():
                              })
         if not new_info:
             return SYSTEM_ERROR
-        dgr = get_model_return_dict(self.sscrapy.get_dgr_by_unno(args["dgr_name"]))
+        dgr = get_model_return_list(self.sscrapy.get_dgr_by_unno2(args["dgr_name"]))
         make_log("dgr", dgr)
         if not dgr:
             return SYSTEM_ERROR
-        dgr_type = get_model_return_list(self.sscrapy.get_dgr_level_by_dgrid(dgr["id"]))
-        make_log("dgr_type", dgr_type)
-        if not dgr:
-            return SYSTEM_ERROR
-        for row in dgr_type:
-            row["airliner_is_single"] = self.make_code(row["airliner_is_single"])
-            row["airfreighter_is_single"] = self.make_code(row["airfreighter_is_single"])
-            dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid(row["id"]))
-            for raw in dgr_con:
-                raw["dgr_container"] = raw["dgr_container"]
-                raw["dgr_type"] = raw["dgr_type"]
-            if not dgr_con:
-                return
-            row["dgr_con"] = dgr_con
-        dgr["dgr_type"] = dgr_type
+        dgr_list = []
+        for raw in dgr:
+            dgr_type = get_model_return_list(self.sscrapy.get_dgr_level_by_dgrid(raw["id"]))
+            make_log("dgr_type", dgr_type)
+            if not dgr:
+                return SYSTEM_ERROR
+            for row in dgr_type:
+                row["airliner_is_single"] = self.make_code(row["airliner_is_single"])
+                row["airfreighter_is_single"] = self.make_code(row["airfreighter_is_single"])
+                dgr_con = get_model_return_list(self.sscrapy.get_dgr_container_by_levelid(row["id"]))
+                if not dgr_con:
+                    return
+                row["dgr_con"] = dgr_con
+            raw["dgr_type"] = dgr_type
+            dgr_list.append(raw)
 
         response = import_status("SUCCESS_GET_RETRUE", "OK")
-        response["data"] = dgr
+        response["data"] = dgr_list
         return response
 
     def get_tact(self):
@@ -643,9 +643,9 @@ class Cscrapy():
             dgr_row_value = sheet1.row_values(dgr_row)
 
             # dgr model
-            if dgr_row_value[dgr_key_index_to_db.get("unno")]:
-                dgr_tmp = self.sscrapy.get_dgr_by_unno(
-                    dgr_row_value[dgr_key_index_to_db.get("unno")], dgr_row_value[dgr_key_index_to_db.get("unname")])
+            if dgr_row_value[dgr_key_index_to_db.get("unname")]:
+                dgr_tmp = self.sscrapy.get_dgr_by_unno_unname(
+                    dgr_row_value[dgr_key_index_to_db.get("unno")], re.sub(r"[\n\t\s]", "", dgr_row_value[dgr_key_index_to_db.get("unname")]))
                 if dgr_tmp:
                     dgrid = dgr_tmp.id
 
