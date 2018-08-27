@@ -158,12 +158,18 @@ class CUsers():
         get_status_by_openid = get_model_return_dict(self.susers.get_wechat_login_by_openid(args["openid"]))
         make_log("get_status_by_openid", get_status_by_openid)
         if not get_status_by_openid:
-            return import_status("ERROR_NONE_BINDING", "FANSTI_ERROR", "ERROR_NONE_BINDING")
+            return SYSTEM_ERROR
         else:
-            response = import_status("ERROR_HAVE_BINDING", "OK")
-            response["data"] = {}
-            response["data"]["login_name"] = get_status_by_openid["login_name"]
-            return response
+            if not get_status_by_openid["login_name"]:
+                user_type = -111
+            else:
+                user_type = get_model_return_dict(self.susers.get_user_type(get_status_by_openid["login_name"]))["user_type"]
+        
+        response = import_status("ERROR_HAVE_BINDING", "OK")
+        response["data"] = {}
+        response["data"]["login_name"] = get_status_by_openid["login_name"]
+        response["data"]["user_type"] = user_type
+        return response
 
     def get_openid(self):
         args = request.args.to_dict()
