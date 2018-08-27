@@ -26,11 +26,12 @@ class CGoods():
         wts_filter = set()
         from Fansti.models.model import AIR_HWYS_WTS
         if args.get("ydno"):
-            wts_filter.add(AIR_HWYS_WTS.ydno == args.get('ydno'))
+            wts_filter.add(AIR_HWYS_WTS.ydno.like("%{0}%".format(args.get('ydno'))))
         if args.get("hxno"):
-            wts_filter.add(AIR_HWYS_WTS.hxno == args.get("hxno"))
+            wts_filter.add(AIR_HWYS_WTS.hxno.like("%{0}%".format(args.get("hxno"))))
         if args.get("destination"):
-            wts_filter.add(AIR_HWYS_WTS.destination == args.get("destination"))
+            wts_filter.add(AIR_HWYS_WTS.destination.like("%{0}%".format(args.get("destination"))))
+            
         user = self.susers.get_user_type(args.get("login_name"))
         if not user:
             return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
