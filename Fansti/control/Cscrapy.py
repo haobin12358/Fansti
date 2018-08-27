@@ -644,7 +644,8 @@ class Cscrapy():
 
             # dgr model
             if dgr_row_value[dgr_key_index_to_db.get("unno")]:
-                dgr_tmp = self.sscrapy.get_dgr_by_unno(dgr_row_value[dgr_key_index_to_db.get("unno")])
+                dgr_tmp = self.sscrapy.get_dgr_by_unno(
+                    dgr_row_value[dgr_key_index_to_db.get("unno")], dgr_row_value[dgr_key_index_to_db.get("unname")])
                 if dgr_tmp:
                     dgrid = dgr_tmp.id
 
