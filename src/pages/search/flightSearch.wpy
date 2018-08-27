@@ -89,7 +89,7 @@
 
   export default class FlightSearch extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '航班时刻查询'
     }
 
     components = {};
@@ -106,7 +106,6 @@
     events = {};
 
     onLoad(params, data) {
-      console.log('preload',data.preload.res);
       this.res = data.preload.res
     }
   }

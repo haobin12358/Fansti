@@ -143,7 +143,7 @@
 
   export default class DgrSearch extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: 'DGR查询'
     }
 
     components = {};
@@ -162,18 +162,7 @@
     events = {};
 
     onLoad(params, data) {
-      console.log('preload',data.preload.res);
       this.res = data.preload.res;
-      // let list = [
-      //   {
-      //
-      //   }
-      // ]
-      //
-      // list.push({
-      //   name: '联合国正确运输名称',
-      //   value: res.unname,
-      // })
     }
   }
 </script>

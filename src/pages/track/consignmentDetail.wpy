@@ -1,5 +1,29 @@
 <style scoped lang="less">
-    @import "../../styles/base";
+    @import "../../styles/table";
+
+    .two-column-table {
+
+      .tbody {
+        .tr {
+          .td {
+            &:first-child {
+              text-align: center;
+              justify-content: center;
+
+              /*padding-right: 31 rpx;*/
+            }
+            &:last-child {
+              text-align: center;
+              justify-content: center;
+            }
+          }
+
+          .td.file-link{
+            text-decoration:underline;
+          }
+        }
+      }
+    }
 
   .container{
     padding-top: 20rpx;
@@ -61,58 +85,7 @@
       box-sizing: border-box;
       border-bottom: 1px solid @borderColor;
 
-      .progress-title{
-        display: flex;
-        padding: 0 80rpx;
-        justify-content: space-between;
-        color: @mainBlueColor;
-        .fz24();
 
-        .title-item{
-
-        }
-      }
-
-      .progress-img{
-        display: flex;
-        align-items: center;
-        padding: 0 85rpx;
-        margin: 13rpx 0 26rpx;
-
-
-        .circle-big {
-          flex: 1;
-          height: 32rpx;
-          text-align: center;
-
-          image{
-            height: 32rpx;
-            width: 32rpx;
-          }
-        }
-        .circle-small{
-          height: 8rpx;
-          width: 8rpx;
-          background: @mainYellowColor;
-          border-radius: 50%;
-          margin: 0 4rpx;
-        }
-      }
-
-      .progress-time{
-        display: flex;
-        justify-content: space-between;
-        padding: 0 69rpx;
-        color: @mainFontColor;
-
-        .time-item{
-          width: 115rpx;
-          word-break: break-word;
-          text-align: center;
-
-          .fz21();
-        }
-      }
     }
 
     .container-check-section{
@@ -280,37 +253,43 @@
 
     </view>
     <view class="container-consignment-progress">
-      <view class="progress-title">
-        <view class="title-item">预配时间</view>
-        <view class="title-item">交单时间</view>
-        <view class="title-item">起飞时间</view>
-        <view class="title-item">送达时间</view>
-      </view>
-      <view class="progress-img">
-        <block wx:for="{{progressInfo}}" wx:key="*this">
-          <block wx:if="{{item}}">
-            <view class="circle-big">
-              <image src="../../images/circle_full.png"></image>
-            </view>
-          </block>
-          <block wx:else>
-            <view class="circle-big">
-              <image src="../../images/circle.png"></image>
-            </view>
-          </block>
+      <view class="two-column-table">
+        <view class="thead">
+          运单时刻表
+        </view>
+        <view class="tbody">
+          <view class="tr">
+            <view class="td">预配时间</view>
+            <view class="td">{{detail.mes1 || '暂无'}}</view>
+          </view>
+          <view class="tr">
+            <view class="td">交单时间</view>
+            <view class="td">{{detail.hbdate1 || '暂无'}}</view>
+          </view>
+          <view class="tr">
+            <view class="td">起飞时间</view>
+            <view class="td">{{detail.supporttime || '暂无'}}</view>
+          </view>
+          <view class="tr">
+            <view class="td">送达时间</view>
+            <view class="td">{{detail.dhmes || '暂无'}}</view>
+          </view>
 
-          <block wx:if="{{index != progressInfo.length-1}}">
-            <view class="circle-small"></view>
-            <view class="circle-small"></view>
-            <view class="circle-small"></view>
-          </block>
-        </block>
+        </view>
       </view>
-      <view class="progress-time">
-        <block wx:for="{{progressInfo}}" wx:key="*this">
-          <view class="time-item">{{item}}</view>
-        </block>
+
+      <view wx:if="{{detail.ydfile.length}}" class="two-column-table">
+        <view class="thead">
+          运单文件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.ydfile}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
       </view>
+
     </view>
     <view class="container-check-section">
       <!--入仓照片-->
@@ -386,7 +365,7 @@
         </view>
       </view>
 
-      <view class="check-action-section">
+      <view class="check-action-section" wx:if="{{showConfirmAll}}">
         <view class="check-btn" @tap="confirmAllImg">全部确认</view>
       </view>
     </view>
@@ -403,7 +382,7 @@
 
   export default class ConsignmentDetail extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '运单详情'
     }
 
     components = {};
@@ -412,12 +391,58 @@
       detail: {
 
       },
-      progressInfo: ['', '', '', ''],
+      shouldRefresh: false,  // onShow是否触发getJcAbo
     };
 
-    computed = {};
+    computed = {
+      showConfirmAll(){
+        if(this.detail.in_status == 0 && this.detail.in.picture && this.detail.in.picture.length){
+          return true;
+        }
+        if(this.detail.weight_status == 0 && this.detail.weight_pic.picture && this.detail.weight_pic.picture.length){
+          return true;
+        }
+        if(this.detail.out_status == 0 && this.detail.out.picture && this.detail.out.picture.length){
+          return true;
+        }
+
+        return false;
+      }
+    };
 
     methods = {
+      overviewFile(filename){
+        tip.loading('下载文件中');
+
+        wx.downloadFile({
+          url: `https://fstwechat.com/fansti/scrapy/get_pdf_file?jcno=${this.detail.jcno}&filename=${filename}`,
+          success: function (res) {
+            var filePath = res.tempFilePath,
+              docArr = ['doc', 'xls', 'ppt', 'pdf', 'docx', 'xlsx', 'pptx'],
+              imgArr = ['jpg','png']
+            tip.loaded();
+
+            let showDoc = false;
+
+            for (let item in docArr){
+              if (filePath.endsWith(docArr[item])) {
+                wx.openDocument({
+                  filePath: filePath
+                })
+                showDoc = true;
+              }
+            }
+
+            if(!showDoc){
+              wx.previewImage({
+                urls: [filePath]
+              })
+            }
+          }
+
+        })
+      },
+      //  点击确认所有照片(判断是否有照片并未确认)
       confirmAllImg(){
         let confirmText = [],
           confirmType = [];
@@ -440,16 +465,21 @@
         wx.showModal({
           title: '提示',
           content: `确认${confirmText.join('、')}的照片`,
-          success: ()=>{
-            confirmType.forEach(async val =>await this.retrueGoods(val));
-            tip.success('确认完毕');
-            this.retrueGoods(this.detail.jcno)
+          success: res => {
+            if (res.confirm) {
+              Promise.all(confirmType.map(val => this.retrueGoods(val))).then(
+                () => {
+                  tip.success('确认完毕').then(
+                    () => this.getJcAbo(this.detail.jcno)
+                  );
+                }
+              );
+            }
           }
         })
 
       },
       goConfirmConsignment(type){
-        console.log(type);
         let params = {
           jcno: this.detail.jcno,
           type
@@ -489,20 +519,13 @@
     events = {};
 
     //  确认照片
-    async retrueGoods(type){
-      let res = await api.retrueGoods({
+    retrueGoods(type){
+      return api.retrueGoods({
         method: 'POST',
         'login_name': wx.getStorageSync('token'),
         jcno: this.detail.jcno,
         query: { 'retrue_name': type }
       });
-
-      // tip.success('已确认照片!', 500).then(
-      //   ()=>{
-      //     wx.navigateBack();
-      //   }
-      // )
-      return;
     }
 
     //  获取货物详情
@@ -511,27 +534,16 @@
 
       if(status == 200){
         this.detail = data;
-        this.progressInfo[0] = data.mes1
-        this.progressInfo[1] = data.hbdate1
-        this.progressInfo[2] = data.supporttime
-        this.progressInfo[3] = data.dhmes
         this.$apply();
       }else{
         tip.alert(message)
       }
     }
 
-    onReachBottom() {
-      console.log('触底');
-    }
-
     onShow(){
-      console.log(this.detail);
-      console.log(this.jcno);
       //  确认之后回退刷新
       if (this.detail.jcno) {
         this.getJcAbo(this.detail.jcno);
-
       }
     }
 

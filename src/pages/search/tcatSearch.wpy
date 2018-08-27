@@ -67,7 +67,7 @@
 
   export default class TcatSearch extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: 'TACT查询'
     }
 
     components = {};
@@ -85,15 +85,13 @@
     events = {};
 
     onLoad(params, data) {
-      console.log('preload',data.preload.res);
       this.res = data.preload.res;
       // return;
       let res = data.preload.res;
       let arr = [],
       list = [];
 
-      arr = res.freight.split('\r\n')
-      console.log(arr);
+      arr = res.freight.split('||chr(13)||chr(10)||')
       for (let i = 0; i < arr.length; i++) {
         list.push({
           i,
@@ -101,7 +99,6 @@
           value: arr[i].split(':')[1],
         })
       }
-      console.log(list);
       this.list = list;
     }
   }

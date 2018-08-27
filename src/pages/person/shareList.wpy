@@ -145,7 +145,7 @@
 
   export default class ShareList extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '邀请记录'
     }
 
     components = {

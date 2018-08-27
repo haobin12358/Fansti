@@ -112,7 +112,9 @@
   import tip from '@/utils/tip';
 
   export default class Question extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '填写问卷'
+    };
 
     mixins = [CardMixin]
 

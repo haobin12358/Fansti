@@ -52,6 +52,8 @@
           .search-bar-input {
             flex: 1;
             color: @mainFontColor;
+            height: 53rpx;
+            line-height: 53rpx;
           }
         }
         .search-bar-ft {
@@ -89,7 +91,8 @@
     }
 
     .container-bd {
-
+      padding: 0 10rpx;
+      box-sizing: border-box;
     }
   }
 </style>
@@ -210,10 +213,8 @@
             break;
         }
       }
-      console.log('searchParam', searchParam);
-      // return
       let res = await api.getGoodsList({
-        _noLoading: true,
+        _noLoading: true  && !replace,
         query: {
           page_num: this.pageNum,
           page_size: this.pageSize,
@@ -258,21 +259,16 @@
     }
 
     async onLoad() {
-      console.log('track load');
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
       //  只需要在onload中判断 及 进行自动登录   这样可以将这些代码写在mixin的onload中了
       if (!this.isBinding) {
-
+        //  等待尝试自动绑定
         await this.checkBinding();
-
-        // 绑定成功  res结果无意义就是个字符串
-        console.log('新老用户', this.isOldUser, this.isNewUser);
       }
 
-      console.log(this.isOldUser, this.isNewUser);
       if (this.isOldUser) {
         this.getGoodsList();
       }

@@ -124,7 +124,7 @@
 
   export default class ConfirmConsignment extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '确认照片'
     }
 
     components = {};
@@ -194,7 +194,6 @@
     }
 
     onLoad(params) {
-      console.log(params);
       this.checkImgs=params.pic.split(',');
       this.type = params.type;
       this.title = params.title;

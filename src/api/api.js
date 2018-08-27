@@ -1,7 +1,7 @@
 import {
   wxRequest
 } from '@/utils/wxRequest';
-const mock = true;
+const mock = false;
 
 const host =mock? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' :'https://fstwechat.com/fansti';
 

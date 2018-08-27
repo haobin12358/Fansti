@@ -131,6 +131,11 @@
 
           if (res.data.status == 200) {
             this.news = res.data.data;
+
+            wx.setNavigationBarTitle({
+              title: res.data.data.news_title
+            })
+
             this.$apply();
           } else {
             tip.alert(res.data.message);

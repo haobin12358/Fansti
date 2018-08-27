@@ -36,7 +36,7 @@
 
   export default class HsCode extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: 'HS code查询'
     }
 
     components = {};

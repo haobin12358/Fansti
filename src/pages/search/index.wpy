@@ -389,7 +389,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -407,7 +406,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -448,7 +446,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -465,7 +462,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -482,7 +478,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -502,7 +497,6 @@
       });
 
       if(res.data.status == 200){
-        console.log(res.data.data);
         return res.data.data;
       }else{
         tip.alert('未查到结果');
@@ -517,13 +511,9 @@
 
       this.isBinding = this.isOldUser || this.isNewUser;
 
-      // console.log(this.isOldUser,this.isNewUser,this.isBinding);
       if (!this.isBinding) {
 
         await this.checkBinding();
-
-        // 绑定成功  res结果无意义就是个字符串
-        console.log('新老用户', this.isOldUser, this.isNewUser);
       }
     }
   }

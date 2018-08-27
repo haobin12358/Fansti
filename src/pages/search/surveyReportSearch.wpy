@@ -64,7 +64,7 @@
 
   export default class SurveyReportSearch extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '鉴定报告查询'
     }
 
     components = {};
@@ -80,7 +80,6 @@
     events = {};
 
     onLoad(params, data) {
-      console.log('preload',data.preload.res);
       this.res = data.preload.res;
     }
   }
