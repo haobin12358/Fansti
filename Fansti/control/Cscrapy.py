@@ -806,6 +806,7 @@ class Cscrapy():
                     "dgr_container": dgr_row_value[dgr_container_dict.get("货机容器类型")],
                     "dgr_container_capacity": dgr_row_value[dgr_container_dict.get("货机容器类型对应容量")],
                     "dgr_type": "货机",
+                    "dgr_container_message": dgr_row_value[dgr_level_index_to_db.get("message")],
                 }
 
                 # 内容格式编码处理以及去空格处理+ TODO 正则校验

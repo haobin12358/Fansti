@@ -374,6 +374,7 @@ class AIR_HWYS_DGR_CONTAINER(Base):
     dgr_container = Column(String(200))                     # 容器类型
     dgr_container_capacity = Column(String(200))            # 容量
     dgr_type = Column(String(60))                           # 客机/货机
+    dgr_container_message = Column(String(2000))            #
 
 class AIR_HWYS_TACT(Base):
     __tablename__ = "AIR_HWYS_TACT"
