@@ -132,9 +132,9 @@
     float: left;
     height: 7rem;
     .table-title-tr {
+      display: flex;
       .table-title {
         width: 33%;
-        float: left;
         color: #545454;
         margin: 0.3rem 0;
         font-weight: bold;
@@ -142,9 +142,9 @@
       }
     }
     .table-tr {
+      display: flex;
       .table-td {
         width: 33%;
-        float: left;
         margin: 0.2rem 0;
         text-align: center;
       }
