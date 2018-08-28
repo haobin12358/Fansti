@@ -191,19 +191,25 @@ class CGoods():
         jc_abo.update(get_model_return_dict(self.sgoods.get_std(args.get("jcno"))))
         # 预配
         hbdate1 = self.sgoods.get_dctime_by_jcno(args.get("jcno"))
-        jc_abo["hbdate1"] = hbdate1.hbdate1.strftime( '%Y-%m-%d')
+        if not hbdate1:
+            jc_abo["hb_date1"] = None
+        else:
+            jc_abo["hbdate1"] = hbdate1.hbdate1.strftime('%Y-%m-%d')
         # 交单
         jdtime = self.sgoods.get_jd_by_jcno(args.get("jcno"))
         jdtime = jdtime.jd_time or jdtime.jd_date
         if not jdtime:
             jc_abo['supporttime'] = None
         else:
-            jc_abo['supporttime'] = jdtime.strftime( '%Y-%m-%d')
+            jc_abo['supporttime'] = jdtime.strftime('%Y-%m-%d')
         # 送达
         jc_abo.update(get_model_return_dict(self.sgoods.get_dhmes_by_jcno(args.get("jcno"))))
         # 运单文件
         ydfile = get_model_return_list(self.sgoods.get_awbfile_by_jcno(args.get("jcno")))
         jc_abo['ydfile'] = ydfile
+        # 报关单文件
+        contentfile = get_model_return_list(self.sgoods.get_contentfile_by_jcno(args.get("jcno")))
+        jc_abo['contentfile'] = contentfile
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response

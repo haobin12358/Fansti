@@ -330,7 +330,7 @@ class Cscrapy():
         if args["login_name"] == "" and self.get_count("flyno", args["openid"]) >= 10:
             return import_status("ERROR_GET_SCRAPY", "FANSTI_ERROR", "ERROR_GET_SCRAPY")
         args["depa"] = str(args.get("depa")).upper() if args.get("depa") else None
-        args["dest"] = str(args.get("depa")).upper() if args.get("dest") else None
+        args["dest"] = str(args.get("dest")).upper() if args.get("dest") else None
 
         new_info = add_model("SELECT_INFO",
                              **{

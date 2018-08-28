@@ -16,7 +16,7 @@ class SGoods(SBase):
     @close_session
     def get_all_goods_by_filter(self, wtsfilter, page_size, page_num):
         return self.session.query(
-            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc) \
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc).order_by(AIR_HWYS_WTS.jd_date.desc()) \
             .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
 
     @close_session
@@ -50,7 +50,7 @@ class SGoods(SBase):
     @close_session
     def get_awb_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.content)\
-            .filter_by(content='awb').filter_by(jcno=jcno).all()
+            .filter_by(content='AWB').filter_by(jcno=jcno).all()
 
     @close_session
     def get_jd_by_jcno(self, jcno):
@@ -120,3 +120,7 @@ class SGoods(SBase):
     def get_awbfile_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.filename) \
             .filter_by(content='AWB').filter_by(jcno=jcno).all()
+
+    @close_session
+    def get_contentfile_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='报关单').filter_by(jcno=jcno).all()
