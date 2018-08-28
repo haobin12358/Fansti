@@ -647,7 +647,7 @@ class Cscrapy():
 
             # dgr model
             if dgr_row_value[dgr_key_index_to_db.get("unname")]:
-                unno =  dgr_row_value[dgr_key_index_to_db.get("unno")] or unno
+                unno = re.sub(r"[\n\t\s]", "", dgr_row_value[dgr_key_index_to_db.get("unno")]) or unno
                 dgr_tmp = self.sscrapy.get_dgr_by_unno_unname(
                     unno, re.sub(r"[\n\t\s]", "", dgr_row_value[dgr_key_index_to_db.get("unname")]))
                 if dgr_tmp:
