@@ -26,7 +26,8 @@ class Sscrapy(SBase):
 
     @close_session
     def get_all_select(self, page_num, page_size, select_name):
-        return self.session.query(SELECT_INFO.login_name, SELECT_INFO.openid, SELECT_INFO.select_name, SELECT_INFO.create_time)\
+        return self.session.query(SELECT_INFO.login_name, SELECT_INFO.openid, SELECT_INFO.select_name,
+                                  SELECT_INFO.create_time, SELECT_INFO.select_value)\
             .filter_by(select_name=select_name).offset(page_size * (page_num - 1)).limit(page_size).all()
 
     @close_session

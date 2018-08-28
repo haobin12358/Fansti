@@ -104,7 +104,7 @@ class Cscrapy():
             ]
             first_key = ["基本信息", "所属章节", "税率信息", "申报要素", "监管条件", "检验检疫类别"]
             for row in parser.text:
-                print(row.encode("utf8"))
+                print(row)
                 if row in first_key:
                     key_index = first_key.index(row)
                     row_index = parser.text.index(row)
@@ -114,14 +114,14 @@ class Cscrapy():
                         print(parser.text[row_index + 2])
                         print(self.title.format(""))
                         a = {}
-                        if parser.text[row_index + 1] in first_key or parser.text[row_index + 1].encode("utf8") == "无" or parser.text[
+                        if parser.text[row_index + 1] in first_key or parser.text[row_index + 1] == "无" or parser.text[
                             row_index + 1] == "分享" or parser.text[row_index + 1] == "上一条:":
                             break
-                        if parser.text[row_index + 1].encode("utf8") == "CIQ代码(13位海关编码)" and parser.text[row_index + 2].encode("utf8") == "编码状态":
+                        if parser.text[row_index + 1] == "CIQ代码(13位海关编码)" and parser.text[row_index + 2] == "编码状态":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
                             a["value"] = ""
-                        elif parser.text[row_index + 1].encode("utf8") == "暂定税率" and parser.text[row_index + 2].encode("utf8") == "进口普通税率":
+                        elif parser.text[row_index + 1] == "暂定税率" and parser.text[row_index + 2] == "进口普通税率":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
                             a["value"] = ""
@@ -497,6 +497,9 @@ class Cscrapy():
 
         all_select = get_model_return_list(self.sscrapy.get_all_select(int(args["page_num"]), int(args["page_size"])
                                                                        , name))
+        for select in all_select:
+            select['select_name'] = select['select_value']
+            
         make_log("all_select", all_select)
         for select_info in all_select:
             select_info['create_time'] = datetime.datetime.strptime(select_info['create_time'], "%Y%m%d").strftime("%Y-%m-%d")
