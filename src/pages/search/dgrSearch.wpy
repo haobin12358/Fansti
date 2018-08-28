@@ -18,6 +18,10 @@
                 }
               }
             }
+
+            .tr.tr-unname{
+              font-weight: bold;
+            }
           }
         }
 
@@ -38,100 +42,104 @@
               联合国正确运输编号:
             </view>
             <view class="td">
-              {{res.unno}}
+              {{res[0].unno}}
             </view>
           </view>
-          <view class="tr">
-            <view class="td">
-              联合国正确运输名称:
-            </view>
-            <view class="td">
-              {{res.unname}}
-            </view>
-          </view>
-          <block wx:for="{{res.dgr_type}}" wx:key="id">
-            <view class="tr">
-              <view class="td">
-                型号等级:
-              </view>
-              <view class="td">
-                {{item.dgr_level}}
-              </view>
-            </view>
 
-            <!--固定货机3个-->
-            <view class="tr">
-              <view class="td">
-                货机容量:
+          <block  wx:for="{{res}}" wx:key="id" wx:for-item="wrapItem">
+            <block wx:for="{{wrapItem.dgr_type}}">
+              <view class="tr tr-unname">
+                <view class="td">
+                  | 联合国正确运输名称:
+                </view>
+                <view class="td">
+                  {{wrapItem.unname}}
+                </view>
               </view>
-              <view class="td">
-                {{item.airfreighter_capacity}}
-              </view>
-            </view>
-            <view class="tr">
-              <view class="td">
-                货机说明号:
-              </view>
-              <view class="td">
-                {{item.airfreighter_description_no}}
-              </view>
-            </view>
-            <view class="tr">
-              <view class="td">
-                货机是否可单一:
-              </view>
-              <view class="td">
-                {{item.airfreighter_is_single}}
-              </view>
-            </view>
-            <!--固定客机3个-->
-            <view class="tr">
-              <view class="td">
-                客机容量:
-              </view>
-              <view class="td">
-                {{item.airliner_capacity}}
-              </view>
-            </view>
-            <view class="tr">
-              <view class="td">
-                客机说明号:
-              </view>
-              <view class="td">
-                {{item.airliner_description_no}}
-              </view>
-            </view>
-            <view class="tr">
-              <view class="td">
-                客机是否可单一:
-              </view>
-              <view class="td">
-                {{item.airliner_is_single}}
-              </view>
-            </view>
-
-            <view class="tr">
-              <view class="td">
-                型号备注:
-              </view>
-              <view class="td">
-                {{item.message?item.message:''}}
-              </view>
-            </view>
-            <block wx:for="{{item.dgr_con}}" wx:for-item="conType">
               <view class="tr">
                 <view class="td">
-                  {{conType.dgr_container}}-{{conType.dgr_type}}:
+                  型号等级:
                 </view>
                 <view class="td">
-                  {{conType.dgr_container_capacity}}
+                  {{item.dgr_level}}
                 </view>
               </view>
+
+              <!--固定货机3个-->
+              <view class="tr">
+                <view class="td">
+                  货机容量:
+                </view>
+                <view class="td">
+                  {{item.airfreighter_capacity}}
+                </view>
+              </view>
+              <view class="tr">
+                <view class="td">
+                  货机说明号:
+                </view>
+                <view class="td">
+                  {{item.airfreighter_description_no}}
+                </view>
+              </view>
+              <view class="tr">
+                <view class="td">
+                  货机是否可单一:
+                </view>
+                <view class="td">
+                  {{item.airfreighter_is_single}}
+                </view>
+              </view>
+              <!--固定客机3个-->
+              <view class="tr">
+                <view class="td">
+                  客机容量:
+                </view>
+                <view class="td">
+                  {{item.airliner_capacity}}
+                </view>
+              </view>
+              <view class="tr">
+                <view class="td">
+                  客机说明号:
+                </view>
+                <view class="td">
+                  {{item.airliner_description_no}}
+                </view>
+              </view>
+              <view class="tr">
+                <view class="td">
+                  客机是否可单一:
+                </view>
+                <view class="td">
+                  {{item.airliner_is_single}}
+                </view>
+              </view>
+
+              <view class="tr">
+                <view class="td">
+                  型号备注:
+                </view>
+                <view class="td">
+                  {{item.message?item.message:''}}
+                </view>
+              </view>
+              <block wx:for="{{item.dgr_con}}" wx:for-item="conType">
+                <view class="tr">
+                  <view class="td">
+                    {{conType.dgr_container}}-{{conType.dgr_type}}:
+                  </view>
+                  <view class="td">
+                    {{conType.dgr_container_capacity}}
+                  </view>
+                </view>
+              </block>
             </block>
           </block>
-        </view>
 
+        </view>
       </view>
+
     </scroll-view>
   </view>
 
