@@ -274,7 +274,6 @@
             <view class="td">送达时间</view>
             <view class="td">{{detail.dhmes || '暂无'}}</view>
           </view>
-
         </view>
       </view>
 
@@ -283,7 +282,7 @@
           报关单文件
         </view>
         <view class="tbody">
-          <view wx:for="{{detail.ydfile}}" class="tr">
+          <view wx:for="{{detail.contentfile}}" class="tr">
             <view class="td">{{index+1}}</view>
             <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
           </view>
@@ -301,9 +300,6 @@
           </view>
         </view>
       </view>
-
-
-
     </view>
     <view class="container-check-section">
       <!--入仓照片-->
