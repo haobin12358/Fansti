@@ -16,8 +16,9 @@ class SGoods(SBase):
     @close_session
     def get_all_goods_by_filter(self, wtsfilter, page_size, page_num):
         return self.session.query(
-            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc).order_by(AIR_HWYS_WTS.jd_date.desc()) \
-            .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc)\
+                .order_by(AIR_HWYS_WTS.jd_date.desc() or AIR_HWYS_WTS.jd_time.desc()).order_by(AIR_HWYS_WTS.jcno.desc()) \
+                .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
 
     @close_session
     def get_xsr_by_user(self, accounts):

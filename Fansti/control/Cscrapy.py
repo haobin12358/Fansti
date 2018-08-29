@@ -111,11 +111,12 @@ class Cscrapy():
                     while True:
                         print(self.title.format(""))
                         print(parser.text[row_index + 1])
-                        print(parser.text[row_index + 2])
+                        print("分享")
+                        print("分享" == parser.text[row_index + 1])
                         print(self.title.format(""))
                         a = {}
                         if parser.text[row_index + 1] in first_key or parser.text[row_index + 1] == "无" or parser.text[
-                            row_index + 1] == "分享" or parser.text[row_index + 1] == "上一条:":
+                            row_index + 1] == "分享" or parser.text[row_index + 1] == "上一条:" or parser.text[row_index + 1] == "网站声明":
                             break
                         if parser.text[row_index + 1] == "CIQ代码(13位海关编码)" and parser.text[row_index + 2] == "编码状态":
                             a["name"] = parser.text[row_index + 1]
@@ -168,7 +169,7 @@ class Cscrapy():
             parser.feed(strResult.decode('gbk','ignore'))
             length = len(parser.text)
             while length >= 0:
-                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("\t", "").replace("\r","").replace("\n", "")
+                parser.text[length - 1] = parser.text[length - 1].replace(" ", "").replace("\t", "").replace("\r","").replace("\n", "").replace("   ", "")
                 if parser.text[length - 1].replace(" ", "") in ["\r\n", "\r\n\r\n", "\r\n\r\n\r\n", "]", "?", "\r\n\t",
                                                                 "\r\n\t\t", "\r\n\t\t\t", "\r\n\t\t\t\t'", ":", ""]:
                     parser.text.remove(parser.text[length - 1])
@@ -215,7 +216,6 @@ class Cscrapy():
                             else:
                                 item["value"].append(parser.text[row_index + index + 1])
                         index += 1
-
                 elif row in keys:
                     key_index = keys.index(row)
                     index = 0
@@ -230,6 +230,7 @@ class Cscrapy():
 
                             item["name"] = parser.text[row_index + index + 1]
                             item["value"] = []
+
                         else:
                             if parser.text[row_index + index + 1] in keys \
                                     or parser.text[row_index + index + 1] == "相关化学品信息":
@@ -237,6 +238,13 @@ class Cscrapy():
                             else:
                                 item["value"].append(parser.text[row_index + index + 1])
                         index += 1
+            # print(data)
+            while True:
+                length = len(data[1]["value"])
+                if data[1]["value"][length - 1]["name"] == "密度:":
+                    break
+                else:
+                    data[1]["value"].remove(data[1]["value"][length - 1])
             response = import_status("SUCCESS_GET_INFO", "OK")
             response["data"] = data
             return response
@@ -347,8 +355,8 @@ class Cscrapy():
         make_log("all_airline", all_airline)
         for airline in all_airline:
             airline["mydate"] = datetime.datetime.strptime(airline["mydate"], '%Y-%m-%d').strftime("%Y-%m-%d")
-            airline["etd"] = airline["etd"].strftime("%Y-%m-%d %H:%M")
-            airline["eta"] = airline["eta"].strftime("%Y-%m-%d %H:%M")
+            airline["etd"] = airline["etd"].strftime("%Y-%m-%d %H:%M:%S")
+            airline["eta"] = airline["eta"].strftime("%Y-%m-%d %H:%M:%S")
         if not all_airline:
             return SYSTEM_ERROR
         response = import_status("SUCCESS_GET_INFO", "OK")

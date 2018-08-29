@@ -268,8 +268,8 @@ class AIR_HWYS_LINES(Base):
     depa = Column(String(50))                                   # 起飞地
     dest = Column(String(50))                                   # 目的地
     mydate = Column(String(50))                                 # 航班日期
-    etd = Column(DATE)                                          # 起飞时间
-    eta = Column(DATE)                                          # 落地时间
+    etd = Column(DATETIME)                                          # 起飞时间
+    eta = Column(DATETIME)                                          # 落地时间
     supporttime = Column(String(100))                           # 交单时间
     aircraft = Column(String(200))                              # 机型
     remark = Column(Text)                                       # 备注
