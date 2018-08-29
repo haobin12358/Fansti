@@ -118,10 +118,15 @@ class Cscrapy():
                         if parser.text[row_index + 1] in first_key or parser.text[row_index + 1] == "无" or parser.text[
                             row_index + 1] == "分享" or parser.text[row_index + 1] == "上一条:" or parser.text[row_index + 1] == "网站声明":
                             break
-                        if parser.text[row_index + 1] == "CIQ代码(13位海关编码)" and parser.text[row_index + 2] == "编码状态":
+                        if parser.text[row_index + 2] == "编码状态":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
                             a["value"] = ""
+                        if parser.text[row_index + 1] == "CIQ代码(13位海关编码)":
+                            a["name"] = parser.text[row_index + 1]
+                            row_index = row_index + 1
+                            a["value"] = parser.text[row_index + 2]
+                            break
                         elif parser.text[row_index + 1] == "暂定税率" and parser.text[row_index + 2] == "进口普通税率":
                             a["name"] = parser.text[row_index + 1]
                             row_index = row_index + 1
