@@ -107,7 +107,7 @@ class CGoods():
                     goods["jiaodan"] = "0"
                 else:
                     goods["jiaodan"] = "1"
-            qifei = get_model_return_dict(self.sgoods.get_hbdate_by_jcno(goods["jcno"]))
+            qifei = get_model_return_dict(self.sgoods.get_std(goods["jcno"]))
             make_log("qifei", qifei)
             if not qifei or not qifei["mes1"]:
                 goods["qifei"] = "0"
@@ -190,18 +190,22 @@ class CGoods():
         # 起飞
         jc_abo.update(get_model_return_dict(self.sgoods.get_std(args.get("jcno"))))
         # 预配
-        hbdate1 = self.sgoods.get_dctime_by_jcno(args.get("jcno"))
-        if not hbdate1:
+        hbdate1 = get_model_return_dict(self.sgoods.get_dctime_by_jcno(args.get("jcno")))
+        print(hbdate1)
+        if not hbdate1 or not hbdate1["hbdate1"]:
             jc_abo["hb_date1"] = None
         else:
-            jc_abo["hbdate1"] = hbdate1.hbdate1.strftime('%Y-%m-%d')
+            jc_abo["hbdate1"] = hbdate1["hbdate1"].strftime('%Y-%m-%d')
         # 交单
         jdtime = self.sgoods.get_jd_by_jcno(args.get("jcno"))
         jdtime = jdtime.jd_time or jdtime.jd_date
         if not jdtime:
             jc_abo['supporttime'] = None
         else:
-            jc_abo['supporttime'] = jdtime.strftime('%Y-%m-%d')
+            if not jdtime:
+                jc_abo['supporttime'] = jdtime.strftime('%Y-%m-%d')
+            else:
+                jc_abo["supporttime"] = None
         # 送达
         jc_abo.update(get_model_return_dict(self.sgoods.get_dhmes_by_jcno(args.get("jcno"))))
         # 运单文件
