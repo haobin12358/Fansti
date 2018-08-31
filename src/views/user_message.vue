@@ -102,6 +102,7 @@
   }
 }
   .m-page-box{
+    margin-left: -25%;
     margin-top: 0.6rem;
   }
 
