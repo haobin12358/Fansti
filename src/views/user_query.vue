@@ -1,33 +1,20 @@
 <template>
-    <div>
+    <div class="table">
       <tabs :tabs="tabs_data" @tabClick="tabClick"></tabs>
       <div class="table-container">
         <div class="table-title-tr">
-          <div class="table-title">时间</div>
-          <div class="table-title">用户名</div>
-          <div class="table-title">查询内容</div>
+          <div class="table-title">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间</div>
+          <div class="table-title">用 户 名</div>
+          <div class="table-title-one">查询内容</div>
         </div>
-        <div class="table-tr" v-for="item in query1">
+        <div class="table-tr" v-for="item in query">
           <div class="table-td">{{item.create_time}}</div>
           <div class="table-td">{{item.login_name}}</div>
-          <div class="table-td">{{item.select_name}}</div>
-        </div>
-      </div>
-      <div class="line"></div>
-      <div class="table-container" v-if="query2Status">
-        <div class="table-title-tr">
-          <div class="table-title">时间</div>
-          <div class="table-title">用户名</div>
-          <div class="table-title">查询内容</div>
-        </div>
-        <div class="table-tr" v-for="item in query2">
-          <div class="table-td">{{item.create_time}}</div>
-          <div class="table-td">{{item.login_name}}</div>
-          <div class="table-td">{{item.select_name}}</div>
+          <div class="table-td-one">{{item.select_name}}</div>
         </div>
       </div>
       <div class="page-box">
-        <page :total="total_page"></page>
+        <page :total="total_page" @pageChange="pageChange"></page>
       </div>
     </div>
 </template>
@@ -55,7 +42,7 @@
           { name: '航班时刻', click: false, url: '' }
         ],
         select_name: 'DGR',
-        page_size:20,
+        page_size:10,
         total_num:5,
         current_page:1,
         total_page:0
@@ -75,7 +62,6 @@
             // console.log(this.query)
             this.total_num = res.data.data.count;
             this.total_page = Math.ceil(this.total_num / this.page_size);
-            this.changeQuery();
           }else{
             this.$message.error(res.data.message);
           }
@@ -102,22 +88,6 @@
         this.select_name = this.tabs_data[index].name
         this.getData(1);
       },
-      // 将获取到的数据分为左右两块
-      changeQuery() {
-        this.query1 = [];
-        this.query2 = [];
-        if(this.query.length <= 10) {
-          this.query2Status = false
-          this.query1 = this.query
-        }else if(this.query.length > 10) {
-          for(let i = 0; i < 10; i ++) {
-            this.query1.push(this.query[i])
-          }
-          for(let j = 10; j < this.query.length; j ++) {
-            this.query2.push(this.query[j])
-          }
-        }
-      }
     },
     created() {
       this.getData(1);
@@ -127,37 +97,45 @@
 
 <style lang="less" rel="stylesheet/less" scoped>
   @import "../common/css/_variate.less";
-  .table-container {
-    width: 45%;
-    float: left;
-    height: 7rem;
-    .table-title-tr {
-      display: flex;
-      .table-title {
-        width: 33%;
-        color: #545454;
-        margin: 0.3rem 0;
-        font-weight: bold;
-        text-align: center;
+  .table {
+    .table-container {
+      width: 95%;
+      .table-title-tr {
+        display: flex;
+        .table-title {
+          width: 15%;
+          color: #545454;
+          padding: 0.2rem 0;
+          font-weight: bold;
+          text-align: center;
+        }
+        .table-title-one {
+          width: 60%;
+          color: #545454;
+          padding: 0.2rem 0.6rem;
+          font-weight: bold;
+        }
+      }
+      .table-tr {
+        display: flex;
+        align-items: center;
+        line-height: 0.2rem;
+        border-bottom: 1px solid @borderColor;
+        .table-td {
+          width: 15%;
+          height: auto;
+          padding: 0.2rem 0;
+          text-align: center;
+        }
+        .table-td-one {
+          width: 60%;
+          height: auto;
+          padding: 0.2rem 0.6rem;
+        }
       }
     }
-    .table-tr {
-      display: flex;
-      .table-td {
-        width: 33%;
-        margin: 0.2rem 0;
-        text-align: center;
-      }
+    .page-box {
+      margin-top: 0.3rem;
     }
-  }
-  .page-box {
-    margin: 48% 0 0 -20%;
-  }
-  .line {
-    width: 1px;
-    float: left;
-    height: 5.7rem;
-    margin-top: 1rem;
-    background-color: @borderColor;
   }
 </style>
