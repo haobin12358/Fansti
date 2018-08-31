@@ -177,6 +177,7 @@ class AIR_HWYS_DCD_JLD(Base):
     mes1 = Column(String(2000))
     mes2 = Column(String(2000))
     mes3 = Column(String(2000))
+    is_delay = Column(String(10))
 
 class AIR_HWYS_PHOTOS(Base):
     __tablename__ = "AIR_HWYS_PHOTOS"
@@ -184,7 +185,7 @@ class AIR_HWYS_PHOTOS(Base):
     jcno = Column(String(50), nullable=False)           # 进仓单号
     phototype = Column(String(100), nullable=False)     # 照片类型in进仓out出仓weight称重
     photourl = Column(String(200), nullable=False)      # 图片地址
-    createtime = Column(DATE, nullable=False)           # 创建时间
+    createtime = Column(DATETIME, nullable=False)           # 创建时间
     czr = Column(String(100))                           # 处理师傅
     filename = Column(String(100))                      # 文件名称
     filetext = Column(String(100), default="无")        # 文件信息

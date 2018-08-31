@@ -47,12 +47,12 @@ class SGoods(SBase):
     @close_session
     def get_content_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.content)\
-            .filter(AIR_HWYS_FILE.content.like("%报关单%"), AIR_HWYS_FILE.jcno == jcno).all()
+            .filter(AIR_HWYS_FILE.content.like("%报关单%"), AIR_HWYS_FILE.jcno == jcno).first()
 
     @close_session
     def get_awb_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.content)\
-            .filter_by(content='AWB').filter_by(jcno=jcno).all()
+            .filter_by(content='AWB').filter_by(jcno=jcno).first()
 
     @close_session
     def get_jd_by_jcno(self, jcno):
@@ -116,7 +116,7 @@ class SGoods(SBase):
 
     @close_session
     def get_std(self, jcno):
-        return self.session.query(AIR_HWYS_DCD_JLD.mes1).filter(AIR_HWYS_DCD_JLD.jcno == jcno).first()
+        return self.session.query(AIR_HWYS_DCD_JLD.mes1).filter_by(jcno=jcno).first()
 
     @close_session
     def get_awbfile_by_jcno(self, jcno):
@@ -126,3 +126,7 @@ class SGoods(SBase):
     @close_session
     def get_contentfile_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='报关单').filter_by(jcno=jcno).all()
+
+    @close_session
+    def get_yanwu_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_DCD_JLD.id).filter_by(jcno=jcno).filter_by(is_delay="1").all()

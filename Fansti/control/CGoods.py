@@ -59,7 +59,9 @@ class CGoods():
         for goods in goods_list:
             yupei = get_model_return_dict(self.sgoods.get_dctime_by_jcno(goods["jcno"]))
             make_log("yupei", yupei)
-            if not yupei or not yupei["hbdate1"]:
+            if not yupei:
+                goods["yupei"] = "0"
+            elif "hbdate1" in yupei.keys() and not yupei["hbdate1"]:
                 goods["yupei"] = "0"
             else:
                 goods["yupei"] = "1"
@@ -84,41 +86,52 @@ class CGoods():
                 goods["chengzhong"] = "0"
             else:
                 goods["chengzhong"] = "1"
-            baoguan = get_model_return_list(self.sgoods.get_content_by_jcno(goods["jcno"]))
+            baoguan = get_model_return_dict(self.sgoods.get_content_by_jcno(goods["jcno"]))
             make_log("baoguan", baoguan)
             #for row in baoguan:
             if not baoguan:
                 goods["baoguan"] = "0"
+            elif "content" in baoguan.keys() and not baoguan["content"]:
+                goods["baoguan"] = "0"
             else:
                 goods['baoguan'] = "1"
-            yundan = get_model_return_list(self.sgoods.get_awb_by_jcno(goods["jcno"]))
+            yundan = get_model_return_dict(self.sgoods.get_awb_by_jcno(goods["jcno"]))
             make_log("yundan", yundan)
             #for row in yundan:
             if not yundan:
                 goods["yundan"] = "0"
+            elif "content" in yundan.keys() and not yundan["content"]:
+                goods["yundan"] = "0"
             else:
                 goods["yundan"] = "1"
-            jiaodan = get_model_return_dict(self.sgoods.get_jd_by_jcno(goods["jcno"]))
-            make_log("jiaodan", jiaodan)
-            if not jiaodan:
+            jdtime = self.sgoods.get_jd_by_jcno(goods["jcno"])
+            make_log("jiaodan", jdtime)
+            jdtime = jdtime.jd_time or jdtime.jd_date
+            if not jdtime:
                 goods["jiaodan"] = "0"
             else:
-                if not jiaodan["jd_date"] and not jiaodan["jd_time"]:
-                    goods["jiaodan"] = "0"
-                else:
-                    goods["jiaodan"] = "1"
+                goods["jiaodan"] = "1"
             qifei = get_model_return_dict(self.sgoods.get_std(goods["jcno"]))
             make_log("qifei", qifei)
-            if not qifei or not qifei["mes1"]:
+            if not qifei:
+                goods["qifei"] = "0"
+            elif "mes1" in qifei.keys() and not qifei["mes1"]:
                 goods["qifei"] = "0"
             else:
                 goods["qifei"] = "1"
             dida = get_model_return_dict(self.sgoods.get_dhmes_by_jcno(goods["jcno"]))
             make_log("dida", dida)
-            if not dida or not dida["dhmes"]:
+            if not dida:
                 goods["dida"] = "0"
+            elif "dhmes" in dida.keys() and not dida["dhmes"]:
+                goods["dhmes"] = "0"
             else:
                 goods["dida"] = "1"
+            yanwu = get_model_return_list(self.sgoods.get_yanwu_by_jcno(goods["jcno"]))
+            if not yanwu:
+                goods["yanwu"] = "0"
+            else:
+                goods["yanwu"] = "1"
         response = import_status("SUCCESS_GET_GOODS", "OK")
         response["data"] = goods_list
         return response
@@ -153,7 +166,7 @@ class CGoods():
             make_log("jc_abo_in", jc_abo_in)
             if jc_abo_in:
                 for in_order in jc_abo_in:
-                    jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
                     # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
                     jc_abo["in"]["czr"] = in_order["czr"]
                     jc_abo["in"]["picture"].append(in_order["photourl"])
@@ -161,7 +174,7 @@ class CGoods():
             make_log("jc_abo_out", jc_abo_out)
             if jc_abo_out:
                 for out_order in jc_abo_out:
-                    jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
                     # jc_abo["out"]["czr"] = out_order["czr"].decode("gbk").encode("utf8")
                     jc_abo["out"]["czr"] = out_order["czr"]
                     jc_abo["out"]["picture"].append(out_order["photourl"])
@@ -169,7 +182,7 @@ class CGoods():
             make_log("jc_abo_weight", jc_abo_weight)
             if jc_abo_weight:
                 for weight_order in jc_abo_weight:
-                    jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d")
+                    jc_abo["weight_pic"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
                     # jc_abo["weight_pic"]["czr"] = weight_order["czr"].decode("gbk").encode("utf8")
                     jc_abo["weight_pic"]["czr"] = weight_order["czr"]
                     jc_abo["weight_pic"]["picture"].append(weight_order["photourl"])
@@ -188,24 +201,27 @@ class CGoods():
 
         import datetime
         # 起飞
-        jc_abo.update(get_model_return_dict(self.sgoods.get_std(args.get("jcno"))))
+        jcno = args.get("jcno")
+        make_log("jcno", jcno)
+        jc_abo.update(get_model_return_dict(self.sgoods.get_std(jcno)))
         # 预配
-        hbdate1 = get_model_return_dict(self.sgoods.get_dctime_by_jcno(args.get("jcno")))
-        print(hbdate1)
-        if not hbdate1 or not hbdate1["hbdate1"]:
-            jc_abo["hb_date1"] = None
+        hbdate1 = get_model_return_dict(self.sgoods.get_dctime_by_jcno(jcno))
+        make_log("hbdate1", hbdate1)
+        if not hbdate1:
+            jc_abo["hbdate1"] = None
+        elif "hbdate1" in hbdate1.keys() and not hbdate1["hbdate1"]:
+            jc_abo["hbdate1"] = None
         else:
             jc_abo["hbdate1"] = hbdate1["hbdate1"].strftime('%Y-%m-%d')
         # 交单
-        jdtime = self.sgoods.get_jd_by_jcno(args.get("jcno"))
+        jdtime = self.sgoods.get_jd_by_jcno(jcno)
+        make_log("jdtime", jdtime)
         jdtime = jdtime.jd_time or jdtime.jd_date
         if not jdtime:
             jc_abo['supporttime'] = None
         else:
-            if not jdtime:
-                jc_abo['supporttime'] = jdtime.strftime('%Y-%m-%d')
-            else:
-                jc_abo["supporttime"] = None
+            jc_abo['supporttime'] = jdtime.strftime('%Y-%m-%d')
+
         # 送达
         jc_abo.update(get_model_return_dict(self.sgoods.get_dhmes_by_jcno(args.get("jcno"))))
         # 运单文件
