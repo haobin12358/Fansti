@@ -40,6 +40,7 @@
   @import "../../common/css/index";
   .m-page{
     margin-top: 0.2rem;
+    margin-left: 8%;
     &:after{
       display: block;
       content: '';
