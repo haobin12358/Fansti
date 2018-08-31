@@ -508,6 +508,7 @@ class Cscrapy():
         if not name:
             return PARAMS_MISS
 
+        count =  self.sscrapy.get_all_select_count(name)
         all_select = get_model_return_list(self.sscrapy.get_all_select(int(args["page_num"]), int(args["page_size"])
                                                                        , name))
         for select in all_select:
@@ -516,7 +517,7 @@ class Cscrapy():
         make_log("all_select", all_select)
         for select_info in all_select:
             select_info['create_time'] = datetime.datetime.strptime(select_info['create_time'], "%Y%m%d").strftime("%Y-%m-%d")
-        count = len(all_select)
+        # count = len(all_select)
         response = import_status("SUCCESS_GET_RETRUE", "OK")
         response["data"] = {}
         response["data"]["all_select"] = all_select

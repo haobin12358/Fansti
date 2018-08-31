@@ -26,9 +26,11 @@ class Sscrapy(SBase):
 
     @close_session
     def get_all_select(self, page_num, page_size, select_name):
-        return self.session.query(SELECT_INFO.login_name, SELECT_INFO.openid, SELECT_INFO.select_name,
-                                  SELECT_INFO.create_time, SELECT_INFO.select_value)\
-            .filter_by(select_name=select_name).offset(page_size * (page_num - 1)).limit(page_size).all()
+        return self.session.query(
+            SELECT_INFO.login_name, SELECT_INFO.openid, SELECT_INFO.select_name,
+            SELECT_INFO.create_time, SELECT_INFO.select_value).filter_by(
+            select_name=select_name).order_by(SELECT_INFO.create_time.desc()).offset(
+            page_size * (page_num - 1)).limit(page_size).all()
 
     @close_session
     def get_dgr_by_unno_unname(self, unno, unname):
@@ -104,3 +106,8 @@ class Sscrapy(SBase):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
             .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).offset(1).limit(20).all()
+
+    @close_session
+    def get_all_select_count(self, name):
+        from sqlalchemy import func
+        return self.session.query(func.count(SELECT_INFO.id)).filter(SELECT_INFO.select_name == name).scalar()
