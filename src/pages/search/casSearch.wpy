@@ -12,7 +12,7 @@
           .thead {
             color: #ffffff;
             background: @mainYellowColor;
-            padding: 8 rpx 0 7 rpx 28 rpx;
+            padding: 8rpx 0 7rpx 28rpx;
 
             .fz24();
           }
@@ -24,7 +24,7 @@
                   text-align: right;
                   justify-content: flex-end;
 
-                  padding-right: 31 rpx;
+                  padding-right: 31rpx;
                 }
                 &:last-child {
                   text-align: left;

@@ -2,6 +2,24 @@
   @import "../../styles/table";
   @import "../../styles/card";
 
+  .container {
+    .container-card {
+      .card-title {
+      }
+
+      /*覆盖公共中靠两边的样式   使其靠中*/
+      .two-column-table {
+        .thead {
+          color: #ffffff;
+          background: @mainYellowColor;
+          padding: 8rpx 0 7rpx 28rpx;
+
+          .fz24();
+        }
+
+      }
+    }
+  }
 </style>
 
 <template>

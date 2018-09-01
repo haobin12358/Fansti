@@ -116,7 +116,7 @@
   <view class="freight-consignment-list">
     <view wx:for="{{listCmp}}" wx:key="hxno" class="goods-item" @tap.stop="tapItemHandler({{item.jcno}})">
       <view class="line-progress">
-        <block wx:for="{{item.stateGather}}" wx:key="index"  wx:for-item="stateItem">
+        <block wx:for="{{item.stateGather}}" wx:for-item="stateItem">
           <block wx:if="{{stateItem == 1}}">
             <view class="circle-big">
               <image src="../images/circle_full.png"></image>
@@ -177,9 +177,9 @@
         </view>
       </view>
 
-      <!--<view wx:if="{{item.progress == 0}}" class="top-right-label top-right-label-delay">-->
-        <!--<text class="top-right-label-text">延误</text>-->
-      <!--</view>-->
+      <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
+        <text class="top-right-label-text">延误</text>
+      </view>
 
 
       <view wx:if="{{item.dida == 1}}" class="top-right-label top-right-label-finish">
@@ -199,7 +199,8 @@
     props = {
       list: {
         //  Object Array String Number Boolean
-        type: Array
+        type: Array,
+        default: []
       }
     };
 
@@ -217,12 +218,9 @@
 
             item.stateGather = [item.yupei,item.jincang,item.chucang,item.chengzhong,item.baoguan,item.yundan,item.jiaodan,item.qifei,item.dida];
           }
-
         }
 
-        console.log(this.list);
         return this.list;
-
       }
 
     };

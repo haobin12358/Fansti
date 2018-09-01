@@ -19,6 +19,10 @@
               .td{
                 padding: 11rpx 0;
               }
+
+              .td.td-narrow{
+                flex: .5;
+              }
             }
           }
 
@@ -37,6 +41,10 @@
               .td{
                 padding: 11rpx 0;
 
+              }
+
+              .td.td-narrow{
+                flex: .5;
               }
             }
           }
@@ -57,20 +65,20 @@
 
         <view class="thead">
           <view class="tr">
-            <view class="td">目的机场</view>
-            <view class="td">航班号</view>
+            <view class="td td-narrow">目的地</view>
+            <view class="td td-narrow">航班号</view>
             <view class="td">航班</view>
-            <view class="td">机型</view>
+            <view class="td td-narrow">机型</view>
             <view class="td">起飞时间</view>
             <view class="td">到达时间</view>
           </view>
         </view>
         <view class="tbody">
           <view class="tr" wx:for="{{res}}" wx:key="flight">
-            <view class="td">{{item.dest}}</view>
-            <view class="td">{{item.flight}}</view>
+            <view class="td td-narrow">{{item.dest}}</view>
+            <view class="td td-narrow">{{item.flight}}</view>
             <view class="td">{{item.mydate}}</view>
-            <view class="td">{{item.aircraft}}</view>
+            <view class="td td-narrow">{{item.aircraft}}</view>
             <view class="td">{{item.etd}}</view>
             <view class="td">{{item.eta}}</view>
           </view>

@@ -210,18 +210,18 @@
               <view class="service-info-line">
                 客服名称：{{serviceInfo.user_name || '暂无'}}
               </view>
-              <view class="service-info-line">
+              <view class="service-info-line" @longtap="longTapQQHandler">
                 客服 QQ：{{serviceInfo.qq || '暂无'}}
               </view>
               <view class="service-info-line">
                 客服电话：{{serviceInfo.telephone || '暂无'}}
               </view>
-              <view class="service-info-line">
+              <view class="service-info-line" @longtap="longTapEmailHandler">
                 客服邮箱：{{serviceInfo.email || '暂无'}}
               </view>
 
             </view>
-            <image src="../../images/service_people.png" class="service-img"></image>
+            <image src="../../images/service_people.png" class="service-img"/>
           </view>
         </view>
         <view class="bd-section">
@@ -238,7 +238,7 @@
       </view>
       <view class="container-ft">
         <view class="ft-btns">
-          <button @tap="goPersonCard">分享服务号</button>
+          <button @tap="goPersonCard">分享小程序</button>
           <button @tap="tapCallService">电话沟通</button>
           <button @tap="bindingAgain">{{isBinding ? '重新绑定' : '开始绑定'}} </button>
         </view>
@@ -321,12 +321,25 @@
           count += this.monthRed[i].count;
         }
 
-        console.log(count);
         return count;
       }
     };
 
     methods = {
+      longTapQQHandler(){
+        if(this.serviceInfo.qq){
+          wx.setClipboardData({
+            data: this.serviceInfo.qq
+          });
+        }
+      },
+      longTapEmailHandler(){
+        if(this.serviceInfo.email){
+          wx.setClipboardData({
+            data: this.serviceInfo.email
+          });
+        }
+      },
       goPersonCard(){
         wx.navigateTo({
           url: '/pages/person/personCard'
@@ -367,7 +380,11 @@
       },
       //  显示未领取的红包
       tapWGPHandler() {
-        this.showWGP = true;
+        if(this.allPacketInfo.red_list.length){
+          this.showWGP = true;
+        }else{
+          tip.alert('没有待领红包');
+        }
       },
       receiveRed(item){
           // console.log('领取红包',item);
@@ -375,7 +392,12 @@
       },
       //  显示已领取的红包
       tapAGPHandler() {
-        this.showAGP = true;
+        if(this.allPacketInfo.my_red_num){
+
+          this.showAGP = true;
+        }else{
+          tip.alert('没有已领红包');
+        }
       },
       //  显示已完成票数
       tapCTHandler() {
@@ -411,8 +433,6 @@
       if (res.data.status == 200) {
         this.serviceInfo = res.data.data;
         this.$apply();
-      } else {
-        tip.alert(res.data.message);
       }
     }
 
@@ -467,7 +487,6 @@
     }
 
     async onLoad(params) {
-      console.log('person onload');
 
       // 方法在bindingMixin中
       await this.setOpenid();
@@ -475,22 +494,15 @@
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 
       this.isBinding = this.isOldUser || this.isNewUser;
-      // console.log(this.isBinding,this.isOldUser,this.isNewUser);
 
       if (!this.isBinding) {
         //  自动绑定后再自动获取数据
         let res = await this.checkBinding();
 
         // 绑定成功  res结果无意义就是个字符串
-        // console.log('新老用户',this.isOldUser, this.isNewUser);
       }
-
       this.init();
 
-      // params = {
-      //   openid: 'o_3il5Lbz4VYZOO8KI91P1Mqeanc',
-      //   share: 'true'
-      // }
       // 分享
       if (params.share == 'true') {
         this.addInvate(params.openid);

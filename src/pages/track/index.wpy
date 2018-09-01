@@ -93,6 +93,117 @@
     .container-bd {
       padding: 0 10rpx;
       box-sizing: border-box;
+
+      .freight-consignment-list{
+        .goods-item{
+          margin-bottom: 19rpx;
+          height: 261rpx;
+          border-radius: 10rpx;
+          border: 1px solid @borderColor;
+          box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
+          padding: 50rpx 25rpx 58rpx;
+          box-sizing: border-box;
+          color: @mainBlueColor;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          position: relative;
+
+          overflow: hidden;
+
+          .fz28();
+
+          .line-progress{
+            display: flex;
+            align-items: center;
+
+            .circle-big {
+              flex: 1;
+              height: 32rpx;
+              text-align: center;
+
+              image{
+                height: 32rpx;
+                width: 32rpx;
+              }
+            }
+            .circle-small{
+              height: 8rpx;
+              width: 8rpx;
+              background: @mainYellowColor;
+              border-radius: 50%;
+              margin: 0 4rpx;
+            }
+
+          }
+          .line-detail{
+            display: flex;
+            justify-content: space-between;
+
+            .line-right{
+              min-width: 35%;
+            }
+
+            .item-label{
+              display: inline-block;
+              margin-right: 20rpx;
+
+              image{
+                width: 36rpx;
+                height: 25rpx;
+                margin-right: 5rpx;
+
+              }
+
+              .text-number{
+                padding-left: 20rpx;
+              }
+            }
+            .item-value{
+              display: inline-block;
+
+            }
+
+
+          }
+
+          .top-right-label{
+            position: absolute;
+            top: -60rpx;
+            right: -60rpx;
+
+            width: 120rpx;
+            height: 120rpx;
+            line-height: 50rpx;
+            text-align: center;
+            border-radius:50%;
+
+            color: #ffffff;
+
+            .fz21();
+
+            .top-right-label-text{
+              position: absolute;
+
+              bottom: 15rpx;
+              left: 15rpx;
+            }
+          }
+
+          .top-right-label-delay{
+            background: #BA272D;
+
+          }
+
+          .top-right-label-finish{
+            background: #0071B5;
+
+          }
+        }
+      }
+
     }
   }
 </style>
@@ -113,7 +224,7 @@
               </view>
             </picker>
             <input class="search-bar-input" type="text" placeholder="请输入{{searchPickerArray[searchPickerIndex]}}"
-                   @input="searchBarInput">
+                   @input="searchBarInput"/>
           </view>
           <view class="search-bar-ft" @tap="doSearch">查询</view>
         </view>
@@ -125,7 +236,79 @@
       </view>
 
       <view class="container-bd">
-        <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
+        <view class="freight-consignment-list">
+          <view wx:for="{{listCmp}}" wx:key="hxno" class="goods-item" @tap.stop="goConsignmentDetail({{item.jcno}})">
+            <view class="line-progress">
+              <block wx:for="{{item.stateGather}}" wx:for-item="stateItem">
+                <block wx:if="{{stateItem == 1}}">
+                  <view class="circle-big">
+                    <image src="../../images/circle_full.png"></image>
+                  </view>
+                </block>
+                <block wx:else>
+                  <view class="circle-big">
+                    <image src="../../images/circle.png"></image>
+                  </view>
+                </block>
+
+                <block wx:if="{{index != item.stateGather.length-1}}">
+                  <view class="circle-small"></view>
+                  <view class="circle-small"></view>
+                  <view class="circle-small"></view>
+                </block>
+              </block>
+            </view>
+            <view class="line-detail">
+              <view class="line-left">
+                <view class="item-label">
+                  <image class="label-img" src="../../images/goods.png"></image>
+                  <text>运单号:</text>
+                </view>
+                <view class="item-value">
+                  {{item.ydno || '暂无'}}
+                </view>
+              </view>
+              <view class="line-right">
+                <view class="item-label">
+                  <image class="label-img" src="../../images/plane.png"></image>
+                  <text>目的港:</text>
+                </view>
+                <view class="item-value">
+                  {{item.destination || '暂无'}}
+
+                </view>
+              </view>
+            </view>
+            <view class="line-detail">
+              <view class="line-left">
+                <view class="item-label">
+                  <image class="label-img" src="../../images/order.png"></image>
+                  <text>订单号:</text>
+                </view>
+                <view class="item-value">
+                  {{item.hxno || '暂无'}}
+                </view>
+              </view>
+              <view class="line-right">
+                <view class="item-label">
+                  <image class="label-img" src="../../images/number.png"></image>
+                  <text space="emsp">件 数:</text>
+                </view>
+                <view class="item-value">
+                  {{item.jsbzcc || '暂无'}}
+                </view>
+              </view>
+            </view>
+
+            <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
+              <text class="top-right-label-text">延误</text>
+            </view>
+
+            <view wx:if="{{item.dida == 1}}" class="top-right-label top-right-label-finish">
+              <text class="top-right-label-text">完成</text>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
     <load-more :type.sync="loadingType"></load-more>
@@ -156,7 +339,7 @@
     components = {
       placeholder1: Placeholder,
       placeholder2: Placeholder,
-      'freight-consignment-list': FreightConsignmentList,
+      // 'freight-consignment-list': FreightConsignmentList,
       'load-more': LoadMore
     };
 
@@ -168,9 +351,13 @@
       searchContent: '',
       progressData: ['预配', '进仓', '出仓', '称重', '报关', '运单', '交单', '起飞', '送达'],
 
+      searchParams: {
+        page_num: 1,
+        page_size: 10
+      },
+      replace: false,  // 是否替换列表数据
       goodsList: [],
-      pageNum: 1,
-      pageSize: 15,
+
 
       loadingType: 'normal', // 加载状态
 
@@ -178,66 +365,97 @@
       isOldUser: false,
       isNewUser: false
     };
-    computed = {};
+    computed = {
+      listCmp(){
+        let res = []
+
+        if(this.goodsList.length){
+          for (let i = 0; i < this.goodsList.length; i++) {
+            let item = this.goodsList[i]
+
+            item.stateGather = [item.yupei,item.jincang,item.chucang,item.chengzhong,item.baoguan,item.yundan,item.jiaodan,item.qifei,item.dida];
+          }
+        }
+
+        return this.goodsList;
+      }
+    };
 
     methods = {
+      //  点击查询
       doSearch() {
-        this.getGoodsList(true);
+        this.replace = true;
+        this.getGoodsList(2);
       },
+      //  输入查询内容
       searchBarInput({ detail: { value } }) {
         this.searchContent = value;
       },
+      //  切换查询类别
       searchPickerChange({ detail: { value } }) {
         this.searchPickerIndex = value;
+        this.$apply();
       },
+      //  前往货物详情
       goConsignmentDetail(jcno) {
         this.$navigate('/pages/track/consignmentDetail', { jcno });
       }
     };
 
-    async getGoodsList(replace = false) {
+    async getGoodsList() {
       this.loadingType = 'loading';
       this.$apply();
-      let searchParam = {};
-      if (replace) {
-        this.pageNum = 1;
-        switch (this.searchPickerIndex + '') {
-          case '0':
-            searchParam = { ydno: this.searchContent };
-            break;
-          case '1':
-            searchParam = { hxno: this.searchContent };
-            break;
-          case '2':
-            searchParam = { destination: this.searchContent };
-            break;
+
+      if (this.replace) {
+        this.searchParams.page_num = 1;
+        //  剔除输入框查询参数
+        // let {ydno,hxno, destination, ...baseSearchParam} = this.searchParams;
+        // this.searchParams = baseSearchParam;
+        this.searchParams.ydno = '';
+        this.searchParams.hxno = '';
+        this.searchParams.destination = '';
+
+        //  根据输入框赋查询值
+        if(this.searchContent){
+          if(this.searchPickerIndex == 0){
+            this.searchParams.ydno = this.searchContent;
+          }else if(this.searchPickerIndex == 1){
+            this.searchParams.hxno = this.searchContent;
+          }else if(this.searchPickerIndex == 2){
+            this.searchParams.destination = this.searchContent;
+          }
         }
       }
+
       let res = await api.getGoodsList({
-        _noLoading: true  && !replace,
-        query: {
-          page_num: this.pageNum,
-          page_size: this.pageSize,
-          login_name: wx.getStorageSync('token'),
-          ...searchParam
-        }
+        _noLoading: !this.replace,
+        query: this.searchParams
       });
 
       if (res.data.status == 200) {
-        // this.goodsList= res.data.data.filter(x => x.jcno == 'E18030634')
-        if(replace){
+        if(this.replace){
+          tip.confirm(`是否查询:是,查询参数:${this.searchParams.ydno?'运单号-'+this.searchParams.ydno:''}${this.searchParams.hxno?'订单号-'+this.searchParams.hxno:''}${this.searchParams.destination?'目的港-'+this.searchParams.destination:''}。
+当前第${this.searchParams.page_num}页,该页有${res.data.data.length}条数据`,false)
+        }else{
+          tip.confirm(`是否查询:否。
+当前第${this.searchParams.page_num}页,该页有${res.data.data.length}条数据`,false);
+        }
+
+        if(this.replace){
           this.goodsList = res.data.data;
+          this.replace = false;
         }else{
           this.goodsList = [...this.goodsList, ...res.data.data];
         }
 
 
-        if (res.data.data.length == this.pageSize) {
+        if (res.data.data.length == this.searchParams.page_size) {
           this.loadingType = 'normal';
         } else {
           this.loadingType = 'nomore';
         }
-        this.pageNum++;
+
+        this.searchParams.page_num++;
         this.$apply();
       } else {
         tip.alert(res.data.message);
@@ -250,14 +468,6 @@
       }
     }
 
-    watch = {};
-
-    events = {};
-
-    init() {
-
-    }
-
     async onLoad() {
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
@@ -268,6 +478,8 @@
         //  等待尝试自动绑定
         await this.checkBinding();
       }
+
+      this.searchParams.login_name= wx.getStorageSync('token');
 
       if (this.isOldUser) {
         this.getGoodsList();

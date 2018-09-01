@@ -24,6 +24,12 @@
             color: @mainBlueColor;
           }
 
+          .check-num{
+            color: #a0afba;
+
+            .fz24();
+          }
+
           .check-time{
             color: #a0afba;
 
@@ -46,24 +52,15 @@
           }
 
           .check-img-swiper{
-            height: 210rpx;
+            width: 100%;
+            white-space: nowrap;
 
-            .check-img-swiper-item{
-              text-align: center;
-
-              image{
-                width: 210rpx;
-                height: 210rpx;
-
-                opacity: .8;
-              }
-
-              .image-view{
-                opacity: 1;
-              }
+            .swiper-item{
+              width: 210rpx;
+              height: 210rpx;
+              margin-right: 10rpx;
+              opacity: 1;
             }
-
-
           }
         }
         .card-ft{
@@ -91,6 +88,7 @@
     <view class="container-card">
       <view class="card-hd">
         <text class="check-type">{{title}}</text>
+        <text class="check-num">当前第{{currentViewIndex+1}}/{{checkImgs.length}}张</text>
         <text class="check-time">{{createtime}}</text>
       </view>
       <view class="card-bd">
@@ -99,12 +97,9 @@
           <image src="{{checkImgs[currentViewIndex]}}" @tap="previewImgs"></image>
         </view>
         <!-- 多图滑动 -->
-        <swiper class="check-img-swiper" scroll-x="true"  previous-margin="220rpx" next-margin="220rpx"
-                circular="true" current="{{currentViewIndex}}" bindchange="swiperChange">
-          <swiper-item class="check-img-swiper-item" wx:for="{{checkImgs}}" wx:key="*this">
-            <image  class=" {{currentViewIndex == index ?'image-view': ''}}" src="{{item}}" @tap="viewNext({{index}})"></image>
-          </swiper-item>
-        </swiper>
+        <scroll-view class="check-img-swiper"	scroll-into-view="id{{currentViewIndex-1}}" scroll-x="true">
+          <image class="swiper-item" id="id{{index}}" wx:for="{{checkImgs}}" wx:key="*this" src="{{item}}" @tap="showImg({{index}})"></image>
+        </scroll-view>
       </view>
       <view class="card-ft" wx:if="{{isconfirm == 'false'}}">
         <button class="confirm-btn" @tap="confirmPic">
@@ -144,16 +139,11 @@
     methods = {
       previewImgs(){
         wx.previewImage({
-          current: this.checkImgs[this.currentViewIndex],
+          current: this.currentViewImg,
           urls: this.checkImgs,
         })
       },
-
-      swiperChange(e){
-        this.currentViewIndex = e.detail.current
-      },
-
-      viewNext(index){
+      showImg(index){
         this.currentViewIndex = index;
       },
 

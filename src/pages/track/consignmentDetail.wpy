@@ -6,11 +6,11 @@
       .tbody {
         .tr {
           .td {
+
             &:first-child {
               text-align: center;
               justify-content: center;
-
-              /*padding-right: 31 rpx;*/
+              flex: 0.3;
             }
             &:last-child {
               text-align: center;
@@ -162,6 +162,11 @@
           text-align: center;
           color: #a0afba;
         }
+
+        .check-img-section-ft{
+          color: @mainFontColor;
+          .fz21();
+        }
       }
 
       .check-action-section{
@@ -254,21 +259,18 @@
     </view>
     <view class="container-consignment-progress">
       <view class="two-column-table">
-        <view class="thead">
-          运单时刻表
-        </view>
         <view class="tbody">
           <view class="tr">
             <view class="td">预配时间</view>
-            <view class="td">{{detail.mes1 || '暂无'}}</view>
-          </view>
-          <view class="tr">
-            <view class="td">交单时间</view>
             <view class="td">{{detail.hbdate1 || '暂无'}}</view>
           </view>
           <view class="tr">
-            <view class="td">起飞时间</view>
+            <view class="td">交单时间</view>
             <view class="td">{{detail.supporttime || '暂无'}}</view>
+          </view>
+          <view class="tr">
+            <view class="td">起飞时间</view>
+            <view class="td">{{detail.mes1 || '暂无'}}</view>
           </view>
           <view class="tr">
             <view class="td">送达时间</view>
@@ -314,7 +316,6 @@
             <image wx:if="{{detail.in_status == 1}}" class="check-img" src="../../images/staff_check.png"></image>
             <image wx:else class="uncheck-img" src="../../images/staff_uncheck.png"></image>
           </view>
-
         </view>
 
         <view wx:if="{{detail.in.picture.length}}" class="check-img-section-bd" @tap="goConfirmConsignment('in')">
@@ -325,6 +326,9 @@
         </view>
         <view wx:else class="check-img-section-bd check-img-section-bd-empty">
           暂未上传照片
+        </view>
+        <view wx:if="{{detail.in.picture.length}}" class="check-img-section-ft">
+          共{{detail.in.picture.length}}张照片
         </view>
 
       </view>
@@ -350,6 +354,9 @@
         <view wx:else class="check-img-section-bd check-img-section-bd-empty">
           暂未上传照片
         </view>
+        <view wx:if="{{detail.out.picture.length}}" class="check-img-section-ft">
+          共{{detail.out.picture.length}}张照片
+        </view>
       </view>
 
       <!--称重照片-->
@@ -372,6 +379,9 @@
         </view>
         <view wx:else class="check-img-section-bd check-img-section-bd-empty">
           暂未上传照片
+        </view>
+        <view wx:if="{{detail.weight_pic.picture.length}}" class="check-img-section-ft">
+          共{{detail.weight_pic.picture.length}}张照片
         </view>
       </view>
 
