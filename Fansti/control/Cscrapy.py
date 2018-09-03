@@ -358,10 +358,6 @@ class Cscrapy():
             return SYSTEM_ERROR
         all_airline = get_model_return_list(self.sscrapy.get_all_by_depa_dest(args["depa"], args["dest"]))
         make_log("all_airline", all_airline)
-        for airline in all_airline:
-            airline["mydate"] = datetime.datetime.strptime(airline["mydate"], '%Y-%m-%d').strftime("%Y-%m-%d")
-            airline["etd"] = airline["etd"].strftime("%Y-%m-%d %H:%M:%S")
-            airline["eta"] = airline["eta"].strftime("%Y-%m-%d %H:%M:%S")
         if not all_airline:
             return SYSTEM_ERROR
         response = import_status("SUCCESS_GET_INFO", "OK")
@@ -408,6 +404,7 @@ class Cscrapy():
         depa = ""
         dest = ""
         remark = ""
+        flight = ""
         for row in range(1, sheet1.nrows):
             row_data = sheet1.row_values(row, 0)
             row_dict = {
@@ -441,6 +438,10 @@ class Cscrapy():
             else:
                 row_dict["dest"] = dest
 
+            if row_dict.get("flight"):
+                flight = row_dict.get("flight")
+            else:
+                row_dict["flight"] = flight
             if row_dict.get("remark"):
                 remark = row_dict.get("remark")
             else:
@@ -466,33 +467,9 @@ class Cscrapy():
                     print(key)
                     print(row_dict.get(key))
 
-            make_log("row_dict", row_dict)
-            # eta etd date 修改
-            eta_list = row_dict.get("eta").split("+")
-            eta_data = row_dict.get("mydate") + " " + eta_list[0]
-            eta_data = datetime.datetime.strptime(eta_data, format_forweb_no_second)
 
-            if len(eta_list) > 1 and eta_list[1]:
-                if re.match(r"\d+", eta_list[1]):
-                    eta_data = eta_data + datetime.timedelta(days=int(eta_list[1]))
-
-            etd_list = row_dict.get("etd").split("+")
-            etd_date = row_dict.get("mydate") + " " + etd_list[0]
-            etd_date = datetime.datetime.strptime(etd_date, format_forweb_no_second)
-
-            row_dict["eta"] = eta_data
-            row_dict["etd"] = etd_date
-
-            airhwysline = self.sscrapy.get_airline_by_flight(row_dict.get("flight"))
-            if airhwysline:
-                update_result = self.sscrapy.update_airline(row_dict.get("flight"), row_dict)
-                if not update_result:
-                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
-                    response["data"] = row
-                    return response
-            else:
-                row_dict["id"] = str(uuid.uuid1())
-                self.sscrapy.add_model("AIR_HWYS_LINES", **row_dict)
+            row_dict["id"] = str(uuid.uuid1())
+            self.sscrapy.add_model("AIR_HWYS_LINES", **row_dict)
 
         response = import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
         return response
