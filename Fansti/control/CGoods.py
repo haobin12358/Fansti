@@ -31,6 +31,8 @@ class CGoods():
             wts_filter.add(AIR_HWYS_WTS.hxno.like("%{0}%".format(args.get("hxno"))))
         if args.get("destination"):
             wts_filter.add(AIR_HWYS_WTS.destination.like("%{0}%".format(args.get("destination"))))
+        if args.get("accounts"):
+            wts_filter.add(AIR_HWYS_WTS.accounts.like("%{0}%".format(args.get("accounts"))))
             
         user = self.susers.get_user_type(args.get("login_name"))
         if not user:
