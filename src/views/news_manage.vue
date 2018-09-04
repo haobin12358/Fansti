@@ -317,7 +317,7 @@
           axios.post(api.update_status+'?id='+news.id, params).then(res=>{
             if(res.data.status == 200){
               this.getData(1)
-              this.$message({ type: 'success', message: res.data.message });
+              this.$message({ type: 'success', message: "新闻删除成功" });
             }else{
               this.$message.error(res.data.message);
             }
