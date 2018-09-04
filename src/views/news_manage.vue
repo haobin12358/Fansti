@@ -30,7 +30,8 @@
         </div>
         <div class="news-upload-image">
           <div class="left-text">标题图片：</div>
-          <el-upload class="avatar-uploader" action="http://10.0.0.130:7444/fansti/news/upload_files" :show-file-list="false"
+          <!--<el-upload class="avatar-uploader" action="http://10.0.0.130:7444/fansti/news/upload_files" :show-file-list="false"-->
+          <el-upload class="avatar-uploader" action="https://fstwechat.com/fansti/news/upload_files" :show-file-list="false"
                      :on-success="uploadPicture"
                      :before-upload="beforeAvatarUpload">
                      <!--:on-remove="handleRemove"-->
@@ -39,7 +40,7 @@
           </el-upload>
           <div class="image-upload-done" v-if="imageUrlStatus">
             <p>注意：</p>
-            <p>1、图片文件大小不超过 2MB</p>
+            <p>1、图片文件大小不超过 20MB</p>
             <p>2、图片的格式须为 JPG 或 PNG</p>
             <p>3、图片宽高比的适宜范围为 2.1~2.7</p>
           </div>
@@ -110,12 +111,13 @@
           }}).then(res => {
           if (res.data.status == 200){
             this.news = res.data.data
-            for(let i=0;i<this.news.length;i++) {
+            for(let i = 0; i < this.news.length; i ++) {
               // 去除html中的标签和&nbsp;
               this.abstract = this.news[i].news_all.replace(/<[^<>]+?>/g, '').replace(/(\s|&nbsp;)+/g,'')
-              this.news[i].abstract = this.abstract
+              this.news[i].abstract = this.abstract;
+
+              console.log(this.news[i])
             }
-            // console.log(this.news)
             this.total_num = res.data.data.length;
             this.total_page = Math.ceil(this.total_num / this.page_size);
           }else{
@@ -156,18 +158,19 @@
         form.append("index", 1);
         axios.post(api.upload_files, form).then(res => {
           if(res.data.status == 200){
-            console.log(res)
             this.$message({ type: 'success', message: res.data.message });
           }else{
             this.$message({ type: 'error', message: res.data.message });
           }
+          console.log(res.data);
+          this.imageUrl = res.data.data;
         },error =>{
           this.$message({ type: 'error', message: '服务器请求失败，请稍后再试' });
-        })
-        this.imageUrl = URL.createObjectURL(file.raw);
+        });
       },
       // 上传图片前的限制方法
       beforeAvatarUpload(file) {
+        this.$message({ type: 'warning', message: "上传中，请等待" });
         // 上传前限制图片的宽高比
         var _this = this;
         return new Promise(function(resolve, reject) {
@@ -187,13 +190,13 @@
           reader.readAsDataURL(file);
         });
         const isJPG = file.type === 'image/jpeg' || 'image/png';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLt2M = file.size / 1024 / 1024 < 20;
 
         if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
+          this.$message.error('上传图片只能是 JPG 或 PNG 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
       },
@@ -226,11 +229,16 @@
             this.$message.error('请填写新闻标题');
           }else if(this.fromInput == '') {
             this.$message.error('请填写新闻来源');
-          }else if(this.imageUrl == '') {
+          }
+          /*else if(this.imageUrl == '') {
             this.$message.error('请上传标题图片');
-          }else if(this.newsContent == '') {
+          }*/
+          else if(this.newsContent == '') {
             this.$message.error('请撰写新闻正文');
           }else {
+            if(this.imageUrl == "") {
+              this.imageUrl = "null";
+            }
             let params = {
               news_title: this.titleInput,
               news_from: this.fromInput,
@@ -260,11 +268,16 @@
           this.$message.error('请填写新闻标题');
         }else if(this.fromInput == '') {
           this.$message.error('请填写新闻来源');
-        }else if(this.imageUrl == '') {
+        }
+        /*else if(this.imageUrl == '') {
           this.$message.error('请上传标题图片');
-        }else if(this.newsContent == '') {
+        }*/
+        else if(this.newsContent == '') {
           this.$message.error('请撰写新闻正文');
         }else {
+          if(this.imageUrl == "") {
+            this.imageUrl = "null";
+          }
           let params = {
             news_title: this.titleInput,
             news_from: this.fromInput,
@@ -309,8 +322,6 @@
               this.$message.error(res.data.message);
             }
           }, error=>{
-            console.log(123)
-            // this.$message.error(error.data.message);
             console.log(error)
           });
         });
