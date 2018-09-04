@@ -80,7 +80,6 @@
           <view class="line1">{{item.news_title}}</view>
           <view class="line2" >
             {{item.news_all}}
-            <!--111111111111111111111111111111111111111111111111111111111111111-->
           </view>
           <view class="line3">
             <text class="news-source">{{item.news_from}}</text>
@@ -88,8 +87,8 @@
           </view>
 
         </view>
-        <!--<image class="news-img" src="{{item.news_picture}}">-->
-        <image class="news-img"  src="../images/test_news.jpg">
+        <image class="news-img" src="{{item.news_picture}}" mode="aspectFill">
+        <!--<image class="news-img"  src="../images/test_news.jpg">-->
         </image>
       </view>
     </view>

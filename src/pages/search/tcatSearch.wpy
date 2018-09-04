@@ -38,8 +38,8 @@
       </view>
 
       <view class="destination">
-        <view class="destination-en">目的港: {{res.three_code}}</view>
-        <view>目的港名称: {{res.chinese_position}}</view>
+        <view class="destination-en">目的港: {{res.three_code|| '暂无' }}</view>
+        <view>目的港名称: {{res.chinese_position|| '暂无' }}</view>
       </view>
       <view class="standard-table">
         <view class="thead">
@@ -51,7 +51,7 @@
         <view class="tbody">
           <view class="tr" wx:for="{{list}}">
             <view class="td">{{item.name}}</view>
-            <view class="td">{{item.value}}</view>
+            <view class="td">{{item.value|| '暂无' }}</view>
           </view>
         </view>
 

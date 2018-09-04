@@ -128,8 +128,6 @@
           url: '/pages/track/index'
         })
       }
-
-      tip.alert('三星测试 1')
     }
 
   }

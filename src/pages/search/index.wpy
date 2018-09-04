@@ -141,81 +141,97 @@
 <template>
   <view class="container" @tap="containerTapHandler">
     <view class="search-form">
-      <view class="form-item">
-        <view class="form-item-label">
-          DGR
-        </view>
-
-        <view class="form-item-main">
-          <input class="form-item-input" value="{{dgr}}" @input="inputSearchHandler('dgr')" type="text"></input>
-          <button class="form-item-btn"  @tap="goSearchResult('dgr')">查询</button>
-        </view>
-      </view>
-      <view class="form-item">
-        <view class="form-item-label">
-          鉴定报告
-        </view>
-        <view class="form-item-main">
-          <input class="form-item-input" type="text" value="{{surveyReport}}" @input="inputSearchHandler('surveyReport')"></input>
-
-          <button class="form-item-btn" @tap="goSearchResult('surveyReport')">查询</button>
-        </view>
-        <view wx:if="{{showJdSearchResult}}" @tap.stop="mytap"  class="survey-search-result">
-          <scroll-view scroll-y >
-            <view wx:for="{{jdSearchResult}}" class="search-result-item" @tap="goJdResult({{item}})" wx:key="*this">{{item}}</view>
-          </scroll-view>
-
-        </view>
-      </view>
-      <view class="form-item">
-        <view class="form-item-label">
-          北京始发TACT
-        </view>
-
-        <view class="form-item-main">
-          <input class="form-item-input" type="text" value="{{tact}}" @input="inputSearchHandler('tact')"></input>
-
-          <button class="form-item-btn" @tap="goSearchResult('tact')">查询</button>
-        </view>
-      </view>
-      <view class="form-item">
-        <view class="form-item-label">
-          HS code
-        </view>
-
-        <view class="form-item-main">
-          <input class="form-item-input" type="text" value="{{hsCode}}" @input="inputSearchHandler('hsCode')"/>
-
-          <button class="form-item-btn" @tap="goSearchResult('hsCode')">查询</button>
-        </view>
-      </view>
-      <view class="form-item">
-        <view class="form-item-label">
-          CAS
-        </view>
-
-        <view class="form-item-main">
-          <input class="form-item-input" type="text" value="{{cas}}" @input="inputSearchHandler('cas')"></input>
-
-          <button class="form-item-btn" @tap="goSearchResult('cas')">查询</button>
-        </view>
-      </view>
-      <view class="form-item-flight ">
-        <view class="form-item-label">
-          航班时刻
-        </view>
-
-        <view class="form-item-main">
-          <view class="expand-main">
-            <input type="text" @input="inputSearchHandler('flightStart')" value="{{flightStart}}" class="form-item-input "></input>
-            <image class="flight-img" src="../../images/search_airplane1.png"></image>
-            <input type="text" @input="inputSearchHandler('flightEnd')" class="form-item-input "></input>
+      <form @submit="doDgrSearch">
+        <view class="form-item">
+          <view class="form-item-label">
+            DGR
           </view>
-          <button class="form-item-btn" @tap="goSearchResult('flight')">查询</button>
+          <view class="form-item-main">
+            <input class="form-item-input" name="dgr" value="{{dgr}}" type="text"></input>
+            <button class="form-item-btn" form-type="submit">查询</button>
+          </view>
         </view>
-      </view>
+      </form>
+      <form @submit="doJdSearch">
+        <view class="form-item">
+          <view class="form-item-label">
+            鉴定报告
+          </view>
+          <view class="form-item-main">
+            <input class="form-item-input" type="text" value="{{surveyReport}}" name="jd"></input>
+
+            <button class="form-item-btn" form-type="submit">查询</button>
+          </view>
+          <view wx:if="{{showJdSearchResult}}" @tap.stop="mytap" class="survey-search-result">
+            <scroll-view scroll-y>
+              <view wx:for="{{jdSearchResult}}" class="search-result-item" @tap="goJdResult({{item}})" wx:key="*this">
+                {{item}}
+              </view>
+            </scroll-view>
+          </view>
+        </view>
+      </form>
+      <form @submit="doTactSearch">
+        <view class="form-item">
+          <view class="form-item-label">
+            北京始发TACT
+          </view>
+
+          <view class="form-item-main">
+            <input class="form-item-input" type="text" value="{{tact}}" name="tact"/>
+
+            <button class="form-item-btn" form-type="submit">查询</button>
+          </view>
+        </view>
+      </form>
+      <form @submit="doHSCodeSearch">
+
+        <view class="form-item">
+          <view class="form-item-label">
+            HS code
+          </view>
+
+          <view class="form-item-main">
+            <input class="form-item-input" type="text" value="{{hsCode}}" name="hsCode"/>
+
+            <button class="form-item-btn" form-type="submit">查询</button>
+          </view>
+        </view>
+      </form>
+      <form @submit="doCasSearch">
+
+        <view class="form-item">
+          <view class="form-item-label">
+            CAS
+          </view>
+
+          <view class="form-item-main">
+            <input class="form-item-input" type="text" value="{{cas}}" name="cas"></input>
+
+            <button class="form-item-btn" form-type="submit" @tap="goSearchResult('cas')">查询</button>
+          </view>
+        </view>
+      </form>
+      <form @submit="doFlightSearch">
+
+        <view class="form-item-flight ">
+          <view class="form-item-label">
+            航班时刻
+          </view>
+
+          <view class="form-item-main">
+            <view class="expand-main">
+              <input type="text" name="flightStart" value="{{flightStart}}" class="form-item-input "></input>
+              <image class="flight-img" src="../../images/search_airplane1.png"></image>
+              <input type="text" name="flightEnd" class="form-item-input "></input>
+            </view>
+            <button class="form-item-btn" form-type="submit">查询</button>
+          </view>
+        </view>
+      </form>
+
     </view>
-    <view class="footer" >
+    <view class="footer">
       <image src="../../images/paper_plane.png"></image>
     </view>
   </view>
@@ -235,7 +251,7 @@
     }
 
     components = {
-      placeholder: Placeholder,
+      placeholder: Placeholder
     }
 
     data = {
@@ -247,19 +263,47 @@
       flightStart: 'PEK',
       flightEnd: '',
 
+      //  表单数据
+      searchParams: {},
+
       showJdSearchResult: false,
       jdSearchResult: [],
 
       isBinding: false,
-      isOldUser:false,
-      isNewUser:false,
-    }
+      isOldUser: false,
+      isNewUser: false
+    };
 
     mixins = [BindingMixin];
 
-    computed = {}
+    computed = {};
 
     methods = {
+      // dgr查询
+      async doDgrSearch({ detail: { value: { dgr } } }) {
+        if (dgr != '') {
+          let res = await this.getDgr(dgr);
+
+          if (res) {
+            this.$preload('res', res);
+            this.$navigate('/pages/search/dgrSearch');
+          }
+        } else {
+          tip.alert('请输入查询内容');
+        }
+      },
+
+      // jd查询 显示列表
+      async doJdSearch({ detail: { value: { jd } } }) {
+        if (jd != '') {
+          let res = await this.getJdList(jd);
+
+          return;
+        } else {
+          tip.alert('请输入查询内容');
+        }
+      },
+      // 点击jd结果列表跳转
       async goJdResult(jdName) {
         let res = await this.getJd(jdName);
 
@@ -270,242 +314,193 @@
           this.$navigate('/pages/search/surveyReportSearch');
         }
       },
-      containerTapHandler(){
+      //  配合jd结果列表
+      containerTapHandler() {
         this.showJdSearchResult = false;
       },
-      //  点击查询
-     async goSearchResult(type){
-        let res = {}
-        switch (type){
-          case 'hsCode':
-            if(this.hsCode != '' ){
-              res =await this.getHscode();
 
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/hsCodeSearch');
-              }
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
-          case 'cas':
-            if(this.cas != '' ){
-              res =await this.getCas();
+      // tact查询 显示列表
+      async doTactSearch({ detail: { value: { tact } } }) {
+        if (tact != '') {
+          let res = await this.getTact(tact);
 
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/casSearch');
-              }
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
-          case 'dgr':
-            if(this.dgr != '' ){
-              res =await this.getDgr();
-
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/dgrSearch');
-              }
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
-          case 'surveyReport':
-            if(this.surveyReport != '' ){
-              res =await this.getJdList();
-
-              return
-
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
-          case 'tact':
-            if(this.tact != '' ){
-              res =await this.getTact();
-
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/tcatSearch');
-              }
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
-          case 'flight':
-            if(this.flightStart != '' && this.flightEnd != ''){
-              res =await this.getFlyno();
-
-              if (res) {
-                this.$preload('res', res);
-                this.$navigate('/pages/search/flightSearch');
-              }
-            }else{
-              tip.alert('请输入查询内容')
-            }
-            break;
+          if (res) {
+            this.$preload('res', res);
+            this.$navigate('/pages/search/tcatSearch');
+          }
+        } else {
+          tip.alert('请输入查询内容');
         }
       },
 
-      inputSearchHandler(type, {detail: {value: inputValue}}) {
-        switch (type) {
-          case 'hsCode':
-            this.hsCode = inputValue;
-            break;
-          case 'cas':
-            this.cas = inputValue;
-            break;
-          case 'dgr':
-            this.dgr = inputValue;
-            break;
-          case 'surveyReport':
-            //  鉴定
-            this.surveyReport = inputValue;
-            break;
-          case 'tact':
-            this.tact = inputValue;
-            break;
-          case 'flightStart':
-            this.flightStart = inputValue;
-            break;
-          case 'flightEnd':
-            this.flightEnd = inputValue;
-            break;
+      // hsCode查询 显示列表
+      async doHSCodeSearch({ detail: { value: { hsCode } } }) {
+        if (hsCode != '') {
+          let res = await this.getHscode(hsCode);
+
+          if (res) {
+            this.$preload('res', res);
+            this.$navigate('/pages/search/hsCodeSearch');
+          }
+        } else {
+          tip.alert('请输入查询内容');
         }
       },
-    }
+
+      async doCasSearch({ detail: { value: { cas } } }) {
+        if (cas != '') {
+          let res = await this.getCas(cas);
+
+          if (res) {
+            this.$preload('res', res);
+            this.$navigate('/pages/search/casSearch');
+          }
+        } else {
+          tip.alert('请输入查询内容');
+        }
+      },
+
+      async doFlightSearch({ detail: { value: { flightStart, flightEnd } } }) {
+        if (flightStart != '' && flightEnd != '') {
+          let res = await this.getFlyno(flightStart, flightEnd);
+
+          if (res) {
+            this.$preload('res', res);
+            this.$navigate('/pages/search/flightSearch');
+          }
+        } else {
+          tip.alert('请输入查询内容');
+        }
+      }
+
+    };
 
     // dgr
-    async getDgr(){
+    async getDgr(dgr_name) {
       let res = await api.getDgr({
         query: {
           login_name: wx.getStorageSync('token'),
-          dgr_name: this.dgr,
+          dgr_name,
           openid: wx.getStorageSync('openid')
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
     // 鉴定报告
-    async getJd(jd_name){
+    async getJd(jd_name) {
       let res = await api.getJd({
         query: {
           login_name: wx.getStorageSync('token'),
           openid: wx.getStorageSync('openid'),
-          jd_name,
+          jd_name
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
     // 鉴定报告
-    async getJdList(){
-      let {data: {message,status, data}} = await api.getJdList({
+    async getJdList(jd_name) {
+      let { data: { message, status, data } } = await api.getJdList({
         query: {
-          jd_name: this.surveyReport,
+          jd_name
         }
       });
 
-      if(status == 200){
-        if(data.length){
+      if (status == 200) {
+        if (data.length) {
           this.showJdSearchResult = true;
-        }else{
+        } else {
           tip.alert('未查到结果');
         }
         this.jdSearchResult = data;
         this.$apply();
         // return data;
-      }else{
+      } else {
         tip.alert(message);
       }
     }
 
 
-
-    async getTact(){
+    async getTact(tact_name) {
       let res = await api.getTact({
         query: {
           login_name: wx.getStorageSync('token'),
-          tact_name: this.tact,
+          tact_name,
           openid: wx.getStorageSync('openid')
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
-     async getHscode(){
+    async getHscode(hs_name) {
       let res = await api.getHs({
         query: {
           login_name: wx.getStorageSync('token'),
-          hs_name: this.hsCode,
+          hs_name,
           openid: wx.getStorageSync('openid')
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
-    async getCas(){
+    async getCas(cas_name) {
       let res = await api.getCas({
         query: {
           login_name: wx.getStorageSync('token'),
-          cas_name: this.cas,
+          cas_name,
           openid: wx.getStorageSync('openid')
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
 
-
-    async getFlyno(){
+    async getFlyno(depa, dest) {
       let res = await api.getFlyno({
         query: {
           login_name: wx.getStorageSync('token'),
           openid: wx.getStorageSync('openid'),
-          depa: this.flightStart,
-          dest: this.flightEnd
+          depa,
+          dest
         }
       });
 
-      if(res.data.status == 200){
+      if (res.data.status == 200) {
         return res.data.data;
-      }else{
+      } else {
         tip.alert('未查到结果');
       }
     }
 
-    events = {}
+    events = {};
 
-   async onLoad() {
+    async onLoad() {
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 

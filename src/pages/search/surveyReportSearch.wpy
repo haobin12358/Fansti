@@ -49,7 +49,7 @@
               {{item.name}}:
             </view>
             <view class="section-info">
-              {{item.value}}
+              {{item.value|| '暂无' }}
             </view>
         </view>
       </view>

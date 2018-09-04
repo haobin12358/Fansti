@@ -42,7 +42,7 @@
               联合国正确运输编号:
             </view>
             <view class="td">
-              {{res[0].unno}}
+              {{res[0].unno|| '暂无' }}
             </view>
           </view>
 
@@ -53,7 +53,7 @@
                   | 联合国正确运输名称:
                 </view>
                 <view class="td">
-                  {{wrapItem.unname}}
+                  {{wrapItem.unname|| '暂无' }}
                 </view>
               </view>
               <view class="tr">
@@ -61,7 +61,7 @@
                   型号等级:
                 </view>
                 <view class="td">
-                  {{item.dgr_level}}
+                  {{item.dgr_level|| '暂无' }}
                 </view>
               </view>
 
@@ -71,7 +71,7 @@
                   货机容量:
                 </view>
                 <view class="td">
-                  {{item.airfreighter_capacity}}
+                  {{item.airfreighter_capacity|| '暂无' }}
                 </view>
               </view>
               <view class="tr">
@@ -79,7 +79,7 @@
                   货机说明号:
                 </view>
                 <view class="td">
-                  {{item.airfreighter_description_no}}
+                  {{item.airfreighter_description_no|| '暂无' }}
                 </view>
               </view>
               <view class="tr">
@@ -87,7 +87,7 @@
                   货机是否可单一:
                 </view>
                 <view class="td">
-                  {{item.airfreighter_is_single}}
+                  {{item.airfreighter_is_single|| '暂无' }}
                 </view>
               </view>
               <!--固定客机3个-->
@@ -96,7 +96,7 @@
                   客机容量:
                 </view>
                 <view class="td">
-                  {{item.airliner_capacity}}
+                  {{item.airliner_capacity|| '暂无' }}
                 </view>
               </view>
               <view class="tr">
@@ -104,7 +104,7 @@
                   客机说明号:
                 </view>
                 <view class="td">
-                  {{item.airliner_description_no}}
+                  {{item.airliner_description_no|| '暂无' }}
                 </view>
               </view>
               <view class="tr">
@@ -112,7 +112,7 @@
                   客机是否可单一:
                 </view>
                 <view class="td">
-                  {{item.airliner_is_single}}
+                  {{item.airliner_is_single|| '暂无' }}
                 </view>
               </view>
 
@@ -121,7 +121,7 @@
                   型号备注:
                 </view>
                 <view class="td">
-                  {{item.message?item.message:''}}
+                  {{item.message|| '暂无' }}
                 </view>
               </view>
               <block wx:for="{{item.dgr_con}}" wx:for-item="conType">
@@ -130,7 +130,7 @@
                     {{conType.dgr_container}}-{{conType.dgr_type}}:
                   </view>
                   <view class="td">
-                    {{conType.dgr_container_capacity}}
+                    {{conType.dgr_container_capacity|| '暂无' }}
                   </view>
                 </view>
               </block>

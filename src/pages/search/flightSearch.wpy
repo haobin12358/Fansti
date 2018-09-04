@@ -75,12 +75,12 @@
         </view>
         <view class="tbody">
           <view class="tr" wx:for="{{res}}" wx:key="flight">
-            <view class="td td-narrow">{{item.dest}}</view>
-            <view class="td td-narrow">{{item.flight}}</view>
-            <view class="td">{{item.mydate}}</view>
-            <view class="td td-narrow">{{item.aircraft}}</view>
-            <view class="td">{{item.etd}}</view>
-            <view class="td">{{item.eta}}</view>
+            <view class="td td-narrow">{{item.dest || '暂无'}}</view>
+            <view class="td td-narrow">{{item.flight || '暂无'}}</view>
+            <view class="td">{{item.mydate || '暂无'}}</view>
+            <view class="td td-narrow">{{item.aircraft || '暂无'}}</view>
+            <view class="td">{{item.etd || '暂无'}}</view>
+            <view class="td">{{item.eta || '暂无' }}</view>
           </view>
         </view>
 

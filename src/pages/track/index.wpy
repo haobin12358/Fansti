@@ -212,22 +212,25 @@
   <block wx:if="{{isOldUser}}">
     <view class="container">
       <view class="fix-top">
-        <view class="search-bar">
-          <!--search-bar-->
-          <view class="search-bar-bd">
-            <picker bindchange="searchPickerChange" value="{{searchPickerIndex}}" range="{{searchPickerArray}}">
-              <view class="classify">
-                <view class="classify-checkbox">
-                  {{searchPickerArray[searchPickerIndex]}}
+        <form @submit="doSearch">
+          <view class="search-bar">
+            <!--search-bar-->
+            <view class="search-bar-bd">
+              <picker bindchange="searchPickerChange" value="{{searchPickerIndex}}" range="{{searchPickerArray}}">
+                <view class="classify">
+                  <view class="classify-checkbox">
+                    {{searchPickerArray[searchPickerIndex]}}
+                  </view>
+                  <image src="../../images/arrow_down.jpg" class="classify-label"></image>
                 </view>
-                <image src="../../images/arrow_down.jpg" class="classify-label"></image>
-              </view>
-            </picker>
-            <input class="search-bar-input" type="text" placeholder="请输入{{searchPickerArray[searchPickerIndex]}}"
-                   @input="searchBarInput"/>
+              </picker>
+              <input class="search-bar-input" type="text" placeholder="请输入{{searchPickerArray[searchPickerIndex]}}"
+                     name="{{enSearchPickerArray[searchPickerIndex]}}"/>
+            </view>
+            <button form-type="submit" class="search-bar-ft" >查询</button>
           </view>
-          <view class="search-bar-ft" @tap="doSearch">查询</view>
-        </view>
+
+        </form>
         <view class="progress-chart">
           <view class="progress-item" wx:for="{{progressData}}" wx:key="*this">
             {{item}}
@@ -236,79 +239,7 @@
       </view>
 
       <view class="container-bd">
-        <view class="freight-consignment-list">
-          <view wx:for="{{goodsList}}" wx:key="hxno" class="goods-item" @tap.stop="goConsignmentDetail({{item.jcno}})">
-            <view class="line-progress">
-              <block wx:for="{{item.stateGather}}" wx:for-item="stateItem">
-                <block wx:if="{{stateItem == 1}}">
-                  <view class="circle-big">
-                    <image src="../../images/circle_full.png"></image>
-                  </view>
-                </block>
-                <block wx:else>
-                  <view class="circle-big">
-                    <image src="../../images/circle.png"></image>
-                  </view>
-                </block>
-
-                <block wx:if="{{index != item.stateGather.length-1}}">
-                  <view class="circle-small"></view>
-                  <view class="circle-small"></view>
-                  <view class="circle-small"></view>
-                </block>
-              </block>
-            </view>
-            <view class="line-detail">
-              <view class="line-left">
-                <view class="item-label">
-                  <image class="label-img" src="../../images/goods.png"></image>
-                  <text>运单号:</text>
-                </view>
-                <view class="item-value">
-                  {{item.ydno || '暂无'}}
-                </view>
-              </view>
-              <view class="line-right">
-                <view class="item-label">
-                  <image class="label-img" src="../../images/plane.png"></image>
-                  <text>目的港:</text>
-                </view>
-                <view class="item-value">
-                  {{item.destination || '暂无'}}
-
-                </view>
-              </view>
-            </view>
-            <view class="line-detail">
-              <view class="line-left">
-                <view class="item-label">
-                  <image class="label-img" src="../../images/order.png"></image>
-                  <text>订单号:</text>
-                </view>
-                <view class="item-value">
-                  {{item.hxno || '暂无'}}
-                </view>
-              </view>
-              <view class="line-right">
-                <view class="item-label">
-                  <image class="label-img" src="../../images/number.png"></image>
-                  <text space="emsp">件 数:</text>
-                </view>
-                <view class="item-value">
-                  {{item.jsbzcc || '暂无'}}
-                </view>
-              </view>
-            </view>
-
-            <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
-              <text class="top-right-label-text">延误</text>
-            </view>
-
-            <view wx:if="{{item.dida == 1}}" class="top-right-label top-right-label-finish">
-              <text class="top-right-label-text">完成</text>
-            </view>
-          </view>
-        </view>
+        <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
       </view>
     </view>
     <load-more :type.sync="loadingType"></load-more>
@@ -339,14 +270,15 @@
     components = {
       placeholder1: Placeholder,
       placeholder2: Placeholder,
-      // 'freight-consignment-list': FreightConsignmentList,
+      'freight-consignment-list': FreightConsignmentList,
       'load-more': LoadMore
     };
 
     data = {
       type: 'newUser',
 
-      searchPickerArray: ['运单号', '订单号', '目的港'],
+      searchPickerArray: ['运单号', '订单号', '目的港', '公司名'],
+      enSearchPickerArray: ['ydno', 'hxno', 'destination','accounts'],
       searchPickerIndex: 0,
       searchContent: '',
       progressData: ['预配', '进仓', '出仓', '称重', '报关', '运单', '交单', '起飞', '送达'],
@@ -355,7 +287,7 @@
         page_num: 1,
         page_size: 10
       },
-      replace: false,  // 是否替换列表数据
+      searchParam: {},
       goodsList: [],
 
 
@@ -370,14 +302,10 @@
 
     methods = {
       //  点击查询
-      doSearch() {
-        this.replace = true;
-        this.getGoodsList(2);
-      },
-      //  输入查询内容
-      searchBarInput(evt) {
-        console.log('输入查询内容',evt.detail.value);
-        this.searchContent = evt.detail.value;
+      doSearch(evt) {
+        console.log('提交查询表单', evt);
+        this.searchParam = evt.detail.value;
+        this.getGoodsList(true);
       },
       //  切换查询类别
       searchPickerChange(evt) {
@@ -390,59 +318,32 @@
       }
     };
 
-    async getGoodsList() {
+    async getGoodsList(replace) {
       this.loadingType = 'loading';
       this.$apply();
 
-      if (this.replace) {
+      if (replace) {
+        console.log('查询逻辑阶段 1',!!this.searchContent);
         this.searchParams.page_num = 1;
         //  剔除输入框查询参数
-        // let {ydno,hxno, destination, ...baseSearchParam} = this.searchParams;
-        // this.searchParams = baseSearchParam;
         this.searchParams.ydno = '';
         this.searchParams.hxno = '';
         this.searchParams.destination = '';
+        this.searchParams.accounts = '';
 
-        console.log('typeof this.searchPickerIndex',typeof this.searchPickerIndex);
-        //  根据输入框赋查询值
-        if(this.searchContent){
-          if(this.searchPickerIndex == 0){
-            this.searchParams.ydno = this.searchContent;
-          }else if(this.searchPickerIndex == 1){
-            this.searchParams.hxno = this.searchContent;
-          }else if(this.searchPickerIndex == 2){
-            this.searchParams.destination = this.searchContent;
-          }
-        }
+        Object.assign(this.searchParams,this.searchParam);
       }
 
       let res = await api.getGoodsList({
-        _noLoading: !this.replace,
+        _noLoading: !replace,
         query: this.searchParams
       });
 
       if (res.data.status == 200) {
-        if(this.replace){
-          console.log(`是否查询:是,查询参数:${this.searchParams.ydno?'运单号-'+this.searchParams.ydno:''}${this.searchParams.hxno?'订单号-'+this.searchParams.hxno:''}${this.searchParams.destination?'目的港-'+this.searchParams.destination:''}。
-当前第${this.searchParams.page_num}页,该页有${res.data.data.length}条数据`)
-        }else{
-          console.log(`是否查询:否。
-当前第${this.searchParams.page_num}页,该页有${res.data.data.length}条数据`);
-        }
-
-        if(this.replace){
+        if(replace){
           this.goodsList = res.data.data;
-          this.replace = false;
         }else{
           this.goodsList = [...this.goodsList, ...res.data.data];
-        }
-
-        if(this.goodsList.length){
-          for (let i = 0; i < this.goodsList.length; i++) {
-            let item = this.goodsList[i];
-
-            this.goodsList[i].stateGather = [item.yupei,item.jincang,item.chucang,item.chengzhong,item.baoguan,item.yundan,item.jiaodan,item.qifei,item.dida];
-          }
         }
 
         if (res.data.data.length == this.searchParams.page_size) {

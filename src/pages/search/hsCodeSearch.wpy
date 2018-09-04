@@ -38,7 +38,7 @@
               {{secItem.name}}
             </view>
             <view class="td">
-              {{secItem.value}}
+              {{secItem.value|| '暂无' }}
             </view>
           </view>
         </view>

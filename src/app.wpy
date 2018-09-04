@@ -17,7 +17,13 @@ export default class extends wepy.app {
       'pages/track/consignmentDetail',  //托运详情
       'pages/track/confirmConsignment',  //确认托运照片
 
-
+      'pages/search/index', //查询首页
+      'pages/search/surveyReportSearch', //鉴定报告
+      'pages/search/flightSearch', //航班时刻
+      'pages/search/tcatSearch', //tcac
+      'pages/search/dgrSearch', //dgr
+      'pages/search/casSearch', //cas
+      'pages/search/hsCodeSearch', //hs code
 
       'pages/person/index', //个人首页
       'pages/person/shareList', //分享列表
@@ -28,13 +34,7 @@ export default class extends wepy.app {
       'pages/questionnaire/index', //问卷首页
       'pages/questionnaire/question', //问卷
 
-      'pages/search/index', //查询首页
-      'pages/search/surveyReportSearch', //鉴定报告
-      'pages/search/flightSearch', //航班时刻
-      'pages/search/tcatSearch', //tcac
-      'pages/search/dgrSearch', //dgr
-      'pages/search/casSearch', //cas
-      'pages/search/hsCodeSearch', //hs code
+
 
     ],
     window: {
