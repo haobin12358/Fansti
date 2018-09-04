@@ -21,11 +21,11 @@
     <div v-if="!newsManage">
       <div class="news-upload">
         <div class="news-upload-title">
-          <div class="left-text">新闻标题：</div>
+          <div class="left-text required">新闻标题：</div>
           <el-input class="right-input" v-model="titleInput" placeholder="此处为新闻标题"></el-input>
         </div>
         <div class="news-upload-from">
-          <div class="left-text">新闻来源：</div>
+          <div class="left-text required">新闻来源：</div>
           <el-input class="right-input" v-model="fromInput" placeholder="此处为新闻来源"></el-input>
         </div>
         <div class="news-upload-image">
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="news-upload-body">
-          <div class="left-text">新闻正文：</div>
+          <div class="left-text required">新闻正文：</div>
           <div class="ueditor">
             <UE :defaultMsg=defaultMsg ref="ue"></UE>
           </div>
@@ -450,8 +450,8 @@
     }
     .left-text {
       float: left;
-      min-width: 1.3rem;
       line-height: 0.32rem;
+      width: 0.9rem;
     }
     .image-upload-done {
       color: #7e7e7e;
@@ -460,6 +460,7 @@
     }
     .right-input {
       width: 6rem;
+      margin-left: 0.4rem;
       margin-bottom: 0.4rem;
     }
   }
