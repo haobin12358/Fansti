@@ -19,10 +19,10 @@
   <view class="container">
     <swiper class="swiper" indicator-dots="true" circular="true" autoplay="true">
       <swiper-item>
-        <image src="../../images/test_swiper.png"></image>
+        <image src="../../images/index_banner1.jpg"></image>
       </swiper-item>
-      <swiper-item @tap="goQuestionnaire">
-        <image src="../../images/questionnaire_banner.png"></image>
+      <swiper-item>
+        <image src="../../images/index_banner2.jpg"></image>
       </swiper-item>
 
     </swiper>
