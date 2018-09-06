@@ -45,6 +45,7 @@
 
           .news-source{
             color: #a0afba;
+            margin-bottom: 30rpx;
 
             text{
               margin-right: 20rpx;
@@ -69,7 +70,7 @@
   <view class="container" style="height: {{containerHeight}}px;">
     <view class="news-card" style="height: {{cardHeight}}px;">
       <view class="news-card-head-img">
-        <image src="{{news.news_picture}}"></image>
+        <image src="{{imgLoadFail ?  '../../images/default_news_detail.png' : news.news_picture}}" @error="imgErr"></image>
         <!--<image src="http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg" @error="imgErr" @load="imgLoad"></image>-->
       </view>
       <view class="height-maintain">
@@ -91,58 +92,63 @@
 </template>
 
 <script>
-    import wepy from 'wepy'
-    import api from '@/api/api';
-    import tip from '@/utils/tip';
-    import HtmlParser from '@/components/common/htmlParser';
-    import CardMixin from '@/mixins/cardMixin';
+  import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+  import HtmlParser from '@/components/common/htmlParser';
+  import CardMixin from '@/mixins/cardMixin';
 
-    export default class NewsDetail extends wepy.page {
-      config = {
-        navigationBarTitleText: '泛思特'
+  export default class NewsDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '泛思特'
+    };
+    components = {
+      'html-parser': HtmlParser
+    };
+
+    mixins = [CardMixin];
+
+    data = {
+      news: {},
+      name1: 'myHtmlParserKiner1',
+      imgLoadFail: false
+    };
+    watch = {
+      news() {
+        if (this.news.news_all) {
+          this.$invoke('html-parser', 'htmlParserNotice', this.news.news_all);
+        }
       }
-        components = {
-          'html-parser': HtmlParser,
-        }
+    };
 
-      mixins = [CardMixin]
+    methods = {
+      imgErr(evt){
+        console.log('图片加载失败',evt);
+        this.imgLoadFail = true;
+      }
+    };
 
-      data = {
-          news: {},
-          name1: 'myHtmlParserKiner1'
-        }
-        watch = {
-          news(){
-            if (this.news.news_all) {
-              this.$invoke('html-parser','htmlParserNotice',this.news.news_all);
-            }
-          }
-        }
+    events = {};
 
-        methods = {
-        }
+    async getNewsAbo(id) {
+      let res = await api.getNewsAbo({ id });
 
-        events = {}
+      if (res.data.status == 200) {
+        this.news = res.data.data;
 
-        async getNewsAbo(id){
-          let res = await api.getNewsAbo({id});
+        wx.setNavigationBarTitle({
+          title: res.data.data.news_title
+        });
 
-          if (res.data.status == 200) {
-            this.news = res.data.data;
-
-            wx.setNavigationBarTitle({
-              title: res.data.data.news_title
-            })
-
-            this.$apply();
-          } else {
-            tip.alert(res.data.message);
-          }
-        }
-
-      onLoad(params) {
-        this.getNewsAbo(params.id);
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
       }
     }
+
+    onLoad(params) {
+      this.getNewsAbo(params.id);
+    }
+  }
 </script>
 

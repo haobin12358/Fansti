@@ -87,9 +87,7 @@
           </view>
 
         </view>
-        <image class="news-img" src="{{item.news_picture}}" mode="aspectFill">
-        <!--<image class="news-img"  src="../images/test_news.jpg">-->
-        </image>
+        <image class="news-img" src="{{item.imgLoadFail? '../../images/default_news_hd.jpg' :  item.news_picture}}" mode="aspectFill" @error="imgErr({{index}})"/>
       </view>
     </view>
   </view>
@@ -114,6 +112,10 @@
           tapItemHandler(news){
             console.log('组件 点击');
             this.$emit('tapItem', news);
+          },
+
+          imgErr(index){
+            this.list[index].imgLoadFail = true;
           }
         }
 
