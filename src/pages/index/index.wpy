@@ -19,12 +19,11 @@
   <view class="container">
     <swiper class="swiper" indicator-dots="true" circular="true" autoplay="true">
       <swiper-item>
-        <image src="../../images/index_banner1.jpg"></image>
-      </swiper-item>
-      <swiper-item>
         <image src="../../images/index_banner2.jpg"></image>
       </swiper-item>
-
+      <swiper-item>
+        <image src="../../images/index_banner1.jpg"></image>
+      </swiper-item>
     </swiper>
   </view>
   <news-list :list.sync="newsList" @tapItem.user="goNewsDetail"></news-list>
