@@ -26,8 +26,7 @@ class CNews():
         all_news = get_model_return_list(self.snews.get_all(int(args["page_num"]), int(args["page_size"])))
         make_log("all_news", all_news)
         for news in all_news:
-            news["news_time"] = news["news_time"].strftime("%Y-%m-%d %H:%M:%S")
-
+            news["news_time"] =news["news_time"].strftime("%Y-%m-%d %H:%M:%S")
         response = import_status("SUCCESS_GET_NEWS", "OK")
         response["data"] = all_news
         return response
@@ -111,12 +110,13 @@ class CNews():
             return
         filessuffix = str(files.filename).split(".")[-1]
         index = formdata.get("index", 1)
-        filename = formdata.get("FileType") + str(index) + "." + filessuffix
+        # filename = formdata.get("FileType") + str(index) + "." + filessuffix
+        filename = formdata.get("FileType") + str(uuid.uuid4()) + "." + filessuffix
         filepath = os.path.join(rootdir, filename)
         print(filepath)
         files.save(filepath)
         response = import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
-        url = Inforcode.ip + Inforcode.LinuxImgs + "/" + filename
+        url = Inforcode.ip + Inforcode.WindowsImag + "/" + filename
         print(url)
         response["data"] = url
         return response

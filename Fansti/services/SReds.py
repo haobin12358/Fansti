@@ -24,7 +24,8 @@ class SReds(SBase):
 
     @close_session
     def get_my_red_by_time(self, starttime, endtime):
-        return self.session.query(GET_RED_COIN.red_id).filter(GET_RED_COIN.createtime.between(starttime, endtime)).all()
+        return self.session.query(GET_RED_COIN.red_id)\
+            .filter(GET_RED_COIN.createtime.between(starttime, endtime), GET_RED_COIN.status == 2).all()
 
     @close_session
     def get_id_by_red_loginname(self, red, login_name):

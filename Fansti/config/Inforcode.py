@@ -10,10 +10,12 @@ mch_key = "8ecWB0VuVAtwqnQsAG0FAdjDlhZWmY88"
 # 图片存储地址
 LinuxRoot = "/opt/"
 LinuxImgs = "imgs/Fansti"
-WindowsRoot = "E:/"
+WindowsRoot = "E:/img"
+WindowsImag = 'img'
 
 # url
-ip = "http://120.79.182.43:7443/"
+ip = "https://fstwechat.com/"
+# ip = "http://120.79.182.43:7443/"
 
 # 服务器ip地址
 NETWORK_IP = "123.207.97.185"

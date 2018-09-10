@@ -217,7 +217,7 @@ class WECHAT_NEWS(Base):
     news_all = Column(Text)                             # 新闻详情
     news_picture = Column(String(200))                  # 新闻主图
     news_from = Column(String(200))                     # 新闻来源
-    news_time = Column(DATE)                            # 新闻日期
+    news_time = Column(DATETIME)                        # 新闻日期
     news_status = Column(String(10))                    # 新闻状态{0不可用1可用}
 
 class AIR_HWYS_JD(Base):
