@@ -61,14 +61,7 @@ class CUsers():
                     "name": data.get("name", ""),
                     "usex": data.get("usex", ""),
                     "city": data.get("city", ""),
-                    "province": data.get("province", ""),
-                    "user_name": data.get("user_name", ""),
-                    "work_year": data.get("work_year", ""),
-                    "work_goodat": data.get("work_goodat", ""),
-                    "user_introduction": data.get("user_introduction", ""),
-                    "qq": data.get("qq", ""),
-                    "wechat": data.get("wechat", ""),
-                    "email": data.get("email", ""),
+                    "province": data.get("province", "")
                 })
             else:
                 if "login_name" in data and "login_password" in data:

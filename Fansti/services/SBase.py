@@ -26,7 +26,7 @@ class SBase(object):
         try:
             self.session = DBSession.db_session()
         except Exception as e:
-            print(e.message)
+            print(e)
 
     @close_session
     def add_model(self, model_name, **kwargs):

@@ -105,7 +105,7 @@ class Sscrapy(SBase):
     def get_jds_by_name(self, name):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
-            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).offset(1).limit(20).all()
+            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).offset(0).limit(20).all()
 
     @close_session
     def get_all_select_count(self, name):

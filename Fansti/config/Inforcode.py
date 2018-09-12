@@ -10,7 +10,7 @@ mch_key = "8ecWB0VuVAtwqnQsAG0FAdjDlhZWmY88"
 # 图片存储地址
 LinuxRoot = "/opt/"
 LinuxImgs = "imgs/Fansti"
-WindowsRoot = "E:/img"
+WindowsRoot = "E:/"
 WindowsImag = 'img'
 
 # url
