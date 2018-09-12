@@ -1,3 +1,28 @@
+function getRandomContent() {
+  let content= [
+    '从入门到专业，手把手带您玩转医药化工危险品空运！',
+    '重新定义传统货代，移动时代新选择，轻松办公，马上尝试。',
+    '史上最强小程序诞生啦！只有你想不到，没有我们查不到！',
+    '想体验最新的前沿科技么与货代新方式么，指尖办公，畅快无阻！'
+    ],
+    imgs = [
+      '../../images/share_img1.jpg' ,
+      '../../images/share_img2.jpg',
+      '../../images/share_img3.jpg' ,
+      '../../images/share_img4.jpg'
+    ],
+    randomIndex = Math.floor(Math.random()* content.length),
+    randomIndex2 = Math.floor(Math.random()* imgs.length);
+
+
+  return {
+    title: content[randomIndex],
+    imageUrl: imgs[randomIndex2]
+  }
+}
+
+
+
 function getCurrentTime() {
   var keep = '';
   var date = new Date();
@@ -138,5 +163,6 @@ module.exports = {
   div: div,
   mul: mul,
   accAdd: accAdd,
-  convertStarArray: convertStarArray
+  convertStarArray: convertStarArray,
+  getRandomContent
 }

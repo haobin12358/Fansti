@@ -37,6 +37,7 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import BindingMixin from '@/mixins/bindingMixin';
+  import {getRandomContent} from '@/utils/util'
 
   export default class Index extends wepy.page {
     config = {
@@ -102,13 +103,20 @@
       }
     }
 
+    onShareAppMessage(){
+      let rst = getRandomContent();
+
+      rst.path = '/pages/index/index?share=true';
+      return rst;
+    }
+
     onReachBottom(){
       if(this.loadingType != 'nomore'){
         this.getAllNews();
       }
     }
 
-    async onLoad() {
+    async onLoad(params) {
       this.getAllNews();
       //  保存code openid
       await this.setOpenid();
@@ -121,8 +129,13 @@
         let res = await this.checkBinding();
       }
 
-      console.log(this.isOldUser);
-      if(this.isOldUser){
+      if(params.share == 'true'){
+        console.log(params.newsId);
+        if(params.newsId){
+          this.$navigate('/pages/index/newsDetail', {id: params.newsId})
+
+        }
+      } else if(this.isOldUser){
         wx.switchTab({
           url: '/pages/track/index'
         })

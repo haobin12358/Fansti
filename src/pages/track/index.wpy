@@ -258,6 +258,7 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import BindingMixin from '@/mixins/bindingMixin';
+  import {getRandomContent} from '@/utils/util'
 
 
   export default class Index extends wepy.page {
@@ -363,6 +364,10 @@
       if (this.isOldUser && this.loadingType != 'nomore') {
         this.getGoodsList();
       }
+    }
+
+    onShareAppMessage(){
+      return getRandomContent();
     }
 
     async onLoad() {

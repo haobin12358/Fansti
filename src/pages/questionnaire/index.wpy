@@ -56,6 +56,7 @@
 <script>
   import wepy from 'wepy';
   import CardMixin from '@/mixins/cardMixin';
+  import {getRandomContent} from '@/utils/util'
 
   export default class Index extends wepy.page {
     config = {};
@@ -74,6 +75,10 @@
         })
       }
     };
+
+    onShareAppMessage(){
+      return getRandomContent();
+    }
 
     onLoad() {
 

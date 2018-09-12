@@ -262,6 +262,7 @@
   import WaitGetPacket from '@/components/waitGetPacket'
   import AlreadyGetTicket from '@/components/alreadyGetTicket'
   import BindingMixin from '@/mixins/bindingMixin'
+  import {getRandomContent} from '@/utils/util'
 
   export default class Index extends wepy.page {
     config = {
@@ -424,6 +425,10 @@
     };
 
     events = {};
+
+    onShareAppMessage(){
+      return getRandomContent();
+    }
 
     //  获取客服信息
     async getCustom() {

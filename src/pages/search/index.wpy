@@ -243,6 +243,7 @@
   import tip from '@/utils/tip';
   import Placeholder from '@/components/common/placeholder'
   import BindingMixin from '@/mixins/bindingMixin'
+  import {getRandomContent} from '@/utils/util'
 
 
   export default class Index extends wepy.page {
@@ -499,6 +500,10 @@
     }
 
     events = {};
+
+    onShareAppMessage(){
+      return getRandomContent();
+    }
 
     async onLoad() {
       this.isOldUser = !!wx.getStorageSync('token');

@@ -233,7 +233,6 @@
 
 <script>
   import wepy from 'wepy';
-  import Rate from '@/components/common/rate';
   import api from '@/api/api';
   import tip from '@/utils/tip';
 
@@ -244,14 +243,9 @@
     };
 
     components = {
-      rate: Rate
     };
 
     data = {
-      rateKey: 4.7,
-      rateStarSize: 27,
-      rateReadonly: true,
-
       cardInfo: {
 
       }

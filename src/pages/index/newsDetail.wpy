@@ -97,6 +97,7 @@
   import tip from '@/utils/tip';
   import HtmlParser from '@/components/common/htmlParser';
   import CardMixin from '@/mixins/cardMixin';
+  import {getRandomContent} from '@/utils/util'
 
   export default class NewsDetail extends wepy.page {
     config = {
@@ -144,6 +145,13 @@
       } else {
         tip.alert(res.data.message);
       }
+    }
+
+    onShareAppMessage(){
+      let rst = getRandomContent();
+
+      rst.path = `/pages/index/index?share=true&newsId=${this.news.id}`;
+      return rst;
     }
 
     onLoad(params) {
