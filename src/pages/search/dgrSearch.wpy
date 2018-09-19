@@ -45,6 +45,15 @@
               {{res[0].unno|| '暂无' }}
             </view>
           </view>
+          <view class="tr">
+            <view class="td">
+              类别:
+            </view>
+            <view class="td">
+              {{res[0].untype|| '暂无' }}
+            </view>
+          </view>
+
 
           <block  wx:for="{{res}}" wx:key="id" wx:for-item="wrapItem">
             <block wx:for="{{wrapItem.dgr_type}}">
