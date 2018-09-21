@@ -63,7 +63,6 @@
 
     //  缓存code,openid
    async setOpenid() {
-      console.log('setOpenid');
       if(wx.getStorageSync('code') == ''||wx.getStorageSync('openid') == ''){
         let { code }  = await wepy.login();
         wx.setStorageSync('code', code);
@@ -71,6 +70,7 @@
         let res = await    api.getOpenid({ query: { code } });
         let openid = res.data.data.openid;
         wx.setStorageSync('openid', openid);
+        console.log('[code openid] 已缓存');
       }
     }
 

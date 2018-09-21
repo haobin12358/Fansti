@@ -152,7 +152,7 @@
       userinfoAuthorize: UserinfoAuthorize,
     };
 
-    mixins = [CardMixin];
+    mixins = [CardMixin,BindingMixin];
 
     data = {
       userInfo: {},
@@ -161,20 +161,25 @@
     computed = {};
 
     methods = {
-      formSubmit(e) {
-        let formData = e.detail.value
+      async formSubmit(e) {
+        let formData = e.detail.value;
+        await this.setOpenid();
 
-        if(formData.username && formData.password && formData.phone){
-          tip.alert('老用户绑定')
+        if(wx.getStorageSync('openid')){
+          if(formData.username && formData.password && formData.phone){
+            tip.alert('老用户绑定');
 
-          this.doBinding(formData);
-         }else if (!formData.username && !formData.password && formData.phone) {
-          tip.alert('新用户绑定')
+            this.doBinding(formData);
+          }else if (!formData.username && !formData.password && formData.phone) {
+            tip.alert('新用户绑定');
 
-          this.doBinding(formData);
-        }
-        else{
-          tip.alert('请填写完整')
+            this.doBinding(formData);
+          }
+          else{
+            tip.alert('请填写完整')
+          }
+        }else{
+          tip.confirm('应用出了点小问题,建议重新进入应用后再尝试',false);
         }
       },
 
@@ -216,7 +221,6 @@
 
     onLoad() {
       let that = this
-
 
       wx.getUserInfo({
         success: res => {
