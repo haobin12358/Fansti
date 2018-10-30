@@ -249,7 +249,7 @@
       </view>
     </view>
     <waitGetPacket :show.sync="showWGP" :list.sync="redList" @receive.user="receiveRed"></waitGetPacket>
-    <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin"></alreadyGetPacket>
+    <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin" @query.user="queryReceive"></alreadyGetPacket>
     <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed" :redCoin.sync="myRedCoin"></alreadyGetTicket>
 </template>
 
@@ -379,6 +379,7 @@
           url: '/pages/person/binding'
         });
       },
+
       //  显示未领取的红包
       tapWGPHandler() {
         if(this.allPacketInfo.red_list.length){
@@ -387,10 +388,18 @@
           tip.alert('没有待领红包');
         }
       },
+
       receiveRed(item){
-          // console.log('领取红包',item);
-        tip.confirm('该功能暂不可用!', false)
+        console.log(item);
+        this.receiveRedPackage(item.red_id);
+
       },
+      queryReceive(item){
+        console.log(item);
+        this.queryReceiveRedPkg(item.red_id);
+
+      },
+
       //  显示已领取的红包
       tapAGPHandler() {
         if(this.allPacketInfo.my_red_num){
@@ -430,6 +439,30 @@
       return getRandomContent();
     }
 
+    //  领取红包
+    async receiveRedPackage(red_id) {
+      let res = await api.receiveRed({method: 'POST',query:{openid: wx.getStorageSync('openid'),red_id}});
+
+      if (res.data.status == 200) {
+        tip.toast('领取成功');
+        this.getAllRed();
+      }else{
+        tip.toast(res.data.message);
+      }
+    }
+
+    //  查询红包领取状态
+    async queryReceiveRedPkg(red_id) {
+      let res = await api.receiveRedQuery({method: 'POST',query:{openid: wx.getStorageSync('openid'),red_id}});
+
+      if(res.data.data.result_code == 'SUCCESS'){
+        tip.confirm(`红包已到账,时间:${res.data.data.payment_time}`,false);
+      }else{
+        tip.toast('请重试');
+      }
+    }
+
+
     //  获取客服信息
     async getCustom() {
       //  token可空,新老用户
@@ -440,6 +473,8 @@
         this.$apply();
       }
     }
+
+
 
     //  留言
     async makeUserMessage(message) {
@@ -492,9 +527,10 @@
     }
 
     async onLoad(params) {
-
       // 方法在bindingMixin中
       await this.setOpenid();
+      // wx.setStorageSync('token', 'NJLPS');
+      // wx.getStorageSync('');
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
 

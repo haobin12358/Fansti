@@ -17,6 +17,9 @@ const getAllNews = params => wxRequest(params, host+`/news/get_all?page_size=${p
 //  获取新闻列表  POST
 const getNewsAbo = params => wxRequest(params, host+`/news/get_abo?id=${params.id}`);
 
+//  获取支付数据
+const payService = params => wxRequest(params, host+`/pay/pay_service`);
+
 
 
 
@@ -45,6 +48,8 @@ const getFlyno = params => wxRequest(params, host+'/scrapy/get_flyno');
 
 //  获取红包全部内容
 const getAllRed = params => wxRequest(params, host+'/reds/get_all_red');
+const receiveRed = params => wxRequest(params, host+'/reds/receive_red');
+const receiveRedQuery = params => wxRequest(params, host+'/reds/receive_red_query');
 //  留言
 const makeUserMessage = params => wxRequest(params, host+`/users/make_user_message?openid=${params.openid}`);
 //  获取客服信息
@@ -92,4 +97,7 @@ export default {
   getInvateList,
   getVote,
   makeVote,
+  receiveRed,
+  receiveRedQuery,
+  payService,
 }

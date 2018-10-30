@@ -86,11 +86,11 @@
     <view class="popup-content" style="height: {{cardHeight}}px;">
       <scroll-view scroll-y class="already-get-packet">
         <view class="container-title">
-          已领红包（{{list.length}}）
+          已领红包(点击查询是否发放)（{{list.length}}）
         </view>
         <view class="container-content">
           <view class="red-packet-list">
-            <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item">
+            <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item" @tap.stop="clickItemHandler({{item}})">
               <view class="line1">
                 <view class="name">
                   {{index+1}}.{{item.name}}
@@ -153,6 +153,10 @@
     methods = {
       hidePopup(){
         this.show = false;
+      },
+      clickItemHandler(item){
+        console.log('组件 emit');
+        this.$emit('query', item)
       }
     };
 

@@ -63,6 +63,8 @@
       }
 
     }
+
+
   }
 </style>
 
@@ -82,7 +84,7 @@
             <text>{{news.news_from}}</text>
             <text>{{news.news_time}}</text>
           </view>
-          <html-parser :parserName="name1"></html-parser>
+          <wxparser rich-text="{{news.news_all}}"></wxparser>
         </scroll-view>
       </view>
 
@@ -95,16 +97,19 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import HtmlParser from '@/components/common/htmlParser';
   import CardMixin from '@/mixins/cardMixin';
   import {getRandomContent} from '@/utils/util'
 
   export default class NewsDetail extends wepy.page {
+
+
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '泛思特',
+      usingComponents: {
+        wxparser: 'plugin://wxparserPlugin/wxparser',
+      }
     };
     components = {
-      'html-parser': HtmlParser
     };
 
     mixins = [CardMixin];
@@ -112,13 +117,18 @@
     data = {
       news: {},
       name1: 'myHtmlParserKiner1',
-      imgLoadFail: false
+      imgLoadFail: false,
+      richText: '<h1>Hello world!</h1>' +
+      '<div style="color: red;text-align: center">居中的红色字</div>' +
+      '<img src="http://dummyimage.com/1200x1000/7bf279" alt="">' +
+      '<video src="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"></video>',
+
     };
     watch = {
       news() {
-        if (this.news.news_all) {
-          this.$invoke('html-parser', 'htmlParserNotice', this.news.news_all);
-        }
+        // if (this.news.news_all) {
+        //   this.$invoke('html-parser', 'htmlParserNotice', this.news.news_all);
+        // }
       }
     };
 

@@ -1,13 +1,13 @@
 <style lang="less">
   @import "../../styles/base";
 
-  .container  {
+  .container {
 
-    .swiper{
-      height: 401rpx;
+    .swiper {
+      height: 401 rpx;
 
-      swiper-item{
-        image{
+      swiper-item {
+        image {
           width: 100%;
           height: 100%;
         }
@@ -31,56 +31,56 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import NewsList from '@/components/newsList'
-  import LoadMore from '@/components/common/loadMore'
+  import wepy from 'wepy';
+  import NewsList from '@/components/newsList';
+  import LoadMore from '@/components/common/loadMore';
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import BindingMixin from '@/mixins/bindingMixin';
-  import {getRandomContent} from '@/utils/util'
+  import { getRandomContent } from '@/utils/util';
 
   export default class Index extends wepy.page {
     config = {
       navigationBarTitleText: '泛思特'
-    }
+    };
 
-    mixins=[BindingMixin];
+    mixins = [BindingMixin];
 
     components = {
       'news-list': NewsList,
-      'load-more': LoadMore,
-    }
+      'load-more': LoadMore
+    };
 
-    data={
+    data = {
       newsList: [],
       pageNum: 1,
       pageSize: 10,
 
-      loadingType: 'normal', // 加载状态
-    }
+      loadingType: 'normal' // 加载状态
+    };
 
-    methods={
-      goNewsDetail(news){
-        console.log('页面跳转',news);
-        this.$navigate('/pages/index/newsDetail', news)
+    methods = {
+      goNewsDetail(news) {
+        console.log('页面跳转', news);
+        this.$navigate('/pages/index/newsDetail', news);
       },
 
-      goQuestionnaire(){
-        this.$navigate('/pages/questionnaire/index')
+      goQuestionnaire() {
+        this.$navigate('/pages/questionnaire/index');
 
       }
-    }
+    };
 
-    async getAllNews(){
+    async getAllNews() {
       this.loadingType = 'loading';
       this.$apply();
-      let res = await api.getAllNews({_noLoading: true,page_num:this.pageNum,page_size:this.pageSize});
+      let res = await api.getAllNews({ _noLoading: true, page_num: this.pageNum, page_size: this.pageSize });
 
       if (res.data.status == 200) {
 
         //去除标签 空格等
         for (let i = 0; i < res.data.data.length; i++) {
-          let news = res.data.data[i].news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
+          let news = res.data.data[i].news_all.replace(/<[^>]+>/g, '').replace(/\s|&nbsp;/g, '');
           res.data.data[i].news_all = news;
         }
 
@@ -88,12 +88,12 @@
         //   return x.news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
         // })
 
-        this.newsList =[...this.newsList,...res.data.data];
+        this.newsList = [...this.newsList, ...res.data.data];
 
 
-        if(res.data.data.length == this.pageSize){
+        if (res.data.data.length == this.pageSize) {
           this.loadingType = 'normal';
-        }else{
+        } else {
           this.loadingType = 'nomore';
         }
         this.pageNum++;
@@ -103,17 +103,50 @@
       }
     }
 
-    onShareAppMessage(){
+    onShareAppMessage() {
       let rst = getRandomContent();
 
       rst.path = '/pages/index/index?share=true';
       return rst;
     }
 
-    onReachBottom(){
-      if(this.loadingType != 'nomore'){
+    onReachBottom() {
+      if (this.loadingType != 'nomore') {
         this.getAllNews();
       }
+    }
+
+    async testPay() {
+      let openid = wx.getStorageSync('openid');
+      if (openid) {
+        api.payService({ method: 'POST', query: { openid } }).then(
+          res => {
+            let { appId, nonceStr, paySign, signType, timeStamp } = res.data;
+
+            wepy.requestPayment({
+              appId,
+              timeStamp,
+              nonceStr,
+              package: res.data.package,
+              paySign,
+              signType
+            }).then(
+              res2 => {
+                tip.success('支付成功');
+              }
+            ).catch(
+              e => {
+                tip.error('支付失败');
+
+              }
+            );
+          }
+        );
+      } else {
+
+      }
+
+
     }
 
     async onLoad(params) {
@@ -122,23 +155,24 @@
       await this.setOpenid();
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
-
+      await this.testPay();
+      return;
       this.isBinding = this.isOldUser || this.isNewUser;
 
       if (!this.isBinding) {
         let res = await this.checkBinding();
       }
 
-      if(params.share == 'true'){
+      if (params.share == 'true') {
         console.log(params.newsId);
-        if(params.newsId){
-          this.$navigate('/pages/index/newsDetail', {id: params.newsId})
+        if (params.newsId) {
+          this.$navigate('/pages/index/newsDetail', { id: params.newsId });
 
         }
-      } else if(this.isOldUser){
+      } else if (this.isOldUser) {
         wx.switchTab({
           url: '/pages/track/index'
-        })
+        });
       }
     }
 

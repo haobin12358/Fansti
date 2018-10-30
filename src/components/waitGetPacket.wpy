@@ -91,7 +91,7 @@
           <view wx:for="{{list}}" wx:key="red_id" class="red-packet-item">
             <view class="column1">{{index+1}}.{{item.name}}</view>
             <view class="column2">{{item.price}}元</view>
-            <view class="column3 {{item.status == 0 ? 'column3-disable':''}}" @tap.stop="tapReceiveHandler({{item}})">
+            <view class="column3 {{item.status == 0 ? 'column3-disable':''}}" @tap.stop="tapRedPackHandler({{item}})">
               领取
             </view>
           </view>
@@ -141,9 +141,8 @@
         this.show = false;
       },
 
-      tapReceiveHandler(item){
+      tapRedPackHandler(item){
         if(item.status == 1){
-          console.log('emit wait');
           this.$emit('receive', item);
         }
       }

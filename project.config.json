@@ -9,8 +9,8 @@
 	},
 	"compileType": "miniprogram",
 	"appid": "wxad55d967c5abf395",
-	"projectname": "fansti",
-	"miniprogramRoot": "./dist",
+	"projectname": "fastii",
+	"miniprogramRoot": "dist/",
 	"libVersion": "2.2.3",
 	"condition": {}
 }
