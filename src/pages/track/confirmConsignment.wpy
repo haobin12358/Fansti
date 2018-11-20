@@ -173,14 +173,12 @@
         jcno: this.jcno,
         query: { 'retrue_name': this.type }
       });
-      let that = this
 
       tip.success('已确认照片!', 500).then(
         ()=>{
           wx.navigateBack();
         }
       )
-      return;
     }
 
     onLoad(params) {

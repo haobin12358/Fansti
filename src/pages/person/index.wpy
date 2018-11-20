@@ -390,13 +390,11 @@
       },
 
       receiveRed(item){
-        console.log(item);
         this.receiveRedPackage(item.red_id);
 
       },
       queryReceive(item){
-        console.log(item);
-        this.queryReceiveRedPkg(item.red_id);
+        this.queryReceiveRedPkg(item.id);
 
       },
 
@@ -447,13 +445,14 @@
         tip.toast('领取成功');
         this.getAllRed();
       }else{
-        tip.toast(res.data.message);
+
+        tip.confirm(res.data.message.join(','), false,{},'领取失败');
       }
     }
 
     //  查询红包领取状态
-    async queryReceiveRedPkg(red_id) {
-      let res = await api.receiveRedQuery({method: 'POST',query:{openid: wx.getStorageSync('openid'),red_id}});
+    async queryReceiveRedPkg(id) {
+      let res = await api.receiveRedQuery({method: 'POST',query:{id}});
 
       if(res.data.data.result_code == 'SUCCESS'){
         tip.confirm(`红包已到账,时间:${res.data.data.payment_time}`,false);
@@ -524,6 +523,11 @@
       } else {
         tip.alert(res.data.message);
       }
+    }
+
+    async onShow(){
+      this.init();
+
     }
 
     async onLoad(params) {

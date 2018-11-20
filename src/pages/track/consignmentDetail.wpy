@@ -463,40 +463,46 @@
         })
       },
       //  点击确认所有照片(判断是否有照片并未确认)
-      confirmAllImg(){
+     async confirmAllImg(){
         let confirmText = [],
           confirmType = [];
 
-        if(this.detail.in_status == 0 && this.detail.in.picture && this.detail.in.picture.length){
+
+       if(this.detail.in_status == 0 && this.detail.in.picture && this.detail.in.picture.length){
           confirmText.push('入库');
           confirmType.push('in');
         }
-        if(this.detail.weight_status == 0 && this.detail.weight_pic.picture && this.detail.weight_pic.picture.length){
+       if(this.detail.out_status == 0 && this.detail.out.picture && this.detail.out.picture.length){
+         confirmText.push('出库');
+         confirmType.push('out');
+       }
+
+       if(this.detail.weight_status == 0 && this.detail.weight_pic.picture && this.detail.weight_pic.picture.length){
           confirmText.push('称重');
           confirmType.push('weight');
 
         }
-        if(this.detail.out_status == 0 && this.detail.out.picture && this.detail.out.picture.length){
-          confirmText.push('出库');
-          confirmType.push('out');
 
-        }
-
-        wx.showModal({
+        let confirmRes =await wepy.showModal({
           title: '提示',
           content: `确认${confirmText.join('、')}的照片`,
-          success: res => {
-            if (res.confirm) {
-              Promise.all(confirmType.map(val => this.retrueGoods(val))).then(
-                () => {
-                  tip.success('确认完毕').then(
-                    () => this.getJcAbo(this.detail.jcno)
-                  );
-                }
-              );
-            }
-          }
-        })
+        }) ;
+
+       if (confirmRes.confirm) {
+         for (let type of confirmType) {
+           await api.retrueGoods({
+             method: 'POST',
+             'login_name': wx.getStorageSync('token'),
+             jcno: this.jcno,
+             query: { 'retrue_name': type }
+           });
+         }
+
+         tip.success('确认完毕').then(
+           () => this.getJcAbo(this.detail.jcno)
+         );
+       }
+
 
       },
       goConfirmConsignment(type){
@@ -540,12 +546,7 @@
 
     //  确认照片
     retrueGoods(type){
-      return api.retrueGoods({
-        method: 'POST',
-        'login_name': wx.getStorageSync('token'),
-        jcno: this.detail.jcno,
-        query: { 'retrue_name': type }
-      });
+      return
     }
 
     //  获取货物详情

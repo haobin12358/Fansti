@@ -155,7 +155,7 @@
       await this.setOpenid();
       this.isOldUser = !!wx.getStorageSync('token');
       this.isNewUser = !!wx.getStorageSync('isNewUser');
-      await this.testPay();
+      // await this.testPay();
       return;
       this.isBinding = this.isOldUser || this.isNewUser;
 
