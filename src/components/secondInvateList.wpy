@@ -20,7 +20,7 @@
       left: 50rpx;
       width: 650rpx;
       background: #ffffff;
-      border: 4 rpx solid @borderColor;
+      border: 4rpx solid @borderColor;
       border-radius: 10rpx;
 
       .hide-btn {

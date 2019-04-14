@@ -4,7 +4,7 @@
   .container {
 
     .swiper {
-      height: 401 rpx;
+      height: 401rpx;
 
       swiper-item {
         image {

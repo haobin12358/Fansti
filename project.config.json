@@ -11,6 +11,6 @@
 	"appid": "wxad55d967c5abf395",
 	"projectname": "fastii",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.2.3",
+	"libVersion": "2.6.2",
 	"condition": {}
 }
