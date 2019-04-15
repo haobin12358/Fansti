@@ -293,10 +293,6 @@
 
 
       loadingType: 'normal', // 加载状态
-
-      isBinding: false,
-      isOldUser: false,
-      isNewUser: false
     };
     computed = {
     };
@@ -371,13 +367,8 @@
     }
 
     async onLoad() {
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser = !!wx.getStorageSync('isNewUser');
-
-      this.isBinding = this.isOldUser || this.isNewUser;
-      //  只需要在onload中判断 及 进行自动登录   这样可以将这些代码写在mixin的onload中了
       if (!this.isBinding) {
-        //  等待尝试自动绑定
+        await this.setOpenid();
         await this.checkBinding();
       }
 

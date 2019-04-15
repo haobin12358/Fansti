@@ -158,7 +158,7 @@
             鉴定报告
           </view>
           <view class="form-item-main">
-            <input class="form-item-input" type="text" value="{{surveyReport}}" name="jd"></input>
+            <input class="form-item-input" type="text" value="{{surveyReport}}" placeholder="可先点击查询进行模糊搜索" name="jd"></input>
 
             <button class="form-item-btn" form-type="submit">查询</button>
           </view>
@@ -506,13 +506,8 @@
     }
 
     async onLoad() {
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser = !!wx.getStorageSync('isNewUser');
-
-      this.isBinding = this.isOldUser || this.isNewUser;
-
       if (!this.isBinding) {
-
+        await this.setOpenid();
         await this.checkBinding();
       }
     }
