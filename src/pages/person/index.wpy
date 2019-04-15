@@ -269,7 +269,7 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '个人'
+      navigationBarTitleText: '操作'
     }
     components = {
       placeholder: Placeholder,
