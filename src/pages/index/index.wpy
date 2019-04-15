@@ -84,10 +84,6 @@
           res.data.data[i].news_all = news;
         }
 
-        // res.data.data.map((x)=>{
-        //   return x.news_all.replace(/<[^>]+>/g,"").replace(/\s|&nbsp;/g,"");
-        // })
-
         this.newsList = [...this.newsList, ...res.data.data];
 
 
@@ -116,64 +112,8 @@
       }
     }
 
-    async testPay() {
-      let openid = wx.getStorageSync('openid');
-      if (openid) {
-        api.payService({ method: 'POST', query: { openid } }).then(
-          res => {
-            let { appId, nonceStr, paySign, signType, timeStamp } = res.data;
-
-            wepy.requestPayment({
-              appId,
-              timeStamp,
-              nonceStr,
-              package: res.data.package,
-              paySign,
-              signType
-            }).then(
-              res2 => {
-                tip.success('支付成功');
-              }
-            ).catch(
-              e => {
-                tip.error('支付失败');
-
-              }
-            );
-          }
-        );
-      } else {
-
-      }
-
-
-    }
-
     async onLoad(params) {
       this.getAllNews();
-      //  保存code openid
-      await this.setOpenid();
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser = !!wx.getStorageSync('isNewUser');
-      // await this.testPay();
-      return;
-      this.isBinding = this.isOldUser || this.isNewUser;
-
-      if (!this.isBinding) {
-        let res = await this.checkBinding();
-      }
-
-      if (params.share == 'true') {
-        console.log(params.newsId);
-        if (params.newsId) {
-          this.$navigate('/pages/index/newsDetail', { id: params.newsId });
-
-        }
-      } else if (this.isOldUser) {
-        wx.switchTab({
-          url: '/pages/track/index'
-        });
-      }
     }
 
   }

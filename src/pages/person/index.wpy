@@ -309,9 +309,7 @@
       serviceInfo: {},
       msg: '',
 
-      isBinding: false,
-      isOldUser:false,
-      isNewUser:false,
+
     };
 
     computed = {
@@ -522,7 +520,7 @@
       let res = await api.addInvate({ method: 'POST', openid, query: { openid: wx.getStorageSync('openid') } });
 
       if (res.data.status == 200) {
-        tip.success('接收邀请成功!');
+        tip.success('成功接收邀请!');
       } else {
         tip.alert(res.data.message);
       }
@@ -534,20 +532,9 @@
     }
 
     async onLoad(params) {
-      // 方法在bindingMixin中
-      await this.setOpenid();
-      // wx.setStorageSync('token', 'NJLPS');
-      // wx.getStorageSync('');
-      this.isOldUser = !!wx.getStorageSync('token');
-      this.isNewUser = !!wx.getStorageSync('isNewUser');
-
-      this.isBinding = this.isOldUser || this.isNewUser;
-
       if (!this.isBinding) {
-        //  自动绑定后再自动获取数据
-        let res = await this.checkBinding();
-
-        // 绑定成功  res结果无意义就是个字符串
+        await this.setOpenid();
+        await this.checkBinding();
       }
       this.init();
 
