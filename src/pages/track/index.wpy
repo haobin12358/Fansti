@@ -278,8 +278,8 @@
     data = {
       type: 'newUser',
 
-      searchPickerArray: ['运单号', '订单号', '目的港', '公司名'],
-      enSearchPickerArray: ['ydno', 'hxno', 'destination','accounts'],
+      searchPickerArray: ['运单号', '订单号', '目的港', '公司名','进仓编号'],
+      enSearchPickerArray: ['ydno', 'hxno', 'destination','accounts', 'jcno'],
       searchPickerIndex: 0,
       searchContent: '',
       progressData: ['预配', '进仓', '出仓', '称重', '报关', '运单', '交单', '起飞', '送达'],
@@ -327,6 +327,7 @@
         this.searchParams.hxno = '';
         this.searchParams.destination = '';
         this.searchParams.accounts = '';
+        this.searchParams.jcno = '';
 
         Object.assign(this.searchParams,this.searchParam);
       }

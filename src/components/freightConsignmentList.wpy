@@ -3,7 +3,7 @@
     .freight-consignment-list{
       .goods-item{
         margin-bottom: 19rpx;
-        height: 261rpx;
+        height: 301rpx;
         border-radius: 10rpx;
         border: 1px solid @borderColor;
         box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
@@ -71,8 +71,6 @@
             display: inline-block;
 
           }
-
-
         }
 
         .top-right-label{
@@ -173,6 +171,26 @@
           </view>
           <view class="item-value">
             {{item.jsbzcc || '暂无'}}
+          </view>
+        </view>
+      </view>
+       <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" src="../images/order.png"></image>
+            <text>进仓号:</text>
+          </view>
+          <view class="item-value">
+            {{item.jcno || '暂无'}}
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" src="../images/number.png"></image>
+            <text space="emsp">客 户:</text>
+          </view>
+          <view class="item-value">
+            {{item.accounts || '暂无'}}
           </view>
         </view>
       </view>
