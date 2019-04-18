@@ -112,3 +112,31 @@ page{
   font-size: 44rpx;
 }
 
+.wl(@width,@height) {
+  width: @width;
+  height: @height;
+}
+
+.fz(@size) {
+  font-size: @size;
+}
+
+.sc(@size, @color) {
+  font-size: @size;
+  color: @color;
+}
+
+.fj(@type: space-between;) {
+  display: flex;
+  justify-content: @type;
+}
+
+.fjc(@type: space-between;) {
+  display: flex;
+  justify-content: @type;
+  flex-direction: column;
+}
+
+radio.radio::before{
+  display: none;
+}

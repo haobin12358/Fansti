@@ -27,17 +27,24 @@
 
   .container{
     padding-top: 20rpx;
+    color: @mainBlueColor;
+
+    .new-line{
+      padding: 0 21rpx;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20rpx;
+    }
 
     .container-consignment-info{
       border-radius: 10rpx;
       border: 1px solid @borderColor;
       box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
 
-      padding: 64rpx 21rpx 46rpx;
+      padding: 26rpx 21rpx 36rpx;
       box-sizing: border-box;
       margin:0 20rpx 41rpx;
 
-      color: @mainBlueColor;
 
       .line-detail{
         display: flex;
@@ -190,7 +197,12 @@
 </style>
 
 <template>
-  <view class="container" style="height: {{containerHeight}}px;">
+  <view class="container">
+    <view class="new-line">
+      <view>客服: {{detail.custom_name || '暂无'}}</view>
+      <view>销售: {{detail.xsr || '暂无'}}</view>
+    </view>
+
     <view class="container-consignment-info">
       <view class="line-detail">
         <view class="line-left">
@@ -302,7 +314,44 @@
           </view>
         </view>
       </view>
+       <view wx:if="{{detail.contentsb.length}}" class="two-column-table">
+        <view class="thead">
+          申报单文件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.contentsb}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
+      </view>
+
+       <view wx:if="{{detail.contentfx.length}}" class="two-column-table">
+        <view class="thead">
+          放行单文件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.contentfx}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
+      </view>
+
+       <view wx:if="{{detail.contentdgd.length}}" class="two-column-table">
+        <view class="thead">
+          DGD附件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.contentdgd}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
+      </view>
     </view>
+
+
     <view class="container-check-section">
       <!--入仓照片-->
       <view class="check-img-section">
@@ -397,8 +446,6 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import CardMixin from '@/mixins/cardMixin';
-
 
   export default class ConsignmentDetail extends wepy.page {
     config = {
@@ -569,8 +616,11 @@
     }
 
     onLoad(params) {
-      this.jcno = params.jcno;
-      this.getJcAbo(params.jcno);
+      // this.jcno = params.jcno;
+      this.jcno = 'E18110072';
+      this.getJcAbo(this.jcno);
+
+      console.log(this.jcno)
 
     }
   }
