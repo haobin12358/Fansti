@@ -33,6 +33,7 @@ page{
 .type-yellow-plain{
   color: @mainYellowColor;
   background: #ffffff;
+  border: 1px solid @mainYellowColor;
 }
 
 .type-gray{
@@ -149,10 +150,14 @@ page{
   .fj(center);
 
   .button{
-    padding: 20rpx 25rpx;
+    padding: 20rpx 50rpx;
     border: 1px solid @mainYellowColor;
     .type-yellow;
     border-radius: 10rpx;
     font-weight: bold;
+
+    &:first-child{
+      margin-right: 30rpx;
+    }
   }
 }

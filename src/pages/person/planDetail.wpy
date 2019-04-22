@@ -91,16 +91,63 @@
           }
         }
       }
+
+      .textarea-remark{
+        padding: 5rpx;
+        min-height: 100rpx;
+        border: 1rpx solid gray;
+        border-radius: 10rpx;
+      }
     }
 
     /*照片*/
     .photo{
+      padding: 55rpx;
+      .fj();
+      flex-wrap: wrap;
 
+      .photo-item{
+        .wl(300rpx, 300rpx);
+        border: 1px solid @mainBlueColor;
+        border-radius: 10rpx;
+        .fjc(center);
+        margin-bottom: 34rpx;
+
+        &:nth-child(odd){
+          margin-right: 34rpx;
+        }
+
+        .title{
+          color: #333333;
+          margin-bottom: 20rpx;
+        }
+
+        &.disable{
+          border-color: #DFDFDF;
+
+          .num{
+            color: #DFDFDF;
+          }
+        }
+        .num{
+          font-weight: bold;
+          color: @mainBlueColor;
+        }
+      }
     }
 
     /*成本*/
-    .cost{
+    .cost {
+      .cost-hd {
+        color: @mainBlueColor;
+        padding: 0 40rpx;
+        .fj();
+        margin-bottom: 60rpx;
 
+        view{
+          flex: 1;
+        }
+      }
     }
 
 
@@ -294,7 +341,7 @@
           </view>
         </view>
 
-        <view class="form-section-title">
+        <view class="form-section-title" style="margin-top: 80rpx;">
           包装
         </view>
         <view class="two-column-center-table">
@@ -324,20 +371,86 @@
           <view class="file-item">
             鉴定
           </view>
-
         </view>
 
         <view class="form-section-title">
           提交
         </view>
+        <view class="two-column-center-table">
+          <view class="row">
+            <view class="cell">
+              库房人员:
+            </view>
+            <view class="cell">
+              <textarea class="textarea-remark" auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
+            </view>
+          </view>
+          <view class="row">
+            <view class="cell">
+              货场人员:
+            </view>
+            <view class="cell">
+              <textarea class="textarea-remark" auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
+            </view>
+          </view>
+        </view>
 
       </view>
+
+      <view class="btn-wrap">
+        <view class="button" @tap="storeConfirm">库房确认</view>
+        <view class="button" @tap="storeConfirm">货场确认</view>
+      </view>
     </view>
-    <view class="detail" wx:if="{{2 == activeName}}">
-      照片
+    <view class="photo" wx:if="{{2 == activeName}}">
+      <view class="photo-item">
+        <view class="title">
+          入仓照片
+        </view>
+        <view class="num">
+          5
+        </view>
+      </view>
+      <view class="photo-item">
+        <view class="title">
+          出仓照片
+        </view>
+        <view class="num">
+          5
+        </view>
+      </view>
+      <view class="photo-item">
+        <view class="title">
+          称重照片
+        </view>
+        <view class="num">
+          5
+        </view>
+      </view>
+      <view class="photo-item disable">
+        <view class="title">
+          备用
+        </view>
+        <view class="num">
+          0
+        </view>
+      </view>
     </view>
-    <view class="detail" wx:if="{{3 == activeName}}">
-      成本
+    <view class="cost" wx:if="{{3 == activeName}}">
+      <view class="cost-hd">
+        <view>进仓号：123456</view>
+        <view>运单号：123456</view>
+      </view>
+      <view class="two-column-center-table">
+        <view class="row">
+          <view class="cell">公司：</view>
+          <view class="cell">中赤化阿三丹萨</view>
+        </view>
+        <view class="row">
+          <view class="cell">总价：</view>
+          <view class="cell">2200</view>
+        </view>
+      </view>
     </view>
 
 
@@ -359,7 +472,7 @@
     components = {};
 
     data = {
-      activeName: 1,
+      activeName: 3,
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
       res: [
@@ -376,6 +489,13 @@
         this.activeName = index
         wx.setNavigationBarTitle({
           title: this.tabs[this.activeName]
+        })
+      },
+
+      storeConfirm(){
+        console.log('进行扫码')
+        wx.scanCode({
+          scanType: 'barCode'
         })
       }
     };
