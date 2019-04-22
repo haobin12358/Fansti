@@ -15,7 +15,7 @@ page{
 }
 
 // view实现button
-.button {
+/*.button {
   font-size: 36rpx;
   height: 95rpx;
   line-height: 95rpx;
@@ -23,11 +23,16 @@ page{
   margin: 0 auto;
   width: 100%;
   border-radius: 10rpx;
-}
+}*/
 
 .type-yellow{
   color: #ffffff;
   background: @mainYellowColor;
+}
+
+.type-yellow-plain{
+  color: @mainYellowColor;
+  background: #ffffff;
 }
 
 .type-gray{
@@ -126,17 +131,28 @@ page{
   color: @color;
 }
 
-.fj(@type: space-between;) {
+.fj(@type: space-between;@align: center;) {
   display: flex;
   justify-content: @type;
+  align-items: @align;
 }
 
-.fjc(@type: space-between;) {
+.fjc(@type: space-between;@align: center) {
   display: flex;
   justify-content: @type;
+  align-items: @align;
   flex-direction: column;
 }
 
-radio.radio::before{
-  display: none;
+.btn-wrap{
+  margin-top: 100rpx;
+  .fj(center);
+
+  .button{
+    padding: 20rpx 25rpx;
+    border: 1px solid @mainYellowColor;
+    .type-yellow;
+    border-radius: 10rpx;
+    font-weight: bold;
+  }
 }

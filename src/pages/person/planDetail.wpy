@@ -1,0 +1,389 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+  @import "../../styles/table";
+
+  .container {
+    padding-top: 40rpx;
+    padding-bottom: 120rpx;
+
+    /*详情*/
+    .detail{
+      .detail-hd{
+        color: @mainBlueColor;
+        padding: 0 40rpx;
+        .fj();
+        margin-bottom: 60rpx;
+
+        view{
+          flex: 1;
+        }
+      }
+
+      .detail-ft{
+        display: flex;
+        justify-content: center;
+
+        .button{
+          padding: 20rpx 25rpx;
+          .type-yellow;
+        }
+      }
+    }
+
+    /*电子交接单*/
+    .delivery-receipt{
+      .delivery-receipt-hd{
+        color: @mainBlueColor;
+        padding: 0 40rpx;
+        .fj();
+        margin-bottom: 60rpx;
+
+        view{
+          flex: 1;
+        }
+      }
+
+      .delivery-receipt-bd{
+        // 电子交接单,两列
+        .row{
+          display: flex;
+          .fz(24rpx);
+
+          .form-item{
+            flex: 1;
+
+            display: flex;
+
+            .label{
+              padding-right: 10rpx;
+              color: #999999;
+              flex: .8;
+              text-align: right;
+            }
+
+            .value{
+              text-align: left;
+              color: #333333;
+              flex: 1;
+              padding-left: 14rpx;
+              /*word-break: break-all;*/
+            }
+          }
+        }
+
+        .form-section-title{
+          .type-blue;
+          padding-left: 20rpx;
+        }
+        .file-list{
+          display: flex;
+          .file-item{
+            flex: 1;
+            padding: 70rpx 55rpx;
+            font-weight: bold;
+            color: @mainBlueColor;
+            text-align: center;
+
+            &:nth-child(2){
+              border-left: 1px solid @mainBlueColor;
+              border-right: 1px solid @mainBlueColor;
+            }
+          }
+        }
+      }
+    }
+
+    /*照片*/
+    .photo{
+
+    }
+
+    /*成本*/
+    .cost{
+
+    }
+
+
+
+    /*底部fix tab*/
+    .fix-bottom-tabbar{
+      background: white;
+      z-index: 10;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      .wl(100%, 90rpx);
+      .fj();
+
+      text-align: center;
+      color: #999999;
+
+      view{
+        flex: 1;
+
+        &.active{
+          font-weight: bold;
+          color: @mainBlueColor;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="detail" wx:if="{{0 == activeName}}">
+      <view class="detail-hd">
+        <view>进仓号：123456</view>
+        <view>运单号：123456</view>
+      </view>
+
+      <view class="two-column-center-table">
+        <view class="row">
+          <view class="cell">操作人：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">目的港：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">件数：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">航空公司：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">航班号：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">航班日期：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">货场要求：</view>
+          <view class="cell">某某</view>
+        </view>
+         <view class="row">
+          <view class="cell">仓库要求：</view>
+          <view class="cell">仓库要求</view>
+        </view>
+         <view class="row">
+          <view class="cell">货物品名：</view>
+          <view class="cell">仓库要求</view>
+        </view>
+         <view class="row">
+          <view class="cell">操作时间：</view>
+          <view class="cell">仓库要求</view>
+        </view>
+         <view class="row">
+          <view class="cell">订单号：</view>
+          <view class="cell">仓库要求</view>
+        </view>
+        <view class="row">
+          <view class="cell">交单时间：</view>
+          <view class="cell">仓库要求</view>
+        </view>
+      </view>
+
+     <!-- <view class="detail-ft">
+        <view class="button">交单时间</view>
+      </view>-->
+      <view class="btn-wrap" style="margin-top: 200rpx">
+        <view class="button">提交交单时间</view>
+      </view>
+    </view>
+    <view class="delivery-receipt"  wx:if="{{1 == activeName}}">
+      <view class="delivery-receipt-hd">
+        <view>进仓号：123456</view>
+        <view>运单号：123456</view>
+      </view>
+
+      <view class="delivery-receipt-bd">
+        <view class="row">
+          <view class="form-item">
+            <view class="label">库房确认时间:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">货场确认时间:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">客服:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">操作人:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">入库交接单:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">无货转库房:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">随机文件:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">随货文件:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">托盘材质:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">货物状态:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">托盘尺寸:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">温度区间:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">加冰种类:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">打托盘:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">加冰处理:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">加冰用量:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="form-item">
+            <view class="label">内唛头:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+          <view class="form-item">
+            <view class="label">外唛头:</view>
+            <view class="value">2019-04-01 11:11:22</view>
+          </view>
+        </view>
+
+        <view class="form-section-title">
+          包装
+        </view>
+        <view class="two-column-center-table">
+          <view class="row">
+            <view class="cell">原包装是否保留：</view>
+            <view class="cell">否</view>
+          </view>
+          <view class="row">
+            <view class="cell">内包装说明：</view>
+            <view class="cell">某某</view>
+          </view>
+          <view class="row">
+            <view class="cell">包装名：</view>
+            <view class="cell">某某</view>
+          </view>
+        </view>
+        <view class="form-section-title">
+          文件
+        </view>
+        <view class="file-list">
+          <view class="file-item">
+            申报单
+          </view>
+          <view class="file-item">
+            包装说明
+          </view>
+          <view class="file-item">
+            鉴定
+          </view>
+
+        </view>
+
+        <view class="form-section-title">
+          提交
+        </view>
+
+      </view>
+    </view>
+    <view class="detail" wx:if="{{2 == activeName}}">
+      照片
+    </view>
+    <view class="detail" wx:if="{{3 == activeName}}">
+      成本
+    </view>
+
+
+    <view class="fix-bottom-tabbar">
+      <view wx:for="{{tabs}}" wx:key="*this" class="{{index == activeName ? 'active' : ''}}"
+      @tap="switchTab({{index}})">
+        {{item}}
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class PlanDetail extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {
+      activeName: 1,
+      tabs: ['详情', '电子交接单', '照片', '成本'],
+
+      res: [
+        {
+          name: ''
+        }
+      ]
+    };
+
+    computed = {};
+
+    methods = {
+      switchTab(index){
+        this.activeName = index
+        wx.setNavigationBarTitle({
+          title: this.tabs[this.activeName]
+        })
+      }
+    };
+
+    onLoad() {
+      wx.setNavigationBarTitle({
+        title: this.tabs[this.activeName]
+      })
+    };
+  }
+</script>

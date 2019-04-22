@@ -1,549 +1,141 @@
-<style scoped lang="less">
+<style lang="less" scoped>
   @import "../../styles/base";
 
-  .container{
-    padding: 38rpx 23rpx 30rpx;
-    box-sizing: border-box;
-    .container-hd{
-      margin-bottom: 48rpx;
+  .container {
+    .search-bar{
+      padding: 20rpx;
+      .fj();
 
-      .overview{
+      .input-wrap{
+        flex: 1;
+        height: 55rpx;
+        margin-right: 20rpx;
+        padding-left: 60rpx;
+
         display: flex;
-        position: relative;
-
-        .overview-item{
-          width: 228rpx;
-          margin-right: 10rpx;
-          height: 331rpx;
-          color: #ffffff;
-          position: relative;
-
-          &:last-child{
-            margin-right: 0;
-          }
-
-          .overview-item-bg{
-            height: 100%;
-            width: 100%;
-          }
-
-          .overview-item-info{
-            position: absolute;
-            left: 44rpx;
-            top: 38rpx;
-            width: 140rpx;
-            /*height: 140rpx;*/
-            text-align: center;
-
-            .line1{
-              margin-bottom: 20rpx;
-
-              .fz28();
-            }
-            .line2{
-              font-size: 112rpx;
-              font-weight: bold;
-              /*overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;*/
-            }
-
-          }
-        }
-
-        .newuser-shadow{
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          background: #ffffff;
-          opacity: .7;
-
-          padding-top: 101rpx;
-          padding-bottom:  114rpx;
-          box-sizing: border-box;
-
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-
-          .line1{
-            height: 60rpx;
-            width: 120rpx;
-          }
-
-          .line2{
-            color: @mainBlueColor;
-          }
-        }
-      }
-    }
-    .container-bd{
-      color: @mainBlueColor;
-
-      .bd-section{
-        margin-bottom: 20rpx;
-        .bd-section-title{
-          padding-left: 10rpx;
-
-        }
-        .bd-section-content{
-          border: 4rpx solid @borderColor;
-          padding: 40rpx;
-          border-radius: 10rpx;
-        }
-        /*客服信息*/
-        .bd-section-content-info{
-          display: flex;
-          .service-info{
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .fz24()
-
-          }
-          .service-img{
-            height: 187rpx;
-            width: 163rpx;
-          }
-
-        }
-
-        /*  在线留言*/
-        .bd-section-content-msg{
-          padding: 20rpx 35rpx 12rpx 20rpx;
-          .fz24();
-
-          .textarea-msg{
-            height: 100rpx;
-            width: 100%;
-          }
-          .confirm-msg{
-            color: @mainFontColor;
-            /*display: inline-block;*/
-            text-align: right;
-          }
-
-        }
-      }
-    }
-    .container-ft{
-      .ft-btns{
-        padding: 0 40rpx;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 34rpx;
-
-        button{
-          color: #ffffff;
-          background: #a1afba;
-          padding: 0 31rpx;
-
-          .fz28();
-        }
-      }
-      .ft-share-list{
-        display: flex;
-        justify-content: flex-end;
         align-items: center;
+        border: 1px solid #A0AFBA;
+        border-radius: 10rpx;
 
-        image{
-          width: 25rpx;
-          height: 22rpx;
-          margin-right: 9rpx;
+        .search-icon{
+          .wl(30rpx, 30rpx);
+          margin-right: 10rpx;
         }
 
-        text{
-          color: @mainFontColor;
-          .fz24();
+        input{
+          flex: 1;
+        }
+      }
+
+      button{
+        height: 55rpx;
+        line-height: 55rpx;
+        .fz(26rpx);
+      }
+    }
+
+    .list{
+      .sc(32rpx, @mainBlueColor);
+
+      .list-item{
+        padding: 25rpx 40rpx 25rpx 40rpx;
+        .fj();
+        border-bottom: 1px solid #C5C5C5;
+
+        .item-hd{
+          flex: 1;
+        }
+        .item-ft{
+          .wl(14rpx, 25rpx);
+
+          &.share{
+            .wl(25rpx, 25rpx);
+          }
         }
       }
     }
   }
-
 </style>
 
 <template>
-    <view  class="container">
-      <view class="container-hd">
-        <view  class="overview">
-          <view class="overview-item" @tap="tapWGPHandler">
-            <image class="overview-item-bg" src="../../images/packet_yellow.png"></image>
-            <view class="overview-item-info">
-              <view class="line1">待领取红包</view>
-              <view class="line2">{{allPacketInfo.red_list.length}}</view>
-            </view>
-          </view>
-          <view class="overview-item" @tap="tapAGPHandler">
-            <image class="overview-item-bg" src="../../images/packet_gray.png"></image>
-            <view class="overview-item-info">
-              <view class="line1">已领取红包</view>
-              <view class="line2">{{allPacketInfo.my_red_num}}</view>
-            </view>
-
-          </view>
-          <view class="overview-item"  @tap="tapCTHandler">
-            <image class="overview-item-bg" src="../../images/packet_blue.png"></image>
-            <view class="overview-item-info">
-              <view class="line1">月度统计</view>
-              <view class="line2">{{packetCount}}</view>
-            </view>
-
-          </view>
-
-          <view wx:if="{{!isOldUser}}" class="newuser-shadow">
-            <image class="line1" src="../../images/paper_plane.png"></image>
-            <view class="line2">
-              与客服联系如何开启红包
-            </view>
-          </view>
-        </view>
+  <view class="container">
+    <view class="search-bar">
+      <view class="input-wrap">
+        <image class="search-icon" src="../../images/search.png"></image>
+        <input type="text" placeholder="请输入进仓号/运单号/目的港">
       </view>
-      <view class="container-bd">
-        <view class="bd-section">
-          <view class="bd-section-title">
-            客服信息
-          </view>
-          <view class="bd-section-content bd-section-content-info">
-            <view class="service-info">
-              <view class="service-info-line">
-                客服名称：{{serviceInfo.user_name || '暂无'}}
-              </view>
-              <view class="service-info-line" @longtap="longTapQQHandler">
-                客服 QQ：{{serviceInfo.qq || '暂无'}}
-              </view>
-              <view class="service-info-line">
-                客服电话：{{serviceInfo.telephone || '暂无'}}
-              </view>
-              <view class="service-info-line" @longtap="longTapEmailHandler">
-                客服邮箱：{{serviceInfo.email || '暂无'}}
-              </view>
-
-            </view>
-            <image src="../../images/service_people.png" class="service-img"/>
-          </view>
-        </view>
-        <view class="bd-section">
-          <view class="bd-section-title">
-            在线留言
-          </view>
-          <view class="bd-section-content bd-section-content-msg">
-            <textarea class="textarea-msg" cursor-spacing="20" disabled="{{!textareaEnable}}" value="{{textareaEnable ? msg : ''}}" @input="inputMsgHandler"></textarea>
-            <view class="confirm-msg">
-              <text @tap="submitMsg">确认提交</text>
-            </view>
-          </view>
-        </view>
-      </view>
-      <view class="container-ft">
-        <view class="ft-btns">
-          <button @tap="goPersonCard">分享小程序</button>
-          <button @tap="tapCallService">电话沟通</button>
-          <button @tap="bindingAgain">{{isBinding ? '重新绑定' : '开始绑定'}} </button>
-        </view>
-        <view  class="ft-share-list">
-          <image src="../../images/person_share_list.png"></image>
-          <text @tap="goShareList">查看分享列表</text>
-        </view>
-      </view>
+      <button class="type-blue">搜索</button>
     </view>
-    <waitGetPacket :show.sync="showWGP" :list.sync="redList" @receive.user="receiveRed"></waitGetPacket>
-    <alreadyGetPacket :show.sync="showAGP" :list.sync="myRedList" :total.sync="myRedCoin" @query.user="queryReceive"></alreadyGetPacket>
-    <alreadyGetTicket :show.sync="showCT" :list.sync="monthRed" :redCoin.sync="myRedCoin"></alreadyGetTicket>
+
+    <view class="list">
+      <view class="list-item" @tap="handleRedirect('plan')">
+        <view class="item-hd">
+          当日计划
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('plane')">
+        <view class="item-hd">
+          扫码入库
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('plane')">
+        <view class="item-hd">
+          扫码出库
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('plane')">
+        <view class="item-hd">
+          货场接收
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('plane')">
+        <view class="item-hd">
+          申报上传
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('share')">
+        <view class="item-hd">
+          分享小程序
+        </view>
+        <image class="item-ft share" src="../../images/share.png"></image>
+      </view>
+
+    </view>
+  </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import api from '@/api/api';
-  import tip from '@/utils/tip';
-  import Placeholder from '@/components/common/placeholder'
-  import AlreadyGetPacket from '@/components/alreadyGetPacket'
-  import WaitGetPacket from '@/components/waitGetPacket'
-  import AlreadyGetTicket from '@/components/alreadyGetTicket'
-  import BindingMixin from '@/mixins/bindingMixin'
-  import {getRandomContent} from '@/utils/util'
+  import wepy from 'wepy';
 
   export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '操作'
-    }
-    components = {
-      placeholder: Placeholder,
-      alreadyGetPacket: AlreadyGetPacket,
-      waitGetPacket: WaitGetPacket,
-      alreadyGetTicket: AlreadyGetTicket
-    };
+    config = {};
 
-    mixins = [BindingMixin];
+    components = {};
 
-    data = {
-      showWGP: false,//  显示未领取红包
-      showAGP: false, //  显示已领取红包
-      showCT: false,  //  显示已完成票数
-      lineChart: {},
+    data = {};
 
-      allPacketInfo: {
-        'month_red': [
-
-        ],
-        'my_red_coin': 0,
-        'my_red_list': [
-
-        ],
-        'my_red_num': 0,
-        'red_list': [
-
-        ],
-        'red_num': 0
-      },
-
-      redList:[],
-      myRedList:[],
-      myRedCoin:0,
-      monthRed:[],
-
-      serviceInfo: {},
-      msg: '',
-
-
-    };
-
-    computed = {
-      textareaEnable() {
-        return !this.showWGP && !this.showAGP && !this.showCT;
-      },
-      packetCount(){
-        let count = 0
-
-        for (let i = 0; i < this.monthRed.length; i++) {
-          count += this.monthRed[i].count;
-        }
-
-        return count;
-      }
-    };
+    computed = {};
 
     methods = {
-      longTapQQHandler(){
-        if(this.serviceInfo.qq){
-          wx.setClipboardData({
-            data: this.serviceInfo.qq
-          });
+      handleRedirect(command){
+        switch (command) {
+          case 'plan':
+            this.$navigate('/pages/person/plan')
+            break
+          case 'share':
+            this.$navigate('/pages/person/personCard')
+            break
+
         }
-      },
-      longTapEmailHandler(){
-        if(this.serviceInfo.email){
-          wx.setClipboardData({
-            data: this.serviceInfo.email
-          });
-        }
-      },
-      goPersonCard(){
-        wx.navigateTo({
-          url: '/pages/person/personCard'
-        });
-      },
-      goShareList() {
-        if(this.isBinding){
-          wx.navigateTo({
-            url: '/pages/person/shareList'
-          });
-        }else{
-          tip.confirm('请绑定后使用', false)
-        }
-
-      },
-
-      inputMsgHandler(e) {
-        this.msg = e.detail.value;
-      },
-
-      submitMsg() {
-        if(this.isBinding){
-          if (this.msg != '') {
-            this.makeUserMessage(this.msg);
-          } else {
-            tip.alert('留言不能为空');
-          }
-        }else{
-          tip.alert('请绑定后操作');
-        }
-
-      },
-
-      bindingAgain() {
-        wx.navigateTo({
-          url: '/pages/person/binding'
-        });
-      },
-
-      //  显示未领取的红包
-      tapWGPHandler() {
-        if(this.allPacketInfo.red_list.length){
-          this.showWGP = true;
-        }else{
-          tip.alert('没有待领红包');
-        }
-      },
-
-      receiveRed(item){
-        this.receiveRedPackage(item.red_id);
-
-      },
-      queryReceive(item){
-        this.queryReceiveRedPkg(item.id);
-
-      },
-
-      //  显示已领取的红包
-      tapAGPHandler() {
-        if(this.allPacketInfo.my_red_num){
-
-          this.showAGP = true;
-        }else{
-          tip.alert('没有已领红包');
-        }
-      },
-      //  显示已完成票数
-      tapCTHandler() {
-        this.showCT = true;
-        this.$invoke('alreadyGetTicket', 'apply');
-
-      },
-      tapCallService() {
-        let phoneNumber = this.serviceInfo.telephone+'';
-
-        wepy.showModal({
-          title: `联系客服`,
-          content: `拨打${phoneNumber}(客服电话)?`
-        }).then(
-          p => {
-            if (p.confirm) {
-              wx.makePhoneCall({
-                phoneNumber
-              });
-            }
-          }
-        );
       }
     };
 
-    events = {};
-
-    onShareAppMessage(){
-      return getRandomContent();
-    }
-
-    //  领取红包
-    async receiveRedPackage(red_id) {
-      let res = await api.receiveRed({method: 'POST',query:{openid: wx.getStorageSync('openid'),red_id}});
-
-      if (res.data.status == 200) {
-        tip.toast('领取成功');
-        this.getAllRed();
-      }else{
-
-        tip.confirm(res.data.message.join(','), false,{},'领取失败');
-      }
-    }
-
-    //  查询红包领取状态
-    async queryReceiveRedPkg(id) {
-      let res = await api.receiveRedQuery({method: 'POST',query:{id}});
-
-      if(res.data.data.result_code == 'SUCCESS'){
-        tip.confirm(`红包已到账,时间:${res.data.data.payment_time}`,false);
-      }else{
-        tip.toast('请重试');
-      }
-    }
-
-
-    //  获取客服信息
-    async getCustom() {
-      //  token可空,新老用户
-      let res = await api.getCustom({login_name: wx.getStorageSync('token')});
-
-      if (res.data.status == 200) {
-        this.serviceInfo = res.data.data;
-        this.$apply();
-      }
-    }
-
-
-
-    //  留言
-    async makeUserMessage(message) {
-      let res = await api.makeUserMessage({ method: 'POST', openid: wx.getStorageSync('openid'), query: { message } });
-
-      if (res.data.status == 200) {
-        this.msg = '';
-        this.$apply();
-        tip.success('留言成功!');
-      } else {
-        tip.alert(res.data.message);
-      }
-    }
-
-    async getAllRed() {
-      let res = await api.getAllRed({ query: { login_name: wx.getStorageSync('token') } });
-
-      if (res.data.status == 200) {
-        this.allPacketInfo = res.data.data;
-        this.redList = res.data.data.red_list;
-        this.myRedList = res.data.data.my_red_list;
-        this.myRedCoin = res.data.data.my_red_coin;
-        this.monthRed = res.data.data.month_red;
-        this.$apply();
-      } else {
-        tip.alert(res.data.message);
-      }
-    }
-
-    init(){
-      this.getCustom();
-
-      if(this.isBinding){
-
-        if(this.isOldUser){
-          this.getAllRed();
-        }
-      }
-    }
-
-    //  邀请用户
-    async addInvate(openid){
-      let res = await api.addInvate({ method: 'POST', openid, query: { openid: wx.getStorageSync('openid') } });
-
-      if (res.data.status == 200) {
-        tip.success('成功接收邀请!');
-      } else {
-        tip.alert(res.data.message);
-      }
-    }
-
-    async onShow(){
-      this.init();
-
-    }
-
-    async onLoad(params) {
-      if (!this.isBinding) {
-        await this.setOpenid();
-        await this.checkBinding();
-      }
-      this.init();
-
-      // 分享
-      if (params.share == 'true') {
-        this.addInvate(params.openid);
-        this.$navigate('/pages/person/personCard');
-      }
-    }
+    onLoad() {
+    };
   }
 </script>
-

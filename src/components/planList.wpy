@@ -1,0 +1,211 @@
+<style lang="less" scoped>
+    @import "../styles/base";
+
+    .plan-list {
+      padding: 0 20rpx;
+
+      .plan-item{
+        margin-bottom: 20rpx;
+        height: 220rpx;
+        border-radius: 10rpx;
+        border: 1px solid @borderColor;
+        box-sizing: border-box;
+        color: @mainBlueColor;
+
+        .fj();
+
+        position: relative;
+        overflow: hidden;
+
+        &.warning{
+          background: #FFFAD0;
+        }
+        &.info{
+          background: #EBEBEB;
+        }
+        &.danger{
+          background: #FFEFEF;
+        }
+
+        .plan-item-left{
+          width: 65rpx;
+          height: 100%;
+          border-right: 1px solid #C6C6C6;
+
+          .fjc(center);
+        }
+        .plan-item-right{
+          flex: 1;
+          height: 100%;
+          box-sizing: border-box;
+          padding: 30rpx 0 30rpx 20rpx;
+          .fz24;
+
+          .fjc();
+
+          .line-detail{
+            width: 100%;
+
+            display: flex;
+            justify-content: space-between;
+
+            .line-right{
+              min-width: 45%;
+            }
+
+            .item-label{
+              display: inline-block;
+              margin-right: 20rpx;
+
+              image{
+                width: 36rpx;
+                height: 25rpx;
+                margin-right: 5rpx;
+
+              }
+
+              .text-number{
+                padding-left: 20rpx;
+              }
+            }
+            .item-value{
+              display: inline-block;
+
+            }
+          }
+        }
+
+        .top-right-label{
+          position: absolute;
+          top: -60rpx;
+          right: -60rpx;
+
+          width: 120rpx;
+          height: 120rpx;
+          line-height: 50rpx;
+          text-align: center;
+          border-radius:50%;
+
+          color: #ffffff;
+          background: #306fb0;
+
+          &.danger{
+            background: #ab3534;
+          }
+          text{
+            position: absolute;
+
+            bottom: 10rpx;
+            left: 20rpx;
+          }
+        }
+      }
+    }
+</style>
+
+<template>
+    <view class="plan-list">
+      <view class="plan-item" wx:for="{{10}}">
+        <view class="plan-item-left">
+          <view>交</view>
+          <view>货</view>
+        </view>
+        <view class="plan-item-right">
+          <view class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/jc.png"></image>
+                <text>进仓号:</text>
+              </view>
+              <view class="item-value">
+                {{item.jcno || '暂无'}}
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/customer.png"></image>
+                <text space="emsp">客 户:</text>
+              </view>
+              <view class="item-value">
+                {{item.accounts || '暂无'}}
+              </view>
+            </view>
+          </view>
+          <view class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <image class="label-img" src="../images/goods.png"></image>
+                <text>运单号:</text>
+              </view>
+              <view class="item-value">
+                {{item.ydno || '暂无'}}
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <image class="label-img" src="../images/plane.png"></image>
+                <text>目的港:</text>
+              </view>
+              <view class="item-value">
+                {{item.destination || '暂无'}}
+
+              </view>
+            </view>
+          </view>
+          <view class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <image class="label-img" src="../images/order.png"></image>
+                <text>订单号:</text>
+              </view>
+              <view class="item-value">
+                {{item.hxno || '暂无'}}
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <image class="label-img" src="../images/number.png"></image>
+                <text space="emsp">件 数:</text>
+              </view>
+              <view class="item-value">
+                {{item.jsbzcc || '暂无'}}
+              </view>
+            </view>
+          </view>
+        </view>
+
+
+        <view class="top-right-label danger">
+          <text>危</text>
+        </view>
+        <!--
+        <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
+          <text class="top-right-label-text">延误</text>
+        </view>
+
+
+        <view wx:if="{{item.dida == 1}}" class="top-right-label top-right-label-finish">
+          <text class="top-right-label-text">完成</text>
+        </view>-->
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class PlanList extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+    };
+  }
+</script>

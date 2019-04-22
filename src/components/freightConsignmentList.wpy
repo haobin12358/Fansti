@@ -45,33 +45,33 @@
 
         }
         .line-detail{
-          display: flex;
-          justify-content: space-between;
+           display: flex;
+           justify-content: space-between;
 
-          .line-right{
-            min-width: 35%;
-          }
+           .line-right{
+             min-width: 35%;
+           }
 
-          .item-label{
-            display: inline-block;
-            margin-right: 20rpx;
+           .item-label{
+             display: inline-block;
+             margin-right: 20rpx;
 
-            image{
-              width: 36rpx;
-              height: 25rpx;
-              margin-right: 5rpx;
+             image{
+               width: 36rpx;
+               height: 25rpx;
+               margin-right: 5rpx;
 
-            }
+             }
 
-            .text-number{
-              padding-left: 20rpx;
-            }
-          }
-          .item-value{
-            display: inline-block;
+             .text-number{
+               padding-left: 20rpx;
+             }
+           }
+           .item-value{
+             display: inline-block;
 
-          }
-        }
+           }
+         }
 
         .top-right-label{
           position: absolute;
@@ -133,6 +133,27 @@
           </block>
         </block>
       </view>
+
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
+            <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/jc.png"></image>
+            <text>进仓号:</text>
+          </view>
+          <view class="item-value">
+            {{item.jcno || '暂无'}}
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/customer.png"></image>
+            <text space="emsp">客 户:</text>
+          </view>
+          <view class="item-value">
+            {{item.accounts || '暂无'}}
+          </view>
+        </view>
+      </view>
       <view class="line-detail">
         <view class="line-left">
           <view class="item-label">
@@ -171,26 +192,6 @@
           </view>
           <view class="item-value">
             {{item.jsbzcc || '暂无'}}
-          </view>
-        </view>
-      </view>
-       <view class="line-detail">
-        <view class="line-left">
-          <view class="item-label">
-            <image class="label-img" src="../images/order.png"></image>
-            <text>进仓号:</text>
-          </view>
-          <view class="item-value">
-            {{item.jcno || '暂无'}}
-          </view>
-        </view>
-        <view class="line-right">
-          <view class="item-label">
-            <image class="label-img" src="../images/number.png"></image>
-            <text space="emsp">客 户:</text>
-          </view>
-          <view class="item-value">
-            {{item.accounts || '暂无'}}
           </view>
         </view>
       </view>

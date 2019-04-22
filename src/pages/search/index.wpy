@@ -10,8 +10,11 @@
 
         .form-item-label{
           color: @mainBlueColor;
-
           margin-bottom: 19rpx;
+
+          .sub-label{
+            font-size: 22rpx;
+          }
         }
 
 
@@ -156,6 +159,7 @@
         <view class="form-item">
           <view class="form-item-label">
             鉴定报告
+            <text class="sub-label">(库中已经有1220条数据)</text>
           </view>
           <view class="form-item-main">
             <input class="form-item-input" type="text" value="{{surveyReport}}" placeholder="可先点击查询进行模糊搜索" name="jd"></input>

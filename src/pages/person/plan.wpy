@@ -1,0 +1,53 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+
+  .container {
+    color: @mainBlueColor;
+
+    .search-date-switch{
+      margin: 25rpx 0;
+      padding: 0 30rpx;
+      .fj();
+
+      view{
+        &.active{
+          border-bottom: 1px solid @mainBlueColor;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="search-date-switch">
+      <view>全部</view>
+      <view class="active">今日</view>
+    </view>
+
+    <plan-list></plan-list>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import PlanList from '../../components/planList';
+
+  export default class Plan extends wepy.page {
+    config = {
+    };
+
+    components = {
+      'plan-list': PlanList
+    };
+
+    data = {};
+
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+    };
+  }
+</script>
