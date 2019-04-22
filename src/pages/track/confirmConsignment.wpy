@@ -71,12 +71,17 @@
           align-items: center;
 
           .confirm-btn{
-            background: @mainYellowColor;
-            color: #ffffff;
-            padding-left: 40rpx;
-            padding-right: 40rpx;
-
+            margin: 0;
+            padding: 20rpx 50rpx;
+            .type-yellow;
+            border-radius: 10rpx;
+            font-weight: bold;
             .fz30();
+
+            &.send-email{
+              margin-left: 30rpx;
+              .type-yellow-plain;
+            }
           }
         }
       }
@@ -102,9 +107,13 @@
         </scroll-view>
       </view>
       <view class="card-ft" wx:if="{{isconfirm == 'false'}}">
-        <button class="confirm-btn" @tap="confirmPic">
+        <view class="confirm-btn" @tap="confirmPic">
           确认照片
-        </button>
+        </view>
+        <view class="confirm-btn send-email">
+          发送至邮箱
+        </view>
+
       </view>
 
     </view>
