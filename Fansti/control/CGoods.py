@@ -33,6 +33,8 @@ class CGoods():
             wts_filter.add(AIR_HWYS_WTS.destination.like("%{0}%".format(args.get("destination"))))
         if args.get("accounts"):
             wts_filter.add(AIR_HWYS_WTS.accounts.like("%{0}%".format(args.get("accounts"))))
+        if args.get("jcno"):
+            wts_filter.add(AIR_HWYS_WTS.jcno.like("%{0}%".format(args.get("jcno"))))
             
         user = self.susers.get_user_type(args.get("login_name"))
         if not user:
@@ -232,6 +234,23 @@ class CGoods():
         # 报关单文件
         contentfile = get_model_return_list(self.sgoods.get_contentfile_by_jcno(args.get("jcno")))
         jc_abo['contentfile'] = contentfile
+        # 申报单文件
+        contentsb = get_model_return_dict(self.sgoods.get_contentsb_by_jcno(args.get("jcno")))
+        jc_abo["contentsb"] = contentsb
+        # 放行单文件
+        contentfx = get_model_return_list(self.sgoods.get_contentfx_by_jcno(args.get("jcno")))
+        jc_abo["contentfx"] = contentfx
+        # DGD文件
+        contentdgd = get_model_return_list(self.sgoods.get_contentdgd_by_jcno(args.get("jcno")))
+        jc_abo["contentdgd"] = contentdgd
+        # 销售人xsr
+
+        # 客服人员
+        if jc_abo["xsr"]:
+            user_abo = get_model_return_dict(self.susers.get_custom_by_xsr(jc_abo["xsr"]))
+            jc_abo["custom_name"] = user_abo["user_name"]
+        else:
+            jc_abo["custom_name"] = ""
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response

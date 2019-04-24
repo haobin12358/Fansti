@@ -78,7 +78,7 @@ class AIR_HWYS_WTS(Base):
     link_file = Column(String(20), default='废单')    # 废单链接
     link_bq = Column(String(20), default='标签')      # 标签链接
     status = Column(String(10), default='0')          # 货单状态（911代表废单） TODO
-    accounts = Column(String(100))                    #
+    accounts = Column(String(100))                    # 客户名
     link_hkqr = Column(String(20), default='成本')     # 成本链接
     link_ajd = Column(String(20), default='安检单')    # 安检单链接
     jd_date = Column(DATE)                            # 交单日期
@@ -437,6 +437,13 @@ class VoteResult(Base):
     void = Column(String(64))     # 问题id
     vrchoice = Column(String(16))  # 选项
     vrabo = Column(Text)          # 详情： 填空和其他用
+
+class AIR_HWYS_DZJJD(Base):
+    __tablename__ = "AIR_HWYS_DZJJD"
+    jjd_id = Column(String(40), primary_key=True)
+    jcno = Column(String(1000))
+    kf_bz = Column(String(2000))                    # 仓库要求
+    hc_bz = Column(String(2000))                    # 货场要求
 
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)
