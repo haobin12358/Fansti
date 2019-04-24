@@ -9,7 +9,7 @@ class SReds(SBase):
 
     @close_session
     def get_my_red_receive(self, login_name):
-        return self.session.query(GET_RED_COIN.createtime, GET_RED_COIN.red_id)\
+        return self.session.query(GET_RED_COIN.createtime, GET_RED_COIN.red_id, GET_RED_COIN.id)\
             .filter_by(login_name=login_name).filter_by(status=2).all()
 
     @close_session
@@ -53,3 +53,38 @@ class SReds(SBase):
     @close_session
     def get_red_all(self):
         return self.session.query(WECHAT_RED_COIN.id, WECHAT_RED_COIN.name, WECHAT_RED_COIN.price).all()
+
+    @close_session
+    def get_userred_by_loginname_redid(self, loginname, redid, status=1):
+        """根据用户名, 红包id, 获取用户红包"""
+        user_red = self.session.query(GET_RED_COIN).filter(
+            GET_RED_COIN.login_name == loginname,
+            GET_RED_COIN.red_id == redid,
+            GET_RED_COIN.status == status
+        ).first()
+        self.session.expunge_all()
+        return user_red
+
+    @close_session
+    def get_userred_by_id(self, id):
+        user_red = self.session.query(GET_RED_COIN).filter(
+            GET_RED_COIN.id == id
+        ).first()
+        self.session.expunge_all()
+        return user_red
+
+    @close_session
+    def get_red_new_by_id(self, id):
+        """根据红包id获取红包, 新方法"""
+        red = self.session.query(WECHAT_RED_COIN).filter(WECHAT_RED_COIN.id == id).first()
+        self.session.expunge_all()
+        return red
+
+    @close_session
+    def update_user_red_by_id(self, id, data):
+        """根据用户名, 红包id, 获取用户红包"""
+        return self.session.query(GET_RED_COIN).filter(
+            GET_RED_COIN.id == id
+        ).update(data)
+
+

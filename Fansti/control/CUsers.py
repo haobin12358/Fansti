@@ -2,7 +2,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-import json, uuid
+import json, uuid, re
 from flask import request
 from flask import make_response
 from Fansti.config.response import SYSTEM_ERROR, NETWORK_ERROR
@@ -36,14 +36,15 @@ class CUsers():
         wl_key = ['status', 'openid', 'province', 'name', 'user_introduction', 'city',
                   'work_goodat', 'qq', 'login_name', 'work_year', 'phone', 'email',
                   'wechat', 'user_name', 'id', 'usex']
+
         wl = {k: data.get(k) for k in wl_key if k in data}
         import configparser
         from Fansti.config.Inforcode import FANSTICONFIG
         cfg = configparser.ConfigParser()
         cfg.read(FANSTICONFIG)
         usertype = -111
-
         phone_list = eval(cfg.get("phone", "whitelist"))
+        data["name"] = None
         if str(data.get("phone")) in phone_list:
             wechat_login_tmp = get_model_return_dict(self.susers.get_wechat_login_by_phone(data.get("phone")))
             if not wechat_login_tmp:
@@ -56,13 +57,14 @@ class CUsers():
                     "id": str(uuid.uuid1()),
                     "openid": data.get("openid", ""),
                     "login_name": data.get("login_name", ""),
+                    "name": data.get("name", ""),
                     "phone": data.get("phone"),
                     "status": data.get("status", "1"),
-                    "name": data.get("name", ""),
                     "usex": data.get("usex", ""),
                     "city": data.get("city", ""),
                     "province": data.get("province", "")
                 })
+
             else:
                 if "login_name" in data and "login_password" in data:
                     check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))

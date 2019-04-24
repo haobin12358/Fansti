@@ -11,7 +11,7 @@ import flask_restful
 #from ManagerSystem.apis.MSApproval import MSApproval
 #from ManagerSystem.apis.AOther import AOther
 #from ManagerSystem.apis.ACoupons import MSCoupons
-
+from Fansti.apis.APay import FSpay
 from Fansti.apis.Ascrapy import FSscrapy
 from Fansti.apis.AUsers import FSUser
 from Fansti.apis.AGoods import FSGoods
@@ -39,6 +39,8 @@ api.add_resource(FSGoods, "/fansti/goods/<string:goods>")
 api.add_resource(FSother, "/fansti/other/<string:other>")
 api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
+# api.add_resource(FSpay, "/fansti/pay/<string:pay>")
+
 
 @fansti.route("/")
 def index():

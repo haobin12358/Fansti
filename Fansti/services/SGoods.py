@@ -26,6 +26,10 @@ class SGoods(SBase):
         return self.session.query(AIR_HWYS_WTS.xsr).filter_by(accounts=accounts).first()
 
     @close_session
+    def get_AIR_HWYS_WTS_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_WTS.jd_date, AIR_HWYS_WTS.jd_time).filter(AIR_HWYS_WTS.jcno == jcno).first()
+
+    @close_session
     def get_dctime_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_DCD.hbdate1).filter_by(jcno=jcno).first()
 

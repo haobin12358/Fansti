@@ -26,7 +26,8 @@ class FSRed(Resource):
         print(self.title.format("api is" + reds))
 
         apis = {
-            "receive_red": "self.creds.receive_red()"
+            "receive_red": "self.creds.receive_red()",
+            "receive_red_query": "self.creds.receive_red_query()"
         }
 
         if reds not in apis:

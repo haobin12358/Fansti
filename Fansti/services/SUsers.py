@@ -85,3 +85,10 @@ class SUsers(SBase):
     @close_session
     def get_user_type(self, login_name):
         return self.session.query(D_MESSAGE_USER.user_type).filter(D_MESSAGE_USER.login_name == login_name).first()
+
+    @close_session
+    def get_user_by_openid(self, openid):
+        """open获取用户"""
+        user = self.session.query(WECHAT_LOGIN).filter(WECHAT_LOGIN.openid == openid).first()
+        self.session.expunge_all()
+        return user

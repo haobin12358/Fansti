@@ -9,6 +9,7 @@ from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
 from Fansti.common.import_status import import_status
 from Fansti.common.TransformToList import add_model
+from Fansti.models.model import AIR_HWYS_WTS
 
 class CGoods():
     def __init__(self):
@@ -247,7 +248,8 @@ class CGoods():
             return judge_keys(true_args, args.keys())
         if judge_keys(true_data, data.keys()) != 200:
             return judge_keys(true_data, data.keys())
-        goods_retrue = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(args["jcno"]))
+        jcno = args["jcno"]
+        goods_retrue = get_model_return_list(self.sgoods.get_in_out_weight_by_jcno(jcno))
         if not goods_retrue:
             in_pic = "0"
             out_pic = "0"
@@ -256,6 +258,18 @@ class CGoods():
                 in_pic = "1"
             if data["retrue_name"] == "out":
                 out_pic = "1"
+                import datetime
+                air_hwys_wts = get_model_return_dict(self.sgoods.get_AIR_HWYS_WTS_by_jcno(jcno))
+                if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
+                    new_reds = add_model("GET_RED_COIN", **{
+                        "id": str(uuid.uuid1()),
+                        "login_name": args["login_name"],
+                        "createtime": datetime.datetime.now(),
+                        "red_id": 2,
+                        "status": 1
+                    })
+                    if not new_reds:
+                        return SYSTEM_ERROR
             if data["retrue_name"] == "weight":
                 weight_pic = "1"
             new_goods_retrue = add_model("GOODS_RETRUE",
@@ -313,6 +327,18 @@ class CGoods():
                     else:
                         update_goods_retrue = self.sgoods.update_goods_retrue_by_id(id_name["id"], {"out_pic": "1"})
                         if not update_goods_retrue:
+                            return SYSTEM_ERROR
+                    import datetime
+                    air_hwys_wts = get_model_return_dict(self.sgoods.get_AIR_HWYS_WTS_by_jcno(jcno))
+                    if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
+                        new_reds = add_model("GET_RED_COIN", **{
+                            "id": str(uuid.uuid1()),
+                            "login_name": args["login_name"],
+                            "createtime": datetime.datetime.now(),
+                            "red_id": 2,
+                            "status": 1
+                        })
+                        if not new_reds:
                             return SYSTEM_ERROR
             elif data["retrue_name"] == "weight":
                 id = get_model_return_dict(self.sgoods.get_retrue_by_jcno_weight(args["jcno"]))
