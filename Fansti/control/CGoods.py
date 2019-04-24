@@ -62,6 +62,10 @@ class CGoods():
 
         make_log("goods_list", goods_list)
         for goods in goods_list:
+            if goods["transtime"]:
+                goods["transtime"] = goods["transtime"].strftime("%Y-%m-%d")
+            if goods["flag_date"]:
+                goods["flag_date"] = goods["flag_date"].strftime("%Y-%m-%d")
             yupei = get_model_return_dict(self.sgoods.get_dctime_by_jcno(goods["jcno"]))
             make_log("yupei", yupei)
             if not yupei:
