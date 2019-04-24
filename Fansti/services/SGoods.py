@@ -2,7 +2,8 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
-from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, GOODS_RETRUE
+from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, \
+    GOODS_RETRUE, AIR_HWYS_DZJJD
 from Fansti.services.SBase import SBase, close_session
 from sqlalchemy import func
 
@@ -17,7 +18,9 @@ class SGoods(SBase):
     @close_session
     def get_all_goods_by_filter(self, wtsfilter, page_size, page_num):
         return self.session.query(
-            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc)\
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc,
+            AIR_HWYS_WTS.accounts, AIR_HWYS_WTS.xsr, AIR_HWYS_WTS.flag_date, AIR_HWYS_WTS.transtime, AIR_HWYS_WTS.isphoto,
+            AIR_HWYS_WTS.wphw)\
                 .order_by(func.nvl(AIR_HWYS_WTS.jd_date, AIR_HWYS_WTS.jd_time).desc(), AIR_HWYS_WTS.jcno.desc())\
                 .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
 
@@ -73,7 +76,8 @@ class SGoods(SBase):
     @close_session
     def get_goods_abo_by_jcno(self, jcno):
         return self.session.query(
-            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm,).filter_by(jcno=jcno).first()
+            AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm, AIR_HWYS_WTS.czr,
+            AIR_HWYS_WTS.company, AIR_HWYS_WTS.contract).filter_by(jcno=jcno).first()
 
     @close_session
     def get_goods_abo_by_filter(self, dcdfilter):
@@ -132,5 +136,34 @@ class SGoods(SBase):
         return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='报关单').filter_by(jcno=jcno).all()
 
     @close_session
+    def get_contentsb_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='申报单').filter_by(jcno=jcno).all()
+
+    @close_session
+    def get_contentfx_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='放行单').filter_by(jcno=jcno).all()
+
+    @close_session
+    def get_contentdgd_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_FILE.filename).filter_by(content='DGD').filter_by(jcno=jcno).all()
+
+    @close_session
     def get_yanwu_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_DCD_JLD.id).filter_by(jcno=jcno).filter_by(is_delay="1").all()
+
+    @close_session
+    def get_control_goods(self, jcno):
+        return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.destination,
+                                  AIR_HWYS_WTS.jsbzcc, AIR_HWYS_WTS.company, AIR_HWYS_WTS.contract, AIR_HWYS_WTS.hwpm,
+                                  AIR_HWYS_WTS.wh_require, AIR_HWYS_WTS.instruction, AIR_HWYS_WTS.arrivetime,
+                                  AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jd_date, AIR_HWYS_WTS.jd_time, AIR_HWYS_WTS.contract)\
+            .filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_dzjjd(self, jcno):
+        return self.session.query(AIR_HWYS_DZJJD.hc_bz, AIR_HWYS_DZJJD.kf_bz).filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_dcd_flight(self, jcno):
+        return self.session.query(AIR_HWYS_DCD.flightdate, AIR_HWYS_DCD.hbdate1, AIR_HWYS_DCD.flight)\
+            .filter_by(jcno=jcno).first()

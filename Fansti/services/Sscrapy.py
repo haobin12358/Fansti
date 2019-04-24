@@ -11,7 +11,8 @@ class Sscrapy(SBase):
     @close_session
     def get_jd_by_name(self, name):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
-                                  AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
+                                  AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2, AIR_HWYS_JD.principal,
+                                  AIR_HWYS_JD.identificationunits, AIR_HWYS_JD.endtime)\
             .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).first()
 
     @close_session

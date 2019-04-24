@@ -296,6 +296,10 @@ class Cscrapy():
             else:
                 appearance = jd_report["appearance"] \
                              + jd_report["appearance2"]
+        if jd_report["endtime"]:
+            endtime = str(jd_report["endtime"].year) + "/" + str(jd_report["endtime"].month) + "/" + str(jd_report["endtime"].day)
+        else:
+            endtime = "暂无出鉴定日期"
         data = [
             {
                 "name": "中文品名",
@@ -312,6 +316,18 @@ class Cscrapy():
             {
                 "name": "颜色状态",
                 "value": appearance
+            },
+            {
+                "name": "委托公司",
+                "value": jd_report["principal"]
+            },
+            {
+                "name": "鉴定机构",
+                "value": jd_report["identificationunits"]
+            },
+            {
+                "name": "出鉴定日期",
+                "value": endtime
             }
         ]
         response = import_status("SUCCESS_GET_INFO", "OK")

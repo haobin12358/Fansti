@@ -18,6 +18,7 @@ from Fansti.apis.AGoods import FSGoods
 from Fansti.apis.AOther import FSother
 from Fansti.apis.AReds import FSRed
 from Fansti.apis.ANews import FSNews
+from Fansti.apis.AControl import FSControl
 
 fansti = Flask(__name__)
 #CORS(sg, resources=r'/*')
@@ -39,8 +40,12 @@ api.add_resource(FSGoods, "/fansti/goods/<string:goods>")
 api.add_resource(FSother, "/fansti/other/<string:other>")
 api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
+<<<<<<< HEAD
 # api.add_resource(FSpay, "/fansti/pay/<string:pay>")
 
+=======
+api.add_resource(FSControl, "/fansti/control/<string:control>")
+>>>>>>> fc93f3573ba5cdc29c3a7eeaf3f0a018c20c8c83
 
 @fansti.route("/")
 def index():
