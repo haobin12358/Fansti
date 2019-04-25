@@ -251,9 +251,12 @@ class CGoods():
         # 销售人xsr
 
         # 客服人员
-        if jc_abo["xsr"]:
-            user_abo = get_model_return_dict(self.susers.get_custom_by_xsr(jc_abo["xsr"]))
-            jc_abo["custom_name"] = user_abo["user_name"]
+        if "czr" in jc_abo.keys() and jc_abo["czr"]:
+            user_abo = get_model_return_dict(self.susers.get_custom_by_xsr(jc_abo["czr"]))
+            if "user_name" in user_abo.keys():
+                jc_abo["custom_name"] = user_abo["user_name"]
+            else:
+                jc_abo["custom_name"] = ""
         else:
             jc_abo["custom_name"] = ""
         response = import_status("SUCCESS_GET_JC", "OK")
