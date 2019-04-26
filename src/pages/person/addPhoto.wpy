@@ -1,0 +1,170 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+
+  .container {
+    padding: 35rpx;
+
+    .container-hd{
+      color: @mainBlueColor;
+    }
+
+    .choose-batch{
+      border: 1px solid @mainBlueColor;
+      padding: 5rpx 20rpx;
+      .fj();
+      margin: 20rpx 0;
+
+      .bd{
+        .sc(24rpx, #999999);
+      }
+
+      .ft{
+        .wl(10rpx, 20rpx);
+        transform: rotate(90deg);
+      }
+    }
+
+    .choose-photo{
+      .fj(flex-start);
+      flex-wrap: wrap;
+      .add-photo-block{
+        .wl(220rpx, 220rpx);
+      }
+      .photo-item{
+        .wl(220rpx, 220rpx);
+        margin-right: 10rpx;
+        margin-bottom: 10rpx;
+        position: relative;
+
+        &:nth-child(3n){
+          margin-right: 0;
+        }
+
+        .img{
+          .wl(100%, 100%);
+        }
+
+        .remove{
+          position: absolute;
+          top: 0rpx;
+          right: 0rpx;
+          .wl(35rpx, 35rpx);
+        }
+
+        .info{
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          .wl(100%);
+          padding: 0 5rpx;
+          box-sizing: border-box;
+
+          .fj(space-between, flex-end);
+          .sc(20rpx, black);
+          text-shadow:1px 1px 0px #fff;
+
+          .time{
+            flex: 1;
+            margin-right: 5rpx;
+            /*min-width: 100%;*/
+            /*text-align: right;*/
+          }
+        }
+      }
+
+
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="container-hd">
+      进仓号
+    </view>
+
+    <view class="choose-batch">
+      <view class="bd">
+        选择批次
+      </view>
+      <image class="ft" src="../../images/index_arrow.png"></image>
+    </view>
+
+    <view class="choose-photo">
+      <view class="photo-item" wx:for="{{list}}">
+        <image class="img" src="{{item.url}}"></image>
+
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <view class="info">
+          <view class="time">{{item.time}}</view>
+          <view >{{item.name}}</view>
+        </view>
+      </view>
+
+      <image src="../../images/plus.png" class="add-photo-block" @tap="addPhoto"></image>
+
+    </view>
+
+    <view class="btn-wrap">
+      <view class="button">删除</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class AddPhoto extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {
+      list: [
+        {
+          url: 'http://dummyimage.com/200x100',
+          time: '2019-23-21 29:22:@2',
+          name: '李明'
+        },{
+          url: 'http://dummyimage.com/200x100',
+          time: new Date().toLocaleDateString(),
+          name: '李明1'
+        },{
+          url: 'http://dummyimage.com/200x100',
+          time: new Date().toLocaleDateString(),
+          name: '李明2'
+        },{
+          url: 'http://dummyimage.com/200x100',
+          time: new Date().toLocaleDateString(),
+          name: '李明1'
+        },{
+          url: 'http://dummyimage.com/200x100',
+          time: new Date().toLocaleDateString(),
+          name: '李明2'
+        },
+      ]
+    };
+
+    computed = {};
+
+    methods = {
+      removePhoto(index){
+        this.list.splice(index, 1)
+      },
+      addPhoto(){
+        let that = this
+
+        wx.chooseImage({
+          success({tempFilePaths}) {
+            that.list = that.list.concat(tempFilePaths.map(item => {return {url: item}}));
+            that.$apply()
+          }
+        })
+      }
+    };
+
+    onLoad() {
+      console.log(this.list)
+    };
+  }
+</script>

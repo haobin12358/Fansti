@@ -199,6 +199,10 @@
 
     components = {};
 
+    prop = {
+      list: []
+    };
+
     data = {};
 
     computed = {};
@@ -206,6 +210,7 @@
     methods = {};
 
     onLoad() {
+      console.log(this)
     };
   }
 </script>

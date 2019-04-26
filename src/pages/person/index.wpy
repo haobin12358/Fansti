@@ -2,11 +2,11 @@
   @import "../../styles/base";
 
   .container {
-    .search-bar{
-      padding: 20rpx;
+    .search-bar {
+      padding: 20rpx 40rpx;
       .fj();
 
-      .input-wrap{
+      .input-wrap {
         flex: 1;
         height: 55rpx;
         margin-right: 20rpx;
@@ -17,38 +17,38 @@
         border: 1px solid #A0AFBA;
         border-radius: 10rpx;
 
-        .search-icon{
+        .search-icon {
           .wl(30rpx, 30rpx);
           margin-right: 10rpx;
         }
 
-        input{
+        input {
           flex: 1;
         }
       }
 
-      button{
+      button {
         height: 55rpx;
         line-height: 55rpx;
         .fz(26rpx);
       }
     }
 
-    .list{
+    .list {
       .sc(32rpx, @mainBlueColor);
 
-      .list-item{
+      .list-item {
         padding: 25rpx 40rpx 25rpx 40rpx;
         .fj();
         border-bottom: 1px solid #C5C5C5;
 
-        .item-hd{
+        .item-hd {
           flex: 1;
         }
-        .item-ft{
+        .item-ft {
           .wl(14rpx, 25rpx);
 
-          &.share{
+          &.share {
             .wl(25rpx, 25rpx);
           }
         }
@@ -62,9 +62,9 @@
     <view class="search-bar">
       <view class="input-wrap">
         <image class="search-icon" src="../../images/search.png"></image>
-        <input type="text" placeholder="请输入进仓号/运单号/目的港">
+        <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港">
       </view>
-      <button class="type-blue">搜索</button>
+      <button class="type-blue" form-type="submit">搜索</button>
     </view>
 
     <view class="list">
@@ -111,31 +111,50 @@
 
 <script>
   import wepy from 'wepy';
+  import tip from '@/utils/tip';
+  import BindingMixin from '@/mixins/bindingMixin';
+  import { getRandomContent } from '@/utils/util';
 
   export default class Index extends wepy.page {
     config = {};
 
     components = {};
 
+    mixins = [BindingMixin];
+
     data = {};
 
     computed = {};
 
     methods = {
-      handleRedirect(command){
+      doSearch(evt) {
+        console.log(evt);
+      },
+      handleRedirect(command) {
+        console.log(command);
+
+        return;
         switch (command) {
           case 'plan':
-            this.$navigate('/pages/person/plan')
-            break
+            this.$navigate('/pages/person/plan');
+            break;
           case 'share':
-            this.$navigate('/pages/person/personCard')
-            break
+            this.$navigate('/pages/person/personCard');
+            break;
 
         }
       }
     };
 
-    onLoad() {
+    onShareAppMessage() {
+      return getRandomContent();
+    }
+
+    async onLoad() {
+      if (!this.isBinding) {
+        await this.setOpenid();
+        await this.checkBinding();
+      }
     };
   }
 </script>

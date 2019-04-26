@@ -12,5 +12,7 @@
 	"projectname": "fastii",
 	"miniprogramRoot": "dist/",
 	"libVersion": "2.6.2",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {}
 }

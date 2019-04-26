@@ -10,31 +10,40 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/person/planDetail', // 计划详情
-      'pages/person/plan', // 当日/全部计划
       'pages/person/index', // 操作首页
+      'pages/person/plan', // 当日/全部计划
       'pages/person/shareList', //分享列表
       'pages/person/personCard',  //个人名片
       'pages/person/editPersonCard',  //编辑个人名片
-
       'pages/search/index', //查询首页
+
+      'pages/person/inStoDetail', // 计划详情
+      'pages/person/planDetail', // 计划详情
+      'pages/person/addCost', // 计划详情
+      'pages/person/addPhoto', // 计划详情
+
+      'pages/track/index',  //跟踪首页
+
+      'pages/track/confirmConsignment',  //确认托运照片
+      'pages/track/consignmentDetail',  //托运详情
+
+      'pages/index/index',  //首页
+      'pages/index/newsDetail', //新闻详情
+
+
+
       'pages/search/surveyReportSearch', //鉴定报告
       'pages/search/flightSearch', //航班时刻
       'pages/search/tcatSearch', //tcac
       'pages/search/dgrSearch', //dgr
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
-
-
       'pages/person/binding', //绑定页
 
-      'pages/track/index',  //跟踪首页
-      'pages/track/confirmConsignment',  //确认托运照片
 
-      'pages/track/consignmentDetail',  //托运详情
 
-      'pages/index/index',  //首页
-      'pages/index/newsDetail', //新闻详情
+
+
 
 
 

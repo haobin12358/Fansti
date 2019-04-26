@@ -189,7 +189,6 @@
         </view>
       </form>
       <form @submit="doHSCodeSearch">
-
         <view class="form-item">
           <view class="form-item-label">
             HS code

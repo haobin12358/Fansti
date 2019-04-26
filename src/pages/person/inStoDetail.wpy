@@ -1,0 +1,154 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+
+  .container {
+    .detail-hd{
+      color: @mainBlueColor;
+      padding: 0 40rpx;
+      margin-bottom: 60rpx;
+
+      .row{
+        .fj();
+
+        &:first-child{
+          margin-bottom: 10rpx;
+        }
+
+        view{
+          flex: 1;
+        }
+      }
+
+    }
+    .form{
+      .form-item{
+        padding: 30rpx 40rpx;
+        border-top: 1px solid #C5C5C5;
+        .fj();
+
+        &.photo{
+          display: block;
+
+          .list{
+            margin-top: 20rpx;
+            .item{
+              .wl(220rpx, 220rpx);
+              margin-right: 10rpx;
+              margin-bottom: 10rpx;
+
+              &:nth-child(3n){
+                margin-right: 0;
+              }
+            }
+          }
+        }
+
+        .label{
+          width: 160rpx;
+          margin-right: 10rpx;
+          color: @mainBlueColor;
+        }
+        .value{
+          text-align: right;
+          flex: 1;
+          .sc(24rpx, #333333);
+        }
+      }
+    }
+
+  }
+</style>
+
+<template>
+  <view class="container">
+    <view class="detail-hd">
+      <view class="row">
+
+        <view>进仓号：123456</view>
+        <view>运单号：123456</view>
+      </view>
+      <view class="row">
+        货物品名：as单静安三看卡三卡景安静
+      </view>
+    </view>
+    <view class="form">
+      <view class="form-item">
+        <view class="label">库房存放地</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">进仓时间</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">件数</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">送货单位</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">重量</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">货物尺寸</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">客户名称</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">备注</view>
+        <view class="value">
+          <input placeholder="请填写">
+        </view>
+      </view>
+      <view class="form-item photo">
+        <view class="label">入仓照片</view>
+        <view class="list">
+          <image class="item" src="http://dummyimage.com/200x100"></image>
+          <image class="item" src="http://dummyimage.com/200x100"></image>
+          <image class="item" src="http://dummyimage.com/200x100"></image>
+          <image class="item" src="http://dummyimage.com/200x100"></image>
+          <image class="item" src="http://dummyimage.com/200x100"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class InStoDetail extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+    };
+  }
+</script>

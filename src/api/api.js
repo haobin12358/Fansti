@@ -68,6 +68,8 @@ const getVote = params => wxRequest(params, host+`/votes/get_vote?VSid=${params.
 //  做问卷 POST
 const makeVote = params => wxRequest(params, host+`/votes/make_vote`);
 
+const getTodayList = params => wxRequest(params, host+`/control/get_today_list`);
+
 
 
 

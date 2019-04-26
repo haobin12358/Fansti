@@ -14,6 +14,12 @@ page{
   //border-top: 1px solid #e9e9e9;
 }
 
+button{
+  margin: 0;
+  line-height: normal;
+  position: static;
+}
+
 // view实现button
 /*.button {
   font-size: 36rpx;
@@ -118,7 +124,7 @@ page{
   font-size: 44rpx;
 }
 
-.wl(@width,@height) {
+.wl(@width: auto,@height: auto) {
   width: @width;
   height: @height;
 }
@@ -155,9 +161,14 @@ page{
     .type-yellow;
     border-radius: 10rpx;
     font-weight: bold;
+    .fz(28rpx);
 
     &:first-child{
       margin-right: 30rpx;
+    }
+
+    &.plain{
+      .type-yellow-plain;
     }
   }
 }
