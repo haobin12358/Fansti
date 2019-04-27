@@ -40,6 +40,7 @@
     }
 
     .form-section-two{
+      margin-bottom: 50rpx;
 
       .row{
         padding-bottom: 20rpx;
@@ -56,10 +57,8 @@
           }
 
           .foot {
-
+            .wl(40rpx, 40rpx);
           }
-
-
         }
 
         .row-collapse-content {
@@ -78,6 +77,25 @@
               .fz26;
             }
           }
+        }
+      }
+
+      // 包装等级,picker单选
+      .package{
+        .fj();
+        padding-bottom: 10rpx;
+        border-bottom: 1px solid @mainBlueColor;
+
+        .label{
+
+        }
+        .content{
+          flex: 1;
+          text-align: right;
+          margin-right: 10rpx;
+        }
+        .foot{
+          .wl(40rpx, 40rpx);
         }
       }
     }
@@ -108,121 +126,117 @@
 
 <template>
   <view class="container">
-    <view id="box"></view>
-    <view class="form-section-one">
-      <view class="row">
-        <input placeholder="起运地" style="text-align: left"/>
-        <image src="../../images/plane.png" style="width: 40rpx;height: 36rpx;"></image>
-        <input placeholder="目的地" style="text-align: right"/>
-      </view>
-      <view class="row">
-        <input placeholder="航空公司"/>
-      </view>
-      <view class="hr"></view>
-
-      <radio-group>
-        <view class="row radio">
-          <view class="radio-item">
-            <label>普货
-              <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
-            </label>
-          </view>
-          <view class="radio-item" style="flex: 1">
-            <label>危品
-            <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
-            </label>
-          </view>
+    <form @submit="doConfirm">
+      <view class="form-section-one">
+        <view class="row">
+          <input placeholder="起运地" style="text-align: left"/>
+          <image src="../../images/plane.png" style="width: 40rpx;height: 36rpx;"></image>
+          <input placeholder="目的地" style="text-align: right"/>
         </view>
-      </radio-group>
-      <radio-group>
-        <view class="row radio">
-          <view class="radio-item">
-            <label>客机
-            <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
-            </label>
-
-          </view>
-          <view class="radio-item" style="flex: 1">
-            <label>货机
-            <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
-            </label>
-
-          </view>
+        <view class="row">
+          <input placeholder="航空公司"/>
         </view>
-      </radio-group>
+        <view class="hr"></view>
 
-    </view>
-    <view class="form-section-two">
-      <view class="row">
-        <view class="row-header" @tap="showWeightLevel">
-          <view class="title">重量等级</view>
-          <view class="foot"></view>
-        </view>
-        <view class="row-collapse-content" wx:if="{{weightLevelVisible}}">
-          <view class="form-item">
-            <view class="label">
-              货物尺寸
+        <radio-group>
+          <view class="row radio">
+            <view class="radio-item">
+              <label>普货
+                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+              </label>
             </view>
-            <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
-          </view>
-          <view class="form-item">
-            <view class="label">
-              UN号
+            <view class="radio-item" style="flex: 1">
+              <label>危品
+                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+              </label>
             </view>
-            <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
           </view>
-         </view>
+        </radio-group>
+        <radio-group>
+          <view class="row radio">
+            <view class="radio-item">
+              <label>客机
+                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+              </label>
+
+            </view>
+            <view class="radio-item" style="flex: 1">
+              <label>货机
+                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+              </label>
+
+            </view>
+          </view>
+        </radio-group>
+
       </view>
-      <view class="row">
-        <view class="row-header" @tap="showPackageLevel">
+      <view class="form-section-two">
+        <view class="row">
+          <view class="row-header" @tap="showWeightLevel">
+            <view class="title">重量等级</view>
+            <image src="../../images/arrow_down.png" class="foot"></image>
+          </view>
+          <view class="row-collapse-content" wx:if="{{weightLevelVisible}}">
+            <view class="form-item">
+              <view class="label">
+                货物尺寸
+              </view>
+              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
+            </view>
+            <view class="form-item">
+              <view class="label">
+                UN号
+              </view>
+              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
+            </view>
+          </view>
+        </view>
+        <view class="package">
           <view class="title">包装等级</view>
-          <view class="foot"></view>
+          <view class="content">
+            <picker @change="handlePackLvChange" value="{{packLvIndex}}" range="{{packLvArr}}">
+              {{packLvArr[packLvIndex] || '请选择'}}
+            </picker>
+          </view>
+          <image src="../../images/arrow_down.png" class="foot"></image>
         </view>
-        <view class="row-collapse-content" wx:if="{{packageLevelVisible}}">
-          <view class="form-item">
-            <view class="label">
-              包装等级
-            </view>
-            <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
+      </view>
+      <view class="form-section-three">
+        <view class="row">
+          <text>货物状态</text>
+          <view>
+            <radio-group @change="handleGoodsTypeChange">
+              <label>固体
+                <radio color="#ffcd42" value="1"></radio>
+              </label>
+              <label>液体
+                <radio color="#ffcd42" value="2"></radio>
+              </label>
+            </radio-group>
+          </view>
+        </view>
+        <view class="row">
+          <text>包装形式</text>
+          <view>
+            <radio-group @change="handleGoodsTypeChange">
+              <label>桶
+                <radio color="#ffcd42"></radio>
+              </label>
+              <label>箱子
+                <radio color="#ffcd42"></radio>
+              </label>
+              <label>托盘
+                <radio color="#ffcd42"></radio>
+              </label>
+            </radio-group>
           </view>
         </view>
       </view>
-    </view>
-    <view class="form-section-three">
-      <view class="row">
-        <text>货物状态</text>
-        <view>
-          <radio-group @change="handleGoodsTypeChange">
-            <label>固体
-              <radio color="#ffcd42" value="1"></radio>
-            </label>
-            <label>液体
-              <radio color="#ffcd42" value="2"></radio>
-            </label>
-          </radio-group>
-        </view>
-      </view>
-      <view class="row">
-        <text>包装形式</text>
-        <view>
-          <radio-group @change="handleGoodsTypeChange">
-          <label>桶
-          <radio color="#ffcd42"></radio>
-          </label>
-          <label>箱子
-          <radio color="#ffcd42"></radio>
-          </label>
-          <label>托盘
-          <radio color="#ffcd42"></radio>
-          </label>
-          </radio-group>
-        </view>
-      </view>
-    </view>
 
-    <view class="confirm-button-wrap">
-      <button class="confirm-button">询 价</button>
-    </view>
+      <view class="confirm-button-wrap">
+        <button form-type="submit" class="confirm-button">询 价</button>
+      </view>
+    </form>
   </view>
 </template>
 
@@ -235,8 +249,10 @@
     components = {};
 
     data = {
-      weightLevelVisible: true,
-      packageLevelVisible: true
+      weightLevelVisible: false,
+
+      packLvIndex: '',
+      packLvArr: ['1级', '2级'],
     };
 
     computed = {};
@@ -248,10 +264,15 @@
       showPackageLevel(){
         this.packageLevelVisible = !this.packageLevelVisible
       },
-
+      handlePackLvChange(evt){
+        this.packLvIndex = evt.detail.value
+      },
       handleGoodsTypeChange(evt){
         console.log(evt.detail.value)
       },
+      doConfirm(){
+        console.log('进行询价')
+      }
     };
 
     onLoad() {

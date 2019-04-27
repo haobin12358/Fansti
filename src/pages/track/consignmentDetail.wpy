@@ -30,7 +30,7 @@
     color: @mainBlueColor;
 
     .new-line{
-      padding: 0 21rpx;
+      padding: 0 42rpx;
       display: flex;
       justify-content: space-between;
       margin-bottom: 20rpx;

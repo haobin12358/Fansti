@@ -13,6 +13,10 @@ export default class extends wepy.app {
     pages: [
       'pages/index/index',  //首页
 
+      'pages/track/index',  //跟踪首页
+      'pages/track/consignmentDetail',  //托运详情
+      'pages/track/confirmConsignment',  //确认托运照片
+
       // 'pages/index/newsDetail', //新闻详情
       'pages/search/index', //查询首页
       'pages/search/surveyReportSearch', //鉴定报告
@@ -21,12 +25,6 @@ export default class extends wepy.app {
       'pages/search/dgrSearch', //dgr
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
-      'pages/track/index',  //跟踪首页
-
-      'pages/track/consignmentDetail',  //托运详情
-
-      'pages/track/confirmConsignment',  //确认托运照片
-
 
       'pages/questionnaire/index', //问卷首页
       'pages/questionnaire/question', //问卷

@@ -3,11 +3,11 @@
     .freight-consignment-list{
       .goods-item{
         margin-bottom: 19rpx;
-        height: 301rpx;
+        height: 310rpx;
         border-radius: 10rpx;
         border: 1px solid @borderColor;
         box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
-        padding: 50rpx 25rpx 58rpx;
+        padding: 50rpx 25rpx 32rpx;
         box-sizing: border-box;
         color: @mainBlueColor;
 
@@ -49,7 +49,7 @@
           justify-content: space-between;
 
           .line-right{
-            min-width: 35%;
+            min-width: 45%;
           }
 
           .item-label{
@@ -136,6 +136,26 @@
       <view class="line-detail">
         <view class="line-left">
           <view class="item-label">
+            <image class="label-img" src="../images/customer.png"></image>
+            <text space="emsp">客 户:</text>
+          </view>
+          <view class="item-value" style="line-height: 28rpx;">
+            {{item.accounts || '暂无'}}
+          </view>
+        </view>
+        <view class="line-right">
+          <view class="item-label">
+            <image class="label-img" src="../images/jc.png"></image>
+            <text>进仓号:</text>
+          </view>
+          <view class="item-value">
+            {{item.jcno || '暂无'}}
+          </view>
+        </view>
+      </view>
+      <view class="line-detail">
+        <view class="line-left">
+          <view class="item-label">
             <image class="label-img" src="../images/goods.png"></image>
             <text>运单号:</text>
           </view>
@@ -174,26 +194,7 @@
           </view>
         </view>
       </view>
-       <view class="line-detail">
-        <view class="line-left">
-          <view class="item-label">
-            <image class="label-img" src="../images/order.png"></image>
-            <text>进仓号:</text>
-          </view>
-          <view class="item-value">
-            {{item.jcno || '暂无'}}
-          </view>
-        </view>
-        <view class="line-right">
-          <view class="item-label">
-            <image class="label-img" src="../images/number.png"></image>
-            <text space="emsp">客 户:</text>
-          </view>
-          <view class="item-value">
-            {{item.accounts || '暂无'}}
-          </view>
-        </view>
-      </view>
+
 
       <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
         <text class="top-right-label-text">延误</text>
