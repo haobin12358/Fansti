@@ -16,7 +16,9 @@ class FSControl(Resource):
 
         apis = {
             "get_today_list": "self.cgoods.get_today_list()",
-            "get_jc_abo": "self.cgoods.get_jc_abo()"
+            "get_jc_abo": "self.cgoods.get_jc_abo()",
+            "get_handover_list": "self.cgoods.get_handover_list()",
+            "get_jc_pic": "self.cgoods.get_jc_pic()"
         }
 
         if control not in apis:

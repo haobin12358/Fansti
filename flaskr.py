@@ -24,41 +24,18 @@ fansti = Flask(__name__)
 #CORS(sg, resources=r'/*')
 api = flask_restful.Api(fansti)
 # r'/*' 是通配符，让本服务器所有的URL 都允许跨域请求
-
-#api.add_resource(MSManager, "/sharp/manager/user/<string:manager>")
-#api.add_resource(MSStocks, "/sharp/manager/stock/<string:stock>")
-#api.add_resource(MSProduct, "/sharp/manager/product/<string:product>")
-#api.add_resource(MSOrder, "/sharp/manager/order/<string:order>")
-#api.add_resource(MSCategory, "/sharp/manager/category/<string:category>")
-#api.add_resource(MSApproval, "/sharp/manager/approval/<string:approval>")
-#api.add_resource(AOther, "/sharp/manager/other/<string:other>")
-#api.add_resource(MSCoupons, "/sharp/manager/card/<string:card>")
-
 api.add_resource(FSscrapy, "/fansti/scrapy/<string:scrapy>")
 api.add_resource(FSUser, "/fansti/users/<string:users>")
 api.add_resource(FSGoods, "/fansti/goods/<string:goods>")
 api.add_resource(FSother, "/fansti/other/<string:other>")
 api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
-<<<<<<< HEAD
-# api.add_resource(FSpay, "/fansti/pay/<string:pay>")
-
-=======
+api.add_resource(FSpay, "/fansti/pay/<string:pay>")
 api.add_resource(FSControl, "/fansti/control/<string:control>")
->>>>>>> fc93f3573ba5cdc29c3a7eeaf3f0a018c20c8c83
 
 @fansti.route("/")
 def index():
     return "<html><body>Hello world</body></html>"
 
-
-'''
-if __name__ == '__main__':
-    sg.run('0.0.0.0', 443, debug=False, ssl_context=(
-        "/etc/nginx/cert/1525609592348.pem"
-    ))
-
-'''
 if __name__ == '__main__':
     fansti.run('0.0.0.0', 7443, debug=False)
-# '''

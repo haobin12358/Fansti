@@ -441,9 +441,81 @@ class VoteResult(Base):
 class AIR_HWYS_DZJJD(Base):
     __tablename__ = "AIR_HWYS_DZJJD"
     jjd_id = Column(String(40), primary_key=True)
-    jcno = Column(String(1000))
+    jcno = Column(String(20))                       # 进仓单号
+    rkd_flag = Column(String(10))                   # 入库单交接标识
+    jd_flag = Column(String(40))                    # 鉴定标识
+    ddl_flag = Column(String(10))                   # 是否打代理标识
+    state_goods = Column(String(20))                # 货物状态
+    temperature = Column(String(40))                # 温度区间
+    tc_num = Column(String(40))                     # 干冰用量
+    dtp = Column(String(40))                        # 打托盘
+    tp_mass = Column(String(40))                    # 托盘材质
+    tp_size = Column(String(40))                    # 托盘尺寸
+    in_mark = Column(String(100))                   # 内唛头
+    ybzbl_flag = Column(String(10))                 # 原包装是否保留标识
+    goods_file = Column(String(10))                 # 随货文件
+    nbzsm = Column(String(2000))                    # 内包装说明
+    kh = Column(String(10))                         # 客货机
+    sbxx = Column(String(1000))                     # 申报信息
     kf_bz = Column(String(2000))                    # 仓库要求
+    kf_ry = Column(String(40))                      # 库房人员
+    kfqr_date = Column(DATE)                        # 库房确认时间
+    hc_ry = Column(String(40))                      # 货场人员
+    hcqr_date = Column(DATE)                        # 货场确认时间
+    out_mark = Column(String(100))                  # 外唛头
+    bzpm = Column(String(1000))                     # 包装品名
+    ice_flag = Column(String(10))                   # 加冰处理
+    gb_flag = Column(String(10))                    # 加干冰标识
+    gb_num = Column(String(40))                     # 干冰用量
+    lb_flag = Column(String(10))                    # 加蓝冰标识
+    lb_num = Column(String(40))                     # 蓝冰用量
+    sjwj_flag = Column(String(10))                  # 随机文件
     hc_bz = Column(String(2000))                    # 货场要求
+    creat_time = Column(DATE)                       # 创建时间
+    ungoods_flag = Column(String(10))               # 无货转库房标识
+
+class AIR_HWYS_QRD(Base):
+    __tablename__ = "AIR_HWYS_QRD"
+    id = Column(String(200))
+    ydno = Column(String(20))                       # 运单号
+    jcno = Column(String(200))                      # 进仓号
+    title = Column(String(500))                     # 发票抬头
+    rate = Column(String(20))                       # 汇率
+    doc = Column(String(200))                       # 费用种类
+    curr = Column(String(200))                      # 单价
+    currcode = Column(String(50))                   # 币种
+    amount = Column(String(100))                    # 数量
+    byzd1 = Column(String(500))                     # 账单或成本的标识，空位账单，1为成本
+    byzd2 = Column(String(500))                     # 成本录入人
+    byzd3 = Column(String(500))                     # 备用字段
+    createtime = Column(DATE)                       # 填写时间
+    fjdw = Column(String(2000))                     # 付款单位
+    hxno = Column(String(2000))                     # 发票号
+
+class D_CHARGE_COMPANY(Base):
+    __tablename__ = "D_CHARGE_COMPANY"
+    id = Column(String(200))
+    company = Column(String(200))                   # 公司
+    createtime = Column(DATE)                       # 创建时间
+    code = Column(String(50))                       # 简码
+    create_user = Column(String(40))                # 填写人
+    pay_month = Column(String(10))                  # 付款月份
+    pay_day = Column(String(10))                    # 付款日
+
+class D_CHARGE_TYPE(Base):
+    __tablename__ = "D_CHARGE_TYPE"
+    charge_code = Column(String(20))                # 简码
+    charge_chame = Column(String(50))               # 费用种类名称
+    charge_name = Column(String(50))
+    remark = Column(String(100))                    # 备注
+    create_by = Column(String(20))                  # 创建人
+    create_date = Column(DATE)                      # 创建时间
+    update_by = Column(String(20))                  # 更改人
+    update_date = Column(DATE)                      # 更改时间
+    d_price = Column(String(100))                   # 单价
+    d_charge_id = Column(String(40))                # 主键id
+    charge_group_id = Column(String(40))            # 父类id
+    charge_type = Column(String(100))               # 规格
 
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)

@@ -52,6 +52,11 @@ class SGoods(SBase):
             .filter_by(jcno=jcno).filter_by(phototype='weight').all()
 
     @close_session
+    def get_by_order_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime) \
+            .filter_by(jcno=jcno).filter_by(phototype='by').all()
+
+    @close_session
     def get_content_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_FILE.content)\
             .filter(AIR_HWYS_FILE.content.like("%报关单%"), AIR_HWYS_FILE.jcno == jcno).first()
@@ -167,3 +172,24 @@ class SGoods(SBase):
     def get_dcd_flight(self, jcno):
         return self.session.query(AIR_HWYS_DCD.flightdate, AIR_HWYS_DCD.hbdate1, AIR_HWYS_DCD.flight)\
             .filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_wts_handover(self, jcno):
+        return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.xsr)\
+            .filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_dzjjd_handover(self, jcno):
+        return self.session.query(AIR_HWYS_DZJJD.kfqr_date, AIR_HWYS_DZJJD.hcqr_date, AIR_HWYS_DZJJD.rkd_flag,
+                                  AIR_HWYS_DZJJD.ungoods_flag,
+                                  AIR_HWYS_DZJJD.sjwj_flag, AIR_HWYS_DZJJD.goods_file, AIR_HWYS_DZJJD.tp_mass,
+                                  AIR_HWYS_DZJJD.state_goods, AIR_HWYS_DZJJD.tp_size, AIR_HWYS_DZJJD.temperature,
+                                  AIR_HWYS_DZJJD.dtp, AIR_HWYS_DZJJD.gb_flag, AIR_HWYS_DZJJD.gb_num,
+                                  AIR_HWYS_DZJJD.lb_flag, AIR_HWYS_DZJJD.lb_num,
+                                  AIR_HWYS_DZJJD.in_mark, AIR_HWYS_DZJJD.out_mark, AIR_HWYS_DZJJD.ybzbl_flag,
+                                  AIR_HWYS_DZJJD.nbzsm, AIR_HWYS_DZJJD.bzpm, AIR_HWYS_DZJJD.kf_ry,
+                                  AIR_HWYS_DZJJD.kf_bz, AIR_HWYS_DZJJD.hc_ry, AIR_HWYS_DZJJD.hc_bz)\
+            .filter_by(jcno=jcno).first()
+
+    def get_jc_qrd(self, jcno):
+        return self.session.query().all()
