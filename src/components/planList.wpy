@@ -38,7 +38,7 @@
           flex: 1;
           height: 100%;
           box-sizing: border-box;
-          padding: 30rpx 0 30rpx 20rpx;
+          padding: 35rpx 35rpx 30rpx 20rpx;
           .fz24;
 
           .fjc();
@@ -105,16 +105,22 @@
 
 <template>
     <view class="plan-list">
-      <view class="plan-item" wx:for="{{10}}">
+      <view class="plan-item" wx:for="{{list}}">
         <view class="plan-item-left">
-          <view>交</view>
-          <view>货</view>
+          <block wx:if="{{item.isphoto}}">
+            <view>拍</view>
+            <view>照</view>
+          </block>
+          <block wx:else>
+            <view>交</view>
+            <view>货</view>
+          </block>
         </view>
         <view class="plan-item-right">
           <view class="line-detail">
             <view class="line-left">
               <view class="item-label">
-                <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/jc.png"></image>
+                <image class="label-img" style="width: 30rpx;height: 25rpx;" src="../images/jc.png"></image>
                 <text>进仓号:</text>
               </view>
               <view class="item-value">
@@ -123,11 +129,11 @@
             </view>
             <view class="line-right">
               <view class="item-label">
-                <image class="label-img" style="width: 35rpx;height: 35rpx;" src="../images/customer.png"></image>
-                <text space="emsp">客 户:</text>
+                <image class="label-img" style="width: 30rpx;height: 25rpx;" src="../images/customer.png"></image>
+                <text space="emsp">操作人:</text>
               </view>
               <view class="item-value">
-                {{item.accounts || '暂无'}}
+                {{item.xsr || '暂无'}}
               </view>
             </view>
           </view>
@@ -175,7 +181,7 @@
         </view>
 
 
-        <view class="top-right-label danger">
+        <view wx:if="{{item.wphw == '危'}}" class="top-right-label danger">
           <text>危</text>
         </view>
         <!--
@@ -194,13 +200,17 @@
 <script>
   import wepy from 'wepy';
 
-  export default class PlanList extends wepy.page {
+
+  export default class PlanList extends wepy.component {
     config = {};
 
     components = {};
 
-    prop = {
-      list: []
+    props = {
+      list: {
+        type: Array,
+        default: []
+      }
     };
 
     data = {};
@@ -210,7 +220,6 @@
     methods = {};
 
     onLoad() {
-      console.log(this)
     };
   }
 </script>

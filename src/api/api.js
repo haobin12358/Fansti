@@ -102,4 +102,5 @@ export default {
   receiveRed,
   receiveRedQuery,
   payService,
+  getTodayList,
 }

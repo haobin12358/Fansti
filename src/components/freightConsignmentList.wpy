@@ -3,7 +3,7 @@
     .freight-consignment-list{
       .goods-item{
         margin-bottom: 19rpx;
-        height: 301rpx;
+        height: 310rpx;
         border-radius: 10rpx;
         border: 1px solid @borderColor;
         box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);

@@ -23,7 +23,7 @@ function getRandomContent() {
 
 
 
-function getCurrentTime() {
+function getCurrentTime(onlyDate = false) {
   var keep = '';
   var date = new Date();
   var y = date.getFullYear();
@@ -33,9 +33,14 @@ function getCurrentTime() {
   var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
   var f = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
   var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-  var rand = Math.round(Math.random() * 899 + 100);
-  keep = y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s;
-  return keep; //20160614134947
+
+  if(onlyDate){
+    keep = y + '-' + m + '-' + d
+  }else {
+    keep = y + '-' + m + '-' + d + ' ' + h + ':' + f + ':' + s;
+  }
+
+  return keep;
 }
 
 function objLength(input) {

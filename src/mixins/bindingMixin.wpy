@@ -9,6 +9,7 @@
   import wepy from 'wepy';
   import api from '../api/api';
   import tip from '../utils/tip';
+  import { getStorageSync } from './index';
 
   export default class BindingMixin extends wepy.mixin {
 

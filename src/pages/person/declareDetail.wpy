@@ -2,40 +2,18 @@
   @import "../../styles/base";
 
   .container {
-    padding: 35rpx;
-
-    .container-hd{
-      color: @mainBlueColor;
-    }
-
-    .choose-batch{
-      border: 1px solid @mainBlueColor;
-      padding: 5rpx 20rpx;
-      .fj();
-      margin: 20rpx 0;
-
-      .hd{
-        margin-right: 20rpx;
-        color: @mainBlueColor;
-      }
-
-      .bd{
-        flex: 1;
-        color: #999999;
-      }
-
-      .ft{
-        .wl(10rpx, 20rpx);
-        transform: rotate(90deg);
-      }
+    padding-bottom: 200rpx;
+    .form-section-title{
+      .type-blue;
+      padding: 5rpx 0 5rpx 10rpx;
+      .fz24;
     }
 
     .choose-photo{
       .fj(flex-start);
       flex-wrap: wrap;
-      .add-photo-block{
-        .wl(220rpx, 220rpx);
-      }
+      padding: 20rpx 35rpx;
+
       .photo-item{
         .wl(220rpx, 220rpx);
         margin-right: 10rpx;
@@ -85,53 +63,69 @@
 
 <template>
   <view class="container">
-    <view class="container-hd">
-      进仓号
-    </view>
-    <picker @change="handleBatchChange" value="{{batchIndex}}" range="{{batchList}}">
-      <view class="choose-batch">
-        <view class="hd">批次</view>
-        <view class="bd">
-          {{batchList[batchIndex]}}
-        </view>
-        <image class="ft" src="../../images/index_arrow.png"></image>
-      </view>
-    </picker>
-
+    <view class="form-section-title">鉴定列表</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{list}}" @tap="chooseToRemove({{index}})">
+      <view class="photo-item" wx:for="{{list}}">
         <image class="img" src="{{item.url}}"></image>
 
-        <image wx:if="{{item.checked}}" class="remove" src="../../images/remove.png"></image>
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
         <view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
         </view>
       </view>
 
-      <image src="../../images/plus.png" class="add-photo-block" @tap="addPhoto"></image>
-
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
     </view>
+
+    <view class="form-section-title">申报单</view>
+    <view class="choose-photo">
+      <view class="photo-item" wx:for="{{list}}">
+        <image class="img" src="{{item.url}}"></image>
+
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <view class="info">
+          <view class="time">{{item.time}}</view>
+          <view >{{item.name}}</view>
+        </view>
+      </view>
+
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
+    </view>
+
+    <view class="form-section-title">包装文件</view>
+    <view class="choose-photo">
+      <view class="photo-item" wx:for="{{list}}">
+        <image class="img" src="{{item.url}}"></image>
+
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <view class="info">
+          <view class="time">{{item.time}}</view>
+          <view >{{item.name}}</view>
+        </view>
+      </view>
+
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
+    </view>
+
+
 
     <view class="btn-wrap">
-      <view class="button" @tap="removeCheckedImgs">删除</view>
+      <view class="button" @tap="removeCheckedImgs">上传</view>
     </view>
   </view>
+
 </template>
 
 <script>
   import wepy from 'wepy';
-  import tip from '@/utils/tip';
 
-
-  export default class AddPhoto extends wepy.page {
+  export default class DeclareDetail extends wepy.page {
     config = {};
 
     components = {};
 
     data = {
-      batchIndex: '0',
-      batchList: [1,2,3,4,5,6],
       list: [
         {
           url: 'http://dummyimage.com/200x100',
@@ -162,13 +156,6 @@
     computed = {};
 
     methods = {
-      handleBatchChange(evt){
-        this.batchIndex= evt.detail.value
-      },
-      chooseToRemove(index){
-        console.log(index)
-        this.list[index].checked = !this.list[index].checked
-      },
       addPhoto(){
         let that = this
 
@@ -179,15 +166,8 @@
           }
         })
       },
-      removeCheckedImgs(){
-        let ids = this.list.filter(item => item.checked).map(item => item.url)
-
-        console.log(ids)
-        tip.confirm(`确认删除${ids.length}张照片?`).then(
-          ()=>{
-            tip.success('删除成功!')
-          }
-        )
+      removePhoto(index){
+        console.log(index)
       }
     };
 

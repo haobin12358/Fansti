@@ -1,14 +1,61 @@
 <style lang="less" scoped>
   @import "../../styles/base";
 
-  .container {
+  .add-cost-form{
+    .form-item{
+      padding: 30rpx 40rpx;
+      border-bottom: 1px solid #C5C5C5;
+      .fj();
 
+      &:first-child{
+        border-top: 1px solid #C5C5C5;
+      }
+      .label{
+        width: 160rpx;
+        margin-right: 10rpx;
+        color: @mainBlueColor;
+      }
+      .value{
+        flex: 1;
+        .sc(24rpx, #333333);
+      }
+    }
   }
 </style>
 
 <template>
-  <view class="container">
-    添加成本
+  <view class="add-cost-form">
+    <form @submit="doConfirmCost" @reset="doResetCost" style="position: relative;">
+      <view class="form-item">
+        <view class="label">付款单位</view>
+        <view class="value">
+          <input type="text" name="a" placeholder="请填写该项">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">费用种类</view>
+        <view class="value">
+          <input type="text" name="b" placeholder="请填写该项">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">单价</view>
+        <view class="value">
+          <input type="text" name="c" placeholder="请填写该项">
+        </view>
+      </view>
+      <view class="form-item">
+        <view class="label">数量</view>
+        <view class="value">
+          <input type="text" name="d" placeholder="请填写该项">
+        </view>
+      </view>
+
+      <view class="btn-wrap" style="margin-top: 200rpx">
+        <button class="plain button" form-type="reset">重置</button>
+        <button class="button" form-type="submit">确定</button>
+      </view>
+    </form>
   </view>
 </template>
 
@@ -20,13 +67,29 @@
 
     components = {};
 
-    data = {};
+    data = {
+      isEdit: false,
+      detail: {
+
+      }
+    };
 
     computed = {};
 
-    methods = {};
+    methods = {
+      doResetCost(){
+        console.log('重置')
+      },
+      doConfirmCost(){
+        console.log('提交')
+      }
+    };
 
-    onLoad() {
+    onLoad(params, data) {
+      if(data.preload){
+        this.isEdit = true
+        this.detail = data.preload.detail
+      }
     };
   }
 </script>

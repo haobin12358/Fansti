@@ -22,33 +22,128 @@
   <view class="container">
     <view class="search-date-switch">
       <view>全部</view>
-      <view class="active">今日</view>
+      <view class="active">
+        <picker @change="changeSearchDate" mode="date" value="{{searchDate}}" end="{{searchEndDate}}">
+          {{searchDateTxt}}
+        </picker>
+      </view>
     </view>
+    <plan-list :list.sync="planListArr"></plan-list>
+    <load-more :type.sync="loadingType"></load-more>
 
-    <plan-list></plan-list>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import PlanList from '../../components/planList';
+  import PlanList from '@/components/planList';
+  import LoadMore from '@/components/common/loadMore';
+  import api from '@/api/api';
+  import { getCurrentTime } from '@/utils/util';
+
 
   export default class Plan extends wepy.page {
     config = {
     };
 
     components = {
-      'plan-list': PlanList
+      'plan-list': PlanList,
+      'load-more': LoadMore
     };
 
-    data = {};
+    data = {
+      searchEndDate: getCurrentTime(true),  // 只用于控制结束时间
+      searchDate: getCurrentTime(true),
+      loadingType: 'normal', // 加载状态
+      planListArr: [
+        {
+          "ydno": "607-82715135",
+          "jcno": "E18090928",
+          "destination": "BOM",
+          "hxno": null,
+          "jsbzcc": "1",
+          "accounts": "北京鸿运天翔国际货运代理有限公司",
+          "xsr": "曹媛",
+          "flag_date": null,
+          "transtime": null,
+          "isphoto": null,
+          "backcolor": null,
+          "icon": null
+        },
+        {
+          "ydno": "020-51844800",
+          "jcno": "E18090532",
+          "destination": "PHL",
+          "hxno": null,
+          "jsbzcc": "1",
+          "accounts": "北京鸿运天翔国际货运代理有限公司",
+          "xsr": "曹媛",
+          "flag_date": null,
+          "transtime": null,
+          "isphoto": null,
+          "backcolor": null,
+          "icon": null
+        },
+        {
+          "ydno": "125-84099304",
+          "jcno": "E18090409",
+          "destination": "CPT",
+          "hxno": null,
+          "jsbzcc": "1",
+          "accounts": "北京鸿运天翔国际货运代理有限公司",
+          "xsr": "曹媛",
+          "flag_date": null,
+          "transtime": null,
+          "isphoto": null,
+          "backcolor": null,
+          "icon": null
+        },
+        {
+          "ydno": "160-70311706",
+          "jcno": "E18090186",
+          "destination": "BLR",
+          "hxno": null,
+          "jsbzcc": "2",
+          "accounts": "北京鸿运天翔国际货运代理有限公司",
+          "xsr": "曹媛",
+          "flag_date": null,
+          "transtime": null,
+          "isphoto": null,
+          "backcolor": null,
+          "icon": null,
+          "wphw": "危"
+        },
+      ]
+    };
 
-    computed = {};
+    computed = {
+      searchDateTxt(){
+        if(this.searchDate == getCurrentTime(true)){
+          return '今天'
+        }else {
+          return this.searchDate
+        }
+      }
+    };
 
-    methods = {};
+    methods = {
+      changeSearchDate(evt){
+        this.searchDate = evt.detail.value
+      },
+
+    };
+
+    getTodayList(){
+      api.getTodayList().then(
+        res => {
+          console.log(res)
+        }
+      )
+    }
 
     onLoad() {
-
+      // this.getTodayList()
+      console.log(getCurrentTime(true))
     };
   }
 </script>

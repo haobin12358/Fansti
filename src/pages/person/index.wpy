@@ -5,12 +5,13 @@
     .search-bar {
       padding: 20rpx 40rpx;
       .fj();
+      position: relative;
 
       .input-wrap {
         flex: 1;
         height: 55rpx;
         margin-right: 20rpx;
-        padding-left: 60rpx;
+        padding-left: 30rpx;
 
         display: flex;
         align-items: center;
@@ -19,7 +20,7 @@
 
         .search-icon {
           .wl(30rpx, 30rpx);
-          margin-right: 10rpx;
+          margin-right: 25rpx;
         }
 
         input {
@@ -59,13 +60,15 @@
 
 <template>
   <view class="container">
-    <view class="search-bar">
-      <view class="input-wrap">
-        <image class="search-icon" src="../../images/search.png"></image>
-        <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港">
+    <form @submit="doSearch">
+      <view class="search-bar">
+        <view class="input-wrap">
+          <image class="search-icon" src="../../images/search.png"></image>
+          <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港">
+        </view>
+        <button class="type-blue" form-type="submit">搜索</button>
       </view>
-      <button class="type-blue" form-type="submit">搜索</button>
-    </view>
+    </form>
 
     <view class="list">
       <view class="list-item" @tap="handleRedirect('plan')">
@@ -128,12 +131,15 @@
 
     methods = {
       doSearch(evt) {
-        console.log(evt);
+        let {query} = evt.detail.value
+
+        if(query){
+          this.$navigate('/pages/person/plan')
+        }else{
+          tip.alert('请输入查询内容')
+        }
       },
       handleRedirect(command) {
-        console.log(command);
-
-        return;
         switch (command) {
           case 'plan':
             this.$navigate('/pages/person/plan');

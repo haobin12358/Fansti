@@ -1,0 +1,154 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+
+  .container {
+    .search-bar {
+      padding: 20rpx 40rpx;
+      .fj();
+      border-top: 1px solid #DFDFDF;
+      border-bottom: 1px solid #DFDFDF;
+
+      .input-wrap {
+        flex: 1;
+        height: 55rpx;
+        margin-right: 20rpx;
+        padding-left: 30rpx;
+
+        display: flex;
+        align-items: center;
+        border: 1px solid #A0AFBA;
+        border-radius: 10rpx;
+
+        .search-icon {
+          .wl(30rpx, 30rpx);
+          margin-right: 25rpx;
+        }
+
+        input {
+          flex: 1;
+        }
+      }
+
+      button {
+        height: 55rpx;
+        line-height: 55rpx;
+        .fz(26rpx);
+      }
+    }
+
+    .declare-list{
+      padding: 20rpx;
+      color: @mainBlueColor;
+
+      .declare-item{
+        padding: 25rpx;
+        margin-bottom: 25rpx;
+        border: 1px solid #DFDFDF;
+
+        .row{
+          .fj();
+
+          &:first-child{
+            margin-bottom: 25rpx;
+          }
+
+          .column{
+            flex: 1;
+            .fj(flex-start);
+
+            .label{
+              image{
+                .wl(30rpx, 25rpx);
+                margin-right: 10rpx;
+              }
+            }
+          }
+
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <form @submit="doSearch">
+      <view class="search-bar">
+        <view class="input-wrap">
+          <image class="search-icon" src="../../images/search.png"></image>
+          <input type="text" name="query" placeholder="请输入运单号/进仓编号">
+        </view>
+        <button class="type-blue" form-type="submit">搜索</button>
+      </view>
+    </form>
+
+    <view class="declare-list">
+      <view class="declare-item">
+        <view class="row">
+          <view class="column">
+            <view class="label">
+              <image src="../../images/jc.png"></image>
+              <text>进仓号：</text>
+            </view>
+            <view class="value">
+              {{'暂无'}}
+            </view>
+          </view>
+          <view class="column">
+            <view class="label">
+              <image src="../../images/customer.png"></image>
+              <text>操作人：</text>
+            </view>
+            <view class="value">
+              {{'暂无'}}
+            </view>
+          </view>
+        </view>
+        <view class="row">
+          <view class="column">
+            <view class="label">
+              <image src="../../images/goods.png"></image>
+              <text space="emsp">运单号：</text>
+            </view>
+            <view class="value">
+              {{'暂无'}}
+            </view>
+          </view>
+          <view class="column">
+            <view class="label">
+              <image src="../../images/plane.png"></image>
+              <text>目的港：</text>
+            </view>
+            <view class="value">
+              {{'暂无'}}
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class Declare extends wepy.page {
+    config = {};
+
+    components = {};
+
+    data = {};
+
+    computed = {};
+
+    methods = {
+      doSearch(evt){
+
+      }
+    };
+
+    onLoad() {
+    };
+  }
+</script>

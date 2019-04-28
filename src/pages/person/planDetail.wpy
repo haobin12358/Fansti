@@ -172,26 +172,7 @@
         }
       }
 
-      .add-cost-form{
-        .form-item{
-          padding: 30rpx 40rpx;
-          border-bottom: 1px solid #C5C5C5;
-          .fj();
 
-          &:first-child{
-            border-top: 1px solid #C5C5C5;
-          }
-          .label{
-            width: 160rpx;
-            margin-right: 10rpx;
-            color: @mainBlueColor;
-          }
-          .value{
-            flex: 1;
-            .sc(24rpx, #333333);
-          }
-        }
-      }
     }
 
 
@@ -507,7 +488,7 @@
       </view>
     </view>
     <view class="cost" wx:if="{{3 == activeName}}">
-      <view wx:if="{{!addCost}}">
+      <view>
         <view class="cost-hd">
           <view>进仓号：123456</view>
           <view>运单号：123456</view>
@@ -519,46 +500,14 @@
           </view>
           <view class="row">
             <view class="cell">总价：</view>
-            <view class="cell">2200</view>
+            <view class="cell" @tap="doEditCost">2200</view>
           </view>
         </view>
         <view class="btn-wrap" style="margin-top: 500rpx;">
           <view class="button" @tap="doAddCost">添加成本</view>
         </view>
       </view>
-      <view class="add-cost-form" wx:else>
-        <form @submit="doConfirmCost" @reset="doResetCost" >
-          <view class="form-item">
-            <view class="label">付款单位</view>
-            <view class="value">
-              <input type="text" name="a" placeholder="请填写该项">
-            </view>
-          </view>
-          <view class="form-item">
-            <view class="label">费用种类</view>
-            <view class="value">
-              <input type="text" name="b" placeholder="请填写该项">
-            </view>
-          </view>
-          <view class="form-item">
-            <view class="label">单价</view>
-            <view class="value">
-              <input type="text" name="c" placeholder="请填写该项">
-            </view>
-          </view>
-          <view class="form-item">
-            <view class="label">数量</view>
-            <view class="value">
-              <input type="text" name="d" placeholder="请填写该项">
-            </view>
-          </view>
 
-          <view class="btn-wrap" style="margin-top: 200rpx">
-            <button class="plain button" form-type="reset">重置</button>
-            <button class="button" form-type="submit">确定</button>
-          </view>
-        </form>
-      </view>
     </view>
 
 
@@ -591,8 +540,6 @@
           name: ''
         }
       ],
-
-      addCost: true
     };
 
     computed = {};
@@ -617,18 +564,17 @@
       },
 
       goAddPhoto(){
-        this.$navigate('/person/addPhoto')
+        this.$navigate('/pages/person/addPhoto')
       },
 
+      doEditCost(){
+        this.$preload('detail', {a:1});
+        this.$navigate('/pages/person/addCost')
+      },
       doAddCost(){
-        this.addCost = true
+        this.$navigate('/pages/person/addCost')
       },
-      doResetCost(){
-        console.log('重置')
-      },
-      doConfirmCost(){
-        console.log('提交')
-      }
+
     };
 
     onLoad() {
