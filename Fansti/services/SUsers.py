@@ -92,3 +92,7 @@ class SUsers(SBase):
         user = self.session.query(WECHAT_LOGIN).filter(WECHAT_LOGIN.openid == openid).first()
         self.session.expunge_all()
         return user
+
+    @close_session
+    def get_user_name(self, login_name):
+        return self.session.query(D_MESSAGE_USER.username).filter_by(login_name=login_name).first()
