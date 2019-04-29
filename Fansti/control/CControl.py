@@ -617,10 +617,13 @@ class CControl():
         import platform
         from Fansti.config import Inforcode
         if platform.system() == "Windows":
-            rootdir = Inforcode.WindowsRoot + "/" + str(formdata.get("jcno")) + "/" + str(formdata.get("FileType"))
+            rootdir = Inforcode.WindowsRoot + "/" + str(formdata.get("jcno"))
         else:
             rootdir = Inforcode.LinuxRoot + Inforcode.LinuxImgs
         print(rootdir)
+        if not os.path.isdir(rootdir):
+            os.mkdir(rootdir)
+        rootdir = rootdir + "/" + str(formdata.get("FileType"))
         if not os.path.isdir(rootdir):
             os.mkdir(rootdir)
         if "FileType" not in formdata or "jcno" not in formdata:
