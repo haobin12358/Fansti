@@ -476,7 +476,7 @@ class AIR_HWYS_DZJJD(Base):
 
 class AIR_HWYS_QRD(Base):
     __tablename__ = "AIR_HWYS_QRD"
-    id = Column(String(200))
+    id = Column(String(200), primary_key=True)
     ydno = Column(String(20))                       # 运单号
     jcno = Column(String(200))                      # 进仓号
     title = Column(String(500))                     # 发票抬头
@@ -489,12 +489,12 @@ class AIR_HWYS_QRD(Base):
     byzd2 = Column(String(500))                     # 成本录入人
     byzd3 = Column(String(500))                     # 备用字段
     createtime = Column(DATE)                       # 填写时间
-    fjdw = Column(String(2000))                     # 付款单位
+    fkdw = Column(String(2000))                     # 付款单位
     hxno = Column(String(2000))                     # 发票号
 
 class D_CHARGE_COMPANY(Base):
     __tablename__ = "D_CHARGE_COMPANY"
-    id = Column(String(200))
+    id = Column(String(200), primary_key=True)
     company = Column(String(200))                   # 公司
     createtime = Column(DATE)                       # 创建时间
     code = Column(String(50))                       # 简码
@@ -504,8 +504,8 @@ class D_CHARGE_COMPANY(Base):
 
 class D_CHARGE_TYPE(Base):
     __tablename__ = "D_CHARGE_TYPE"
-    charge_code = Column(String(20))                # 简码
-    charge_chame = Column(String(50))               # 费用种类名称
+    charge_code = Column(String(20), primary_key=True)                # 简码
+    charge_cname = Column(String(50))               # 费用种类名称
     charge_name = Column(String(50))
     remark = Column(String(100))                    # 备注
     create_by = Column(String(20))                  # 创建人
@@ -516,6 +516,73 @@ class D_CHARGE_TYPE(Base):
     d_charge_id = Column(String(40))                # 主键id
     charge_group_id = Column(String(40))            # 父类id
     charge_type = Column(String(100))               # 规格
+
+class AIR_HWYS_CKMXD(Base):
+    __tablename__ = "AIR_HWYS_CKMXD"
+    list_id = Column(String(40), primary_key=True)  # 仓库明细单id
+    jcno = Column(String(20))                       # 进仓编号
+    hwpm = Column(String(2000))                     # 货物品名
+    warehouse_address = Column(String(100))         # 货物存放地
+    enter_time = Column(DATE)                       # 进仓时间
+    goods_quantity = Column(String(20))             # 件数
+    delivery_unit = Column(String(200))             # 送货单位
+    goods_weight = Column(String(20))               # 重量
+    contact_phone = Column(String(20))              # 联系方式
+    originator_phone = Column(String(20))           # 始发方电话
+    receiver_name = Column(String(50))              # 接货人
+    cargo_size = Column(String(100))                # 货物尺寸
+    salesman = Column(String(20))                   # 业务员
+    client_name = Column(String(50))                # 客户名称
+    shipping_mark = Column(String(500))             # 唛头
+    remark = Column(String(2000))                   # 备注
+    store_keeper = Column(String(50))               # 库管
+    consignee = Column(String(50))                  # 提货人
+    pickup_date = Column(DATE)                      # 提货日期
+    creator = Column(String(50))                    # 创建人
+    create_time = Column(DATE)                      # 创建时间
+
+class AIR_HWYS_OUTWAREHOUSE(Base):
+    __tablename__ = "AIR_HWYS_OUTWAREHOUSE"
+    id = Column(String(32), primary_key=True)
+    ydno = Column(String(32))                       # 运单号
+    submitter = Column(String(16))                  # 提交人
+    submit_time = Column(DATE)                      # 提交时间
+    create_time = Column(DATE)                      # 创建时间
+
+class AIR_HWYS_INGOODYARD(Base):
+    __tablename__ = "AIR_HWYS_INGOODYARD"
+    id = Column(String(32), primary_key=True)
+    ydno = Column(String(32))                       # 运单号
+    submitter = Column(String(16))                  # 提交人
+    submit_time = Column(DATE)                      # 提交时间
+    create_time = Column(DATE)                      # 创建时间
+
+class AIR_HWYS_DGD_UPLOAD(Base):
+    __tablename__ = "AIR_HWYS_DGD_UPLOAD"
+    id = Column(String(100), primary_key=True)
+    jcno = Column(String(40))                       # 进仓单号
+    ydno = Column(String(40))                       # 运单号
+    file_type = Column(String(100))                 # 种类：申报单/包装明细/鉴定文件
+    file_url = Column(String(200))                  # 存储路径
+    create_time = Column(DATE)                      # 文件上传时间
+    create_user = Column(String(100))               # 文件上传人
+    file_name = Column(String(100))                 # 文件名称
+    file_remark = Column(String(100))               # 文件备注信息
+
+class AIR_HWYS_DGD_UPLOAD_BAK(Base):
+    __tablename__ = "AIR_HWYS_DGD_UPLOAD_BAK"
+    id = Column(String(100), primary_key=True)
+    jcno = Column(String(40))                       # 进仓单号
+    ydno = Column(String(40))                       # 运单号
+    file_type = Column(String(100))                 # 种类：申报单/包装明细/鉴定文件
+    file_url = Column(String(200))                  # 存储路径
+    upload_create_time = Column(DATE)               # 文件上传时间
+    upload_create_user = Column(String(100))        # 文件上传人
+    file_name = Column(String(100))                 # 文件名称
+    file_remark = Column(String(100))               # 文件备注信息
+    upload_id = Column(String(100))                 # upload关联id
+    delete_time = Column(DATE)                      # 文件删除时间
+    delete_user = Column(String(100))               # 文件删除人
 
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)

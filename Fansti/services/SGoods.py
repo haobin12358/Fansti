@@ -3,9 +3,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, \
-    GOODS_RETRUE, AIR_HWYS_DZJJD
+    GOODS_RETRUE, AIR_HWYS_DZJJD, AIR_HWYS_QRD, D_CHARGE_COMPANY, D_CHARGE_TYPE, AIR_HWYS_CKMXD, AIR_HWYS_OUTWAREHOUSE, \
+    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD
 from Fansti.services.SBase import SBase, close_session
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 class SGoods(SBase):
 
@@ -192,4 +193,52 @@ class SGoods(SBase):
             .filter_by(jcno=jcno).first()
 
     def get_jc_qrd(self, jcno):
-        return self.session.query().all()
+        return self.session.query(AIR_HWYS_QRD.id, AIR_HWYS_QRD.jcno, AIR_HWYS_QRD.ydno, AIR_HWYS_QRD.fkdw,
+                                  AIR_HWYS_QRD.byzd1,
+                                  AIR_HWYS_QRD.byzd3, AIR_HWYS_QRD.curr, AIR_HWYS_QRD.amount, AIR_HWYS_QRD.doc)\
+            .filter_by(jcno=jcno).filter_by(byzd1="1").all()
+
+    def get_fkdw(self, company):
+        return self.session.query(D_CHARGE_COMPANY.id, D_CHARGE_COMPANY.code, D_CHARGE_COMPANY.company)\
+            .filter(D_CHARGE_COMPANY.company.like("%{0}%".format(company))).all()
+
+    def get_fkzl(self, charge_cname):
+        return self.session.query(D_CHARGE_TYPE.charge_code, D_CHARGE_TYPE.charge_cname, D_CHARGE_TYPE.d_price)\
+            .filter(D_CHARGE_TYPE.charge_cname.like("%{0}%".format(charge_cname))).all()
+
+    def get_ckmxd_wts(self, jcno):
+        return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.hwpm, AIR_HWYS_WTS.ydno)\
+            .filter_by(jcno=jcno).first()
+
+    def get_ckmxd_abo(self, jcno):
+        return self.session.query(AIR_HWYS_CKMXD.warehouse_address, AIR_HWYS_CKMXD.enter_time,
+                                  AIR_HWYS_CKMXD.goods_quantity, AIR_HWYS_CKMXD.delivery_unit,
+                                  AIR_HWYS_CKMXD.goods_weight, AIR_HWYS_CKMXD.cargo_size, AIR_HWYS_CKMXD.client_name,
+                                  AIR_HWYS_CKMXD.remark)\
+            .filter_by(jcno=jcno).first()
+
+    def get_outwarehouse(self, ydno):
+        return self.session.query(AIR_HWYS_OUTWAREHOUSE.submitter, AIR_HWYS_OUTWAREHOUSE.submit_time)\
+            .filter_by(ydno=ydno).first()
+
+    def get_ingoodyard(self, ydno):
+        return self.session.query(AIR_HWYS_INGOODYARD.submitter, AIR_HWYS_INGOODYARD.submit_time)\
+            .filter_by(ydno=ydno).first()
+
+    def get_sb_list(self, jcno):
+        return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url)\
+            .filter_by(jcno=jcno).filter_by(file_type="申报单").all()
+
+    def get_bzsm_list(self, jcno):
+        return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url) \
+            .filter_by(jcno=jcno).filter_by(file_type="包装明细").all()
+
+    def get_jd_list(self, jcno):
+        return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url) \
+            .filter_by(jcno=jcno).filter_by(file_type="鉴定文件").all()
+
+    def get_sbno_list_like_ydno_jcno(self, select_name, page_size, page_num):
+        return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination)\
+            .filter(or_(AIR_HWYS_WTS.jcno.like("%{0}%".format(select_name)), AIR_HWYS_WTS.ydno.like("%{0}%".format(select_name)))) \
+            .offset((page_num - 1) * page_size).limit(page_size)\
+            .all()

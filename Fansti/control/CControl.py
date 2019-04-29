@@ -20,7 +20,7 @@ class CControl():
     def get_today_list(self):
         args = request.args.to_dict()
         make_log("args", args)
-        not_null_params = ['login_name', "page_size", "page_num", "time_use"]
+        not_null_params = ['login_name', "page_size", "page_num", "time_use", "select_name"]
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
         wts_filter = set()
@@ -47,12 +47,16 @@ class CControl():
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
             wts_filter.add(AIR_HWYS_WTS.accounts == accounts.get("compnay"))
-        # 处理当前时间
-        if args["time_use"] == 0:
+        if args["select_name"]:
+            wts_filter.add(or_(AIR_HWYS_WTS.jcno.like("%{0}%".format(args["select_name"])),
+                               AIR_HWYS_WTS.ydno.like("%{0}%".format(args["select_name"])),
+                               AIR_HWYS_WTS.destination.like("%{0}%".format(args["select_name"]))))
+        # 处理当前时间 时间格式为2019-04-29
+        if args["time_use"]:
+            args["time_use"] = datetime.datetime.strptime(args["time_use"], "%Y-%m-%d")
             today_date = datetime.datetime.now().date()
             wts_filter.add(or_(AIR_HWYS_WTS.jd_time.date() == today_date, AIR_HWYS_WTS.jd_date == today_date))
-        elif args["time_use"] == 1:
-            pass
+
         goods_list = get_model_return_list(self.sgoods.get_all_goods_by_filter(
             wts_filter, int(args["page_size"]), int(args["page_num"])))
 
@@ -228,18 +232,27 @@ class CControl():
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
 
         jc_abo = {}
+        jc_abo["jcno"] = args["jcno"]
         jc_abo["in"] = {}
         jc_abo["in"]["picture"] = []
         jc_abo["in"]["length"] = 0
+        jc_abo["in"]["createtime"] = None
+        jc_abo["in"]["czr"] = None
         jc_abo["out"] = {}
         jc_abo["out"]["picture"] = []
         jc_abo["out"]["length"] = 0
+        jc_abo["out"]["createtime"] = None
+        jc_abo["out"]["czr"] = None
         jc_abo["weight"] = {}
         jc_abo["weight"]["picture"] = []
         jc_abo["weight"]["length"] = 0
+        jc_abo["weight"]["createtime"] = None
+        jc_abo["weight"]["czr"] = None
         jc_abo["by"] = {}
         jc_abo["by"]["picture"] = []
         jc_abo["by"]["length"] = 0
+        jc_abo["by"]["createtime"] = None
+        jc_abo["by"]["czr"] = None
         make_log("jc_abo", jc_abo)
         if not jc_abo:
             return SYSTEM_ERROR
@@ -251,18 +264,27 @@ class CControl():
             if jc_abo_in:
                 for in_order in jc_abo_in:
                     jc_abo["in"]["picture"].append(in_order["photourl"])
+                    jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["in"]["czr"] = in_order["czr"]
                 jc_abo["in"]["length"] = len(jc_abo["in"]["picture"])
             jc_abo_out = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
             make_log("jc_abo_out", jc_abo_out)
             if jc_abo_out:
                 for out_order in jc_abo_out:
                     jc_abo["out"]["picture"].append(out_order["photourl"])
+                    jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["out"]["czr"] = out_order["czr"]
                 jc_abo["out"]["length"] = len(jc_abo["out"]["picture"])
             jc_abo_weight = get_model_return_list(self.sgoods.get_weight_order_by_jcno(args["jcno"]))
             make_log("jc_abo_weight", jc_abo_weight)
             if jc_abo_weight:
                 for weight_order in jc_abo_weight:
                     jc_abo["weight"]["picture"].append(weight_order["photourl"])
+                    jc_abo["weight"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["weight"]["czr"] = weight_order["czr"]
                 jc_abo["weight"]["length"] = len(jc_abo["weight"]["picture"])
 
             jc_abo_by = get_model_return_list(self.sgoods.get_by_order_by_jcno(args["jcno"]))
@@ -270,9 +292,281 @@ class CControl():
             if jc_abo_by:
                 for by_order in jc_abo_by:
                     jc_abo["by"]["picture"].append(by_order["photourl"])
+                    jc_abo["by"]["createtime"] = by_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
+                    jc_abo["by"]["czr"] = by_order["czr"]
                 jc_abo["by"]["length"] = len(jc_abo["by"]["picture"])
 
 
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response
+
+    def get_jc_cb(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
+        print(qrd)
+        jc_cb = {}
+        jc_cb["jcno"] = None
+        jc_cb["ydno"] = None
+        jc_cb["company"] = None
+        jc_cb["price"] = []
+        if qrd:
+            for row in qrd:
+                price_dict = {}
+                jc_cb["jcno"] = row["jcno"]
+                jc_cb["ydno"] = row["ydno"]
+                jc_cb["company"] = row["fkdw"]
+                price_dict["curr"] = row["curr"]
+                price_dict["amount"] = row["amount"]
+                price_dict["doc"] = row["doc"]
+                price_dict["id"] = row["id"]
+                if row["byzd1"] == "1" and row["byzd3"] == "1":
+                    price_dict["is_update"] = 1
+                else:
+                    price_dict["is_update"] = 0
+                jc_cb["price"].append(price_dict)
+        return {
+            "status": 200,
+            "message": "获取成本成功",
+            "data": jc_cb
+        }
+
+    def get_fkdw(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["fkdw"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        fkdw = get_model_return_list(self.sgoods.get_fkdw(args["fkdw"]))
+
+        return {
+            "status": 200,
+            "message": "获取付款单位成功",
+            "data": fkdw
+        }
+
+    def get_fyzl(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["fyzl"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        fkdw = get_model_return_list(self.sgoods.get_fkzl(args["fyzl"]))
+
+        return {
+            "status": 200,
+            "message": "获取费用种类成功",
+            "data": fkdw
+        }
+
+    def get_in_abo(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts(args["jcno"]))
+        ckmxd = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
+        if ckmxd:
+            if ckmxd["enter_time"]:
+                ckmxd["enter_time"] = ckmxd["enter_time"].strftime("%Y-%m-%d %H:%M:%S")
+            wts.update(ckmxd)
+        else:
+            wts.update({
+                "warehouse_address": None,
+                "enter_time": None,
+                "goods_quantity": None,
+                "delivery_unit": None,
+                "goods_weight": None,
+                "cargo_size": None,
+                "client_name": None,
+                "remark": None
+            })
+
+        jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
+        make_log("jc_abo_in", jc_abo_in)
+        wts["picture"] = []
+        if jc_abo_in:
+            for in_order in jc_abo_in:
+                wts["picture"].append(in_order["photourl"])
+                if wts["createtime"]:
+                    wts["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                wts["xsr"] = in_order["czr"]
+        else:
+            wts["createtime"] = None
+            wts["xsr"] = None
+        return {
+            "status": 200,
+            "message": "获取入库明细成功",
+            "data": wts
+        }
+
+    def get_out_abo(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts(args["jcno"]))
+        if wts["ydno"]:
+            outwarehouse = get_model_return_dict(self.sgoods.get_outwarehouse(wts["ydno"]))
+            if outwarehouse:
+                wts["is_button"] = 0
+                if outwarehouse["submit_time"]:
+                    outwarehouse["submit_time"] = outwarehouse["submit_time"].strftime("%Y/%m/%d %H:%M:%S")
+                wts.update(outwarehouse)
+            else:
+                wts["is_button"] = 1
+                wts.update({
+                    "submitter": None,
+                    "submit_time": None
+                })
+        else:
+            wts["is_button"] = 1
+            wts.update({
+                "submitter": None,
+                "submit_time": None
+            })
+
+        return {
+            "status": 200,
+            "message": "获取出库确认详情成功",
+            "data": wts
+        }
+
+    def get_hc_abo(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts(args["jcno"]))
+        if wts["ydno"]:
+            ingoodyard = get_model_return_dict(self.sgoods.get_ingoodyard(wts["ydno"]))
+            if ingoodyard:
+                wts["is_button"] = 0
+                if ingoodyard["submit_time"]:
+                    ingoodyard["submit_time"] = ingoodyard["submit_time"].strftime("%Y/%m/%d %H:%M:%S")
+                wts.update(ingoodyard)
+            else:
+                wts["is_button"] = 1
+                wts.update({
+                    "submitter": None,
+                    "submit_time": None
+                })
+        else:
+            wts["is_button"] = 1
+            wts.update({
+                "submitter": None,
+                "submit_time": None
+            })
+
+        return {
+            "status": 200,
+            "message": "获取出库确认详情成功",
+            "data": wts
+        }
+
+    def get_sb_list(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        file_list = get_model_return_list(self.sgoods.get_sb_list(args["jcno"]))
+        return {
+            "status": 200,
+            "message": "获取文件列表成功",
+            "data": file_list
+        }
+
+    def get_bzsm_list(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        file_list = get_model_return_list(self.sgoods.get_bzsm_list(args["jcno"]))
+        return {
+            "status": 200,
+            "message": "获取文件列表成功",
+            "data": file_list
+        }
+
+    def get_jd_list(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        file_list = get_model_return_list(self.sgoods.get_jd_list(args["jcno"]))
+        return {
+            "status": 200,
+            "message": "获取文件列表成功",
+            "data": file_list
+        }
+
+    def get_sbno_list(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["select_name", "page_size", "page_num"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        sbno_list = get_model_return_list(self.sgoods.get_sbno_list_like_ydno_jcno(args["select_name"],
+                                                                                   int(args["page_size"]),
+                                                                                   int(args["page_num"])))
+        return {
+            "status": 200,
+            "message": "搜索成功",
+            "data": sbno_list
+        }

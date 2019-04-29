@@ -18,7 +18,17 @@ class FSControl(Resource):
             "get_today_list": "self.cgoods.get_today_list()",
             "get_jc_abo": "self.cgoods.get_jc_abo()",
             "get_handover_list": "self.cgoods.get_handover_list()",
-            "get_jc_pic": "self.cgoods.get_jc_pic()"
+            "get_jc_pic": "self.cgoods.get_jc_pic()",
+            "get_jc_cb": "self.cgoods.get_jc_cb()",
+            "get_fkdw": "self.cgoods.get_fkdw()",
+            "get_fyzl": "self.cgoods.get_fyzl()",
+            "get_in_abo": "self.cgoods.get_in_abo()",
+            "get_out_abo": "self.cgoods.get_out_abo()",
+            "get_hc_abo": "self.cgoods.get_hc_abo()",
+            "get_sb_list": "self.cgoods.get_sb_list()",
+            "get_bzsm_list": "self.cgoods.get_bzsm_list()",
+            "get_jd_list": "self.cgoods.get_jd_list()",
+            "get_sbno_list": "self.cgoods.get_sbno_list()"
         }
 
         if control not in apis:
