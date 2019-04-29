@@ -579,27 +579,95 @@ class CControl():
             return judge_keys(not_null_params, args.keys())
         data = json.loads(request.data)
         if "wts_type" not in data.keys():
+            accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+            make_log("accounts", accounts)
+            if args["login_name"] == accounts:
+                return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+            if data["wts_type"] == "jd":
+                wts = get_model_return_dict(self.sgoods.get_id_by_jcno(args["jcno"]))
+                wts_id = wts["id"]
+                update_wts = self.sgoods.update_wts(wts_id, {
+                    "jd_time": datetime.datetime.now(),
+                    "ydno": wts["ydno"]
+                })
+                if not update_wts:
+                    return SYSTEM_ERROR
+        return {
+            "status": 200,
+            "message": "交单成功"
+        }
+
+    def update_dzjjd(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        if "dzjjd_type" not in data.keys():
             return {
                 "status": 405,
                 "status_code": 405001,
                 "message": "参数缺失"
             }
 
-        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
-        make_log("accounts", accounts)
-        if args["login_name"] == accounts:
-            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
-
-        if data["wts_type"] == "jd":
-            wts = get_model_return_dict(self.sgoods.get_id_by_jcno(args["jcno"]))
-            wts_id = wts["id"]
-            update_wts = self.sgoods.update_wts(wts_id, {
-                "jd_time": datetime.datetime.now(),
-                "ydno": wts["ydno"]
+        if data["dajjd_type"] == "kfqr":
+            dzjjd = get_model_return_dict(self.sgoods.get_jjdid_by_jcno(args["jcno"]))
+            user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+            update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
+                "kf_ry": user["username"],
+                "kfqr_date": datetime.datetime.now()
             })
-            if not update_wts:
+            if not update_dzjjd:
                 return SYSTEM_ERROR
+        if data["dajjd_type"] == "hcqr":
+            dzjjd = get_model_return_dict(self.sgoods.get_jjdid_by_jcno(args["jcno"]))
+            user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+            update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
+                "hc_ry": user["username"],
+                "hcqr_date": datetime.datetime.now()
+            })
+            if not update_dzjjd:
+                return SYSTEM_ERROR
+
         return {
             "status": 200,
-            "message": "交单成功"
+            "message": str(data["dajjd_type"]) + "成功"
         }
+
+    def upload_files(self):
+        formdata = request.form
+        make_log("formdata", formdata)
+        files = request.files.get("file")
+
+        import platform
+        from Fansti.config import Inforcode
+        if platform.system() == "Windows":
+            rootdir = Inforcode.WindowsRoot + "/" + str(formdata.get("jcno"))
+        else:
+            rootdir = Inforcode.LinuxRoot + Inforcode.LinuxImgs
+        print(rootdir)
+        if not os.path.isdir(rootdir):
+            os.mkdir(rootdir)
+        rootdir = rootdir + "/" + str(formdata.get("FileType"))
+        if not os.path.isdir(rootdir):
+            os.mkdir(rootdir)
+        if "FileType" not in formdata or "jcno" not in formdata:
+            return {
+                "status": 405,
+                "status_code": 405001,
+                "message": "参数缺失"
+            }
+        filessuffix = str(files.filename).split(".")[-1]
+        index = formdata.get("index", 1)
+        # filename = formdata.get("FileType") + str(index) + "." + filessuffix
+        filename = formdata.get("FileType") + "_" + str(index) + "_" + str(uuid.uuid1()) + "." + filessuffix
+        filepath = os.path.join(rootdir, filename)
+        print(filepath)
+        files.save(filepath)
+        response = import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+        url = Inforcode.ip + Inforcode.WindowsImag + "/" + str(formdata.get("jcno")) + "/" + str(formdata.get("FileType")) + "/" + filename
+        print(url)
+        response["data"] = url
+        return response

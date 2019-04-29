@@ -250,3 +250,11 @@ class SGoods(SBase):
 
     def get_id_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_WTS.id, AIR_HWYS_WTS.ydno).filter_by(jcno=jcno).first()
+
+    def update_dzjjd(self, dzjjd_id, dzjjd):
+        self.session.query(AIR_HWYS_DZJJD).filter_by(jjd_id=dzjjd_id).update(dzjjd)
+        self.session.commit()
+        return True
+
+    def get_jjdid_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_DZJJD.jjd_id).filter_by(jcno=jcno).first()

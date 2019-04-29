@@ -39,7 +39,9 @@ class FSControl(Resource):
         print(self.title.format("api is " + control))
 
         apis = {
-            "update_wts": "self.cgoods.update_wts()"
+            "update_wts": "self.cgoods.update_wts()",
+            "update_dzjjd": "self.cgoods.update_dzjjd()",
+            "upload_files": "self.cgoods.upload_files()"
         }
 
         if control not in apis:

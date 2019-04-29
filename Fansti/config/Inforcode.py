@@ -15,8 +15,8 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 # 图片存储地址
 LinuxRoot = "/opt/"
 LinuxImgs = "imgs/Fansti"
-WindowsRoot = "E:/"
-WindowsImag = 'img'
+WindowsRoot = "E:/fstfile/photo"
+WindowsImag = 'photo'
 
 # url
 ip = "https://fstwechat.com/"
