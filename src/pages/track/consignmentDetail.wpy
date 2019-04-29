@@ -597,14 +597,20 @@
     }
 
     //  获取货物详情
-    async getJcAbo(jcno){
-      let {data:{status, data,message}} =await api.getJcAbo({query: {login_name: wx.getStorageSync('token'),jcno}})
+    async getJcAbo(jcno) {
+      let { data: { status, data, message } } = await api.getJcAbo({
+        query: {
+          login_name: wx.getStorageSync('token'),
+          jcno
+        },
+        _noLoading: !!this.detail.jcno
+      });
 
-      if(status == 200){
+      if (status == 200) {
         this.detail = data;
         this.$apply();
-      }else{
-        tip.alert(message)
+      } else {
+        tip.alert(message);
       }
     }
 
@@ -616,11 +622,7 @@
     }
 
     onLoad(params) {
-      // this.jcno = params.jcno;
-      this.jcno = 'E18110072';
-      this.getJcAbo(this.jcno);
-
-      console.log(this.jcno)
+      this.getJcAbo(params.jcno);
 
     }
   }

@@ -21,14 +21,14 @@
 <template>
   <view class="container">
     <view class="search-date-switch">
-      <view>全部</view>
-      <view class="active">
-        <picker @change="changeSearchDate" mode="date" value="{{searchDate}}" end="{{searchEndDate}}">
+      <view class="{{showAll ? 'active' : ''}}" @tap="switchDate({{true}})">全部</view>
+      <view class="{{!showAll ? 'active' : ''}}" @tap="switchDate({{false}})">
+        <picker @change="changeSearchDate" mode="date" value="{{searchDate}}">
           {{searchDateTxt}}
         </picker>
       </view>
     </view>
-    <plan-list :list.sync="planListArr"></plan-list>
+    <plan-list :list.sync="planList" @tapItem.user="goPlanDetail"></plan-list>
     <load-more :type.sync="loadingType"></load-more>
 
   </view>
@@ -39,6 +39,7 @@
   import PlanList from '@/components/planList';
   import LoadMore from '@/components/common/loadMore';
   import api from '@/api/api';
+  import tip from '@/utils/tip';
   import { getCurrentTime } from '@/utils/util';
 
 
@@ -52,68 +53,16 @@
     };
 
     data = {
+      showAll: false,
+
       searchEndDate: getCurrentTime(true),  // 只用于控制结束时间
       searchDate: getCurrentTime(true),
+
       loadingType: 'normal', // 加载状态
-      planListArr: [
-        {
-          "ydno": "607-82715135",
-          "jcno": "E18090928",
-          "destination": "BOM",
-          "hxno": null,
-          "jsbzcc": "1",
-          "accounts": "北京鸿运天翔国际货运代理有限公司",
-          "xsr": "曹媛",
-          "flag_date": null,
-          "transtime": null,
-          "isphoto": null,
-          "backcolor": null,
-          "icon": null
-        },
-        {
-          "ydno": "020-51844800",
-          "jcno": "E18090532",
-          "destination": "PHL",
-          "hxno": null,
-          "jsbzcc": "1",
-          "accounts": "北京鸿运天翔国际货运代理有限公司",
-          "xsr": "曹媛",
-          "flag_date": null,
-          "transtime": null,
-          "isphoto": null,
-          "backcolor": null,
-          "icon": null
-        },
-        {
-          "ydno": "125-84099304",
-          "jcno": "E18090409",
-          "destination": "CPT",
-          "hxno": null,
-          "jsbzcc": "1",
-          "accounts": "北京鸿运天翔国际货运代理有限公司",
-          "xsr": "曹媛",
-          "flag_date": null,
-          "transtime": null,
-          "isphoto": null,
-          "backcolor": null,
-          "icon": null
-        },
-        {
-          "ydno": "160-70311706",
-          "jcno": "E18090186",
-          "destination": "BLR",
-          "hxno": null,
-          "jsbzcc": "2",
-          "accounts": "北京鸿运天翔国际货运代理有限公司",
-          "xsr": "曹媛",
-          "flag_date": null,
-          "transtime": null,
-          "isphoto": null,
-          "backcolor": null,
-          "icon": null,
-          "wphw": "危"
-        },
-      ]
+      planList: [],
+      pageNum: 1,
+      pageSize: 10,
+      select_name: '',
     };
 
     computed = {
@@ -127,23 +76,66 @@
     };
 
     methods = {
+      switchDate(showAll){
+        this.showAll = showAll
+
+        if(this.showAll){
+          this.getTodayList(true)
+        }
+      },
       changeSearchDate(evt){
         this.searchDate = evt.detail.value
+        this.getTodayList(true)
       },
-
+      goPlanDetail({jcno}){
+        this.$navigate('/pages/person/planDetail', { jcno });
+      }
     };
 
-    getTodayList(){
-      api.getTodayList().then(
-        res => {
-          console.log(res)
+    getTodayList(replace = false) {
+      this.loadingType = 'loading';
+      this.$apply();
+
+      if(replace){
+        this.pageNum = 1;
+      }
+
+      api.getTodayList({
+        _noLoading: true,
+        query: {
+          page_num: this.pageNum,
+          page_size: this.pageSize,
+          time_use: this.showAll ? '' : this.searchDate,
+          select_name: this.select_name,
+          login_name: wx.getStorageSync('token')
         }
-      )
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            if(replace){
+              this.planList = res.data.data;
+            }else{
+              this.planList = [...this.planList, ...res.data.data];
+            }
+
+            if (res.data.data.length == this.pageSize) {
+              this.loadingType = 'normal';
+            } else {
+              this.loadingType = 'nomore';
+            }
+
+            this.pageNum++;
+            this.$apply();
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
     }
 
     onLoad() {
-      // this.getTodayList()
-      console.log(getCurrentTime(true))
+      this.getTodayList()
+      // console.log(getCurrentTime(true))
     };
   }
 </script>

@@ -105,7 +105,7 @@
 
 <template>
     <view class="plan-list">
-      <view class="plan-item" wx:for="{{list}}">
+      <view class="plan-item" wx:for="{{list}}" @tap="tapItemHandler({{item}})">
         <view class="plan-item-left">
           <block wx:if="{{item.isphoto}}">
             <view>拍</view>
@@ -217,7 +217,11 @@
 
     computed = {};
 
-    methods = {};
+    methods = {
+      tapItemHandler(item){
+        this.$emit('tapItem', item)
+      }
+    };
 
     onLoad() {
     };
