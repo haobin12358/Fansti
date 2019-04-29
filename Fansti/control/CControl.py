@@ -570,3 +570,36 @@ class CControl():
             "message": "搜索成功",
             "data": sbno_list
         }
+
+    def update_wts(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        if "wts_type" not in data.keys():
+            return {
+                "status": 405,
+                "status_code": 405001,
+                "message": "参数缺失"
+            }
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        if data["wts_type"] == "jd":
+            wts = get_model_return_dict(self.sgoods.get_id_by_jcno(args["jcno"]))
+            wts_id = wts["id"]
+            update_wts = self.sgoods.update_wts(wts_id, {
+                "jd_time": datetime.datetime.now(),
+                "ydno": wts["ydno"]
+            })
+            if not update_wts:
+                return SYSTEM_ERROR
+        return {
+            "status": 200,
+            "message": "交单成功"
+        }

@@ -242,3 +242,11 @@ class SGoods(SBase):
             .filter(or_(AIR_HWYS_WTS.jcno.like("%{0}%".format(select_name)), AIR_HWYS_WTS.ydno.like("%{0}%".format(select_name)))) \
             .offset((page_num - 1) * page_size).limit(page_size)\
             .all()
+
+    def update_wts(self, wts_id, wts):
+        self.session.query(AIR_HWYS_WTS).filter_by(id=wts_id).update(wts)
+        self.session.commit()
+        return True
+
+    def get_id_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_WTS.id, AIR_HWYS_WTS.ydno).filter_by(jcno=jcno).first()
