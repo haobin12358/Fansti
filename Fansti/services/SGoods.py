@@ -192,24 +192,29 @@ class SGoods(SBase):
                                   AIR_HWYS_DZJJD.kf_bz, AIR_HWYS_DZJJD.hc_ry, AIR_HWYS_DZJJD.hc_bz)\
             .filter_by(jcno=jcno).first()
 
+    @close_session
     def get_jc_qrd(self, jcno):
         return self.session.query(AIR_HWYS_QRD.id, AIR_HWYS_QRD.jcno, AIR_HWYS_QRD.ydno, AIR_HWYS_QRD.fkdw,
                                   AIR_HWYS_QRD.byzd1,
                                   AIR_HWYS_QRD.byzd3, AIR_HWYS_QRD.curr, AIR_HWYS_QRD.amount, AIR_HWYS_QRD.doc)\
             .filter_by(jcno=jcno).filter_by(byzd1="1").all()
 
+    @close_session
     def get_fkdw(self, company):
         return self.session.query(D_CHARGE_COMPANY.id, D_CHARGE_COMPANY.code, D_CHARGE_COMPANY.company)\
             .filter(D_CHARGE_COMPANY.company.like("%{0}%".format(company))).all()
 
+    @close_session
     def get_fkzl(self, charge_cname):
         return self.session.query(D_CHARGE_TYPE.charge_code, D_CHARGE_TYPE.charge_cname, D_CHARGE_TYPE.d_price)\
             .filter(D_CHARGE_TYPE.charge_cname.like("%{0}%".format(charge_cname))).all()
 
+    @close_session
     def get_ckmxd_wts(self, jcno):
         return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.hwpm, AIR_HWYS_WTS.ydno)\
             .filter_by(jcno=jcno).first()
 
+    @close_session
     def get_ckmxd_abo(self, jcno):
         return self.session.query(AIR_HWYS_CKMXD.warehouse_address, AIR_HWYS_CKMXD.enter_time,
                                   AIR_HWYS_CKMXD.goods_quantity, AIR_HWYS_CKMXD.delivery_unit,
@@ -217,44 +222,67 @@ class SGoods(SBase):
                                   AIR_HWYS_CKMXD.remark)\
             .filter_by(jcno=jcno).first()
 
+    @close_session
     def get_outwarehouse(self, ydno):
         return self.session.query(AIR_HWYS_OUTWAREHOUSE.submitter, AIR_HWYS_OUTWAREHOUSE.submit_time)\
             .filter_by(ydno=ydno).first()
 
+    @close_session
     def get_ingoodyard(self, ydno):
         return self.session.query(AIR_HWYS_INGOODYARD.submitter, AIR_HWYS_INGOODYARD.submit_time)\
             .filter_by(ydno=ydno).first()
 
+    @close_session
     def get_sb_list(self, jcno):
         return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url)\
             .filter_by(jcno=jcno).filter_by(file_type="申报单").all()
 
+    @close_session
     def get_bzsm_list(self, jcno):
         return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url) \
             .filter_by(jcno=jcno).filter_by(file_type="包装明细").all()
 
+    @close_session
     def get_jd_list(self, jcno):
         return self.session.query(AIR_HWYS_DGD_UPLOAD.id, AIR_HWYS_DGD_UPLOAD.file_name, AIR_HWYS_DGD_UPLOAD.file_url) \
             .filter_by(jcno=jcno).filter_by(file_type="鉴定文件").all()
 
+    @close_session
     def get_sbno_list_like_ydno_jcno(self, select_name, page_size, page_num):
         return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination)\
             .filter(or_(AIR_HWYS_WTS.jcno.like("%{0}%".format(select_name)), AIR_HWYS_WTS.ydno.like("%{0}%".format(select_name)))) \
             .offset((page_num - 1) * page_size).limit(page_size)\
             .all()
 
+    @close_session
     def update_wts(self, wts_id, wts):
         self.session.query(AIR_HWYS_WTS).filter_by(id=wts_id).update(wts)
         self.session.commit()
         return True
 
+    @close_session
     def get_id_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_WTS.id, AIR_HWYS_WTS.ydno).filter_by(jcno=jcno).first()
 
+    @close_session
     def update_dzjjd(self, dzjjd_id, dzjjd):
         self.session.query(AIR_HWYS_DZJJD).filter_by(jjd_id=dzjjd_id).update(dzjjd)
         self.session.commit()
         return True
 
+    @close_session
     def get_jjdid_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_DZJJD.jjd_id).filter_by(jcno=jcno).first()
+
+    @close_session
+    def update_qrd_by_id(self, id, qrd):
+        self.session.query(AIR_HWYS_QRD).filter_by(id=id).update(qrd)
+        self.session.commit()
+        return True
+
+    @close_session
+    def delete_qrd_by_id(self, id):
+        qrd = self.session.query(AIR_HWYS_QRD).filter_by(id=id).first()
+        self.session.delete(qrd)
+        self.session.commit()
+        return True

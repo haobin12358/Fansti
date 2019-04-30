@@ -41,7 +41,11 @@ class FSControl(Resource):
         apis = {
             "update_wts": "self.cgoods.update_wts()",
             "update_dzjjd": "self.cgoods.update_dzjjd()",
-            "upload_files": "self.cgoods.upload_files()"
+            "upload_files": "self.cgoods.upload_files()",
+            "add_in": "self.cgoods.add_in()",
+            "retrue_outhc": "self.cgoods.retrue_outhc()",
+            "make_sb": "self.cgoods.make_sb()",
+            "update_qrd": "self.cgoods.update_qrd()"
         }
 
         if control not in apis:
