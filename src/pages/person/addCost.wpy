@@ -25,29 +25,32 @@
 
 <template>
   <view class="add-cost-form">
-    <form @submit="doConfirmCost" @reset="doResetCost" style="position: relative;">
+    <form @submit.stop="doConfirmCost" >
+      <input style="display: none;" name="fkdw" value="{{formData.fkdw}}"/>
+      <input style="display: none;" name="doc" value="{{formData.doc}}"/>
+
       <view class="form-item">
         <view class="label">付款单位</view>
-        <view class="value">
-          <input type="text" name="a" placeholder="请填写该项">
+        <view class="value" @tap="doShowPayUnit">
+          1
         </view>
       </view>
       <view class="form-item">
         <view class="label">费用种类</view>
         <view class="value">
-          <input type="text" name="b" placeholder="请填写该项">
+          <input type="text" name="b" placeholder="请填写该项"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">单价</view>
         <view class="value">
-          <input type="text" name="c" placeholder="请填写该项">
+          <input type="text" name="c" placeholder="请填写该项"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">数量</view>
         <view class="value">
-          <input type="text" name="d" placeholder="请填写该项">
+          <input type="text" name="d" placeholder="请填写该项"/>
         </view>
       </view>
 
@@ -56,36 +59,88 @@
         <button class="button" form-type="submit">确定</button>
       </view>
     </form>
+
+    <searchList :show.sync="showPayUnit" :list.sync="payUnitList" title="付款单位搜索"
+                @select.user="doChangePayUnit"></searchList>
+    <!--<indexList :show.sync="showPayUnit" :list.sync="payUnitList"></indexList>-->
+
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import searchList from '@/components/searchList';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class AddCost extends wepy.page {
     config = {};
 
-    components = {};
+    components = {
+      searchList
+    };
 
     data = {
       isEdit: false,
-      detail: {
+      formData: {
+        id: '',
+        doc: '',
+        curr: '',
+        amount: '',
+        fkdw: ''
+      },
 
-      }
+      showPayUnit: false,
+      payUnitList: [],
+      selectPayUnit: {}
     };
 
     computed = {};
 
     methods = {
-      doResetCost(){
-        console.log('重置')
+      doShowPayUnit(){
+        console.log('显示单位搜索')
+        this.showPayUnit = true
       },
-      doConfirmCost(){
-        console.log('提交')
-      }
+      doChangePayUnit(item){
+        this.formData.fkdw = item.id;
+      },
+
+      doResetCost() {
+        console.log('重置');
+      },
+      doConfirmCost() {
+        console.log('提交');
+      },
+
     };
 
+    getUnit() {
+      api.getFkdw({
+        query: {
+          fkdw: ''
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            for(let i = 0, length = data.length; i < length; i++) {
+              data[i].label = data[i].code + '-' + data[i].company
+            }
+
+            this.payUnitList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
     onLoad(params, data) {
+      this.getUnit()
+
       if(data.preload){
         this.isEdit = true
         this.detail = data.preload.detail

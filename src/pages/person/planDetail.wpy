@@ -5,8 +5,6 @@
   .container {
     padding-top: 20rpx;
     padding-bottom: 180rpx;
-    border-top: 1px solid @mainBlueColor;
-
 
     /*详情*/
     .detail{
@@ -70,28 +68,31 @@
 
       .delivery-receipt-bd{
         // 电子交接单,两列
-        .row{
-          display: flex;
-          .fz(24rpx);
 
-          .form-item{
-            flex: 1;
-
+        .detail-form{
+          .row{
             display: flex;
+            .fz(24rpx);
 
-            .label{
-              padding-right: 10rpx;
-              color: #999999;
-              flex: .8;
-              text-align: right;
-            }
-
-            .value{
-              text-align: left;
-              color: #333333;
+            .form-item{
               flex: 1;
-              padding-left: 14rpx;
-              /*word-break: break-all;*/
+
+              display: flex;
+
+              .label{
+                padding-right: 10rpx;
+                color: #999999;
+                flex: .8;
+                text-align: right;
+              }
+
+              .value{
+                text-align: left;
+                color: #333333;
+                flex: 1;
+                padding-left: 14rpx;
+                /*word-break: break-all;*/
+              }
             }
           }
         }
@@ -115,14 +116,28 @@
             }
           }
         }
+
+        /*提交 不要在form内使用公共样式,建议单独写*/
+        .del-rec-confirm-form{
+          padding: 20rpx 25rpx;
+          position: relative;
+
+          .row{
+            .label{
+              color: #999999;
+              margin-bottom: 10rpx;
+            }
+
+            .content{
+              .textarea-remark{
+                min-height: 100rpx;
+              }
+            }
+          }
+        }
       }
 
-      .textarea-remark{
-        padding: 5rpx;
-        min-height: 100rpx;
-        border: 1rpx solid gray;
-        border-radius: 10rpx;
-      }
+
     }
 
     /*照片*/
@@ -297,6 +312,7 @@
         <view class="button">提交交单时间</view>
       </view>
     </view>
+
     <!--电子交接单-->
     <view class="delivery-receipt"  wx:if="{{1 == activeName}}">
       <view class="delivery-receipt-hd">
@@ -305,94 +321,96 @@
       </view>
 
       <view class="delivery-receipt-bd">
-        <view class="row">
-          <view class="form-item">
-            <view class="label">库房确认时间:</view>
-            <view class="value">{{deliveryReceipt.kfqr_date || '暂无'}}</view>
+        <view class="detail-form">
+          <view class="row">
+            <view class="form-item">
+              <view class="label">库房确认时间:</view>
+              <view class="value">{{deliveryReceipt.kfqr_date || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">货场确认时间:</view>
+              <view class="value">{{deliveryReceipt.hcqr_date || '暂无'}}</view>
+            </view>
           </view>
-          <view class="form-item">
-            <view class="label">货场确认时间:</view>
-            <view class="value">{{deliveryReceipt.hcqr_date || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">客服:</view>
+              <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">操作人:</view>
+              <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
+            </view>
           </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">客服:</view>
-            <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">入库交接单:</view>
+              <view class="value">{{deliveryReceipt.rkd_flag || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">无货转库房:</view>
+              <view class="value">{{deliveryReceipt.ungoods_flag || '暂无'}}</view>
+            </view>
           </view>
-          <view class="form-item">
-            <view class="label">操作人:</view>
-            <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">随机文件:</view>
+              <view class="value">{{deliveryReceipt.sjwj_flag || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">随货文件:</view>
+              <view class="value">{{deliveryReceipt.goods_file || '暂无'}}</view>
+            </view>
           </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">入库交接单:</view>
-            <view class="value">{{deliveryReceipt.rkd_flag || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">托盘材质:</view>
+              <view class="value">{{deliveryReceipt.tp_mass || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">货物状态:</view>
+              <view class="value">{{deliveryReceipt.state_goods || '暂无'}}</view>
+            </view>
           </view>
-          <view class="form-item">
-            <view class="label">无货转库房:</view>
-            <view class="value">{{deliveryReceipt.ungoods_flag || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">托盘尺寸:</view>
+              <view class="value">{{deliveryReceipt.tp_size || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">温度区间:</view>
+              <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
+            </view>
           </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">随机文件:</view>
-            <view class="value">{{deliveryReceipt.sjwj_flag || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">加冰种类:</view>
+              <view class="value">{{deliveryReceipt.ice_type || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">打托盘:</view>
+              <view class="value">{{deliveryReceipt.dtp || '暂无'}}</view>
+            </view>
           </view>
-          <view class="form-item">
-            <view class="label">随货文件:</view>
-            <view class="value">{{deliveryReceipt.goods_file || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">加冰处理:</view>
+              <view class="value">{{deliveryReceipt.is_ice || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">加冰用量:</view>
+              <view class="value">{{deliveryReceipt.ice_num || '暂无'}}</view>
+            </view>
           </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">托盘材质:</view>
-            <view class="value">{{deliveryReceipt.tp_mass || '暂无'}}</view>
-          </view>
-          <view class="form-item">
-            <view class="label">货物状态:</view>
-            <view class="value">{{deliveryReceipt.state_goods || '暂无'}}</view>
-          </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">托盘尺寸:</view>
-            <view class="value">{{deliveryReceipt.tp_size || '暂无'}}</view>
-          </view>
-          <view class="form-item">
-            <view class="label">温度区间:</view>
-            <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
-          </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">加冰种类:</view>
-            <view class="value">{{deliveryReceipt.ice_type || '暂无'}}</view>
-          </view>
-          <view class="form-item">
-            <view class="label">打托盘:</view>
-            <view class="value">{{deliveryReceipt.dtp || '暂无'}}</view>
-          </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">加冰处理:</view>
-            <view class="value">{{deliveryReceipt.is_ice || '暂无'}}</view>
-          </view>
-          <view class="form-item">
-            <view class="label">加冰用量:</view>
-            <view class="value">{{deliveryReceipt.ice_num || '暂无'}}</view>
-          </view>
-        </view>
-        <view class="row">
-          <view class="form-item">
-            <view class="label">内唛头:</view>
-            <view class="value">{{deliveryReceipt.in_mark || '暂无'}}</view>
-          </view>
-          <view class="form-item">
-            <view class="label">外唛头:</view>
-            <view class="value">{{deliveryReceipt.out_mark || '暂无'}}</view>
+          <view class="row">
+            <view class="form-item">
+              <view class="label">内唛头:</view>
+              <view class="value">{{deliveryReceipt.in_mark || '暂无'}}</view>
+            </view>
+            <view class="form-item">
+              <view class="label">外唛头:</view>
+              <view class="value">{{deliveryReceipt.out_mark || '暂无'}}</view>
+            </view>
           </view>
         </view>
 
@@ -413,6 +431,7 @@
             <view class="cell">{{deliveryReceipt.bzpm || '暂无'}}</view>
           </view>
         </view>
+
         <view class="form-section-title">
           文件
         </view>
@@ -431,32 +450,37 @@
         <view class="form-section-title">
           提交
         </view>
-        <view class="two-column-center-table">
-          <view class="row">
-            <view class="cell">
-              库房人员:
+        <form @submit="confirmDeliveryReceipt">
+          <view class="two-column-center-table">
+            <view class="row">
+              <view class="cell">
+                库房人员:
+              </view>
+              <view class="cell">
+                <textarea class="textarea-remark" name="kf_bz"
+                          auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
+              </view>
             </view>
-            <view class="cell">
-              <textarea class="textarea-remark" auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
+            <view class="row">
+              <view class="cell">
+                货场人员:
+              </view>
+              <view class="cell">
+                <textarea class="textarea-remark" name="hc_bz"
+                          auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
+              </view>
             </view>
           </view>
-          <view class="row">
-            <view class="cell">
-              货场人员:
-            </view>
-            <view class="cell">
-              <textarea class="textarea-remark" auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
-            </view>
+
+          <view class="btn-wrap">
+            <button class="button" form-type="submit" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
+            <button class="button" form-type="submit" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
           </view>
-        </view>
+        </form>
 
-      </view>
-
-      <view class="btn-wrap">
-        <view class="button" wx:if="{{deliveryReceipt.kf_button == 1}}" @tap="storeConfirm">库房确认</view>
-        <view class="button" wx:if="{{deliveryReceipt.hc_button == 1}}" @tap="storeConfirm">货场确认</view>
       </view>
     </view>
+
     <!--照片-->
     <view class="photo" wx:if="{{2 == activeName}}">
       <view class="photo-item" @tap="goAddPhoto">
@@ -464,7 +488,7 @@
           入仓照片
         </view>
         <view class="num">
-          5
+          {{photoList.in && photoList.in.length}}
         </view>
       </view>
       <view class="photo-item" @tap="goAddPhoto">
@@ -472,7 +496,7 @@
           出仓照片
         </view>
         <view class="num">
-          5
+          {{photoList.out && photoList.out.length}}
         </view>
       </view>
       <view class="photo-item" @tap="goAddPhoto">
@@ -480,7 +504,7 @@
           称重照片
         </view>
         <view class="num">
-          5
+          {{photoList.weight && photoList.weight.length}}
         </view>
       </view>
       <view class="photo-item disable" @tap="goAddPhoto">
@@ -488,7 +512,7 @@
           备用
         </view>
         <view class="num">
-          0
+          {{photoList.by && photoList.by.length}}
         </view>
       </view>
     </view>
@@ -496,24 +520,38 @@
     <view class="cost" wx:if="{{3 == activeName}}">
       <view>
         <view class="cost-hd">
-          <view>进仓号：123456</view>
-          <view>运单号：123456</view>
+          <view>进仓号：{{cost.jcno}}</view>
+          <view>运单号：{{cost.ydno}}</view>
         </view>
         <view class="two-column-center-table" style="font-size: 26rpx!important;">
           <view class="row">
             <view class="cell">公司：</view>
-            <view class="cell">中赤化阿三丹萨</view>
+            <view class="cell">{{cost.company}}</view>
           </view>
           <view class="row">
             <view class="cell">总价：</view>
-            <view class="cell" @tap="doEditCost">2200</view>
+            <view class="cell">
+              <view wx:for="{{cost.price}}" style="border: 1px solid gray;margin-bottom: 20rpx;" class="two-column-center-table">
+                <view class="row" style="">
+                  <view class="cell">种类</view>
+                  <view class="cell">{{item.doc}}</view>
+                </view>
+                <view class="row">
+                  <view class="cell">单价</view>
+                  <view class="cell">{{item.curr}}</view>
+                </view>
+                <view class="row">
+                  <view class="cell">数量</view>
+                  <view class="cell">{{item.amount}}</view>
+                </view>
+              </view>
+            </view>
           </view>
         </view>
-        <view class="btn-wrap" style="margin-top: 500rpx;">
+        <view class="btn-wrap" style="margin-top: 200rpx;">
           <view class="button" @tap="doAddCost">添加成本</view>
         </view>
       </view>
-
     </view>
 
 
@@ -546,7 +584,12 @@
 
       planDetail: {},
       deliveryReceipt: {},
-      photoList: [],
+      photoList: {
+        in: {},
+        out: {},
+        weight: {},
+        by: {},
+      },
       cost: {}
     };
 
@@ -558,12 +601,16 @@
         wx.setNavigationBarTitle({
           title: this.tabs[this.activeName]
         });
+
+        this.refreshTab()
       },
 
       // 详情
 
 
-      storeConfirm(){
+      confirmDeliveryReceipt(){
+        console.log('提交')
+        return
         wx.scanCode({
           scanType: 'barCode'
         })
@@ -630,13 +677,48 @@
         }
       );
     }
+    // 获取电子交接单
+    getPhotos(){
+      api.getJcPic({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
 
+            this.photoList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+    // 获取电子交接单
+    getCost(){
+      api.getJcCb({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
 
-    onShow() {
-      wx.setNavigationBarTitle({
-        title: this.tabs[this.activeName]
-      })
+            this.cost = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
 
+    refreshTab(){
       switch (this.activeName) {
         case 0:
           this.getPlanDetail()
@@ -644,8 +726,21 @@
         case 1:
           this.getDeliveryReceipt()
           return
-
+        case 2:
+          this.getPhotos()
+          return
+        case 3:
+          this.getCost()
+          return
       }
+    }
+
+    onShow() {
+      wx.setNavigationBarTitle({
+        title: this.tabs[this.activeName]
+      })
+
+      this.refreshTab()
     };
 
     onLoad(params){

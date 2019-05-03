@@ -60,11 +60,11 @@
 
 <template>
   <view class="container">
-    <form @submit="doSearch">
+    <form @submit="doSearch" style="position: relative;">
       <view class="search-bar">
         <view class="input-wrap">
           <image class="search-icon" src="../../images/search.png"></image>
-          <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港">
+          <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港" />
         </view>
         <button class="type-blue" form-type="submit">搜索</button>
       </view>

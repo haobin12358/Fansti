@@ -76,7 +76,7 @@
       <view class="search-bar">
         <view class="input-wrap">
           <image class="search-icon" src="../../images/search.png"></image>
-          <input type="text" name="query" placeholder="请输入运单号/进仓编号">
+          <input type="text" name="query" placeholder="请输入运单号/进仓编号"/>
         </view>
         <button class="type-blue" form-type="submit">搜索</button>
       </view>

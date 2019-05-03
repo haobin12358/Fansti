@@ -76,49 +76,49 @@
       <view class="form-item">
         <view class="label">库房存放地</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">进仓时间</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">件数</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">送货单位</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">重量</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">货物尺寸</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">客户名称</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">备注</view>
         <view class="value">
-          <input placeholder="请填写">
+          <input placeholder="请填写"/>
         </view>
       </view>
       <view class="form-item photo">

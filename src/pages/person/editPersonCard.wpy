@@ -155,7 +155,8 @@
             <view class="introduce-item-title">
               <image class="title-img title-img-people" src="../../images/people.png"></image>
               <view class="title-text">资深工匠</view>
-              <input type="text" cursor-spacing="20"  class="input-title-name" style="" value="{{cardInfo.user_name ? cardInfo.user_name : ''}}" name="user_name"/>
+              <input type="text" cursor-spacing="20" class="input-title-name" style=""
+                     value="{{cardInfo.user_name ? cardInfo.user_name : ''}}" name="user_name"/>
             </view>
           </view>
           <!--经验擅长-->
@@ -171,7 +172,8 @@
                 <view class="detail-text-hd">
                   从业经验：
                 </view>
-                <input type="number" cursor-spacing="20" value="{{cardInfo.work_year? cardInfo.work_year : ''}}" name="work_year" style="width: 100rpx"/>
+                <input type="number" cursor-spacing="20" value="{{cardInfo.work_year? cardInfo.work_year : ''}}"
+                       name="work_year" style="width: 100rpx"/>
                 <view class="detail-text-ft">
                   年
                 </view>
