@@ -181,13 +181,13 @@
               <view class="label">
                 货物尺寸
               </view>
-              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
+              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;"/>
             </view>
             <view class="form-item">
               <view class="label">
                 UN号
               </view>
-              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;">
+              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;"/>
             </view>
           </view>
         </view>

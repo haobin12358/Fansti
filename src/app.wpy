@@ -1,6 +1,5 @@
 <style lang="less">
   @import "./styles/base";
-  /*@import "./styles/colorui";*/
 </style>
 
 <script>

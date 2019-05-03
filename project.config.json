@@ -12,5 +12,7 @@
 	"projectname": "%E6%B3%9B%E6%80%9D%E7%89%B9%20%E5%A4%96%E9%83%A8",
 	"miniprogramRoot": "dist/",
 	"libVersion": "2.6.2",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {}
 }
