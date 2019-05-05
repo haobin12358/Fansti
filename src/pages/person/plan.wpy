@@ -133,9 +133,14 @@
       );
     }
 
+    onReachBottom() {
+      if(this.loadingType != 'nomore'){
+        this.getTodayList();
+      }
+    }
+
     onLoad() {
       this.getTodayList()
-      // console.log(getCurrentTime(true))
     };
   }
 </script>

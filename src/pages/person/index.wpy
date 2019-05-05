@@ -95,7 +95,7 @@
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('plane')">
+      <view class="list-item" @tap="handleRedirect('declare')">
         <view class="item-hd">
           申报上传
         </view>
@@ -153,6 +153,9 @@
             break;
           case 'yardReceive':
             this.scanToReceive();
+            break;
+          case 'declare':
+            this.$navigate('/pages/person/declare');
             break;
 
           case 'share':

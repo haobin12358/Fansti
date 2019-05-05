@@ -44,22 +44,26 @@
         padding: 25rpx;
         margin-bottom: 25rpx;
         border: 1px solid #DFDFDF;
+        border-radius: 10rpx;
 
         .row{
-          .fj();
+          display: flex;
 
           &:first-child{
             margin-bottom: 25rpx;
           }
 
           .column{
-            flex: 1;
-            .fj(flex-start);
+            display: flex;
+
+            &:first-child{
+              width: 55%;
+            }
 
             .label{
+              width: 150rpx;
               image{
                 .wl(30rpx, 25rpx);
-                margin-right: 10rpx;
               }
             }
           }
@@ -83,7 +87,7 @@
     </form>
 
     <view class="declare-list">
-      <view class="declare-item">
+      <view class="declare-item" wx:for="{{list}}">
         <view class="row">
           <view class="column">
             <view class="label">
@@ -91,7 +95,7 @@
               <text>进仓号：</text>
             </view>
             <view class="value">
-              {{'暂无'}}
+              {{item.jcno || '暂无'}}
             </view>
           </view>
           <view class="column">
@@ -100,7 +104,7 @@
               <text>操作人：</text>
             </view>
             <view class="value">
-              {{'暂无'}}
+              {{item.xzr || '暂无'}}
             </view>
           </view>
         </view>
@@ -111,7 +115,7 @@
               <text space="emsp">运单号：</text>
             </view>
             <view class="value">
-              {{'暂无'}}
+              {{item.ydno || '暂无'}}
             </view>
           </view>
           <view class="column">
@@ -120,35 +124,97 @@
               <text>目的港：</text>
             </view>
             <view class="value">
-              {{'暂无'}}
+              {{item.destination || '暂无'}}
             </view>
           </view>
         </view>
-
       </view>
     </view>
+    <load-more :type.sync="loadingType"></load-more>
+
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import LoadMore from '@/components/common/loadMore';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class Declare extends wepy.page {
     config = {};
 
-    components = {};
+    components = {
+      'load-more': LoadMore
+    };
 
-    data = {};
+    data = {
+      select_name: '',
+
+      loadingType: 'normal', // 加载状态
+      pageNum: 1,
+      pageSize: 10,
+      list: []
+    };
 
     computed = {};
 
     methods = {
       doSearch(evt){
+        let {query} = evt.detail.value
 
+        this.select_name = query
+        this.getList(true)
       }
     };
 
+    getList(replace = false) {
+      this.loadingType = 'loading';
+      this.$apply();
+
+      if(replace){
+        this.pageNum = 1;
+      }
+
+      api.getSbnoList({
+        _noLoading: true,
+        query: {
+          page_num: this.pageNum,
+          page_size: this.pageSize,
+          select_name: this.select_name,
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            if(replace){
+              this.list = res.data.data;
+            }else{
+              this.list = [...this.list, ...res.data.data];
+            }
+
+            if (res.data.data.length == this.pageSize) {
+              this.loadingType = 'normal';
+            } else {
+              this.loadingType = 'nomore';
+            }
+
+            this.pageNum++;
+            this.$apply();
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
+    onReachBottom() {
+      if(this.loadingType != 'nomore') {
+        this.getList();
+      }
+    }
+
     onLoad() {
+      this.getList(true)
     };
   }
 </script>
