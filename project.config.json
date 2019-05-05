@@ -11,7 +11,7 @@
 	"appid": "wxd1facdac814bb86f",
 	"projectname": "fastii",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.6.2",
+	"libVersion": "2.6.6",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {}

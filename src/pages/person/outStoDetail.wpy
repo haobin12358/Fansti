@@ -28,36 +28,35 @@
     <view class="container-hd">
       <view class="row">
         <view class="cell">
-          进仓号：<text class="value" style="margin-left: 1em;">123456</text>
+          进仓号：<text class="value" style="margin-left: 1em;">{{res.jcno}}</text>
         </view>
         <view class="cell">
-          运单号：<text class="value">123456</text>
+          运单号：<text class="value">{{res.ydno}}</text>
         </view>
       </view>
       <view class="row">
         <view class="cell">
-          业务员：<text class="value" style="margin-left: 1em;">某某某</text>
+          业务员：<text class="value" style="margin-left: 1em;">{{res.czr}}</text>
         </view>
       </view>
       <view class="row">
         <view class="cell">
-          货物品名：<text class="value">xxxxxx</text>
+          货物品名：<text class="value">{{res.hwpm}}</text>
         </view>
       </view>
-
     </view>
       <view class="two-column-center-table">
         <view class="row">
           <view class="cell">出仓确认人：</view>
-          <view class="cell">某某</view>
+          <view class="cell">{{res.submitter || ''}}</view>
         </view>
         <view class="row">
           <view class="cell">出仓确认时间：</view>
-          <view class="cell">2018-12-11 19:22:@2</view>
+          <view class="cell">{{res.submit_time || ''}}</view>
         </view>
       </view>
 
-    <view class="btn-wrap" style="margin-top: 500rpx">
+    <view wx:if="{{res.is_button == 1}}" class="btn-wrap" style="margin-top: 500rpx">
       <view class="button">出库确认</view>
     </view>
   </view>
@@ -71,13 +70,16 @@
 
     components = {};
 
-    data = {};
+    data = {
+      res: {}
+    };
 
     computed = {};
 
     methods = {};
 
-    onLoad() {
-    };
+    onLoad(params, data) {
+      this.res = data.preload.res;
+    }
   }
 </script>

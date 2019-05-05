@@ -25,32 +25,32 @@
 
 <template>
   <view class="add-cost-form">
-    <form @submit.stop="doConfirmCost" >
+    <form @submit.stop="doConfirmCost" @reset="doResetCost">
       <input style="display: none;" name="fkdw" value="{{formData.fkdw}}"/>
       <input style="display: none;" name="doc" value="{{formData.doc}}"/>
 
-      <view class="form-item">
+      <view class="form-item" @tap="doShowPayUnit">
         <view class="label">付款单位</view>
-        <view class="value" @tap="doShowPayUnit">
-          1
+        <view class="value">
+          {{formData.fkdw || '请选择'}}
         </view>
       </view>
-      <view class="form-item">
+      <view class="form-item" @tap="doShowFeeType">
         <view class="label">费用种类</view>
         <view class="value">
-          <input type="text" name="b" placeholder="请填写该项"/>
+          {{formData.doc || '请选择'}}
         </view>
       </view>
       <view class="form-item">
         <view class="label">单价</view>
         <view class="value">
-          <input type="text" name="c" placeholder="请填写该项"/>
+          <input type="text" value="{{formData.curr}}" name="curr" placeholder="请填写该项"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">数量</view>
         <view class="value">
-          <input type="text" name="d" placeholder="请填写该项"/>
+          <input type="text" value="{{formData.amount}}" name="amount" placeholder="请填写该项"/>
         </view>
       </view>
 
@@ -62,7 +62,8 @@
 
     <searchList :show.sync="showPayUnit" :list.sync="payUnitList" title="付款单位搜索"
                 @select.user="doChangePayUnit"></searchList>
-    <!--<indexList :show.sync="showPayUnit" :list.sync="payUnitList"></indexList>-->
+    <searchList2 :show.sync="showFeeType" :list.sync="feeTypeList" title="费用种类搜索"
+                @select.user="doChangeFeeType"></searchList2>
 
   </view>
 </template>
@@ -77,10 +78,13 @@
     config = {};
 
     components = {
-      searchList
+      searchList,
+      searchList2: searchList,
     };
 
     data = {
+      val: '初始值',
+
       isEdit: false,
       formData: {
         id: '',
@@ -92,25 +96,57 @@
 
       showPayUnit: false,
       payUnitList: [],
-      selectPayUnit: {}
+      selectPayUnit: {},
+
+      showFeeType: false,
+      feeTypeList: [],
+      selectFeeType: {},
     };
 
     computed = {};
 
     methods = {
       doShowPayUnit(){
-        console.log('显示单位搜索')
         this.showPayUnit = true
       },
       doChangePayUnit(item){
-        this.formData.fkdw = item.id;
+        this.formData.fkdw = item.label;
       },
 
-      doResetCost() {
-        console.log('重置');
+      doShowFeeType(){
+        this.showFeeType = true
       },
-      doConfirmCost() {
-        console.log('提交');
+      doChangeFeeType(item){
+        this.formData.doc = item.label;
+        this.formData.curr = item.d_price
+      },
+
+
+      doResetCost() {
+        this.formData.fkdw = ''
+        this.formData.doc = ''
+      },
+      doConfirmCost(evt) {
+        let formData = evt.detail.value
+
+        if(!formData.fkdw){
+          tip.alert('请选择付款单位')
+          return
+        }
+        if(!formData.doc){
+          tip.alert('请选择费用种类')
+          return
+        }
+        if(!formData.curr){
+          tip.alert('请填写单价')
+          return
+        }
+        if(!formData.amount){
+          tip.alert('请填写数量')
+          return
+        }
+
+
       },
 
     };
@@ -126,7 +162,7 @@
             let data = res.data.data;
 
             for(let i = 0, length = data.length; i < length; i++) {
-              data[i].label = data[i].code + '-' + data[i].company
+              data[i].label = data[i].code + data[i].company
             }
 
             this.payUnitList = data
@@ -137,9 +173,33 @@
         }
       );
     }
+    getFeeType() {
+      api.getFyzl({
+        query: {
+          fyzl: ''
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            for(let i = 0, length = data.length; i < length; i++) {
+              data[i].label = data[i].charge_code + data[i].charge_cname
+            }
+
+            this.feeTypeList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
 
     onLoad(params, data) {
       this.getUnit()
+      this.getFeeType()
 
       if(data.preload){
         this.isEdit = true

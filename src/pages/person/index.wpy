@@ -77,19 +77,19 @@
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('plane')">
+      <view class="list-item" @tap="handleRedirect('insto')">
         <view class="item-hd">
           扫码入库
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('plane')">
+      <view class="list-item" @tap="handleRedirect('outsto')">
         <view class="item-hd">
           扫码出库
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('plane')">
+      <view class="list-item" @tap="handleRedirect('yardReceive')">
         <view class="item-hd">
           货场接收
         </view>
@@ -115,6 +115,7 @@
 <script>
   import wepy from 'wepy';
   import tip from '@/utils/tip';
+  import api from '@/api/api';
   import BindingMixin from '@/mixins/bindingMixin';
   import { getRandomContent } from '@/utils/util';
 
@@ -144,6 +145,16 @@
           case 'plan':
             this.$navigate('/pages/person/plan');
             break;
+          case 'insto':
+            this.scanToInSto();
+            break;
+          case 'outsto':
+            this.scanToOutSto();
+            break;
+          case 'yardReceive':
+            this.scanToReceive();
+            break;
+
           case 'share':
             this.$navigate('/pages/person/personCard');
             break;
@@ -151,6 +162,103 @@
         }
       }
     };
+
+    scanToInSto() {
+      let that = this
+
+      wx.scanCode({
+        success(res){
+          // let jcno = res.result; todo
+          let jcno = 'E15060029';
+
+          api.getInAbo({
+            query: {
+              jcno,
+              login_name: wx.getStorageSync('token')
+            }
+          }).then(
+            res => {
+              if (res.data.status == 200) {
+                let data = res.data.data;
+
+                that.$preload('res', data);
+                that.$navigate('/pages/person/inStoDetail')
+              } else {
+                tip.alert(res.data.message);
+              }
+            }
+          );
+        },
+        fail(){
+          tip.confirm('是否需要手动输入进仓号?', true).then()
+        }
+      })
+    }
+    scanToOutSto() {
+      let that = this
+
+      wx.scanCode({
+        success(res){
+          // let jcno = res.result; todo
+          let jcno = 'E15060029';
+
+          api.getOutAbo({
+            query: {
+              jcno,
+              login_name: wx.getStorageSync('token')
+            }
+          }).then(
+            res => {
+              if (res.data.status == 200) {
+                let data = res.data.data;
+
+                that.$preload('res', data);
+                that.$navigate('/pages/person/outStoDetail')
+              } else {
+                tip.alert(res.data.message);
+              }
+            }
+          );
+        },
+        fail() {
+          tip.confirm('是否需要手动输入进仓号?', true).then();
+        }
+      })
+    }
+    // 货场接收
+    scanToReceive() {
+      let that = this;
+
+      wx.scanCode({
+        success(res) {
+          // let jcno = res.result; todo
+          let jcno = 'E15060029';
+
+          api.getHcAbo({
+            query: {
+              jcno,
+              login_name: wx.getStorageSync('token')
+            }
+          }).then(
+            res => {
+              if (res.data.status == 200) {
+                let data = res.data.data;
+
+                that.$preload('res', data);
+                that.$navigate('/pages/person/goodsYardReceive');
+              } else {
+                tip.alert(res.data.message);
+              }
+            }
+          );
+        },
+        fail() {
+          tip.confirm('是否需要手动输入进仓号?', true).then();
+        }
+      });
+    }
+
+
 
     onShareAppMessage() {
       return getRandomContent();

@@ -80,14 +80,15 @@
               display: flex;
 
               .label{
+                padding-left: 10rpx;
                 padding-right: 10rpx;
                 color: #999999;
                 flex: .8;
-                text-align: right;
+                /*text-align: justify;*/
+                /*text-align-last: justify;*/
               }
 
               .value{
-                text-align: left;
                 color: #333333;
                 flex: 1;
                 padding-left: 14rpx;

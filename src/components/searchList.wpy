@@ -143,7 +143,7 @@
       doSearch(evt) {
         let { query } = evt.detail.value;
 
-        this.showList = this.list.filter(item => item.label.indexOf(query) > -1);
+        this.showList = this.list.filter(item => item.label.toLowerCase().indexOf(query.trim().toLowerCase()) > -1);
       },
 
       select(item){

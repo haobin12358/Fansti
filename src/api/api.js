@@ -23,6 +23,8 @@ const getCJdList = params => wxRequest(params, host + `/control/get_jd_list`);
 const getSbnoList = params => wxRequest(params, host + `/control/get_sbno_list`);
 const updateWts = params => wxRequest(params, host + `/control/update_wts`); // post
 
+const uploadFiles = params => wxRequest(params, host + `/control/upload_files`); // post 上传文件
+
 
 //  绑定用户  POST
 const userBinding = params => wxRequest(params, host + '/users/user_binding');
@@ -129,4 +131,5 @@ export default {
   getCJdList,
   getSbnoList,
   updateWts,
+  uploadFiles,
 };
