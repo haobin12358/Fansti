@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, create_engine, Integer, String, Text, Float, DATE, DATETIME
+from sqlalchemy.dialects.oracle import NUMBER
 from Fansti.config import dbconfig as cfg
 import datetime
 
@@ -32,6 +33,7 @@ class D_MESSAGE_USER(Base):
     login_url = Column(String(200))             # 免登陆URL
     create_time = Column(DATE)                  # 创建时间
     create_user = Column(String(40))            # 创建人
+    location = Column(String(40))               # 区域标识
 
 class AIR_HWYS_WTS(Base):
     __tablename__ = "AIR_HWYS_WTS"
@@ -583,6 +585,63 @@ class AIR_HWYS_DGD_UPLOAD_BAK(Base):
     upload_id = Column(String(100))                 # upload关联id
     delete_time = Column(DATE)                      # 文件删除时间
     delete_user = Column(String(100))               # 文件删除人
+
+class AIR_HWYS_PACK_ROYALTY(Base):
+    __tablename__ = "AIR_HWYS_PACK_ROYALTY"
+    id = Column(String(200), primary_key=True)
+    jcno = Column(String(20))                       # 进仓单号
+    packer_leader = Column(String(40))              # 包装负责热
+    packer = Column(String(40))                     # 包装人员
+    royalty_rate = Column(String(20))               # 提成比例
+    create_date = Column(DATE)                      # 创建时间
+    create_user = Column(String(40))                # 创建者
+    packer_confrim = Column(String(20))             # 包装人员确认标识
+    packer_ok = Column(String(20))                  # 包装人员包装宝成标识
+
+class AIR_HWYS_ENQUIRY(Base):
+    __tablename__ = "AIR_HWYS_ENQUIRY"
+    id = Column(String(200), primary_key=True)
+    departure = Column(String(50))                  # 起运地
+    destination = Column(String(50))                # 目的地
+    company = Column(String(100))                   # 航空公司
+    pwkh = Column(String(20))                       # 普货危品客机货机，GEN普货PAX危品客机CAO危品货机
+    usetime = Column(String(100))                   # 有效期
+    weight_m = Column(String(50))                   # M
+    weight_m_custom = Column(String(50))            # M对应客户价格
+    weight_n = Column(String(50))                   # N
+    weight_n_custom = Column(String(50))            # N对应客户价格
+    weight_q45 = Column(String(50))                 # Q45
+    weight_q45_custom = Column(String(50))          # Q45对应客户价格
+    weight_q100 = Column(String(50))                # Q100
+    weight_q100_custom = Column(String(50))         # Q100对应客户价格
+    weight_q300 = Column(String(50))                # Q300
+    weight_q300_custom = Column(String(50))         # Q300对应客户价格
+    weight_q500 = Column(String(50))                # Q500
+    weight_q500_custom = Column(String(50))         # Q500对应客户价格
+    weight_q1000 = Column(String(50))               # Q1000
+    weight_q1000_custom = Column(String(50))        # Q1000对应客户价格
+    gtyt = Column(String(50))                       # 固体液体
+    fuel = Column(String(50))                       # 燃油费用
+    fuel_min = Column(String(50))                   # 燃油费用最低
+    safe = Column(String(50))                       # 安全费用
+    safe_min = Column(String(50))                   # 安全费用最低
+    awb = Column(String(50))                        # awb
+    attach = Column(String(50))                     # 附加费用
+    attach_min = Column(String(50))                 # 附加费用最低
+    remarks = Column(String(2000))                  # 备注
+
+class D_ACCOUNTS(Base):
+    __tablename__ = "D_ACCOUNTS"
+    id = Column(NUMBER(10), primary_key=True)
+    accounts_code = Column(String(20))              # 公司code
+    accounts_name = Column(String(100))             # 公司名称
+    b_airway = Column(NUMBER(10))                   # 需要判断值为“1”
+
+class D_PORT(Base):
+    __tablename__ = "D_PORT"
+    port_code = Column(String(20), primary_key=True)# 目的地code
+    port_cname = Column(String(50))                 # 目的地名称
+    port_aircode = Column(String(20))               # 需要判断非空
 
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)

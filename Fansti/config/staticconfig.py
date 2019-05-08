@@ -68,6 +68,41 @@ TACT_DB_TO_EXCEL = {
 
 TACT_KEYS = ["城市名", "三字码", "州名", "中文名称及地理位置", "国家", "运费"]
 
+ENQUIRY_DB_TO_EXCEL = {
+    "departure": "起运地",
+    "destination": "目的地",
+    "company": "航空公司",
+    "pwkh": "普危客货",
+    "usetime": "有效期",
+    "weight_m": "M",
+    "weight_m_custom": "M客户",
+    "weight_n": "N",
+    "weight_n_custom": "N客户",
+    "weight_q45": "Q45",
+    "weight_q45_custom": "Q45客户",
+    "weight_q100": "Q100",
+    "weight_q100_custom": "Q100客户",
+    "weight_q300": "Q300",
+    "weight_q300_custom": "Q300客户",
+    "weight_q500": "Q500",
+    "weight_q500_custom": "Q500客户",
+    "weight_q1000": "Q1000",
+    "weight_q1000_custom": "Q1000客户",
+    "gtyt": "固体/液体",
+    "fuel": "燃油费用",
+    "fuel_min": "燃油费用MIN",
+    "safe": "安全费用",
+    "safe_min": "安全费用MIN",
+    "awb": "AWB",
+    "attach": "附加费用",
+    "attach_min": "附加费用MIN",
+    "remarks": "备注"
+}
+
+ENQUIRY_KEYS = ["起运地","目的地","航空公司","普危客货","有效期","M","M客户","N","N客户","Q45",
+                "Q45客户","Q100","Q100客户","Q300","Q300客户","Q500","Q500客户","Q1000","Q1000客户",
+                "固体/液体","燃油费用","燃油费用MIN","安全费用","安全费用MIN","AWB","附加费用","附加费用MIN","备注"]
+
 SELECT_TYPE = {
     "CAS": "cas",
     "DGR": "dgr",

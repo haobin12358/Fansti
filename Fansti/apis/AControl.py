@@ -28,7 +28,8 @@ class FSControl(Resource):
             "get_sb_list": "self.cgoods.get_sb_list()",
             "get_bzsm_list": "self.cgoods.get_bzsm_list()",
             "get_jd_list": "self.cgoods.get_jd_list()",
-            "get_sbno_list": "self.cgoods.get_sbno_list()"
+            "get_sbno_list": "self.cgoods.get_sbno_list()",
+            "get_packer": "self.cgoods.get_packer()"
         }
 
         if control not in apis:
@@ -45,7 +46,9 @@ class FSControl(Resource):
             "add_in": "self.cgoods.add_in()",
             "retrue_outhc": "self.cgoods.retrue_outhc()",
             "make_sb": "self.cgoods.make_sb()",
-            "update_qrd": "self.cgoods.update_qrd()"
+            "update_qrd": "self.cgoods.update_qrd()",
+            "save_royalty": "self.cgoods.save_royalty()",
+            "update_royalty": "self.cgoods.update_royalty()"
         }
 
         if control not in apis:

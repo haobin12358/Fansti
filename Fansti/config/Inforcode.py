@@ -36,6 +36,7 @@ template_type_dir = {
     "AIRLINE": "airline",
     "DGR": "dgr",
     "TACT": 'tact',
+    "ENQUIRY": 'enquiry'
 }
 
 # config路径

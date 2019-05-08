@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import D_MESSAGE_USER, WECHAT_LOGIN, USER_MESSAGE, USER_INVATE, USER_DB_USER
 from Fansti.services.SBase import SBase, close_session
+from sqlalchemy import or_
 
 class SUsers(SBase):
     @close_session
@@ -84,7 +85,8 @@ class SUsers(SBase):
 
     @close_session
     def get_user_type(self, login_name):
-        return self.session.query(D_MESSAGE_USER.user_type).filter(D_MESSAGE_USER.login_name == login_name).first()
+        return self.session.query(D_MESSAGE_USER.user_type, D_MESSAGE_USER.location)\
+            .filter(D_MESSAGE_USER.login_name == login_name).first()
 
     @close_session
     def get_user_by_openid(self, openid):
@@ -96,3 +98,12 @@ class SUsers(SBase):
     @close_session
     def get_user_name(self, login_name):
         return self.session.query(D_MESSAGE_USER.username).filter_by(login_name=login_name).first()
+
+    @close_session
+    def get_packer_by_select(self, select_name, location):
+        packer = self.session.query(D_MESSAGE_USER.id, D_MESSAGE_USER.username)\
+            .filter(or_(D_MESSAGE_USER.user_type == "5", D_MESSAGE_USER.user_type == "4"))\
+            .filter(D_MESSAGE_USER.location == location)
+        if select_name:
+            packer = packer.filter(D_MESSAGE_USER.username.like("%{0}%".format(select_name))).all()
+        return packer

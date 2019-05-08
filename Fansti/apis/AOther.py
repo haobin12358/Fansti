@@ -72,6 +72,21 @@ class FSother(Resource):
             response["data"] = phone_list
             return response
 
+        if other == "get_enquiry":
+            cf = configparser.ConfigParser()
+            cf.read(FANSTICONFIG)
+            phone_list = cf.get("enquiry", "whitelist")
+            if str(phone_list) == "[]":
+                phone_list = str(phone_list).replace("[", "").replace("]", "")
+                phone_list = list(phone_list)
+            else:
+                phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                    .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                print(phone_list)
+            response = import_status("SUCCESS_GET_NEWS", "OK")
+            response["data"] = phone_list
+            return response
+
         return APIS_WRONG
 
     def post(self, other):
@@ -124,6 +139,42 @@ class FSother(Resource):
                         phone_list.append(row)
             print(phone_list)
             cf.set("phone", "whitelist", str(phone_list))
+            cf.write(open(FANSTICONFIG, "w"))
+
+            return import_status("SUCCESS_UPDATE_PHONE", "OK")
+
+        if other == "update_enquiry":
+            data = json.loads(request.data)
+            true_params = ["control", "phone_list"]
+            if judge_keys(true_params, data.keys()) != 200:
+                return judge_keys(true_params, data.keys())
+            cf = configparser.ConfigParser()
+            cf.read(FANSTICONFIG)
+            phone_list = cf.get("enquiry", "whitelist")
+            for row in data["phone_list"]:
+                if data["control"] == "delete":
+                    if str(phone_list) == "[]":
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\r", "").replace("\n", "")\
+                            .replace("\'", "")
+                        phone_list = list(phone_list)
+                    else:
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "")\
+                            .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                        print(phone_list)
+                    if row in phone_list:
+                        phone_list.remove(row)
+                if data["control"] == "add":
+                    if str(phone_list) == "[]":
+                        phone_list = str(phone_list).replace("[", "").replace("]", "")
+                        phone_list = list(phone_list)
+                    else:
+                        phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "")\
+                            .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+                        print(phone_list)
+                    if row not in phone_list:
+                        phone_list.append(row)
+            print(phone_list)
+            cf.set("enquiry", "whitelist", str(phone_list))
             cf.write(open(FANSTICONFIG, "w"))
 
             return import_status("SUCCESS_UPDATE_PHONE", "OK")

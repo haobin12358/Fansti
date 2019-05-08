@@ -25,6 +25,9 @@ class FSscrapy(Resource):
             "get_jd_names": "self.cscrapy.get_jd_names()",
             "get_template_file": "self.cscrapy.get_template_file()",
             "get_pdf_file": "self.cscrapy.get_pdf_file()",
+            "get_des": "self.cscrapy.get_des()",
+            "get_accounts": "self.cscrapy.get_accounts()",
+            "get_enquiry": "self.cscrapy.get_enquiry()"
         }
 
         if scrapy not in apis:
@@ -38,6 +41,7 @@ class FSscrapy(Resource):
             "update_airline": "self.cscrapy.new_update_airline()",
             "upload_dgr": "self.cscrapy.upload_template_dgr()",
             "upload_tact": "self.cscrapy.upload_tact_template()",
+            "upload_enquiry": "self.cscrapy.upload_enquiry()"
         }
 
         if scrapy not in apis:

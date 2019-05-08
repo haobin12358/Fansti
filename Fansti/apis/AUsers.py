@@ -33,7 +33,8 @@ class FSUser(Resource):
             "user_binding": "self.cusers.user_binding()",
             "make_user_message": "self.cusers.make_user_message()",
             "add_invate": "self.cusers.add_invate()",
-            "update_my_info": "self.cusers.update_my_info()"
+            "update_my_info": "self.cusers.update_my_info()",
+            "user_login_local": "self.cusers.user_login_local()"
         }
 
         if users not in apis:

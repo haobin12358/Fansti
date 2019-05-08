@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, \
     GOODS_RETRUE, AIR_HWYS_DZJJD, AIR_HWYS_QRD, D_CHARGE_COMPANY, D_CHARGE_TYPE, AIR_HWYS_CKMXD, AIR_HWYS_OUTWAREHOUSE, \
-    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD
+    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD, AIR_HWYS_PACK_ROYALTY
 from Fansti.services.SBase import SBase, close_session
 from sqlalchemy import func, or_
 
@@ -284,5 +284,18 @@ class SGoods(SBase):
     def delete_qrd_by_id(self, id):
         qrd = self.session.query(AIR_HWYS_QRD).filter_by(id=id).first()
         self.session.delete(qrd)
+        self.session.commit()
+        return True
+
+    @close_session
+    def get_royalty_by_jcno(self, jcno):
+        return self.session.query(AIR_HWYS_PACK_ROYALTY.id, AIR_HWYS_PACK_ROYALTY.packer_leader,
+                                  AIR_HWYS_PACK_ROYALTY.packer, AIR_HWYS_PACK_ROYALTY.royalty_rate,
+                                  AIR_HWYS_PACK_ROYALTY.packer_confrim, AIR_HWYS_PACK_ROYALTY.packer_ok)\
+            .filter_by(jcno=jcno).all()
+
+    @close_session
+    def update_royalty(self, id, royalty):
+        self.session.query(AIR_HWYS_PACK_ROYALTY).filter_by(id=id).update(royalty)
         self.session.commit()
         return True
