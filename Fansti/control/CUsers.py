@@ -76,7 +76,7 @@ class CUsers():
                     return import_status("ERROR_UPDATE_DATA", "FANSTI_ERROR", "ERROR_UPDATE_DATA")
             response = import_status("SUCCESS_USER_BINDING", "OK")
             response['data'] = usertype
-            return  response
+            return response
         if judge_keys(true_data, data.keys(), null_data) != 200:
             return judge_keys(true_data, data.keys(), null_data)
         # if self.get_wechat_phone(data["phone"]) != 200:
@@ -133,8 +133,23 @@ class CUsers():
         #     if not add_wechat_login:
         #         return SYSTEM_ERROR
         response = import_status("SUCCESS_USER_BINDING", "OK")
-
-        response['data'] = usertype
+        from Fansti.config.Inforcode import FANSTICONFIG
+        import configparser
+        cf = configparser.ConfigParser()
+        cf.read(FANSTICONFIG)
+        phone_list = cf.get("enquiry", "whitelist")
+        if str(phone_list) == "[]":
+            phone_list = str(phone_list).replace("[", "").replace("]", "")
+            phone_list = list(phone_list)
+        else:
+            phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+            print(phone_list)
+        response['data']["user_type"] = usertype
+        if data["login_name"] not in phone_list:
+            response["data"]["is_show"] = 0
+        else:
+            response["data"]["is_show"] = 1
         return response
 
     def get_wechat_phone(self, phone):
@@ -159,9 +174,27 @@ class CUsers():
                 user_type = -111
             else:
                 user_type = get_model_return_dict(self.susers.get_user_type(get_status_by_openid["login_name"]))["user_type"]
+
+        from Fansti.config.Inforcode import FANSTICONFIG
+        import configparser
+        cf = configparser.ConfigParser()
+        cf.read(FANSTICONFIG)
+        phone_list = cf.get("enquiry", "whitelist")
+        if str(phone_list) == "[]":
+            phone_list = str(phone_list).replace("[", "").replace("]", "")
+            phone_list = list(phone_list)
+        else:
+            phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
+                .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
+            print(phone_list)
+
         
         response = import_status("ERROR_HAVE_BINDING", "OK")
         response["data"] = {}
+        if get_status_by_openid["login_name"] not in phone_list:
+            response["data"]["is_show"] = 0
+        else:
+            response["data"]["is_show"] = 1
         response["data"]["login_name"] = get_status_by_openid["login_name"]
         response["data"]["user_type"] = user_type
         return response
@@ -382,6 +415,13 @@ class CUsers():
 
             return False
 
+    def check_username_phone(self, name, phone):
+        name_password_phone = get_model_return_dict(self.susers.get_name_password_phone(name))
+        if name_password_phone and name_password_phone["phone"] == phone:
+            return True
+        else:
+            return False
+
 
     def check_role(self, phone):
         import configparser
@@ -397,3 +437,29 @@ class CUsers():
                 .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
 
         return phone in phone_list
+
+    def user_login_local(self):
+        data = json.loads(request.data)
+        make_log("data", data)
+        true_data = ["phone", "login_name", "login_password"]
+        if judge_keys(true_data, data.keys()) != 200:
+            return judge_keys(true_data, data.keys())
+
+        if "login_name" in data and "login_password" in data:
+            check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
+            if check_result:
+                return check_result
+        usertype = get_model_return_dict(self.susers.get_user_type(data.get("login_name"))).get("user_type")
+        if not self.check_username_phone(data["login_name"], data["phone"]):
+            return {
+                "status": 405,
+                "status_code": 405601,
+                "message": "手机号错误"
+            }
+        return {
+            "status": 200,
+            "message": "登陆成功",
+            "data": {
+                "user_type": usertype
+            }
+        }

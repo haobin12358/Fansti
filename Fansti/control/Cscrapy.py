@@ -854,7 +854,7 @@ class Cscrapy():
         from Fansti.config import Inforcode
 
         file_dir = Inforcode.template_type_dir.get(file_type)
-
+        print(file_dir)
         if platform.system() == "Windows":
             rootdir = os.path.join(Inforcode.WindowsRoot, file_dir)
         else:
@@ -936,6 +936,59 @@ class Cscrapy():
 
         return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
 
+    def upload_enquiry(self):
+        file_path = self.save_file("ENQUIRY")
+
+        wb = xlrd.open_workbook(file_path)
+        sheet1 = wb.sheet_by_index(0)
+        title_line = sheet1.row_values(0)
+        # title_line = [title.encode("utf8") if isinstance(title, unicode) else title for title in title_line]
+        from Fansti.config.staticconfig import ENQUIRY_DB_TO_EXCEL, ENQUIRY_KEYS
+        print("title_line", title_line)
+        tact_dict = {k: v for v, k in enumerate(title_line) if k in ENQUIRY_KEYS}
+        # check title key
+        for key in ENQUIRY_KEYS:
+            if key not in title_line:
+                response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                response['data'] = {
+                    "row": 0,
+                    "key": key,
+                    "reason": "the title is not right need {0} necessary".format(key)
+                }
+                return response
+
+        tact_key_index_to_db = {key: tact_dict.get(ENQUIRY_DB_TO_EXCEL.get(key)) for key in ENQUIRY_DB_TO_EXCEL}
+
+        for row in range(1, sheet1.nrows):
+            row_data = sheet1.row_values(row)
+            row_dict = {}
+            for key in tact_key_index_to_db:
+                row_dict[key] = row_data[tact_key_index_to_db.get(key)]
+
+            for key in row_dict:
+                if isinstance(row_dict.get(key), str):
+                    row_dict[key] = re.sub(r"[\x20\t\f]", "", row_dict.get(key))
+                    row_dict[key] = re.sub(r"[\n]", "||chr(13)||chr(10)||", row_dict.get(key))
+                # TODO 增加正则校验
+
+            departure = row_dict.get("departure")
+            destination = row_dict.get("destination")
+            company = row_dict.get("company")
+            pwkh = row_dict.get("pwkh")
+            tact_tmp = self.sscrapy.get_id_by_dep_des_com_pwkh(departure, destination, company, pwkh)
+            if tact_tmp:
+                update_result = self.sscrapy.update_tact(tact_tmp.id, row_dict)
+                if not update_result:
+                    response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
+                    response["data"] = row
+                    return response
+            else:
+                tactid = str(uuid.uuid1())
+                row_dict['id'] = tactid
+                self.sscrapy.add_model("AIR_HWYS_ENQUIRY", **row_dict)
+
+        return import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
+
     def get_jd_names(self):
         args = request.args.to_dict()
         make_log("args", args)
@@ -994,3 +1047,320 @@ class Cscrapy():
         make_log("template path ", filepath)
         from flask import send_from_directory
         return send_from_directory(rootdir, filename, as_attachment=True)
+
+    def get_des(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["select_name"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        all_des = get_model_return_list(self.sscrapy.get_des(args["select_name"]))
+        return {
+            "status": 200,
+            "message": "获取目的地成功",
+            "data": all_des
+        }
+
+    def get_accounts(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["select_name"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        all_des = get_model_return_list(self.sscrapy.get_accounts(args["select_name"]))
+        return {
+            "status": 200,
+            "message": "获取航空公司成功",
+            "data": all_des
+        }
+
+    def get_enquiry(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["des", "dep", "pwkh", "weight", "gtyt"]
+        null_params = ["accounts"]
+        if judge_keys(not_null_params, args.keys(), null_params) != 200:
+            return judge_keys(not_null_params, args.keys(), null_params)
+        des = args["des"]
+        dep = args["dep"]
+        pwkh = args["pwkh"]
+        weight = float(args["weight"])
+        gtyt = args["gtyt"]
+
+        if "accounts" not in args.keys():
+            args["accounts"] = None
+        if weight < 45:
+            price_list = get_model_return_list(self.sscrapy.get_mn_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    M：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                    N：{8}, 
+                    燃油费：{9}/kg（最低{10}）
+                    安全费：{11}/kg（最低{12}）
+                    AWB：{13}
+                    附加费：{14}/kg（最低{15}）
+                """.format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"],
+                           str("%.2f" % (float(price["weight_n"]) + float(price["weight_n_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    M：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    N：{8}, 
+                                    燃油费：{9}/kg（最低{10}）
+                                    安全费：{11}/kg（最低{12}）
+                                    AWB：{13}
+                                    附加费：{14}/kg（最低{15}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"],
+                                           str("%.2f" % (float(price["weight_n"]) + float(price["weight_n_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        elif 45 <= weight < 100:
+            price_list = get_model_return_list(self.sscrapy.get_q45_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    Q45：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                """.format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    Q45：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        elif 100 <= weight < 300:
+            price_list = get_model_return_list(self.sscrapy.get_q100_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    Q100：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                """.format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    Q100：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        elif 300 <= weight < 500:
+            price_list = get_model_return_list(self.sscrapy.get_q300_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    Q300：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                """.format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    Q300：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        elif 500 <= weight < 1000:
+            price_list = get_model_return_list(self.sscrapy.get_q500_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    Q500：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                """.format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    Q500：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        else:
+            price_list = get_model_return_list(self.sscrapy.get_q1000_price(des, dep, args["accounts"], pwkh, gtyt))
+            if len(price_list) == 1:
+                price = price_list[0]
+                price_str = """
+                    Q1000：{0}, 
+                    燃油费：{1}/kg（最低{2}）
+                    安全费：{3}/kg（最低{4}）
+                    AWB：{5}
+                    附加费：{6}/kg（最低{7}）
+                """.format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
+                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
+                           price["attach"], price["attach_min"]
+                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+            elif len(price_list) > 1:
+                price = price_list[0]
+                price_str = """
+                                    Q1000：{0}, 
+                                    燃油费：{1}/kg（最低{2}）
+                                    安全费：{3}/kg（最低{4}）
+                                    AWB：{5}
+                                    附加费：{6}/kg（最低{7}）
+                                    请输入航空公司以查询明确数据
+                                """.format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
+                                           price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
+                                           price["awb"],
+                                           price["attach"], price["attach_min"]
+                                           )
+                return {
+                    "status": 200,
+                    "message": "询价成功",
+                    "data": {
+                        "price": price_str
+                    }
+                }
+        if len(price_list) == 0:
+            return {
+                "status": 405,
+                "status_code": 405998,
+                "message": "未查到数据"
+            }

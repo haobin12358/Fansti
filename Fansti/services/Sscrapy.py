@@ -3,8 +3,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_JD, AIR_HWYS_LINES, SELECT_INFO, AIR_HWYS_DGR, AIR_HWYS_DGR_LEVEL, \
-    AIR_HWYS_DGR_CONTAINER, AIR_HWYS_TACT
+    AIR_HWYS_DGR_CONTAINER, AIR_HWYS_TACT, AIR_HWYS_ENQUIRY, D_ACCOUNTS, D_PORT
 from Fansti.services.SBase import SBase, close_session
+from sqlalchemy import or_
 
 class Sscrapy(SBase):
 
@@ -112,3 +113,94 @@ class Sscrapy(SBase):
     def get_all_select_count(self, name):
         from sqlalchemy import func
         return self.session.query(func.count(SELECT_INFO.id)).filter(SELECT_INFO.select_name == name).scalar()
+
+    @close_session
+    def get_id_by_dep_des_com_pwkh(self, departure, destination, company, pwkh):
+        return self.session.query(AIR_HWYS_ENQUIRY.id)\
+            .filter_by(departure=departure).filter_by(destination=destination)\
+            .filter_by(company=company).filter_by(pwkh=pwkh)\
+            .first()
+
+    @close_session
+    def get_des(self, select_name):
+        return self.session.query(D_PORT.port_aircode).filter(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
+                                                                  D_PORT.port_cname.like("%{0}%".format(select_name))))\
+            .filter(not D_PORT.port_aircode).all()
+
+    @close_session
+    def get_accounts(self, select_name):
+        return self.session.query(D_ACCOUNTS.accounts_code)\
+            .filter(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
+                        D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))))\
+            .filter(D_ACCOUNTS.b_airway == "1").all()
+
+    @close_session
+    def get_mn_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_m, AIR_HWYS_ENQUIRY.weight_m_custom,
+                                   AIR_HWYS_ENQUIRY.weight_n, AIR_HWYS_ENQUIRY.weight_n_custom, AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min)\
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()
+
+    @close_session
+    def get_q45_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_q45, AIR_HWYS_ENQUIRY.weight_q45_custom, AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()
+
+    @close_session
+    def get_q100_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_q100, AIR_HWYS_ENQUIRY.weight_q100_custom,
+                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()
+
+    @close_session
+    def get_q300_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_q300, AIR_HWYS_ENQUIRY.weight_q300_custom,
+                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()
+
+    @close_session
+    def get_q500_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_q500, AIR_HWYS_ENQUIRY.weight_q500_custom,
+                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()
+
+    @close_session
+    def get_q1000_price(self, des, dep, accounts, pwkh, gtyt):
+        price = self.session.query(AIR_HWYS_ENQUIRY.weight_q1000, AIR_HWYS_ENQUIRY.weight_q1000_custom,
+                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+            .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
+                    AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
+        if accounts:
+            price = price.filter(AIR_HWYS_ENQUIRY.company == accounts)
+        return price.all()

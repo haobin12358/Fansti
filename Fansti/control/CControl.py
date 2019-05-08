@@ -100,6 +100,31 @@ class CControl():
 
         jc_abo = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
 
+        user_type = get_model_return_dict(self.susers.get_user_type(args["login_name"]))["user_type"]
+        if user_type in ["0", "3", "4"]:
+            royaltys = get_model_return_list(self.sgoods.get_royalty_by_jcno(args["jcno"]))
+            for row in royaltys:
+                jc_abo["packer_leader"] = row["packer_leader"]
+            jc_abo["packer_list"] = royaltys
+            if user_type == "4" and not royaltys:
+                jc_abo["save_button"] = 1
+            else:
+                jc_abo["save_button"] = 0
+        elif user_type in ["5"]:
+            royaltys = get_model_return_list(self.sgoods.get_royalty_by_jcno(args["jcno"]))
+            for row in royaltys:
+                jc_abo["packer_leader"] = row["packer_leader"]
+                if row["packer_confrim"] == "是":
+                    jc_abo["retrue_packer_button"] = 0
+                else:
+                    jc_abo["retrue_packer_button"] = 1
+                if row["packer_ok"] == "是":
+                    jc_abo["retrue_ok_button"] = 0
+                else:
+                    jc_abo["retrue_ok_button"] = 1
+            jc_abo["packer_list"] = royaltys
+
+
         dzjjd = get_model_return_dict(self.sgoods.get_dzjjd(args["jcno"]))
         if dzjjd:
             jc_abo["wh_require"] = jc_abo["wh_require"] or dzjjd["kf_bz"]
@@ -220,6 +245,7 @@ class CControl():
         }
 
     def get_jc_pic(self):
+        # TODO 入仓照片分批次，这个需要设计
         args = request.args.to_dict()
         make_log("args", args)
         not_null_params = ['login_name', "jcno"]
@@ -571,22 +597,58 @@ class CControl():
             "data": sbno_list
         }
 
+    def update_wts(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        if "wts_type" not in data.keys():
+            return {
+                "status": 405,
+                "status_code": 405001,
+                "message": "参数缺失"
+            }
+        if data["wts_type"] == "jd":
+            wts = get_model_return_dict(self.sgoods.get_id_by_jcno(args["jcno"]))
+            wts_id = wts["id"]
+            update_wts = self.sgoods.update_wts(wts_id, {
+                "jd_time": datetime.datetime.now(),
+                "ydno": wts["ydno"]
+            })
+            if not update_wts:
+                return SYSTEM_ERROR
+        return {
+            "status": 200,
+            "message": "交单成功"
+        }
+
     def update_dzjjd(self):
         args = request.args.to_dict()
         make_log("args", args)
         not_null_params = ['login_name', "jcno"]
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
-
         data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
         if "dzjjd_type" not in data.keys():
             return {
                 "status": 405,
                 "status_code": 405001,
                 "message": "参数缺失"
             }
-        if data["dajjd_type"] == "kfqr":
+
+        if data["dzjjd_type"] == "kfqr":
             dzjjd = get_model_return_dict(self.sgoods.get_jjdid_by_jcno(args["jcno"]))
+            print(dzjjd)
             user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
             update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
                 "kf_ry": user["username"],
@@ -594,7 +656,7 @@ class CControl():
             })
             if not update_dzjjd:
                 return SYSTEM_ERROR
-        if data["dajjd_type"] == "hcqr":
+        if data["dzjjd_type"] == "hcqr":
             dzjjd = get_model_return_dict(self.sgoods.get_jjdid_by_jcno(args["jcno"]))
             user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
             update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
@@ -644,3 +706,257 @@ class CControl():
         print(url)
         response["data"] = url
         return response
+
+    def add_in(self):
+        # TODO 首次为写入，其余为更新
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        data = json.loads(request.data)
+        make_log("data", data)
+
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        # wts中获取jcno/czr/hwpm
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        add_model("AIR_HWYS_CKMXD", **{
+            "jcno": args["jcno"],
+            "salesman": wts["czr"],
+            "hwpm": data["hwpm"],
+            "warehouse_address": data["warehouse_address"],
+            "enter_time": datetime.datetime.strptime(data["enter_time"], "%Y-%m-%d %H:%M:%S"),
+            "goods_quantity": data["goods_quantity"],
+            "delivery_unit": data["delivery_unit"],
+            "goods_weight": data["goods_weight"],
+            "cargo_size": data["cargo_size"],
+            "client_name": data["client_name"],
+            "remark": data["remark"]
+        })
+        # TODO 分批次写入，方案未知
+        for row in data["pic_list"]:
+            add_model("AIR_HWYS_PHOTOS", **{
+                "jcno": args["jcno"],
+                "phototype": "入仓",
+                "photourl": row["url"],
+                "createtime": datetime.datetime.now(),
+                "czr": user["user_name"],
+                "filename": row["filename"]
+            })
+        return {
+            "status": 200,
+            "message": "提交成功"
+        }
+
+    def retrue_outhc(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        if "retrue_type" not in data.keys():
+            return {
+                "status": 405,
+                "status_code": 405001,
+                "message": "参数缺失"
+            }
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        if data["retrue_type"] == "out":
+            add_model("AIR_HWYS_OUTWAREHOUSE", **{
+                "ydno": wts["ydno"],
+                "submitter": user["user_name"],
+                "submit_time": datetime.datetime.now(),
+                "create_time": datetime.datetime.now()
+            })
+        if data["retrue_type"] == "hc":
+            add_model("AIR_HWYS_INGOODYARD", **{
+                "ydno": wts["ydno"],
+                "submitter": user["user_name"],
+                "submit_time": datetime.datetime.now(),
+                "create_time": datetime.datetime.now()
+            })
+
+        return {
+            "status": 200,
+            "message": "确认成功"
+        }
+
+    def make_sb(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        for row in data["jd_list"]:
+            add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": "鉴定文件",
+                "file_url": row["url"],
+                "create_time": datetime.datetime.now(),
+                "create_user": user["username"],
+                "file_name": row["file_name"]
+            })
+        for row in data["sb_list"]:
+            add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": "申报单",
+                "file_url": row["url"],
+                "create_time": datetime.datetime.now(),
+                "create_user": user["username"],
+                "file_name": row["file_name"]
+            })
+        for row in data["bzmx_list"]:
+            add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": "包装明细",
+                "file_url": row["url"],
+                "create_time": datetime.datetime.now(),
+                "create_user": user["username"],
+                "file_name": row["file_name"]
+            })
+
+        return {
+            "status": 200,
+            "message": "上传完毕"
+        }
+
+    def update_qrd(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno", "qrd_type"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        if args["qrd_type"] == "add":
+            add_model("AIR_HWYS_QR", **{
+                "ydno": wts["ydno"],
+                "jcno": args["jcno"],
+                "doc": data["doc"],
+                "curr": data["curr"],
+                "amount": data["amount"],
+                "fkdw": data["fkdw"],
+                "createtime": datetime.datetime.now(),
+                "byzd2": user["username"]
+            })
+        if args["qrd_type"] == "update":
+            update_qrd = self.sgoods.update_qrd_by_id(data["id"], {
+                "ydno": wts["ydno"],
+                "jcno": args["jcno"],
+                "doc": data["doc"],
+                "curr": data["curr"],
+                "amount": data["amount"],
+                "fkdw": data["fkdw"],
+                "createtime": datetime.datetime.now(),
+                "byzd2": user["username"]
+            })
+            if not update_qrd:
+                return SYSTEM_ERROR
+
+        if args["qrd_type"] == "delete":
+            delete = self.sgoods.delete_qrd_by_id(data["id"])
+            if not delete:
+                return SYSTEM_ERROR
+        return {
+            "status": 200,
+            "message": "编辑成功"
+        }
+
+    def get_packer(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ["select_name", "login_name"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        location = get_model_return_dict(self.susers.get_user_type(args["login_name"]))["location"]
+        all_packer = get_model_return_list(self.susers.get_packer_by_select(args["select_name"], location))
+        return {
+            "status": 200,
+            "message": "获取包装人员列表成功",
+            "data": all_packer
+        }
+
+    def save_royalty(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        user_type_location = get_model_return_dict(self.susers.get_user_type(args["login_name"]))
+        if user_type_location["user_type"] not in ["0", "3", "4"]:
+            return {
+                "status": 405,
+                "status_code": 405999,
+                "message": "无权限"
+            }
+        packer_leader = data["packer_leader"]
+        for row in data["packer_list"]:
+            add_model("AIR_HWYS_PACK_ROYALTY", **{
+                "id": str(uuid.uuid1()),
+                "jcno": args["jcno"],
+                "packer_leader": packer_leader,
+                "packer": row["packer"],
+                "royalty_rate": None,
+                "create_date": datetime.datetime.now(),
+                "create_user": user["username"]
+            })
+        return {
+            "status": 200,
+            "message": "保存成功"
+        }
+
+    def update_royalty(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        if data["royalty_type"] == 0:
+            royaltys = get_model_return_list(self.sgoods.get_royalty_by_jcno(args["jcno"]))
+            for row in royaltys:
+                update_response = self.sgoods.update_royalty(row["id"], {
+                    "packer_confrim": "是"
+                })
+                if not update_response:
+                    return SYSTEM_ERROR
+        elif data["royalty_type"] == 1:
+            royaltys = get_model_return_list(self.sgoods.get_royalty_by_jcno(args["jcno"]))
+            for row in royaltys:
+                update_response = self.sgoods.update_royalty(row["id"], {
+                    "packer_ok": "是"
+                })
+                if not update_response:
+                    return SYSTEM_ERROR
+        return {
+            "status": 200,
+            "message": "更新成功"
+        }
