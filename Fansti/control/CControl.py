@@ -54,8 +54,8 @@ class CControl():
         # 处理当前时间 时间格式为2019-04-29
         if args["time_use"]:
             args["time_use"] = datetime.datetime.strptime(args["time_use"], "%Y-%m-%d")
-            today_date = datetime.datetime.now().date()
-            wts_filter.add(or_(AIR_HWYS_WTS.jd_time.date() == today_date, AIR_HWYS_WTS.jd_date == today_date))
+            today_date = args["time_use"]
+            wts_filter.add(or_(AIR_HWYS_WTS.jd_time == today_date, AIR_HWYS_WTS.jd_date == today_date))
 
         goods_list = get_model_return_list(self.sgoods.get_all_goods_by_filter(
             wts_filter, int(args["page_size"]), int(args["page_num"])))
