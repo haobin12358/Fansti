@@ -35,6 +35,12 @@
       "MNurl":"/white_list",
       "MNicon":"icon",
       "children":[]
+    },
+    {
+      "MNname":"询价白名单",
+      "MNurl":"/enquiry",
+      "MNicon":"icon",
+      "children":[]
     }
   ]
 }

@@ -2,16 +2,16 @@
   <div>
     <div class="page-box">
       <el-button class="add-btn" @click="dialogFormVisible = true">添加白名单</el-button>
-      <el-dialog title="添加白名单" :close-on-click-modal="false" :visible.sync="dialogFormVisible" width="500px">
+      <el-dialog title="添加询价白名单" :visible.sync="dialogFormVisible" :close-on-click-modal="false" width="500px">
         <el-form :model="dynamicValidateForm" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
-          <el-form-item prop="phone" label="手机号："
+          <el-form-item prop="phone" label="用户名："
                         :rules="[
-                          { required: true, message: '请输入手机号', trigger: 'blur' }
+                          { required: true, message: '请输入用户名', trigger: 'blur' }
                         ]">
             <el-input v-model="dynamicValidateForm.phone" class="phone-input"></el-input>
           </el-form-item>
-          <el-form-item v-for="(domain, index) in dynamicValidateForm.phones" label="手机号：" :key="domain.key" :prop="'phones.' + index + '.value'"
-            :rules="{ required: true, message: '请输入手机号', trigger: 'blur' }">
+          <el-form-item v-for="(domain, index) in dynamicValidateForm.phones" label="用户名：" :key="domain.key" :prop="'phones.' + index + '.value'"
+                        :rules="{ required: true, message: '请输入用户名', trigger: 'blur' }">
             <el-input v-model="domain.value" class="phone-input"></el-input>
             <el-button @click.prevent="removeDomain(domain)" class="cancel-btn" size="small">删除</el-button>
           </el-form-item>
@@ -27,7 +27,7 @@
         <thead>
         <tr>
           <td width="35%">序号</td>
-          <td width="35%">手机号</td>
+          <td width="35%">用户名</td>
           <td>操作</td>
         </tr>
         </thead>
@@ -37,7 +37,7 @@
             <td>{{index+1}}</td>
             <td>{{item}}</td>
             <td>
-              <div @click="editPhone(item, 'delete')" style="color: #5A738A">删除</div>
+              <div @click="editPhone(item, 'delete')">删除</div>
             </td>
           </tr>
         </template>
@@ -53,7 +53,7 @@
   import axios from 'axios';
 
   export default {
-    name: "white_list",
+    name: "enquiry",
     data() {
       return {
         query: [],
@@ -82,11 +82,11 @@
                 control: control,
                 phone_list: phoneList
               }
-              axios.post(api.update_phone, params).then(res=>{
+              axios.post(api.update_enquiry, params).then(res=>{
                 if(res.data.status == 200){
                   this.getData()
                   this.dialogFormVisible = false
-                  this.$message({ type: 'success', message: res.data.message });
+                  this.$message({ type: 'success', message: '成功添加白名单' });
                   this.$refs[formName].resetFields();
                 }else{
                   this.$message.error(res.data.message);
@@ -106,11 +106,11 @@
             control: control,
             phone_list: phone_list
           }
-          axios.post(api.update_phone, params).then(res=>{
+          axios.post(api.update_enquiry, params).then(res=>{
             console.log(res)
             if(res.data.status == 200){
               this.getData()
-              this.$message({ type: 'success', message: res.data.message });
+              this.$message({ type: 'success', message: '删除白名单成功' });
             }else{
               this.$message.error(res.data.message);
             }
@@ -132,10 +132,9 @@
         });
       },
       getData(){
-        axios.get(api.get_phone).then(res => {
+        axios.get(api.get_enquiry).then(res => {
           if (res.data.status == 200){
             this.query = res.data.data
-            // console.log(this.query)
           }else{
             this.$message.error(res.data.message);
           }

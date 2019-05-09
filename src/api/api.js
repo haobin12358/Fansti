@@ -23,9 +23,13 @@ const api={
   get_phone: title + 'other/get_phone',//查看白名单列表
   update_phone: title + 'other/update_phone',//增/删白名单电话
 
+  get_enquiry: title + 'other/get_enquiry',//查询价白名单
+  update_enquiry: title + 'other/update_enquiry',//增/删询价白名单
+
   upload_tact: title + 'scrapy/upload_tact',//上传模板TACT
   update_airline:title + 'scrapy/update_airline',//上传航班信息模板
   upload_dgr: title + 'scrapy/upload_dgr',//上传dgr信息模板
+  upload_enquiry: title + 'scrapy/upload_enquiry',//上传询价模板
   get_template_file: title + 'scrapy/get_template_file',//下载模板
 }
 

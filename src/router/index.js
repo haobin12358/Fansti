@@ -94,7 +94,18 @@ export const constantRouterMap = [
       meta: { title: 'customer_information', icon: 'customer_information', noCache: true }
     }
     ]
-  }
+  },
+  {
+    path: '/enquiry',
+    component: Layout,
+    children: [{
+      path: '',
+      component: () => import('../views/enquiry'),
+      name: 'enquiry',
+    }
+    ]
+  },
+
 
 
 ]

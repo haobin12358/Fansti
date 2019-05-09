@@ -15,6 +15,7 @@
         title="编辑"
         :visible.sync="showModal"
         width="50%"
+        :close-on-click-modal="false"
         center>
         <el-form  :model="form" ref="form" :rules="rules" label-width="2rem" class="demo-ruleForm" >
           <el-form-item label="客服名称：" prop="name">
