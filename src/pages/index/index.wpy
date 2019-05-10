@@ -78,104 +78,105 @@
 
 <template>
   <view class="container">
-    <form @submit="doConfirm">
-      <input placeholder="起运地" name="dep" style="display: none;" value="{{formData.dep}}"/>
-      <input placeholder="目的地" name="des" style="display: none;" value="{{formData.des}}"/>
-      <input placeholder="航空公司" name="accounts" style="display: none;" value="{{formData.accounts}}"/>
-      <view class="form-section-one">
-        <view class="row">
-          <view style="flex: 1;">
-          <picker @change="handleDepChange" value="{{depIndex}}" range="{{depList}}">
-              {{depList[depIndex] || '起运地'}}
-          </picker>
-          </view>
-          <image src="../../images/plane.png" style="width: 40rpx;height: 36rpx;"></image>
-          <view @tap="showDesSearchList" style="flex: 1;text-align: right;">{{formData.des || '目的地'}}</view>
-        </view>
-        <view class="row" @tap="showAccountsSerList">
-          {{formData.accounts || '航空公司(可选)'}}
-        </view>
-        <view class="hr"></view>
-
-        <radio-group name="pw" value="{{formData.pw}}" @change="doChangePw" >
-          <view class="row radio">
-            <view class="radio-item">
-              <label>普货
-                <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="p"></radio>
-              </label>
+    <block wx:if="{{canUse}}">
+      <form @submit="doConfirm">
+        <input placeholder="起运地" name="dep" style="display: none;" value="{{formData.dep}}"/>
+        <input placeholder="目的地" name="des" style="display: none;" value="{{formData.des}}"/>
+        <input placeholder="航空公司" name="accounts" style="display: none;" value="{{formData.accounts}}"/>
+        <view class="form-section-one">
+          <view class="row">
+            <view style="flex: 1;">
+              <picker @change="handleDepChange" value="{{depIndex}}" range="{{depList}}">
+                {{depList[depIndex] || '起运地'}}
+              </picker>
             </view>
-            <view class="radio-item" style="flex: 1">
-              <label>危品
-                <radio color="#ffcd42" style="margin-left: 80rpx;" value="w"></radio>
-              </label>
+            <image src="../../images/plane.png" style="width: 40rpx;height: 36rpx;"></image>
+            <view @tap="showDesSearchList" style="flex: 1;text-align: right;">{{formData.des || '目的地'}}</view>
+          </view>
+          <view class="row" @tap="showAccountsSerList">
+            {{formData.accounts || '航空公司(可选)'}}
+          </view>
+          <view class="hr"></view>
+
+          <radio-group name="pw" value="{{formData.pw}}" @change="doChangePw" >
+            <view class="row radio">
+              <view class="radio-item">
+                <label>普货
+                  <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="p"></radio>
+                </label>
+              </view>
+              <view class="radio-item" style="flex: 1">
+                <label>危品
+                  <radio color="#ffcd42" style="margin-left: 80rpx;" value="w"></radio>
+                </label>
+              </view>
+            </view>
+          </radio-group>
+          <radio-group name="kh" wx:if="{{showKh}}">
+            <view class="row radio">
+              <view class="radio-item">
+                <label>客机
+                  <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="k"></radio>
+                </label>
+
+              </view>
+              <view class="radio-item" style="flex: 1">
+                <label>货机
+                  <radio color="#ffcd42" style="margin-left: 80rpx;" value="h"></radio>
+                </label>
+
+              </view>
+            </view>
+          </radio-group>
+        </view>
+
+        <view class="weight-level">
+          <view>重量等级</view>
+          <input name="weight" type="digit"/>
+        </view>
+
+        <view class="form-section-three">
+          <view class="row">
+            <text>货物状态</text>
+            <view>
+              <radio-group name="gtyt" @change="handleGoodsTypeChange">
+                <label>固体
+                  <radio color="#ffcd42" checked value="固体"></radio>
+                </label>
+                <label>液体
+                  <radio color="#ffcd42" value="固体/液体"></radio>
+                </label>
+              </radio-group>
             </view>
           </view>
-        </radio-group>
-        <radio-group name="kh" wx:if="{{showKh}}">
-          <view class="row radio">
-            <view class="radio-item">
-              <label>客机
-                <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="k"></radio>
-              </label>
-
+          <view class="row">
+            <text>包装形式</text>
+            <view>
+              <radio-group @change="handleGoodsTypeChange">
+                <label>桶
+                  <radio color="#ffcd42" checked></radio>
+                </label>
+                <label>箱子
+                  <radio color="#ffcd42"></radio>
+                </label>
+                <label>托盘
+                  <radio color="#ffcd42"></radio>
+                </label>
+              </radio-group>
             </view>
-            <view class="radio-item" style="flex: 1">
-              <label>货机
-                <radio color="#ffcd42" style="margin-left: 80rpx;" value="h"></radio>
-              </label>
-
-            </view>
-          </view>
-        </radio-group>
-      </view>
-
-      <view class="weight-level">
-        <view>重量等级</view>
-        <input name="weight" type="digit"/>
-      </view>
-
-      <view class="form-section-three">
-        <view class="row">
-          <text>货物状态</text>
-          <view>
-            <radio-group name="gtyt" @change="handleGoodsTypeChange">
-              <label>固体
-                <radio color="#ffcd42" checked value="固体"></radio>
-              </label>
-              <label>液体
-                <radio color="#ffcd42" value="固体/液体"></radio>
-              </label>
-            </radio-group>
           </view>
         </view>
-        <view class="row">
-          <text>包装形式</text>
-          <view>
-            <radio-group @change="handleGoodsTypeChange">
-              <label>桶
-                <radio color="#ffcd42" checked></radio>
-              </label>
-              <label>箱子
-                <radio color="#ffcd42"></radio>
-              </label>
-              <label>托盘
-                <radio color="#ffcd42"></radio>
-              </label>
-            </radio-group>
-          </view>
+
+        <view class="confirm-button-wrap">
+          <button form-type="submit" class="confirm-button">询 价</button>
         </view>
-      </view>
-
-      <view class="confirm-button-wrap">
-        <button form-type="submit" class="confirm-button">询 价</button>
-      </view>
-    </form>
-
-    <searchList :show.sync="showDes" :list.sync="desList" title="目的地搜索"
-                @select.user="doSelectDes"></searchList>
-    <searchList2 :show.sync="showAccounts" :list.sync="accountsList" title="航空公司搜索"
-                @select.user="doSelectAccounts"></searchList2>
-
+      </form>
+      <searchList :show.sync="showDes" :list.sync="desList" title="目的地搜索"
+                  @select.user="doSelectDes"></searchList>
+      <searchList2 :show.sync="showAccounts" :list.sync="accountsList" title="航空公司搜索"
+                   @select.user="doSelectAccounts"></searchList2>
+    </block>
+    <placeholder type="enquiry"></placeholder>
   </view>
 </template>
 
@@ -184,6 +185,7 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import searchList from '@/components/searchList';
+  import placeholder from '@/components/common/placeholder';
 
   export default class Index extends wepy.page {
     config = {};
@@ -191,9 +193,13 @@
     components = {
       searchList,
       searchList2: searchList,
+      placeholder
     };
 
     data = {
+      canUse: false,
+      type: 'newUser',
+
       formData: {
         dep: '',
         des: '',

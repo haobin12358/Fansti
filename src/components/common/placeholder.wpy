@@ -34,7 +34,9 @@
       <block wx:if="{{type == 'newUser'}}">
         尚未与泛思特进行货物合作
       </block>
-
+      <block wx:if="{{type == 'enquiry'}}">
+        请联系客服开启询价功能
+      </block>
     </view>
   </view>
 </template>
