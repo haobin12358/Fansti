@@ -977,7 +977,7 @@ class Cscrapy():
             pwkh = row_dict.get("pwkh")
             tact_tmp = self.sscrapy.get_id_by_dep_des_com_pwkh(departure, destination, company, pwkh)
             if tact_tmp:
-                update_result = self.sscrapy.update_tact(tact_tmp.id, row_dict)
+                update_result = self.sscrapy.update_enquiry(tact_tmp.id, row_dict)
                 if not update_result:
                     response = import_status("ERROR_FAIL_FILE", "FANSTI_ERROR", "ERROR_FAIL_FILE")
                     response["data"] = row

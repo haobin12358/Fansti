@@ -104,6 +104,10 @@ class Sscrapy(SBase):
         return self.session.query(AIR_HWYS_TACT).filter(AIR_HWYS_TACT.id == tactid).update(tact)
 
     @close_session
+    def update_enquiry(self, tactid, tact):
+        return self.session.query(AIR_HWYS_ENQUIRY).filter(AIR_HWYS_ENQUIRY.id == tactid).update(tact)
+
+    @close_session
     def get_jds_by_name(self, name):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
