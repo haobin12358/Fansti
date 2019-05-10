@@ -68,6 +68,10 @@ const getVote = params => wxRequest(params, host+`/votes/get_vote?VSid=${params.
 //  做问卷 POST
 const makeVote = params => wxRequest(params, host+`/votes/make_vote`);
 
+// 询价
+const getDes = params => wxRequest(params, host+`/scrapy/get_des`);
+const getAirPlaneAccounts = params => wxRequest(params, host+`/scrapy/get_accounts`);
+
 
 
 
@@ -100,4 +104,7 @@ export default {
   receiveRed,
   receiveRedQuery,
   payService,
+
+  getDes,
+  getAirPlaneAccounts
 }

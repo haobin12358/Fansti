@@ -3,7 +3,7 @@
   @indexMainColor: #999999;
 
   .container {
-    padding: 75rpx 100rpx;
+    padding: 75rpx;
     color: @indexMainColor;
 
     radio {
@@ -39,64 +39,16 @@
       }
     }
 
-    .form-section-two{
-      margin-bottom: 50rpx;
+    .weight-level{
+      display: flex;
+      align-items: center;
+      margin: 40rpx 0 70rpx;
 
-      .row{
-        padding-bottom: 20rpx;
-        margin-bottom: 30rpx;
+      input{
+        margin-left: 120rpx;
+        flex: 1;
+        text-align: center;
         border-bottom: 1px solid @indexMainColor;
-
-        .row-header {
-          .fj();
-          align-items: center;
-          /*padding-bottom: 20rpx;*/
-
-          .title {
-
-          }
-
-          .foot {
-            .wl(40rpx, 40rpx);
-          }
-        }
-
-        .row-collapse-content {
-          .form-item {
-            margin-top: 30rpx;
-            margin-bottom: 30rpx;
-
-            &:last-child{
-              border-bottom: 0;
-            }
-            .label {
-
-            }
-            input {
-              border-bottom: 1px solid @indexMainColor;
-              .fz26;
-            }
-          }
-        }
-      }
-
-      // 包装等级,picker单选
-      .package{
-        .fj();
-        padding-bottom: 10rpx;
-        border-bottom: 1px solid @mainBlueColor;
-
-        .label{
-
-        }
-        .content{
-          flex: 1;
-          text-align: right;
-          margin-right: 10rpx;
-        }
-        .foot{
-          .wl(40rpx, 40rpx);
-        }
       }
     }
 
@@ -106,7 +58,7 @@
         align-items: center;
 
         &:first-child{
-          margin-bottom: 10rpx;
+          margin-bottom: 40rpx;
         }
       }
     }
@@ -127,90 +79,71 @@
 <template>
   <view class="container">
     <form @submit="doConfirm">
+      <input placeholder="起运地" name="dep" style="display: none;" value="{{formData.dep}}"/>
+      <input placeholder="目的地" name="des" style="display: none;" value="{{formData.des}}"/>
+      <input placeholder="航空公司" name="accounts" style="display: none;" value="{{formData.accounts}}"/>
       <view class="form-section-one">
         <view class="row">
-          <input placeholder="起运地" style="text-align: left"/>
+          <view style="flex: 1;">
+          <picker @change="handleDepChange" value="{{depIndex}}" range="{{depList}}">
+              {{depList[depIndex] || '起运地'}}
+          </picker>
+          </view>
           <image src="../../images/plane.png" style="width: 40rpx;height: 36rpx;"></image>
-          <input placeholder="目的地" style="text-align: right"/>
+          <view @tap="showDesSearchList" style="flex: 1;text-align: right;">{{formData.des || '目的地'}}</view>
         </view>
-        <view class="row">
-          <input placeholder="航空公司"/>
+        <view class="row" @tap="showAccountsSerList">
+          {{formData.accounts || '航空公司(可选)'}}
         </view>
         <view class="hr"></view>
 
-        <radio-group>
+        <radio-group name="pw" value="{{formData.pw}}" @change="doChangePw" >
           <view class="row radio">
             <view class="radio-item">
               <label>普货
-                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+                <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="p"></radio>
               </label>
             </view>
             <view class="radio-item" style="flex: 1">
               <label>危品
-                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+                <radio color="#ffcd42" style="margin-left: 80rpx;" value="w"></radio>
               </label>
             </view>
           </view>
         </radio-group>
-        <radio-group>
+        <radio-group name="kh" wx:if="{{showKh}}">
           <view class="row radio">
             <view class="radio-item">
               <label>客机
-                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+                <radio color="#ffcd42" style="margin-left: 80rpx;" checked value="k"></radio>
               </label>
 
             </view>
             <view class="radio-item" style="flex: 1">
               <label>货机
-                <radio color="#ffcd42" style="margin-left: 80rpx;"></radio>
+                <radio color="#ffcd42" style="margin-left: 80rpx;" value="h"></radio>
               </label>
 
             </view>
           </view>
         </radio-group>
+      </view>
 
+      <view class="weight-level">
+        <view>重量等级</view>
+        <input name="weight" type="digit"/>
       </view>
-      <view class="form-section-two">
-        <view class="row">
-          <view class="row-header" @tap="showWeightLevel">
-            <view class="title">重量等级</view>
-            <image src="../../images/arrow_down.png" class="foot"></image>
-          </view>
-          <view class="row-collapse-content" wx:if="{{weightLevelVisible}}">
-            <view class="form-item">
-              <view class="label">
-                货物尺寸
-              </view>
-              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;"/>
-            </view>
-            <view class="form-item">
-              <view class="label">
-                UN号
-              </view>
-              <input type="text" placeholder="选填" placeholder-style="color: #CECECE;"/>
-            </view>
-          </view>
-        </view>
-        <view class="package">
-          <view class="title">包装等级</view>
-          <view class="content">
-            <picker @change="handlePackLvChange" value="{{packLvIndex}}" range="{{packLvArr}}">
-              {{packLvArr[packLvIndex] || '请选择'}}
-            </picker>
-          </view>
-          <image src="../../images/arrow_down.png" class="foot"></image>
-        </view>
-      </view>
+
       <view class="form-section-three">
         <view class="row">
           <text>货物状态</text>
           <view>
-            <radio-group @change="handleGoodsTypeChange">
+            <radio-group name="gtyt" @change="handleGoodsTypeChange">
               <label>固体
-                <radio color="#ffcd42" value="1"></radio>
+                <radio color="#ffcd42" checked value="固体"></radio>
               </label>
               <label>液体
-                <radio color="#ffcd42" value="2"></radio>
+                <radio color="#ffcd42" value="固体/液体"></radio>
               </label>
             </radio-group>
           </view>
@@ -220,7 +153,7 @@
           <view>
             <radio-group @change="handleGoodsTypeChange">
               <label>桶
-                <radio color="#ffcd42"></radio>
+                <radio color="#ffcd42" checked></radio>
               </label>
               <label>箱子
                 <radio color="#ffcd42"></radio>
@@ -237,45 +170,168 @@
         <button form-type="submit" class="confirm-button">询 价</button>
       </view>
     </form>
+
+    <searchList :show.sync="showDes" :list.sync="desList" title="目的地搜索"
+                @select.user="doSelectDes"></searchList>
+    <searchList2 :show.sync="showAccounts" :list.sync="accountsList" title="航空公司搜索"
+                @select.user="doSelectAccounts"></searchList2>
+
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+  import searchList from '@/components/searchList';
 
   export default class Index extends wepy.page {
     config = {};
 
-    components = {};
+    components = {
+      searchList,
+      searchList2: searchList,
+    };
 
     data = {
-      weightLevelVisible: false,
+      formData: {
+        dep: '',
+        des: '',
 
-      packLvIndex: '',
-      packLvArr: ['1级', '2级'],
+        accounts: '',
+
+        pw: 'p',
+        pwkh: '',
+        weight: '',
+        gtyt: ''
+      },
+
+      depList: ['PEK','SHA','CAN'],
+      depIndex: '',
+
+      showDes: false,
+      desList: [],
+
+      showAccounts: false,
+      accountsList: [],
+
+      showKh: false,
     };
 
     computed = {};
 
     methods = {
-      showWeightLevel(){
-        this.weightLevelVisible = !this.weightLevelVisible
+      handleDepChange(evt){
+        this.depIndex = evt.detail.value
+        this.formData.dep = this.depList[this.depIndex]
       },
-      showPackageLevel(){
-        this.packageLevelVisible = !this.packageLevelVisible
+
+
+      showDesSearchList(){
+        this.showDes = true
       },
-      handlePackLvChange(evt){
-        this.packLvIndex = evt.detail.value
+      doSelectDes(item){
+        console.log(item)
       },
-      handleGoodsTypeChange(evt){
-        console.log(evt.detail.value)
+
+      showAccountsSerList() {
+        this.showAccounts = true;
       },
-      doConfirm(){
-        console.log('进行询价')
+      doSelectAccounts(item) {
+        this.formData.accounts = item.label;
+      },
+
+      doChangePw(evt) {
+        let val = evt.detail.value;
+
+        console.log(val);
+        this.showKh = val === 'w';
+      },
+
+      doConfirm(evt) {
+        let formData = evt.detail.value;
+
+        let checkRst = this.checkFormData(formData);
+        /*
+                if(checkRst){
+                  tip.alert(checkRst)
+                  return
+                }*/
+
+        if (formData.pw === 'p') {
+          formData.pwkh = 'GEN';
+        } else {
+          if (formData.kh === 'k') {
+            formData.pwkh = 'PAX';
+          } else {
+            formData.pwkh = 'CAO';
+          }
+        }
+
+        console.log(formData);
       }
+
+
     };
 
+    checkFormData(formData){
+      if(!formData.dep){
+        return '请选择起运地'
+      }
+      if(!formData.des){
+        return '请选择目的地'
+      }
+      if(!formData.weight || !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^[0-9]\.[0-9]([0-9])?$)/.test(formData.weight)) {
+        return '请填写重量等级(合理的数字,最多两位小数)'
+      }
+    }
+
+    getDesList(query){
+      api.getDes({
+        query: {
+          select_name: ''
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            data.forEach(item => {
+              item.label = item.port_aircode;
+            })
+            this.desList = data;
+            this.$apply();
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+    getAirPlaneAccounts(query = ''){
+      api.getAirPlaneAccounts({
+        query: {
+          select_name: ''
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            data.forEach(item => {
+              item.label = item.accounts_code
+            })
+            this.accountsList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
     onLoad() {
+      // this.getDesList()
+      this.getAirPlaneAccounts()
     };
   }
 </script>
