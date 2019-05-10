@@ -129,14 +129,14 @@ class Sscrapy(SBase):
     def get_des(self, select_name):
         return self.session.query(D_PORT.port_aircode).filter(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
                                                                   D_PORT.port_cname.like("%{0}%".format(select_name))))\
-            .filter(not D_PORT.port_aircode).all()
+            .all()
 
     @close_session
     def get_accounts(self, select_name):
         return self.session.query(D_ACCOUNTS.accounts_code)\
             .filter(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
                         D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))))\
-            .filter(D_ACCOUNTS.b_airway == "1").all()
+            .all()
 
     @close_session
     def get_mn_price(self, des, dep, accounts, pwkh, gtyt):

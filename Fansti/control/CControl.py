@@ -767,18 +767,21 @@ class CControl():
                 "message": "参数缺失"
             }
         user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        print(user)
         wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
         if data["retrue_type"] == "out":
             add_model("AIR_HWYS_OUTWAREHOUSE", **{
+                "id": str(uuid.uuid1()),
                 "ydno": wts["ydno"],
-                "submitter": user["user_name"],
+                "submitter": user["username"],
                 "submit_time": datetime.datetime.now(),
                 "create_time": datetime.datetime.now()
             })
         if data["retrue_type"] == "hc":
             add_model("AIR_HWYS_INGOODYARD", **{
+                "id": str(uuid.uuid1()),
                 "ydno": wts["ydno"],
-                "submitter": user["user_name"],
+                "submitter": user["username"],
                 "submit_time": datetime.datetime.now(),
                 "create_time": datetime.datetime.now()
             })
@@ -799,6 +802,7 @@ class CControl():
         wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
         for row in data["jd_list"]:
             add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
                 "ydno": wts["ydno"],
                 "file_type": "鉴定文件",
@@ -809,6 +813,7 @@ class CControl():
             })
         for row in data["sb_list"]:
             add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
                 "ydno": wts["ydno"],
                 "file_type": "申报单",
@@ -819,6 +824,7 @@ class CControl():
             })
         for row in data["bzmx_list"]:
             add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
                 "ydno": wts["ydno"],
                 "file_type": "包装明细",
@@ -847,7 +853,8 @@ class CControl():
         if args["login_name"] == accounts:
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
         if args["qrd_type"] == "add":
-            add_model("AIR_HWYS_QR", **{
+            add_model("AIR_HWYS_QRD", **{
+                "id": str(uuid.uuid1()),
                 "ydno": wts["ydno"],
                 "jcno": args["jcno"],
                 "doc": data["doc"],
@@ -941,10 +948,11 @@ class CControl():
         if args["login_name"] == accounts:
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
         if data["royalty_type"] == 0:
-            royaltys = get_model_return_list(self.sgoods.get_royalty_by_jcno(args["jcno"]))
+            royaltys = data["packer_list"]
             for row in royaltys:
                 update_response = self.sgoods.update_royalty(row["id"], {
-                    "packer_confrim": "是"
+                    "packer_confrim": "是",
+                    "royalty_rate": row["royalty_rate"]
                 })
                 if not update_response:
                     return SYSTEM_ERROR

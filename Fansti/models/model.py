@@ -545,7 +545,7 @@ class AIR_HWYS_CKMXD(Base):
 
 class AIR_HWYS_OUTWAREHOUSE(Base):
     __tablename__ = "AIR_HWYS_OUTWAREHOUSE"
-    id = Column(String(32), primary_key=True)
+    id = Column(String(36), primary_key=True)
     ydno = Column(String(32))                       # 运单号
     submitter = Column(String(16))                  # 提交人
     submit_time = Column(DATE)                      # 提交时间
@@ -553,7 +553,7 @@ class AIR_HWYS_OUTWAREHOUSE(Base):
 
 class AIR_HWYS_INGOODYARD(Base):
     __tablename__ = "AIR_HWYS_INGOODYARD"
-    id = Column(String(32), primary_key=True)
+    id = Column(String(36), primary_key=True)
     ydno = Column(String(32))                       # 运单号
     submitter = Column(String(16))                  # 提交人
     submit_time = Column(DATE)                      # 提交时间
