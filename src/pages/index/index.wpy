@@ -132,7 +132,7 @@
 
         <view class="weight-level">
           <view>重量等级</view>
-          <input name="weight" type="digit"/>
+          <input name="weight" maxlength="11" type="digit"/>
         </view>
 
         <view class="form-section-three">
@@ -172,11 +172,11 @@
         </view>
       </form>
       <searchList :show.sync="showDes" :list.sync="desList" title="目的地搜索"
-                  @select.user="doSelectDes"></searchList>
+                  @select.user="doSelectDes" @query.user="doQueryDes"></searchList>
       <searchList2 :show.sync="showAccounts" :list.sync="accountsList" title="航空公司搜索"
-                   @select.user="doSelectAccounts"></searchList2>
+                   @select.user="doSelectAccounts" @query.user="doQueryAccounts"></searchList2>
     </block>
-    <placeholder type="enquiry"></placeholder>
+    <placeholder type="enquiry" wx:else></placeholder>
   </view>
 </template>
 
@@ -237,7 +237,10 @@
         this.showDes = true
       },
       doSelectDes(item){
-        console.log(item)
+        this.formData.des = item.label
+      },
+      doQueryDes(query){
+        this.getDesList(query)
       },
 
       showAccountsSerList() {
@@ -246,11 +249,13 @@
       doSelectAccounts(item) {
         this.formData.accounts = item.label;
       },
+      doQueryAccounts(query){
+        this.getAirPlaneAccounts(query)
+      },
 
       doChangePw(evt) {
         let val = evt.detail.value;
 
-        console.log(val);
         this.showKh = val === 'w';
       },
 
@@ -258,11 +263,6 @@
         let formData = evt.detail.value;
 
         let checkRst = this.checkFormData(formData);
-        /*
-                if(checkRst){
-                  tip.alert(checkRst)
-                  return
-                }*/
 
         if (formData.pw === 'p') {
           formData.pwkh = 'GEN';
@@ -273,8 +273,35 @@
             formData.pwkh = 'CAO';
           }
         }
+        let query = Object.assign({}, formData)
+        delete query.pw
 
-        console.log(formData);
+        api.getEnquiry({
+          query
+        }).then(
+          res => {
+            if (res.data.status == 200) {
+              let data = res.data.data;
+              let rst = data.price.replace(/(\s|\\n)/g, ' ')
+
+              wx.showModal({
+                title: '询价结果',
+                content: rst,
+                confirmText: '复制结果',
+                cancelText: '关闭',
+                success(res){
+                  if(res.confirm){
+                    wx.setClipboardData({
+                      data: rst
+                    })
+                  }
+                }
+              })
+            } else {
+              tip.alert(res.data.message);
+            }
+          }
+        );
       }
 
 
@@ -295,7 +322,7 @@
     getDesList(query){
       api.getDes({
         query: {
-          select_name: ''
+          select_name: query
         }
       }).then(
         res => {
@@ -316,7 +343,7 @@
     getAirPlaneAccounts(query = ''){
       api.getAirPlaneAccounts({
         query: {
-          select_name: ''
+          select_name: query
         }
       }).then(
         res => {
@@ -336,8 +363,25 @@
     }
 
     onLoad() {
-      // this.getDesList()
-      this.getAirPlaneAccounts()
+      let loginName= wx.getStorageSync('token')
+
+      if(loginName){
+        api.getEnquiryWhiteList({}).then(
+          res => {
+            if (res.data.status == 200) {
+              let data = res.data.data;
+
+              this.canUse = data.includes(loginName)
+              this.$apply()
+            } else {
+              tip.alert(res.data.message);
+            }
+          }
+        );
+      }else{
+        this.canUse = false
+      }
+
     };
   }
 </script>

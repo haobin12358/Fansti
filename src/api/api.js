@@ -71,6 +71,8 @@ const makeVote = params => wxRequest(params, host+`/votes/make_vote`);
 // 询价
 const getDes = params => wxRequest(params, host+`/scrapy/get_des`);
 const getAirPlaneAccounts = params => wxRequest(params, host+`/scrapy/get_accounts`);
+const getEnquiry = params => wxRequest(params, host+`/scrapy/get_enquiry`);
+const getEnquiryWhiteList = params => wxRequest(params, host+`/other/get_enquiry`);
 
 
 
@@ -106,5 +108,7 @@ export default {
   payService,
 
   getDes,
-  getAirPlaneAccounts
+  getAirPlaneAccounts,
+  getEnquiry,
+  getEnquiryWhiteList
 }
