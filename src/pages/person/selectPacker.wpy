@@ -1,0 +1,207 @@
+<style lang="less" scoped>
+  @import "../../styles/base";
+
+  .container {
+    padding: 20rpx;
+
+    .container-hd{
+      .fj();
+      input{
+        flex: 1;
+        margin-right: 20rpx;
+        border: 1px solid @borderColor;
+        border-radius: 10rpx;
+        padding-left: 20rpx;
+      }
+
+      button{
+        border-radius: 10rpx;
+        height: 2.37em;
+        line-height: 2.37em;
+        .fz26();
+        .type-yellow();
+      }
+    }
+    .packer-list{
+      padding:30rpx 20rpx;
+      .packer-item{
+        padding: 10rpx;
+        color: @mainBlueColor;
+        border-bottom: 1px solid @borderColor;
+        .fj();
+
+      }
+    }
+
+    .fix-bottom{
+      padding: 40rpx 20rpx;
+      box-sizing: border-box;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-top: 1px solid @borderColor;
+      color: @mainBlueColor;
+
+      .bottom-hd{
+        .fj();
+        margin-bottom: 20rpx;
+
+        .title{
+          margin-bottom: 20rpx;
+          color: @mainFontColor;
+        }
+        .confirm{
+          .type-yellow;
+          padding:8rpx 30rpx;
+          border-radius: 10rpx;
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container">
+    <form @submit="doSearch">
+      <view class="container-hd">
+        <input type="text" name="query" placeholder="请搜索,点击人员会被添加至已选择列表"/>
+        <button form-type="submit">搜索</button>
+      </view>
+    </form>
+    <view class="packer-list">
+      <view class="packer-item" wx:for="{{packerListCmp}}" @tap="select({{item}})">
+        <view class="name">
+          {{item.name}}
+        </view>
+        <view class="status" wx:if="{{item.checked}}">
+          已选择
+        </view>
+      </view>
+    </view>
+
+    <view class="fix-bottom">
+      <view class="bottom-hd">
+        <view class="title">已选择人员</view>
+        <view class="confirm" @tap="doSave">
+          保 存
+        </view>
+      </view>
+
+      <view class="checked-list">
+        <checkbox-group @change="handleSelectedChange">
+          <label style="margin:10rpx;display: inline-block;" wx:for="{{selectPackerList}}">
+            <checkbox value="{{item.id}}" checked></checkbox>
+            {{item.name}}
+          </label>
+        </checkbox-group>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
+  import { setStorageSync } from './index';
+
+  export default class SelectPacker extends wepy.page {
+    config = {
+      navigationBarTitleText: '选择包装人员'
+    };
+
+    components = {};
+
+    data = {
+      packerList: [
+        {
+          id: 1,
+          name: '杨某1'
+        },{
+          id: 2,
+          name: '杨某2'
+        },{
+          id: 3,
+          name: '杨某3'
+        },{
+          id: 4,
+          name: '杨某4'
+        }
+      ],
+      selectPackerList: []
+    };
+
+    computed = {
+      packerListCmp(){
+        let rst = JSON.parse(JSON.stringify(this.packerList))
+        let selectIds = this.selectPackerList.map(item => item.id.toString())
+
+        rst.forEach(item => {
+          item.checked = selectIds.includes(item.id.toString())
+        })
+
+        return rst
+      }
+    };
+
+    methods = {
+      doSearch(evt) {
+        console.log(evt.detail.value);
+      },
+      select(packer) {
+        if(packer.checked){
+          tip.confirm(`已选择人员(${packer.name}),是否移除?`,true).then(
+            () => {
+              let index = this.selectPackerList.findIndex(item => item.id == packer.id)
+
+              this.selectPackerList.splice(index, 1)
+              this.$apply()
+            }
+          )
+        }else{
+          this.selectPackerList.push(packer)
+        }
+      },
+
+      handleSelectedChange(evt){
+        let changeList = evt.detail.value;
+
+        this.selectPackerList = this.selectPackerList.filter(
+          item => changeList.includes(item.id.toString())
+        )
+      },
+
+      doSave(){
+        wx.setStorageSync('PACKAGE_LIST', this.selectPackerList);
+        wx.navigateBack();
+      }
+    };
+
+    onLoad(parmas, data) {
+      let selectPackerList = [
+        {
+          id: 1,
+          name: '杨某1'
+        },{
+          id: 2,
+          name: '杨某2'
+        },{
+          id: 3,
+          name: '杨某3'
+        },{
+          id: 4,
+          name: '杨某4'
+        },{
+          id: 6,
+          name: '杨某4'
+        },{
+          id: 5,
+          name: '杨某4'
+        }
+      ]
+
+      this.selectPackerList = selectPackerList
+    };
+  }
+</script>

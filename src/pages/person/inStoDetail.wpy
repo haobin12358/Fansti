@@ -176,27 +176,22 @@
               return
             }
 
-            api.uploadFiles({
-              contentType: 'multipart/form-data',
-              method: 'POST',
-              query: {
-                file: file.path,
+            wx.uploadFile({
+              url: api.uploadFilesUrl,
+              filePath: file.path,
+              name: Date.now(),
+              header: {
+                "Content-Type": "multipart/form-data"
+              },
+              formData: {
                 FileType: 'in',
                 index: that.formData.picture.length + 1,
-                jcno: that.formData.jcno,
-                login_name: wx.getStorageSync('token')
+                jcno: that.formData.jcno
+              },
+              success: function(res) {
+                console.log(res);
               }
-            }).then(
-              res => {
-                if (res.data.status == 200) {
-                  let data = res.data.data;
-
-                  console.log(data)
-                } else {
-                  tip.alert(res.data.message);
-                }
-              }
-            );
+            })
           }
         })
       },

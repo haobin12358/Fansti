@@ -81,11 +81,12 @@
           </view>
         </form>
 
-        <view class="container-content">
-          <view wx:for="{{showList}}" class="item" @tap="select({{item}})">
+        <view class="container-content" wx:if="{{list.length}}">
+          <view wx:for="{{list}}" class="item" @tap="select({{item}})">
             {{item.label}}
           </view>
         </view>
+        <placeholder type="empty" wx:else></placeholder>
       </scroll-view>
 
       <image src="../images/close.png" class="hide-btn" @tap.stop="hidePopup"></image>
@@ -96,7 +97,9 @@
 <script>
   import wepy from 'wepy';
   import CardMixin from '@/mixins/cardMixin';
+  import placeholder from '@/components/placeholder';
 
+  ;
   export default class SearchList extends wepy.component {
     props = {
       show: {
@@ -115,22 +118,13 @@
       },
     };
 
-    watch={
-      show(val){
-        if(val){
-          this.showList = this.list
-          this.$apply()
-        }
-      }
-    }
-
     mixins = [CardMixin]
 
     components={
+      placeholder
     }
 
     data = {
-      showList: []
     };
 
     computed = {};
@@ -143,7 +137,7 @@
       doSearch(evt) {
         let { query } = evt.detail.value;
 
-        this.showList = this.list.filter(item => item.label.toLowerCase().indexOf(query.trim().toLowerCase()) > -1);
+        this.$emit('query', query)
       },
 
       select(item){

@@ -368,11 +368,6 @@
     }
 
     async onLoad() {
-      if (!this.isBinding) {
-        await this.setOpenid();
-        await this.checkBinding();
-      }
-
       this.searchParams.login_name= wx.getStorageSync('token');
 
       if (this.isOldUser) {

@@ -10,18 +10,20 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/person/planDetail', // 计划详情
+      'pages/person/selectPacker', // 选择包装人员
+      'pages/person/index', // 操作首页
+      'pages/person/addCost', // 添加成本
+      'pages/person/addPhoto', // 添加照片
+      'pages/person/login', // 登录
       'pages/person/declare', // 申报列表
       'pages/person/declareDetail', // 申报详情
-      'pages/person/index', // 操作首页
-      'pages/person/planDetail', // 计划详情
       'pages/person/inStoDetail', // 入库明细
-      'pages/person/addCost', // 添加成本
       'pages/search/index', //查询首页
       'pages/person/formTest', // 计划详情
       'pages/person/plan', // 计划列表
       'pages/person/goodsYardReceive', // 货场接收
       'pages/person/outStoDetail', // 出库确认
-      'pages/person/addPhoto', // 添加照片
       'pages/person/shareList', //分享列表
       'pages/person/personCard',  //个人名片
       'pages/person/editPersonCard',  //编辑个人名片
@@ -103,7 +105,7 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-    wx.setStorageSync('token', 'ceshi')
+    // wx.setStorageSync('token', 'ceshi')
   }
 }
 </script>

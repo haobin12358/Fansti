@@ -124,8 +124,6 @@
 
     components = {};
 
-    mixins = [BindingMixin];
-
     data = {};
 
     computed = {};
@@ -266,12 +264,5 @@
     onShareAppMessage() {
       return getRandomContent();
     }
-
-    async onLoad() {
-      if (!this.isBinding) {
-        await this.setOpenid();
-        await this.checkBinding();
-      }
-    };
   }
 </script>

@@ -104,6 +104,7 @@
         }
         .file-list{
           display: flex;
+          border-bottom: 1px solid @mainBlueColor;
           .file-item{
             flex: 1;
             padding: 70rpx 55rpx;
@@ -190,7 +191,22 @@
         }
       }
 
+      .price-item{
+        border-bottom: 1px solid @borderColor;
+        display: flex;
+        align-items: stretch;
 
+        .price-right{
+          .fjc(space-around);
+
+          .edit{
+            color: @mainBlueColor;
+          }
+          .del{
+            color: @mainYellowColor;
+          }
+        }
+      }
     }
 
 
@@ -224,8 +240,8 @@
   <view class="container">
     <!--详情-->
     <view class="detail" wx:if="{{0 == activeName}}">
-      <!--<view class="manager-choose-worker">
-        <view class="choose-item">
+      <view class="manager-choose-worker">
+        <view class="choose-item" @tap="choosePacker({{true}})">
           <view class="hd">
             包装负责人
           </view>
@@ -236,7 +252,7 @@
             </view>
           <image class="ft" src="../../images/index_arrow.png"></image>
         </view>
-        <view class="choose-item">
+        <view class="choose-item" @tap="choosePacker({{false}})">
           <view class="hd">
             包装人员
           </view>
@@ -248,7 +264,7 @@
           <image class="ft" src="../../images/index_arrow.png"></image>
         </view>
 
-      </view>-->
+      </view>
 
       <view class="detail-hd">
         <view>进仓号：{{planDetail.jcno}}</view>
@@ -306,12 +322,14 @@
         </view>
       </view>
 
-     <!-- <view class="detail-ft">
-        <view class="button">交单时间</view>
-      </view>-->
-      <view wx:if="{{planDetail.show_button == 1}}" class="btn-wrap" style="margin-top: 200rpx">
+
+      <view wx:if="{{planDetail.show_button == 1}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
         <view class="button">提交交单时间</view>
       </view>
+      <view wx:if="{{planDetail.save_button == 1}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
+        <view class="button">保 存</view>
+      </view>
+
     </view>
 
     <!--电子交接单-->
@@ -437,16 +455,30 @@
           文件
         </view>
         <view class="file-list">
-          <view class="file-item">
+          <view class="file-item active" @tap="getDelRecFile('sb')">
             申报单
           </view>
-          <view class="file-item">
+          <view class="file-item" @tap="getDelRecFile('bz')">
             包装说明
           </view>
-          <view class="file-item">
+          <view class="file-item" @tap="getDelRecFile('jd')">
             鉴定
           </view>
         </view>
+        <view wx:if="{{delRecFile}}">
+          <view class="two-column-table del-rec-file">
+            <view class="thead">
+              {{delRecFile.title}}
+            </view>
+            <view class="tbody">
+              <view wx:for="{{delRecFile.list}}" class="tr">
+                <view class="td">{{index+1}}</view>
+                <view class="td file-link" @tap="overviewFile({{item.file_url}})">{{item.file_name}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+
 
         <view class="form-section-title">
           提交
@@ -474,8 +506,8 @@
           </view>
 
           <view class="btn-wrap">
-            <button class="button" form-type="submit" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
-            <button class="button" form-type="submit" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
+            <button class="button" @tap="delRecOutConfirm" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
+            <button class="button" @tap="delRecHcConfirm" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
           </view>
         </form>
 
@@ -484,7 +516,7 @@
 
     <!--照片-->
     <view class="photo" wx:if="{{2 == activeName}}">
-      <view class="photo-item" @tap="goAddPhoto">
+      <view class="photo-item" @tap="goAddPhoto('in')">
         <view class="title">
           入仓照片
         </view>
@@ -492,7 +524,7 @@
           {{photoList.in && photoList.in.length}}
         </view>
       </view>
-      <view class="photo-item" @tap="goAddPhoto">
+      <view class="photo-item" @tap="goAddPhoto('out')">
         <view class="title">
           出仓照片
         </view>
@@ -500,7 +532,7 @@
           {{photoList.out && photoList.out.length}}
         </view>
       </view>
-      <view class="photo-item" @tap="goAddPhoto">
+      <view class="photo-item" @tap="goAddPhoto('weight')">
         <view class="title">
           称重照片
         </view>
@@ -508,7 +540,7 @@
           {{photoList.weight && photoList.weight.length}}
         </view>
       </view>
-      <view class="photo-item disable" @tap="goAddPhoto">
+      <view class="photo-item disable" @tap="goAddPhoto('by')">
         <view class="title">
           备用
         </view>
@@ -532,20 +564,29 @@
           <view class="row">
             <view class="cell">总价：</view>
             <view class="cell">
-              <view wx:for="{{cost.price}}" style="border: 1px solid gray;margin-bottom: 20rpx;" class="two-column-center-table">
-                <view class="row" style="">
-                  <view class="cell">种类</view>
-                  <view class="cell">{{item.doc}}</view>
+              <view  wx:for="{{cost.price}}" class="price-item" >
+                <view class="two-column-center-table" style="flex: 1;">
+                  <view class="row" style="">
+                    <view class="cell">种类</view>
+                    <view class="cell">{{item.doc}}</view>
+                  </view>
+                  <view class="row">
+                    <view class="cell">单价</view>
+                    <view class="cell">{{item.curr}}</view>
+                  </view>
+                  <view class="row">
+                    <view class="cell">数量</view>
+                    <view class="cell">{{item.amount}}</view>
+                  </view>
                 </view>
-                <view class="row">
-                  <view class="cell">单价</view>
-                  <view class="cell">{{item.curr}}</view>
-                </view>
-                <view class="row">
-                  <view class="cell">数量</view>
-                  <view class="cell">{{item.amount}}</view>
+
+
+                <view wx:if="{{item.is_update}}" class="price-right">
+                  <view class="edit" @tap="doEditCost({{item}})">修改</view>
+                  <view  class="del" @tap="doRemoveCost({{item}})">删除</view>
                 </view>
               </view>
+
             </view>
           </view>
         </view>
@@ -562,6 +603,8 @@
         {{item}}
       </view>
     </view>
+
+    <file-list :show.sync="showFileList" :title.sync="showFileTitle" :list.sync="delRecFileList" @overview.user="overviewFile"></file-list>
   </view>
 </template>
 
@@ -569,22 +612,31 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
+  import fileList from '@/components/fileList';
 
   export default class PlanDetail extends wepy.page {
     config = {};
 
-    components = {};
+    components = {
+      'file-list': fileList
+    };
 
     data = {
       jcno: '',
-      activeName: 1,
+      activeName: 0,
+      detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
       array: ['杨某', '李某'],
       index: '',
 
       planDetail: {},
+
       deliveryReceipt: {},
+      showFileList: false,
+      showFileTitle: '',
+      delRecFileList: [],
+
       photoList: {
         in: {},
         out: {},
@@ -606,9 +658,141 @@
         this.refreshTab()
       },
 
-      // 详情
+      /*详情*/
+      choosePacker(){
+        this.$preload('list', {a: {b:1}})
+        this.$navigate('/pages/person/selectPacker', {a: {b:1}})
+      },
 
+      // 提交交单时间
+      doSaveJdTime(){
+        tip.confirm('再次确认').then(
+          ()=>{
+            api.updateWts({
+              method: 'POST',
+              login_name: wx.getStorageSync('token'),
+              jcno: this.jcno,
+              query: {
+                retrue_type: 'hc'
+              }
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success('货场确认成功', 1500)
+                  this.getDeliveryReceipt()
+                }
+              }
+            )
+          }
+        )
+      },
+      doSaveBz(){
+        return
+        tip.confirm('再次确认').then(
+          ()=>{
+            api.saveRoyalty({
+              method: 'POST',
+              login_name: wx.getStorageSync('token'),
+              jcno: this.jcno,
+              query: {
+                packer_leader: '',
+                packer_list: '',
+              }
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success('货场确认成功', 1500)
+                  this.getDeliveryReceipt()
+                }
+              }
+            )
+          }
+        )
+      },
 
+      bindPickerChange(index){
+        console.log(index)
+      },
+
+      /*电子交接单*/
+      getDelRecFile(type){
+        let url = '',
+          tipTxt = '无',
+          title = ''
+
+        switch (type) {
+          case 'sb':
+            url = 'getSbList'
+            title = '申报单文件'
+            tipTxt = tipTxt+ title
+            break
+          case 'bz':
+            url = 'getBzsmList'
+            title = '包装说明文件'
+            tipTxt = tipTxt+ title
+            break
+          case 'jd':
+            url = 'getCJdList'
+            title = '鉴定文件'
+            tipTxt = tipTxt+ title
+            break
+        }
+
+        this.showFileTitle = title
+        api[url]({
+          query: {
+            login_name: wx.getStorageSync('token'),
+            jcno: this.jcno
+          }
+        }).then(
+          res => {
+            if(res.data.status == 200){
+              let data = res.data.data
+
+              if(data.length){
+                this.delRecFileList = data
+                this.showFileList = true
+                this.$apply()
+              }else {
+                 tip.alert(tipTxt)
+              }
+            }
+          }
+        )
+      },
+      overviewFile({file_url}){
+        tip.loading('下载文件中');
+
+        wx.downloadFile({
+          url: file_url,
+          success: function (res) {
+            var filePath = res.tempFilePath,
+              docArr = ['doc', 'xls', 'ppt', 'pdf', 'docx', 'xlsx', 'pptx'],
+              imgArr = ['jpg','png']
+            tip.loaded();
+
+            let showDoc = false;
+
+            for (let item in docArr){
+              if (filePath.endsWith(docArr[item])) {
+                wx.openDocument({
+                  filePath: filePath
+                })
+                showDoc = true;
+              }
+            }
+
+            if(!showDoc){
+              wx.previewImage({
+                urls: [filePath]
+              })
+            }
+          }
+
+        })
+      },
+
+      // 废弃 不填form 备注的话
       confirmDeliveryReceipt(){
         console.log('提交')
         return
@@ -617,24 +801,85 @@
         })
       },
 
-      bindPickerChange(index){
-        console.log(index)
+      delRecOutConfirm(){
+        tip.confirm('再次确认').then(
+          ()=>{
+            api.retrueOuthc({
+              method: 'POST',
+              login_name: wx.getStorageSync('token'),
+              jcno: this.jcno,
+              query: {
+                retrue_type: 'out'
+              }
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success('库房确认成功', 1500)
+                  this.getDeliveryReceipt()
+                }
+              }
+            )
+          }
+        )
       },
-      // 电子交接单
 
-      // 照片
-      goAddPhoto(){
-        this.$navigate('/pages/person/addPhoto')
+      delRecHcConfirm(){
+        tip.confirm('再次确认').then(
+          ()=>{
+            api.retrueOuthc({
+              method: 'POST',
+              login_name: wx.getStorageSync('token'),
+              jcno: this.jcno,
+              query: {
+                retrue_type: 'hc'
+              }
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success('货场确认成功', 1500)
+                  this.getDeliveryReceipt()
+                }
+              }
+            )
+          }
+        )
       },
 
-      // 成本
-      doEditCost(){
-        this.$preload('detail', {a:1});
-        this.$navigate('/pages/person/addCost')
+      /*照片*/
+      goAddPhoto(type){
+        this.$navigate('/pages/person/addPhoto', { type, jcno: this.jcno });
+      },
+
+      /*成本*/
+      doEditCost(item){
+        this.$preload('detail', item);
+        this.$navigate('/pages/person/addCost',  {jcno: this.jcno})
       },
       doAddCost(){
-        this.$navigate('/pages/person/addCost')
+        this.$navigate('/pages/person/addCost', {jcno: this.jcno})
       },
+      doRemoveCost(item){
+        tip.confirm(`确认删除成本(种类:${item.doc})?`).then(
+          () => {
+            api.updateQrd({
+              method: 'POST',
+              login_name: wx.getStorageSync('token'),
+              jcno: this.jcno,
+              qrd_type: 'delete',
+              query: {
+                id: item.id
+              }
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success(`删除成本成功`)
+                  this.getCost()
+                }
+              }
+            )
+          }
+        )
+      }
 
     };
 
@@ -736,12 +981,18 @@
       }
     }
 
+    // 接收选择包装人员参数
+    receivePackageList(){
+      console.log('接收选择包装人员参数')
+    }
+
     onShow() {
       wx.setNavigationBarTitle({
         title: this.tabs[this.activeName]
       })
 
       this.refreshTab()
+      this.receivePackageList();
     };
 
     onLoad(params){

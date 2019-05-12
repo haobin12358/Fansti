@@ -6,6 +6,7 @@
 
     .container-hd{
       color: @mainBlueColor;
+      margin-bottom: 20rpx;
     }
 
     .choose-batch{
@@ -86,9 +87,9 @@
 <template>
   <view class="container">
     <view class="container-hd">
-      进仓号
+      进仓号: {{jcno}}
     </view>
-    <picker @change="handleBatchChange" value="{{batchIndex}}" range="{{batchList}}">
+    <picker wx:if="{{type == 'in'}}" @change="handleBatchChange" value="{{batchIndex}}" range="{{batchList}}">
       <view class="choose-batch">
         <view class="hd">批次</view>
         <view class="bd">
@@ -121,8 +122,8 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
   import tip from '@/utils/tip';
-
 
   export default class AddPhoto extends wepy.page {
     config = {};
@@ -130,33 +131,12 @@
     components = {};
 
     data = {
+      type: 'in',
+      jcno: '',
+
       batchIndex: '0',
       batchList: [1,2,3,4,5,6],
-      list: [
-        {
-          url: 'http://dummyimage.com/200x100',
-          time: '2019-23-21 29:22:@2',
-          name: '李明',
-          checked: true
-        },{
-          url: 'http://dummyimage.com/200x100',
-          time: new Date().toLocaleDateString(),
-          name: '李明1',
-          checked: false
-
-        },{
-          url: 'http://dummyimage.com/200x100',
-          time: new Date().toLocaleDateString(),
-          name: '李明2',
-          checked: true
-
-        },{
-          url: 'http://dummyimage.com/200x100',
-          time: new Date().toLocaleDateString(),
-          name: '李明1',
-          checked: false
-        },
-      ]
+      list: []
     };
 
     computed = {};
@@ -173,9 +153,18 @@
         let that = this
 
         wx.chooseImage({
+          count: 1,
           success({tempFilePaths}) {
-            that.list = that.list.concat(tempFilePaths.map(item => {return {url: item}}));
-            that.$apply()
+            wx.uploadFile({
+              url: api.uploadFilesUrl,
+              filePath: tempFilePaths[0],
+              name: 'file',
+              formData: {
+                FileType: that.type,
+                index: that.list.length + 1,
+                jcno: that.jcno
+              }
+            })
           }
         })
       },
@@ -191,7 +180,11 @@
       }
     };
 
-    onLoad() {
+    onLoad(parmas) {
+      /*this.jcno = parmas.jcno
+      this.type = parmas.type */
+      this.jcno = 'E18080196'
+
     };
   }
 </script>

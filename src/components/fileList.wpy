@@ -1,0 +1,103 @@
+<style scoped lang="less">
+  @import "../styles/base";
+  @import "../styles/table";
+
+  .file-list-container {
+    height: 100%;
+
+    .title{
+      padding: 40rpx;
+      color: @mainBlueColor;
+      text-align: center;
+      font-weight: bold;
+      font-size: 30rpx;
+    }
+
+    .two-column-table {
+
+      .tbody {
+        .tr {
+          .td {
+
+            &:first-child {
+              text-align: center;
+              justify-content: center;
+              flex: 0.3;
+            }
+            &:last-child {
+              text-align: center;
+              justify-content: center;
+            }
+          }
+
+          .td.file-link {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <popup :show.sync="show" @hide.user="hidePopup">
+    <scroll-view scroll-y class="file-list-container">
+      <view class="title">{{title}}</view>
+
+      <view style="height: 100%;" class="two-column-table">
+        <view class="tbody">
+          <view wx:for="{{list}}" class="tr" >
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item}})">{{item.file_name}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </popup>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import CardMixin from '@/mixins/cardMixin';
+  import placeholder from '@/components/placeholder';
+  import popup from '@/components/popup';
+
+  export default class SearchList extends wepy.component {
+    props = {
+      show: {
+        type: Boolean,
+        twoWay: true	//双向绑定
+      },
+      title: {
+        type: String,
+        default: '文件列表'
+      },
+      list: {
+        type: Array,
+        default: []
+      },
+    };
+
+    mixins = [CardMixin];
+
+    components = {
+      placeholder,
+      popup
+    };
+
+    data = {};
+
+    computed = {};
+
+    methods = {
+      hidePopup() {
+        this.show = false;
+      },
+      overviewFile(filename){
+        this.$emit('overview', item)
+      },
+    };
+
+  }
+</script>
+

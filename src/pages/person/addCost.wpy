@@ -28,6 +28,7 @@
     <form @submit.stop="doConfirmCost" @reset="doResetCost">
       <input style="display: none;" name="fkdw" value="{{formData.fkdw}}"/>
       <input style="display: none;" name="doc" value="{{formData.doc}}"/>
+      <input style="display: none;" name="id" value="{{formData.id}}"/>
 
       <view class="form-item" @tap="doShowPayUnit">
         <view class="label">付款单位</view>
@@ -44,13 +45,13 @@
       <view class="form-item">
         <view class="label">单价</view>
         <view class="value">
-          <input type="text" value="{{formData.curr}}" name="curr" placeholder="请填写该项"/>
+          <input type="text" value="{{formData.curr}}" type="digit" maxlength="11" name="curr" placeholder="请填写该项(合理的数字,最多两位小数)"/>
         </view>
       </view>
       <view class="form-item">
         <view class="label">数量</view>
         <view class="value">
-          <input type="text" value="{{formData.amount}}" name="amount" placeholder="请填写该项"/>
+          <input type="text" value="{{formData.amount}}" type="number" maxlength="11" name="amount" placeholder="请填写该项(合理的数字)"/>
         </view>
       </view>
 
@@ -61,9 +62,9 @@
     </form>
 
     <searchList :show.sync="showPayUnit" :list.sync="payUnitList" title="付款单位搜索"
-                @select.user="doChangePayUnit"></searchList>
+                @select.user="doChangePayUnit" @query.user="doQueryPayUnit"></searchList>
     <searchList2 :show.sync="showFeeType" :list.sync="feeTypeList" title="费用种类搜索"
-                @select.user="doChangeFeeType"></searchList2>
+                @select.user="doChangeFeeType" @query.user="doQueryFeeType"></searchList2>
 
   </view>
 </template>
@@ -84,6 +85,7 @@
 
     data = {
       val: '初始值',
+      jcno: '',
 
       isEdit: false,
       formData: {
@@ -112,15 +114,19 @@
       doChangePayUnit(item){
         this.formData.fkdw = item.label;
       },
-
-      doShowFeeType(){
-        this.showFeeType = true
+      doQueryPayUnit(query) {
+        this.getUnit(query);
       },
-      doChangeFeeType(item){
+      doShowFeeType() {
+        this.showFeeType = true;
+      },
+      doChangeFeeType(item) {
         this.formData.doc = item.label;
-        this.formData.curr = item.d_price
+        this.formData.curr = item.d_price;
       },
-
+      doQueryFeeType(query) {
+        this.getFeeType(query);
+      },
 
       doResetCost() {
         this.formData.fkdw = ''
@@ -137,24 +143,37 @@
           tip.alert('请选择费用种类')
           return
         }
-        if(!formData.curr){
-          tip.alert('请填写单价')
+        if(!formData.curr || !/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^[0-9]\.[0-9]([0-9])?$)/.test(formData.curr)){
+          tip.alert('请填写单价(注意格式)')
           return
         }
-        if(!formData.amount){
-          tip.alert('请填写数量')
+        if(!formData.amount || !/^([1-9]\d*)$/.test(formData.amount)){
+          tip.alert('请填写数量(注意格式)')
           return
         }
 
-
+        api.updateQrd({
+          method: 'POST',
+          login_name: wx.getStorageSync('token'),
+          jcno: this.jcno,
+          qrd_type: this.isEdit ? 'update' : 'add',
+          query: formData
+        }).then(
+          res => {
+            if(res.data.status == 200){
+              tip.success(`${this.isEdit?'修改':'添加'}成本成功`)
+              wx.navigateBack()
+            }
+          }
+        )
       },
 
     };
 
-    getUnit() {
+    getUnit(query = '') {
       api.getFkdw({
         query: {
-          fkdw: ''
+          fkdw: query
         }
       }).then(
         res => {
@@ -173,10 +192,10 @@
         }
       );
     }
-    getFeeType() {
+    getFeeType(query = '') {
       api.getFyzl({
         query: {
-          fyzl: ''
+          fyzl: query
         }
       }).then(
         res => {
@@ -201,9 +220,12 @@
       this.getUnit()
       this.getFeeType()
 
+      this.jcno = params.jcno
+      // this.jcno = 'E18080196'
       if(data.preload){
+        console.log(data.preload.detail)
         this.isEdit = true
-        this.detail = data.preload.detail
+        this.formData = data.preload.detail
       }
     };
   }

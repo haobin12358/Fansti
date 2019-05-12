@@ -44,8 +44,6 @@
       navigationBarTitleText: '泛思特'
     };
 
-    mixins = [BindingMixin];
-
     components = {
       'news-list': NewsList,
       'load-more': LoadMore

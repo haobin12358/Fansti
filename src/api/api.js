@@ -21,9 +21,19 @@ const getSbList = params => wxRequest(params, host + `/control/get_sb_list`);
 const getBzsmList = params => wxRequest(params, host + `/control/get_bzsm_list`);
 const getCJdList = params => wxRequest(params, host + `/control/get_jd_list`);
 const getSbnoList = params => wxRequest(params, host + `/control/get_sbno_list`);
-const updateWts = params => wxRequest(params, host + `/control/update_wts`); // post
 
-const uploadFiles = params => wxRequest(params, host + `/control/upload_files`); // post 上传文件
+// 修改 都是post
+const updateWts = params => wxRequest(params, host + `/control/update_wts?login_name=${params.login_name}&jcno=${params.jcno}`);  // 交单
+const saveRoyalty = params => wxRequest(params, host + `/control/save_royalty?login_name=${params.login_name}&jcno=${params.jcno}`);  // 保存包装人员
+const updateRoyalty = params => wxRequest(params, host + `/control/update_royalty?login_name=${params.login_name}&jcno=${params.jcno}`);  // 确认包装/完成
+const updateDzjjd = params => wxRequest(params, host + `/control/update_dzjjd?login_name=${params.login_name}&jcno=${params.jcno}`);  // 库房/货场确认
+const addIn = params => wxRequest(params, host + `/control/add_in?login_name=${params.login_name}&jcno=${params.jcno}`);  // 保存入库明细
+const retrueOuthc = params => wxRequest(params, host + `/control/retrue_outhc?login_name=${params.login_name}&jcno=${params.jcno}`);  // 出库/货场确认
+const makeSb = params => wxRequest(params, host + `/control/make_sb?login_name=${params.login_name}&jcno=${params.jcno}`);  // 提交申报单
+const updateQrd = params => wxRequest(params, host + `/control/update_qrd?login_name=${params.login_name}&jcno=${params.jcno}&qrd_type=${params.qrd_type}`);  // 添加/编辑/删除成本
+const userLoginLocal = params => wxRequest(params, host + `/users/user_login_local`);  // 内部办公登录
+
+const uploadFilesUrl = host + `/control/upload_files`; // post 上传文件 url
 
 
 //  绑定用户  POST
@@ -130,6 +140,15 @@ export default {
   getBzsmList,
   getCJdList,
   getSbnoList,
+
   updateWts,
-  uploadFiles,
+  uploadFilesUrl,
+  updateDzjjd,
+  addIn,
+  retrueOuthc,
+  makeSb,
+  updateQrd,
+  userLoginLocal,
+  saveRoyalty,
+  updateRoyalty
 };

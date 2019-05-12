@@ -65,14 +65,14 @@
   <view class="container">
     <view class="form-section-title">鉴定列表</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{list}}">
-        <image class="img" src="{{item.url}}"></image>
+      <view class="photo-item" wx:for="{{jdList}}">
+        <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
-        <view class="info">
+        <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
-        </view>
+        </view>-->
       </view>
 
       <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
@@ -80,14 +80,14 @@
 
     <view class="form-section-title">申报单</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{list}}">
-        <image class="img" src="{{item.url}}"></image>
+      <view class="photo-item" wx:for="{{sbList}}">
+        <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
-        <view class="info">
+        <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
-        </view>
+        </view>-->
       </view>
 
       <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
@@ -95,14 +95,14 @@
 
     <view class="form-section-title">包装文件</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{list}}">
-        <image class="img" src="{{item.url}}"></image>
+      <view class="photo-item" wx:for="{{bzList}}">
+        <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
-        <view class="info">
+        <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
-        </view>
+        </view>-->
       </view>
 
       <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
@@ -119,6 +119,8 @@
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class DeclareDetail extends wepy.page {
     config = {};
@@ -150,7 +152,11 @@
           name: '李明1',
           checked: false
         },
-      ]
+      ],
+
+      jdList: [],
+      sbList: [],
+      bzList: []
     };
 
     computed = {};
@@ -168,10 +174,73 @@
       },
       removePhoto(index){
         console.log(index)
-      }
+      },
+
     };
 
-    onLoad() {
+    getJdList(jcno){
+      api.getCJdList({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.jdList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+    getSbList(jcno){
+      api.getSbList({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.sbList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+    getBzList(jcno){
+      api.getSbList({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.bzList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
+
+    onLoad(params) {
+      this.getJdList(params.jcno)
+      this.getSbList(params.jcno)
+      this.getBzList(params.jcno)
     };
   }
 </script>
