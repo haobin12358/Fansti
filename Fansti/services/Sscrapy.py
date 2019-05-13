@@ -129,7 +129,7 @@ class Sscrapy(SBase):
     def get_des(self, select_name):
         return self.session.query(D_PORT.port_aircode).filter(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
                                                                   D_PORT.port_cname.like("%{0}%".format(select_name))))\
-            .all()
+            .filter(not not D_PORT.port_aircode).all()
 
     @close_session
     def get_accounts(self, select_name):

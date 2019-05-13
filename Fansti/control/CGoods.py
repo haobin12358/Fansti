@@ -53,6 +53,12 @@ class CGoods():
             wts_filter.add(or_(AIR_HWYS_WTS.czr == args.get("login_name"), AIR_HWYS_WTS.xsr == args.get("login_name")))
         elif usertype == 0:
             pass
+        elif usertype == 30:
+            wts_filter.add(AIR_HWYS_WTS.dmczlx == args.get("login_name"))
+        elif usertype == 20:
+            accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
+            make_log("accounts", accounts)
+            wts_filter.add(AIR_HWYS_WTS.company == accounts.get("compnay"))
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
