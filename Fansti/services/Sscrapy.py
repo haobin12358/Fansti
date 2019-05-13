@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_JD, AIR_HWYS_LINES, SELECT_INFO, AIR_HWYS_DGR, AIR_HWYS_DGR_LEVEL, \
     AIR_HWYS_DGR_CONTAINER, AIR_HWYS_TACT, AIR_HWYS_ENQUIRY, D_ACCOUNTS, D_PORT
 from Fansti.services.SBase import SBase, close_session
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 class Sscrapy(SBase):
 
@@ -127,15 +127,17 @@ class Sscrapy(SBase):
 
     @close_session
     def get_des(self, select_name):
-        return self.session.query(D_PORT.port_aircode).filter(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
-                                                                  D_PORT.port_cname.like("%{0}%".format(select_name))))\
-            .filter(not not D_PORT.port_aircode).all()
+        return self.session.query(D_PORT.port_aircode).filter(and_(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
+                                                                  D_PORT.port_cname.like("%{0}%".format(select_name))),
+                                                              D_PORT.port_aircode != None))\
+            .all()
 
     @close_session
     def get_accounts(self, select_name):
         return self.session.query(D_ACCOUNTS.accounts_code)\
-            .filter(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
-                        D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))))\
+            .filter(and_(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
+                        D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))),
+                         D_ACCOUNTS.accounts_code != None))\
             .all()
 
     @close_session
