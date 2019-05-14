@@ -862,6 +862,7 @@ class CControl():
                 "amount": data["amount"],
                 "fkdw": data["fkdw"],
                 "createtime": datetime.datetime.now(),
+                "byzd1": "1",
                 "byzd2": user["username"]
             })
         if args["qrd_type"] == "update":
@@ -873,6 +874,7 @@ class CControl():
                 "amount": data["amount"],
                 "fkdw": data["fkdw"],
                 "createtime": datetime.datetime.now(),
+                "byzd1": "1",
                 "byzd2": user["username"]
             })
             if not update_qrd:
