@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.getcwd()))
 import json, uuid
-from flask import request
+from flask import request, send_from_directory
 from Fansti.config.response import SYSTEM_ERROR
 from Fansti.common.Log import make_log, judge_keys
 from Fansti.common.get_model_return_list import get_model_return_dict, get_model_return_list
@@ -416,3 +416,39 @@ class CGoods():
         response["data"] = {}
         response["data"]["retrue_num"] = retrue_num
         return response
+
+    def export_zip(self):
+        args = request.args.to_dict()
+        jcno = args["jcno"]
+        type = args["type"]
+        import zipfile
+
+        if type == "in":
+            zip_name = "in.zip"
+            zip_dir = 'E:\\fstfile\\photo\\{0}\\in\\in.zip'.format(jcno)
+            f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\in\\in.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
+            photo_files = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
+            for row in photo_files:
+                abs_dir = "E:\\fstfile\\photo\\{0}\\in\\{1}".format(jcno, row["filename"])
+                f.write(abs_dir)
+            f.close()
+        elif type == "out":
+            zip_name = "out.zip"
+            zip_dir = 'E:\\fstfile\\photo\\{0}\\out\\out.zip'.format(jcno)
+            f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\out\\out.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
+            photo_files = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
+            for row in photo_files:
+                abs_dir = "E:\\fstfile\\photo\\{0}\\out\\{1}".format(jcno, row["filename"])
+                f.write(abs_dir)
+            f.close()
+        else:
+            zip_name = "weight.zip"
+            zip_dir = 'E:\\fstfile\\photo\\{0}\\weight\\weight.zip'.format(jcno)
+            f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\weight\\weight.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
+            photo_files = get_model_return_list(self.sgoods.get_weight_order_by_jcno(args["jcno"]))
+            for row in photo_files:
+                abs_dir = "E:\\fstfile\\photo\\{0}\\weight\\{1}".format(jcno, row["filename"])
+                f.write(abs_dir)
+            f.close()
+
+        return send_from_directory(zip_dir, zip_name, as_attachment=True)

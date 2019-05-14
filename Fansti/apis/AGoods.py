@@ -16,7 +16,8 @@ class FSGoods(Resource):
 
         apis = {
             "get_goods_list": "self.cgoods.get_goods_list()",
-            "get_jc_abo": "self.cgoods.get_jc_abo()"
+            "get_jc_abo": "self.cgoods.get_jc_abo()",
+            "export_zip": "self.cgoods.export_zip()"
         }
 
         if goods not in apis:

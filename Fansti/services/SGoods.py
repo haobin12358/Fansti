@@ -39,17 +39,20 @@ class SGoods(SBase):
 
     @close_session
     def get_in_order_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime)\
+        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
+                                  AIR_HWYS_PHOTOS.filename)\
             .filter_by(jcno=jcno).filter_by(phototype='in').all()
 
     @close_session
     def get_out_order_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime) \
+        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
+                                  AIR_HWYS_PHOTOS.filename) \
             .filter_by(jcno=jcno).filter_by(phototype='out').all()
 
     @close_session
     def get_weight_order_by_jcno(self, jcno):
-        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime) \
+        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
+                                  AIR_HWYS_PHOTOS.filename) \
             .filter_by(jcno=jcno).filter_by(phototype='weight').all()
 
     @close_session
