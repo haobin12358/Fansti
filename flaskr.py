@@ -3,14 +3,6 @@ from flask import Flask
 import flask_restful
 #from flask_cors import CORS
 
-#from ManagerSystem.apis.AManager import MSManager
-#from ManagerSystem.apis.AStocks import MSStocks
-#from ManagerSystem.apis.AProducts import MSProduct
-#from ManagerSystem.apis.AOrder import MSOrder
-#from ManagerSystem.apis.ACotegory import MSCategory
-#from ManagerSystem.apis.MSApproval import MSApproval
-#from ManagerSystem.apis.AOther import AOther
-#from ManagerSystem.apis.ACoupons import MSCoupons
 from Fansti.apis.APay import FSpay
 from Fansti.apis.Ascrapy import FSscrapy
 from Fansti.apis.AUsers import FSUser
@@ -19,6 +11,7 @@ from Fansti.apis.AOther import FSother
 from Fansti.apis.AReds import FSRed
 from Fansti.apis.ANews import FSNews
 from Fansti.apis.AControl import FSControl
+from Fansti.apis.ACommon import ACommon
 
 fansti = Flask(__name__)
 #CORS(sg, resources=r'/*')
@@ -32,6 +25,7 @@ api.add_resource(FSRed, "/fansti/reds/<string:reds>")
 api.add_resource(FSNews, "/fansti/news/<string:news>")
 api.add_resource(FSpay, "/fansti/pay/<string:pay>")
 api.add_resource(FSControl, "/fansti/control/<string:control>")
+api.add_resource(ACommon, "/fansti/common/<string:common>")
 
 @fansti.route("/")
 def index():

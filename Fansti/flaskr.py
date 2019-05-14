@@ -14,6 +14,7 @@ from Fansti.apis.AReds import FSRed
 from Fansti.apis.ANews import FSNews
 from Fansti.apis.AVotes import FSVotes
 from Fansti.apis.AControl import FSControl
+from Fansti.apis.ACommon import ACommon
 # # 处理高并发
 # from gevent.pywsgi import WSGIServer
 fansti = Flask(__name__)
@@ -29,6 +30,7 @@ api.add_resource(FSNews, "/fansti/news/<string:news>")
 api.add_resource(FSVotes, "/fansti/votes/<string:votes>")
 api.add_resource(FSpay, "/fansti/pay/<string:pay>")
 api.add_resource(FSControl, "/fansti/control/<string:control>")
+api.add_resource(ACommon, "/fansti/common/<string:common>")
 
 @fansti.route("/")
 def index():
