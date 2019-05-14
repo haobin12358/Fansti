@@ -257,7 +257,7 @@ class CControl():
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
 
         photoheadid = get_model_return_dict(self.sgoods.get_photoheadid_by_head_jcno(args["jcno"], args["photo_head"]))
-        photos = get_model_return_list(self.sgoods.get_photo_by_headid(photoheadid["photoheadid"]))
+        photos = get_model_return_list(self.sgoods.get_photo_by_headid(photoheadid["id"]))
         for row in photos:
             row["czr"] = photoheadid["czr"]
             row["createtime"] = photoheadid["createtime"].strftime("%Y/%m/%d %H:%M:%S")
@@ -281,7 +281,7 @@ class CControl():
 
         photoheadid = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
         photo_dict = []
-        photohead = photoheadid["photohead"]
+        photohead = photoheadid["photo_head"]
         if photohead:
             photohead = int(photohead)
         else:
