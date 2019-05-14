@@ -542,6 +542,17 @@ class AIR_HWYS_CKMXD(Base):
     pickup_date = Column(DATE)                      # 提货日期
     creator = Column(String(50))                    # 创建人
     create_time = Column(DATE)                      # 创建时间
+    photo_head = Column(String(10))                 # 照片批次
+
+class AIR_HWYS_PHOTO_HEAD(Base):
+    __tablename__ = "AIR_HWYS_PHOTO_HEAD"
+    id = Column(String(100), primary_key=True)
+    photohead = Column(String(200))
+    jcno = Column(String(100))
+    type = Column(String(20))
+    createtime = Column(DATE)
+    czr = Column(String(100))
+    photocount = Column(NUMBER)
 
 class AIR_HWYS_OUTWAREHOUSE(Base):
     __tablename__ = "AIR_HWYS_OUTWAREHOUSE"

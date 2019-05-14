@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, \
     GOODS_RETRUE, AIR_HWYS_DZJJD, AIR_HWYS_QRD, D_CHARGE_COMPANY, D_CHARGE_TYPE, AIR_HWYS_CKMXD, AIR_HWYS_OUTWAREHOUSE, \
-    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD, AIR_HWYS_PACK_ROYALTY
+    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD, AIR_HWYS_PACK_ROYALTY, AIR_HWYS_PHOTO_HEAD
 from Fansti.services.SBase import SBase, close_session
 from sqlalchemy import func, or_
 
@@ -219,8 +219,8 @@ class SGoods(SBase):
         return self.session.query(AIR_HWYS_CKMXD.warehouse_address, AIR_HWYS_CKMXD.enter_time,
                                   AIR_HWYS_CKMXD.goods_quantity, AIR_HWYS_CKMXD.delivery_unit,
                                   AIR_HWYS_CKMXD.goods_weight, AIR_HWYS_CKMXD.cargo_size, AIR_HWYS_CKMXD.client_name,
-                                  AIR_HWYS_CKMXD.remark)\
-            .filter_by(jcno=jcno).first()
+                                  AIR_HWYS_CKMXD.remark, AIR_HWYS_CKMXD.photo_head)\
+            .filter_by(jcno=jcno).order_by(AIR_HWYS_CKMXD.create_time.desc()).first()
 
     @close_session
     def get_outwarehouse(self, ydno):
@@ -299,3 +299,12 @@ class SGoods(SBase):
         self.session.query(AIR_HWYS_PACK_ROYALTY).filter_by(id=id).update(royalty)
         self.session.commit()
         return True
+
+    @close_session
+    def get_photoheadid_by_head_jcno(self, jcno, photohead):
+        return self.session.query(AIR_HWYS_PHOTO_HEAD.id, AIR_HWYS_PHOTO_HEAD.czr, AIR_HWYS_PHOTO_HEAD.createtime)\
+            .filter_by(photohead=photohead).filter_by(type="in").filter_by(jcno=jcno).first()
+
+    @close_session
+    def get_photo_by_headid(self, photoheadid):
+        return self.session.query(AIR_HWYS_PHOTOS.photourl).filter_by(photoheadid=photoheadid).all()

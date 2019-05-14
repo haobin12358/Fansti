@@ -244,6 +244,58 @@ class CControl():
             "data": handover_list
         }
 
+    def get_jc_pic_in(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno", "photo_head"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        photoheadid = get_model_return_dict(self.sgoods.get_photoheadid_by_head_jcno(args["jcno"], args["photo_head"]))
+        photos = get_model_return_list(self.sgoods.get_photo_by_headid(photoheadid["photoheadid"]))
+        for row in photos:
+            row["czr"] = photoheadid["czr"]
+            row["createtime"] = photoheadid["createtime"].strftime("%Y/%m/%d %H:%M:%S")
+        return {
+            "status": 200,
+            "message": "获取入仓照片成功",
+            "data": photos
+        }
+
+    def get_jc_in_photohead(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+
+        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        make_log("accounts", accounts)
+        if args["login_name"] == accounts:
+            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+
+        photoheadid = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
+        photo_dict = []
+        photohead = photoheadid["photohead"]
+        if photohead:
+            photohead = int(photohead)
+        else:
+            photohead = 1
+        for row in range(1, photohead + 1):
+            photo_dict.append(row)
+
+        return {
+            "status": 200,
+            "message": "获取入仓照片批次成功",
+            "data": photo_dict
+        }
+
+
     def get_jc_pic(self):
         # TODO 入仓照片分批次，这个需要设计
         args = request.args.to_dict()
@@ -284,7 +336,6 @@ class CControl():
             return SYSTEM_ERROR
         quantity_weight = get_model_return_dict(self.sgoods.get_quantity_weight_by_jcno(args["jcno"]))
         if quantity_weight:
-
             jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
             make_log("jc_abo_in", jc_abo_in)
             if jc_abo_in:
@@ -427,19 +478,6 @@ class CControl():
                 "client_name": None,
                 "remark": None
             })
-
-        jc_abo_in = get_model_return_list(self.sgoods.get_in_order_by_jcno(args["jcno"]))
-        make_log("jc_abo_in", jc_abo_in)
-        wts["picture"] = []
-        if jc_abo_in:
-            for in_order in jc_abo_in:
-                wts["picture"].append(in_order["photourl"])
-                if wts["createtime"]:
-                    wts["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
-                wts["xsr"] = in_order["czr"]
-        else:
-            wts["createtime"] = None
-            wts["xsr"] = None
         return {
             "status": 200,
             "message": "获取入库明细成功",
@@ -710,7 +748,6 @@ class CControl():
         return response
 
     def add_in(self):
-        # TODO 首次为写入，其余为更新
         args = request.args.to_dict()
         make_log("args", args)
         not_null_params = ['login_name', "jcno"]
@@ -723,6 +760,16 @@ class CControl():
         wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
         # wts中获取jcno/czr/hwpm
         user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        ckmxd = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
+        photo_head = ckmxd["photo_ckmxd"]
+        if photo_head:
+            if photo_head == "6":
+                photo_head = int(photo_head)
+            else:
+                photo_head = int(photo_head) + 1
+        else:
+            photo_head = 1
+
         add_model("AIR_HWYS_CKMXD", **{
             "jcno": args["jcno"],
             "salesman": wts["czr"],
@@ -734,9 +781,19 @@ class CControl():
             "goods_weight": data["goods_weight"],
             "cargo_size": data["cargo_size"],
             "client_name": data["client_name"],
-            "remark": data["remark"]
+            "remark": data["remark"],
+            "photo_head": str(photo_head)
         })
-        # TODO 分批次写入，方案未知
+        photoheadid = str(uuid.uuid1())
+        add_model("AIR_HWYS_PHOTO_HEAD", **{
+            "id": photoheadid,
+            "photohead": str(photo_head),
+            "jcno": args["jcno"],
+            "type": "in",
+            "createtime": datetime.datetime.now(),
+            "czr": user["user_name"],
+            "photocount": len(data["pic_list"])
+        })
         for row in data["pic_list"]:
             add_model("AIR_HWYS_PHOTOS", **{
                 "jcno": args["jcno"],
@@ -744,7 +801,8 @@ class CControl():
                 "photourl": row["url"],
                 "createtime": datetime.datetime.now(),
                 "czr": user["user_name"],
-                "filename": row["filename"]
+                "filename": row["filename"],
+                "photoheadid": photoheadid
             })
         return {
             "status": 200,

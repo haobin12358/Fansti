@@ -29,7 +29,9 @@ class FSControl(Resource):
             "get_bzsm_list": "self.cgoods.get_bzsm_list()",
             "get_jd_list": "self.cgoods.get_jd_list()",
             "get_sbno_list": "self.cgoods.get_sbno_list()",
-            "get_packer": "self.cgoods.get_packer()"
+            "get_packer": "self.cgoods.get_packer()",
+            "get_jc_in_photohead": "self.cgoods.get_jc_in_photohead()",
+            "get_jc_pic_in": "self.cgoods.get_jc_pic_in()"
         }
 
         if control not in apis:
