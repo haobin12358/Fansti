@@ -835,6 +835,17 @@ class CControl():
                 "create_user": user["username"],
                 "file_name": row["file_name"]
             })
+        for row in data["jdfj_list"]:
+            add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "id": str(uuid.uuid1()),
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": "鉴定附件",
+                "file_url": row["url"],
+                "create_time": datetime.datetime.now(),
+                "create_user": user["username"],
+                "file_name": row["file_name"]
+            })
 
         return {
             "status": 200,
