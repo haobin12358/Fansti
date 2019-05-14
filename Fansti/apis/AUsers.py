@@ -17,6 +17,7 @@ class FSUser(Resource):
         apis = {
             "get_binding": "self.cusers.get_binding()",
             "get_openid": "self.cusers.get_openid()",
+            "get_openid2": "self.cusers.get_openid2()",
             "get_invate_list": "self.cusers.get_invate_list()",
             "get_user_message": "self.cusers.get_user_message()",
             "get_my_info": "self.cusers.get_my_info()"

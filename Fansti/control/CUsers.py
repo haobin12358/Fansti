@@ -227,6 +227,33 @@ class CUsers():
         response["data"]["openid"] = openid
         return response
 
+    def get_openid2(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        true_params = ["code"]
+        if judge_keys(true_params, args.keys()) != 200:
+            return judge_keys(true_params, args.keys())
+        request_url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type={3}" \
+            .format("wxd1facdac814bb86f", "d92626eb3dc8e0e0f1cff7d511d28b0a", args["code"], "authorization_code")
+        strResult = None
+        try:
+            import urllib.request
+            req = urllib.request.urlopen(request_url)
+            strResult = req.read().decode("utf8")
+            req.close()
+            make_log("strResult", strResult)
+        except Exception as e:
+            print(e)
+            return NETWORK_ERROR
+        jsonResult = json.loads(strResult)
+        if "openid" not in strResult or "session_key" not in strResult:
+            return jsonResult
+        openid = jsonResult["openid"]
+        response = import_status("SUCCESS_GET_OPENID", "OK")
+        response["data"] = {}
+        response["data"]["openid"] = openid
+        return response
+
     def make_user_message(self):
         args = request.args.to_dict()
         make_log("args", args)

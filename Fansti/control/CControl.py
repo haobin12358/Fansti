@@ -652,7 +652,8 @@ class CControl():
             user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
             update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
                 "kf_ry": user["username"],
-                "kfqr_date": datetime.datetime.now()
+                "kfqr_date": datetime.datetime.now(),
+                "kf_bz": data["bz"]
             })
             if not update_dzjjd:
                 return SYSTEM_ERROR
@@ -661,14 +662,15 @@ class CControl():
             user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
             update_dzjjd = self.sgoods.update_dzjjd(dzjjd["jjd_id"], {
                 "hc_ry": user["username"],
-                "hcqr_date": datetime.datetime.now()
+                "hcqr_date": datetime.datetime.now(),
+                "hc_bz": data["bz"]
             })
             if not update_dzjjd:
                 return SYSTEM_ERROR
 
         return {
             "status": 200,
-            "message": str(data["dajjd_type"]) + "成功"
+            "message": str(data["dzjjd_type"]) + "成功"
         }
 
     def upload_files(self):
