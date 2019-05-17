@@ -30,7 +30,7 @@ export default class Tips {
   /**
    * 弹出确认窗口
    */
-  static confirm(text, showCancel,payload = {}, title = "提示") {
+  static confirm(text = '', showCancel = true,payload = {}, title = "提示") {
     return new Promise((resolve, reject) => {
       wx.showModal({
         title: title,
@@ -75,7 +75,7 @@ export default class Tips {
     wx.showToast({
       title: title,
       image: "/images/alert.png",
-      mask: true,
+      mask: false,
       duration: 1500
     });
   }

@@ -57,13 +57,15 @@
       </view>
 
     <view wx:if="{{res.is_button == 1}}" class="btn-wrap" style="margin-top: 500rpx">
-      <view class="button">出库确认</view>
+      <view class="button" @tap="doConfirm">出库确认</view>
     </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
+  import api from '@/api/api';
+  import tip from '@/utils/tip';
 
   export default class OutStoDetail extends wepy.page {
     config = {};
@@ -76,7 +78,36 @@
 
     computed = {};
 
-    methods = {};
+    methods = {
+      doConfirm(){
+        tip.confirm('确认出库?').then(
+          ()=>{
+            api.retrueOuthc({
+              method: 'POST',
+              jcno: this.res.jcno,
+              login_name: wx.getStorageSync('token'),
+              query: {
+                retrue_type: 'out'
+              }
+            }).then(
+              res => {
+                if (res.data.status == 200) {
+                  let data = res.data.data;
+
+                  tip.success('确认成功', 1500).then(
+                    () => {
+                      wx.navigateBack()
+                    }
+                  )
+                } else {
+                  tip.alert(res.data.message);
+                }
+              }
+            );
+          }
+        )
+      }
+    };
 
     onLoad(params, data) {
       this.res = data.preload.res;

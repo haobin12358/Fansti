@@ -152,9 +152,9 @@
     <view class='modal'
           style='bottom:{{ modalBottom }}rpx;height:{{ modalHeight }}rpx;opacity:{{ modalOpacity }};'>
       <text class='title'>{{ title }}</text>
-      <input class='singleline-input' placeholder='{{ placeholder }}' cursor-spacing='150' maxlength='{{ maxlength }}'
+      <input class='singleline-input' placeholder='{{ placeholder }}' focus cursor-spacing='150' maxlength='{{ maxlength }}'
              bindinput='onInput' wx:if='{{ !multiline }}'/>
-      <textarea class='multiline-input' placeholder='{{ placeholder }}' maxlength='{{ maxlength }}' cursor-spacing='175'
+      <textarea class='multiline-input' placeholder='{{ placeholder }}' focus maxlength='{{ maxlength }}' cursor-spacing='175'
                 bindinput='onInput' wx:if='{{ multiline }}'/>
       <view class='cancel-container' @tap.stop='onCancelTap'>
         <view class='cancel'>取消</view>

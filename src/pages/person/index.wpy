@@ -188,7 +188,7 @@
             this.getInAbo(text)
             break
           case 'outsto':
-            this.getInAbo(text)
+            this.getOutAbo(text)
             break
           case 'yardReceive':
             this.getHcAbo(text)
@@ -215,11 +215,10 @@
     scanToInSto() {
       let that = this
 
-      console.log('扫码入库')
       wx.scanCode({
         success(res){
-          // let jcno = res.result; todo
-          let jcno = 'E15060029';
+          let jcno = res.result;
+          // let jcno = 'E15060029';
 
           that.getInAbo(jcno)
         },
@@ -254,10 +253,10 @@
 
       wx.scanCode({
         success(res){
-          // let jcno = res.result; todo
-          let jcno = 'E15060029';
+          let jcno = res.result;
+          // let jcno = 'E15060029';
 
-
+          that.getOutAbo(jcno)
         },
         fail() {
           that.showInputBox = true
@@ -291,10 +290,10 @@
 
       wx.scanCode({
         success(res) {
-          // let jcno = res.result; todo
-          let jcno = 'E15060029';
+          let jcno = res.result;
+          // let jcno = 'E15060029';
 
-
+          that.getHcAbo()
         },
         fail() {
           that.showInputBox = true

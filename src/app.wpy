@@ -10,8 +10,8 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/person/inStoDetail', // 入库明细
       'pages/person/index', // 操作首页
+      'pages/person/inStoDetail', // 入库明细
       'pages/person/login', // 登录
       'pages/person/planDetail', // 计划详情
       'pages/person/selectPacker', // 选择包装人员
