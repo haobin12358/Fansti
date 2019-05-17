@@ -2,78 +2,19 @@
   @import "../../styles/base";
 
   .container{
-    padding: 59rpx 30rpx 0;
-    background: linear-gradient(to top,@mainFontColor, #FFFFFF);
-    color: @mainBlueColor;
-    box-sizing: border-box;
-
-    .news-card{
-      width: 690rpx;
-      border: 1px solid @borderColor;
-      border-radius: 10rpx;
-      box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
-      background: #FFFFFF;
-
-      display: flex;
-      flex-direction: column;
-
-      .news-card-head-img{
-        height: 284rpx;
-
-        image{
-          width: 100%;
-          height: 100%;
-          border-radius: 10rpx 10rpx 0 0;
-        }
-      }
-
-      .height-maintain {
-        height: 770rpx;
-        /*flex: 1;*/
-        /*background: #5A738A;*/
-
-        .news-card-content{
-          height: 100%;
-
-          padding:35rpx 34rpx 10rpx;
-          box-sizing: border-box;
-
-          .news-title{
-            color: @mainBlueColor;
-            margin-bottom: 36rpx;
-          }
-
-          .news-source{
-            color: #a0afba;
-            margin-bottom: 30rpx;
-
-            text{
-              margin-right: 20rpx;
-            }
-          }
-
-          .news-paragraph{
-            color: @mainBlueColor;
-            margin-top: 35rpx;
-            margin-bottom: 35rpx;
-
-            .fz24();
-          }
-        }
-      }
-
-    }
-
+    padding: 20rpx 60rpx 0;
 
   }
 </style>
 
 <template>
-  <view class="container" style="height: {{containerHeight}}px;">
-    <view class="news-card" style="height: {{cardHeight}}px;">
+  <view class="container">
+    <wxparser rich-text="{{richText}}"></wxparser>
+
+    <!--<view class="news-card" style="height: {{cardHeight}}px;">
       <view class="news-card-head-img">
         <image src="{{imgLoadFail ?  '../../images/default_news_detail.png' : news.news_picture}}" @error="imgErr"></image>
-        <!--<image src="http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg" @error="imgErr" @load="imgLoad"></image>-->
+        &lt;!&ndash;<image src="http://img.jdzj.com/UserDocument/2017z/5789139/Picture/20171027153429285.jpg" @error="imgErr" @load="imgLoad"></image>&ndash;&gt;
       </view>
       <view class="height-maintain">
         <scroll-view scroll-y="true" class="news-card-content">
@@ -84,12 +25,12 @@
             <text>{{news.news_from}}</text>
             <text>{{news.news_time}}</text>
           </view>
-          <!--<wxparser rich-text="{{news.news_all}}"></wxparser>-->
+          &lt;!&ndash;<wxparser rich-text="{{news.news_all}}"></wxparser>&ndash;&gt;
           <wxparser rich-text="{{richText2}}"></wxparser>
         </scroll-view>
       </view>
 
-    </view>
+    </view>-->
   </view>
 
 </template>
@@ -119,13 +60,7 @@
       news: {},
       name1: 'myHtmlParserKiner1',
       imgLoadFail: false,
-      richText: '<h1>Hello world!</h1>' +
-      '<div style="color: red;text-align: center">居中的红色字</div>' +
-      '<img src="http://dummyimage.com/1200x1000/7bf279" alt="">' +
-      '<video src="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"></video>',
-
-
-      richText2: ''
+      richText: ''
     };
     watch = {
       news() {
@@ -149,7 +84,7 @@
 
       if (res.data.status == 200) {
         this.news = res.data.data;
-
+        this.richText = this.news.news_all
         wx.setNavigationBarTitle({
           title: res.data.data.news_title
         });
@@ -168,7 +103,6 @@
     }
 
     onLoad(params) {
-      return
       this.getNewsAbo(params.id);
     }
   }

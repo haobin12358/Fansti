@@ -2,68 +2,25 @@
   @import "../styles/base";
 
   .news-list{
-    padding: 17rpx 20rpx 0;
-    box-sizing: border-box;
+    .sc(32rpx, @mainBlueColor);
 
-    .list-header{
-      color: @mainBlueColor;
-      margin-bottom: 13rpx;
-    }
+    .list-item {
+      padding: 25rpx 40rpx 25rpx 40rpx;
+      .fj();
+      border-bottom: 1px solid #C5C5C5;
 
-    .list-content{
-      .news-item{
-        height: 201rpx;
-        border: 1px solid @borderColor;
-        margin-bottom: 19rpx;
-        padding: 21rpx 21rpx 10rpx;
-        box-shadow: 2rpx 2rpx 1rpx rgba(58,82,102,.75);
-        border-radius: 10rpx;
+      &:first-child{
+        border-top: 1px solid #C5C5C5;
+      }
+      .item-hd {
+        flex: 1;
+      }
+      .item-ft {
+        .wl(14rpx, 25rpx);
 
-        display: flex;
-
-        .main-content{
-          flex: 1;
-
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .line1{
-            color: @mainBlueColor;
-          }
-          .line2{
-            color: @mainFontColor;
-
-            height: 99rpx;
-            line-height: 33rpx;
-            word-break: break-all;
-            /*text-overflow: -o-ellipsis-lastline;*/
-            overflow: hidden;
-            /*text-overflow: ellipsis;*/
-            /*display: -webkit-box;*/
-            /*-webkit-box-orient: vertical;*/
-            /*align-content: center;*/
-            .fz24();
-          }
-          .line3{
-            color: @mainFontColor;
-
-            .fz21();
-
-            .news-source{
-              margin-right: 36rpx;
-            }
-          }
+        &.share {
+          .wl(25rpx, 25rpx);
         }
-
-        .news-img{
-          width: 162rpx;
-          height: 162rpx;
-          border-radius: 10rpx;
-
-          border: 1px solid @borderColor;
-        }
-
       }
     }
   }
@@ -71,10 +28,13 @@
 
 <template>
   <view class="news-list">
-    <view class="list-header">
-      新闻资讯
+    <view class="list-item" wx:for="{{list}}" @tap="tapItemHandler({{item}})">
+      <view class="item-hd">
+        {{item.news_title}}
+      </view>
+      <image class="item-ft" src="../images/index_arrow.png"></image>
     </view>
-    <view class="list-content">
+    <!--<view class="list-content">
       <view wx:for="{{list}}" wx:key="id" class="news-item" @tap.stop="tapItemHandler({{item}})">
         <view class="main-content">
           <view class="line1">{{item.news_title}}</view>
@@ -89,7 +49,7 @@
         </view>
         <image class="news-img" src="{{item.imgLoadFail? '../../images/default_news_hd.jpg' :  item.news_picture}}" mode="aspectFill" @error="imgErr({{index}})"/>
       </view>
-    </view>
+    </view>-->
   </view>
 </template>
 
@@ -110,7 +70,6 @@
 
         methods = {
           tapItemHandler(news){
-            console.log('组件 点击');
             this.$emit('tapItem', news);
           },
 

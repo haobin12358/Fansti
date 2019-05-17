@@ -26,7 +26,7 @@
       .form-item{
         padding: 30rpx;
         border-top: 1px solid #C5C5C5;
-        .fj();
+        .fj(space-between);
 
         &.photo{
           display: block;
@@ -58,6 +58,10 @@
           text-align: right;
           flex: 1;
           .sc(24rpx, #333333);
+
+          textarea{
+            width: 520rpx;
+          }
         }
       }
     }
@@ -83,13 +87,16 @@
         <view class="form-item">
           <view class="label">库房存放地</view>
           <view class="value">
-            <input placeholder="请填写" value="{{formData.warehouse_address}}" name="warehouse_address"/>
+            <textarea placeholder="请填写" auto-height value="{{formData.warehouse_address}}" name="warehouse_address"></textarea>
           </view>
         </view>
         <view class="form-item">
           <view class="label">进仓时间</view>
           <view class="value">
-            <input placeholder="请填写" value="{{formData.enter_time}}" name="enter_time"/>
+            <picker name="enter_time"></picker>
+            <picker @change="handleBatchChange" value="{{enterIndex}}" range="{{enterList}}">
+              {{batchList[batchIndex] || '请选择'}}
+            </picker>
           </view>
         </view>
         <view class="form-item">
@@ -201,7 +208,7 @@
     };
 
     onLoad(params, data) {
-      this.formData = data.preload.res;
+      // this.formData = data.preload.res;
     }
   }
 </script>

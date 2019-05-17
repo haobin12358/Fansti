@@ -21,6 +21,7 @@ const getSbList = params => wxRequest(params, host + `/control/get_sb_list`);
 const getBzsmList = params => wxRequest(params, host + `/control/get_bzsm_list`);
 const getCJdList = params => wxRequest(params, host + `/control/get_jd_list`);
 const getSbnoList = params => wxRequest(params, host + `/control/get_sbno_list`);
+const getPacker = params => wxRequest(params, host + `/control/get_packer`);
 
 // 修改 都是post
 const updateWts = params => wxRequest(params, host + `/control/update_wts?login_name=${params.login_name}&jcno=${params.jcno}`);  // 交单
@@ -140,6 +141,7 @@ export default {
   getBzsmList,
   getCJdList,
   getSbnoList,
+  getPacker,
 
   updateWts,
   uploadFilesUrl,

@@ -72,7 +72,7 @@
     <view class="packer-list">
       <view class="packer-item" wx:for="{{packerListCmp}}" @tap="select({{item}})">
         <view class="name">
-          {{item.name}}
+          {{item.username}}
         </view>
         <view class="status" wx:if="{{item.checked}}">
           已选择
@@ -84,7 +84,7 @@
       <view class="bottom-hd">
         <view class="title">已选择人员</view>
         <view class="confirm" @tap="doSave">
-          保 存
+          确 认
         </view>
       </view>
 
@@ -92,7 +92,7 @@
         <checkbox-group @change="handleSelectedChange">
           <label style="margin:10rpx;display: inline-block;" wx:for="{{selectPackerList}}">
             <checkbox value="{{item.id}}" checked></checkbox>
-            {{item.name}}
+            {{item.username}}
           </label>
         </checkbox-group>
       </view>
@@ -104,7 +104,6 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import { setStorageSync } from './index';
 
   export default class SelectPacker extends wepy.page {
     config = {
@@ -114,21 +113,7 @@
     components = {};
 
     data = {
-      packerList: [
-        {
-          id: 1,
-          name: '杨某1'
-        },{
-          id: 2,
-          name: '杨某2'
-        },{
-          id: 3,
-          name: '杨某3'
-        },{
-          id: 4,
-          name: '杨某4'
-        }
-      ],
+      packerList: [],
       selectPackerList: []
     };
 
@@ -147,7 +132,7 @@
 
     methods = {
       doSearch(evt) {
-        console.log(evt.detail.value);
+        this.getPackerList(evt.detail.value)
       },
       select(packer) {
         if(packer.checked){
@@ -178,30 +163,29 @@
       }
     };
 
-    onLoad(parmas, data) {
-      let selectPackerList = [
-        {
-          id: 1,
-          name: '杨某1'
-        },{
-          id: 2,
-          name: '杨某2'
-        },{
-          id: 3,
-          name: '杨某3'
-        },{
-          id: 4,
-          name: '杨某4'
-        },{
-          id: 6,
-          name: '杨某4'
-        },{
-          id: 5,
-          name: '杨某4'
+    getPackerList(query = ''){
+      api.getPacker({
+        query: {
+          select_name: query,
+          login_name: wx.getStorageSync('token')
         }
-      ]
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
 
-      this.selectPackerList = selectPackerList
+            this.packerList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
+    onLoad(params, {preload}) {
+      this.getPackerList()
+      this.selectPackerList = preload.selectPackerList || []
     };
   }
 </script>

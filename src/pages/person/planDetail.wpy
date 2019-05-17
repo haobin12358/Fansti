@@ -31,6 +31,50 @@
         }
       }
 
+      /*确认包装*/
+      .confirm-pack{
+        .cell{
+          padding:20rpx 40rpx;
+          border-bottom: 1px solid @borderColor;
+          .fj(stretch, flex-start);
+
+          .column{
+            flex: 1;
+            .fj(flex-start, flex-start);
+
+            .label{
+              color: @mainBlueColor;
+              margin-right: 10rpx;
+            }
+            .value{
+              color: #333333;
+
+              &.list{
+                flex: 1;
+                .fjc();
+                .item{
+                  &.input{
+                    text-align: center;
+                    .fj(flex-end);
+
+                    input{
+                      margin-right: 8rpx;
+                      width: 80rpx;
+                      border-bottom: 1px solid @borderColor;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .btn-wrap{
+          padding:20rpx 40rpx;
+          border-bottom: 1px solid @borderColor;
+        }
+      }
+
       .detail-hd{
         color: @mainBlueColor;
         padding: 0 40rpx;
@@ -240,31 +284,62 @@
   <view class="container">
     <!--详情-->
     <view class="detail" wx:if="{{0 == activeName}}">
-      <view class="manager-choose-worker">
-        <view class="choose-item" @tap="choosePacker({{true}})">
+      <!--保存包装人员-->
+      <view class="manager-choose-worker" wx:if="{{planDetail.save_button}}">
+        <view class="choose-item" @tap="choosePackLeader">
           <view class="hd">
             包装负责人
           </view>
             <view class="bd">
-              <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-                请选择包装负责人
-              </picker>
+                {{packerLeader || '请选择包装负责人'}}
             </view>
           <image class="ft" src="../../images/index_arrow.png"></image>
         </view>
-        <view class="choose-item" @tap="choosePacker({{false}})">
+        <view class="choose-item" @tap="choosePacker">
           <view class="hd">
             包装人员
           </view>
             <view class="bd">
-              <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-                请选择包装负责人
-              </picker>
+                {{selectPackerListNames ||  '请选择包装人员'}}
             </view>
           <image class="ft" src="../../images/index_arrow.png"></image>
         </view>
-
       </view>
+
+      <!--确认包装-->
+      <form @submit="doConfirmPack">
+        <view class="confirm-pack">
+          <view class="cell">
+            <view class="column">
+              <view class="label">包装负责人</view>
+              <view class="value">某某</view>
+            </view>
+          </view>
+          <view class="cell">
+            <view class="column">
+              <view class="label">包装人员</view>
+              <view class="value list">
+                <view class="item" style="line-height: 55rpx;" wx:for="{{selectPackerList}}">
+                  {{item.username}}
+                </view>
+              </view>
+            </view>
+            <view class="column">
+              <view class="label">提成比例</view>
+              <view class="value list">
+                <view class="item input" wx:for="{{selectPackerList}}">
+                  <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%
+                </view>
+              </view>
+            </view>
+
+          </view>
+          <view class="btn-wrap" style="margin-top: 0;">
+            <button form-type="submit" @tap="signConPackType('0')" class="button plain">确认包装</button>
+            <button form-type="submit" @tap="signConPackType('1')" class="button plain">确认完成</button>
+          </view>
+        </view>
+      </form>
 
       <view class="detail-hd">
         <view>进仓号：{{planDetail.jcno}}</view>
@@ -603,8 +678,10 @@
         {{item}}
       </view>
     </view>
-
-    <file-list :show.sync="showFileList" :title.sync="showFileTitle" :list.sync="delRecFileList" @overview.user="overviewFile"></file-list>
+    <packer-list :show.sync="showPackerList" :list.sync="packerList" title="请搜索,选择包装负责人"
+                 @query.user="queryPakcerList" @select.user="doSelectLeaderPacker"></packer-list>
+    <file-list :show.sync="showFileList" :title.sync="showFileTitle" :list.sync="delRecFileList"
+               @overview.user="overviewFile"></file-list>
   </view>
 </template>
 
@@ -612,13 +689,15 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
+  import searchList from '@/components/searchList';
   import fileList from '@/components/fileList';
 
   export default class PlanDetail extends wepy.page {
     config = {};
 
     components = {
-      'file-list': fileList
+      'file-list': fileList,
+      'packer-list': searchList,
     };
 
     data = {
@@ -627,10 +706,28 @@
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
-      array: ['杨某', '李某'],
-      index: '',
-
       planDetail: {},
+
+      packerList: [], // 选包装负责人用
+      showPackerList: false,
+
+      packerLeader: '',
+      selectPackerList: [
+        {
+          id: 1,
+          username: '杨某1',
+          royalty_rate: ''
+        },{
+          id: 2,
+          username: '杨某2',
+          royalty_rate: ''
+        },{
+          id: 3,
+          username: '杨某3',
+          royalty_rate: ''
+        }
+      ],
+      confirmPackType: '',
 
       deliveryReceipt: {},
       showFileList: false,
@@ -646,7 +743,11 @@
       cost: {}
     };
 
-    computed = {};
+    computed = {
+      selectPackerListNames(){
+          return  this.selectPackerList.map(item=>item.username).join(',')
+      }
+    };
 
     methods = {
       switchTab(index) {
@@ -659,9 +760,48 @@
       },
 
       /*详情*/
+      choosePackLeader(){
+        this.getPackerList()
+        this.showPackerList = true
+      },
+      queryPakcerList(query){
+        this.getPackerList(query)
+      },
+      doSelectLeaderPacker(item){
+        this.packerLeader = item.label
+      },
+
       choosePacker(){
-        this.$preload('list', {a: {b:1}})
-        this.$navigate('/pages/person/selectPacker', {a: {b:1}})
+        // todo
+        this.$preload('selectPackerList', this.selectPackerList)
+        this.$navigate('/pages/person/selectPacker')
+      },
+      signConPackType(type){
+        this.confirmPackType = type
+        console.log('tap')
+      },
+      doConfirmPack(evt){
+        console.log('confirm')
+        // console.log(evt.detail.value)
+        let formData = evt.detail.value
+        let entries =  Object.entries(formData)
+        for (let i = 0; i < entries.length; i++) {
+          this.selectPackerList[i].royalty_rate = entries[i][1]
+          this.selectPackerList[i].packer = this.selectPackerList[i].username
+        }
+
+        api.updateRoyalty({
+          method: 'POST',
+          login_name: wx.getStorageSync('token'),
+          jcno: this.jcno,
+          query:this.selectPackerList
+        }).then(
+          res => {
+            if(res.data.status == 200) {
+
+            }
+          }
+        )
       },
 
       // 提交交单时间
@@ -903,6 +1043,27 @@
         }
       );
     };
+    getPackerList(query = ''){
+      api.getPacker({
+        query: {
+          select_name: query,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            data.forEach(item => {item.label = item.username})
+            this.packerList = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
     // 获取电子交接单
     getDeliveryReceipt(){
       api.getHandoverList({
@@ -983,7 +1144,12 @@
 
     // 接收选择包装人员参数
     receivePackageList(){
-      console.log('接收选择包装人员参数')
+      let list = wx.getStorageSync('PACKAGE_LIST')
+
+      if(list){
+        this.selectPackerList = list
+        wx.setStorageSync('PACKAGE_LIST', '')
+      }
     }
 
     onShow() {
