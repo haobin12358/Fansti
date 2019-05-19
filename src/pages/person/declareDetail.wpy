@@ -68,14 +68,14 @@
       <view class="photo-item" wx:for="{{jdList}}">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto('jd',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('jd')"></image>
     </view>
 
     <view class="form-section-title">申报单</view>
@@ -83,14 +83,14 @@
       <view class="photo-item" wx:for="{{sbList}}">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto('sb',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('sb')"></image>
     </view>
 
     <view class="form-section-title">包装文件</view>
@@ -98,20 +98,20 @@
       <view class="photo-item" wx:for="{{bzList}}">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto({{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap="removePhoto('bz',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('bz')"></image>
     </view>
 
 
 
     <view class="btn-wrap">
-      <view class="button" @tap="removeCheckedImgs">上传</view>
+      <view class="button" @tap="doConfirm">上 传</view>
     </view>
   </view>
 
@@ -162,23 +162,139 @@
     computed = {};
 
     methods = {
-      addPhoto(){
-        let that = this
+      addPhoto(type){
+        let that = this,
+          index = 1;
+
+        switch (type) {
+          case 'jd':
+            index = this.jdList.length + 1
+            break
+          case 'sb':
+            index = that.sbList.length + 1
+            break
+          case 'bz':
+            index = that.sbList.length + 1
+            break
+        }
 
         wx.chooseImage({
-          success({tempFilePaths}) {
-            that.list = that.list.concat(tempFilePaths.map(item => {return {url: item}}));
-            that.$apply()
+          count: 1,
+          success({tempFiles}) {
+            let file = tempFiles[0];
+
+            if(file.size > 5 * 1024 * 1024){
+              tip.confirm('图片过大,请上传小于5MB的图片!', false)
+              return
+            }
+
+            wx.showLoading()
+            wx.uploadFile({
+              url: api.uploadFilesUrl,
+              filePath: file.path,
+              name: 'file',
+              header: {
+                "Content-Type": "multipart/form-data"
+              },
+              formData: {
+                FileType: type,
+                index: index,
+                jcno: that.jcno
+              },
+              success: function(res) {
+                let data = JSON.parse(res.data).data
+                let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+
+                console.log(data,type)
+                switch (type) {
+                  case 'jd':
+                    that.jdList.push({
+                      file_url: data,
+                      file_name: fileName
+                    })
+                    break
+                  case 'sb':
+                    that.sbList.push({
+                      file_url: data,
+                      file_name: fileName
+                    })
+                    break
+                  case 'bz':
+                    that.bzList.push({
+                      file_url: data,
+                      file_name: fileName
+                    })
+                    break
+                }
+                that.$apply()
+              },
+              complete: function() {
+                wx.hideLoading()
+              }
+            })
           }
         })
       },
-      removePhoto(index){
-        console.log(index)
+      removePhoto(type, index){
+        switch (type) {
+          case 'jd':
+            this.jdList.splice(index, 1)
+            break
+          case 'sb':
+            this.sbList.splice(index, 1)
+            break
+          case 'bz':
+            this.bzList.splice(index, 1)
+            break
+        }
       },
 
+      doConfirm(){
+        tip.confirm('确认上传?').then(
+          ()=>{
+            let query = {
+              jd_list: this.jdList.map(item =>{
+                return {
+                  url: item.file_url,
+                  file_name: item.file_name
+                }
+              }),
+              sb_list: this.sbList.map(item =>{
+                return {
+                  url: item.file_url,
+                  file_name: item.file_name
+                }
+              }),
+              bzmx_list: this.bzList.map(item =>{
+                return {
+                  url: item.file_url,
+                  file_name: item.file_name
+                }
+              }),
+            }
+
+            api.makeSb({
+              method: 'POST',
+              jcno: this.jcno,
+              login_name: wx.getStorageSync('token'),
+              query
+            }).then(
+              res => {
+                if(res.data.status == 200){
+                  tip.success('上传成功!', 1000).then(
+                    () => {
+                      wx.navigateBack()
+                    }
+                  )
+                }
+              }
+            )
+          }
+        )
+      }
     };
 
-    getJdList(jcno){
+    getJdList(){
       api.getCJdList({
         query: {
           jcno: this.jcno,
@@ -197,7 +313,7 @@
         }
       );
     }
-    getSbList(jcno){
+    getSbList(){
       api.getSbList({
         query: {
           jcno: this.jcno,
@@ -216,7 +332,7 @@
         }
       );
     }
-    getBzList(jcno){
+    getBzList(){
       api.getSbList({
         query: {
           jcno: this.jcno,
@@ -236,11 +352,16 @@
       );
     }
 
+    init(){
+      this.getJdList()
+      this.getSbList()
+      this.getBzList()
+    }
 
     onLoad(params) {
-      this.getJdList(params.jcno)
-      this.getSbList(params.jcno)
-      this.getBzList(params.jcno)
+      this.jcno = params.jcno
+
+      this.init()
     };
   }
 </script>

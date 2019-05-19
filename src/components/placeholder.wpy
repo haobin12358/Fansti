@@ -8,11 +8,16 @@
       margin-top: 277rpx;
       width: 450rpx;
       height: 150rpx;
+
+      &.auth{
+        .wl(200rpx, 200rpx)
+      }
     }
 
     .placeholder-text{
       margin-top: 93rpx;
       font-size: 32rpx;
+      color: #777777;
 
       navigator{
         display: inline-block;
@@ -26,7 +31,8 @@
 
 <template>
   <view class="placeholder">
-    <image class="placeholder-icon" src="../../images/paper_plane.png"></image>
+    <image wx:if="{{type == 'auth'}}" class="placeholder-icon auth" src="../images/auth.png"></image>
+    <image wx:else class="placeholder-icon" src="../images/paper_plane.png"></image>
     <view class="placeholder-text">
       <block wx:if="{{type == 'binding'}}">
         去绑定,
@@ -41,6 +47,10 @@
       <block wx:if="{{type == 'empty'}}">
         查询结果为空,换个搜索条件试试
       </block>
+      <block wx:if="{{type == 'auth'}}">
+        抱歉,当前账号无权访问该页面
+      </block>
+
     </view>
   </view>
 </template>

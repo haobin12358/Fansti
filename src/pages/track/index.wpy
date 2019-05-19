@@ -209,7 +209,7 @@
 </style>
 
 <template>
-  <block wx:if="{{isOldUser}}">
+  <block wx:if="{{hasAuth}}">
     <view class="container">
       <view class="fix-top">
         <form @submit="doSearch">
@@ -244,20 +244,16 @@
     </view>
     <load-more :type.sync="loadingType"></load-more>
   </block>
-  <block wx:elif="{{isNewUser}}">
-    <placeholder1 :type="type"></placeholder1>
-  </block>
-  <placeholder2 wx:else></placeholder2>
+  <placeholder wx:else type="auth"></placeholder>
 </template>
 
 <script>
   import wepy from 'wepy';
-  import Placeholder from '@/components/common/placeholder';
+  import Placeholder from '@/components/placeholder';
   import LoadMore from '@/components/common/loadMore';
   import FreightConsignmentList from '@/components/freightConsignmentList';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import BindingMixin from '@/mixins/bindingMixin';
   import {getRandomContent} from '@/utils/util'
 
 
@@ -266,17 +262,14 @@
       navigationBarTitleText: '跟踪'
     };
 
-    mixins = [BindingMixin];
-
     components = {
-      placeholder1: Placeholder,
-      placeholder2: Placeholder,
+      placeholder: Placeholder,
       'freight-consignment-list': FreightConsignmentList,
       'load-more': LoadMore
     };
 
     data = {
-      type: 'newUser',
+      hasAuth: false,
 
       searchPickerArray: ['运单号', '订单号', '目的港', '公司名','进仓编号'],
       enSearchPickerArray: ['ydno', 'hxno', 'destination','accounts', 'jcno'],
@@ -358,7 +351,7 @@
     }
 
     onReachBottom() {
-      if (this.isOldUser && this.loadingType != 'nomore') {
+      if (this.hasAuth && this.loadingType != 'nomore') {
         this.getGoodsList();
       }
     }
@@ -368,9 +361,12 @@
     }
 
     async onLoad() {
-      this.searchParams.login_name= wx.getStorageSync('token');
+      let userType = wx.getStorageSync('user_type');
 
-      if (this.isOldUser) {
+      this.hasAuth = ['0', '2', '3'].includes(userType);
+      this.searchParams.login_name = wx.getStorageSync('token');
+
+      if (this.hasAuth) {
         this.getGoodsList();
       }
     }

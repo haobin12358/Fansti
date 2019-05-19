@@ -36,7 +36,6 @@
   import LoadMore from '@/components/common/loadMore';
   import api from '@/api/api';
   import tip from '@/utils/tip';
-  import BindingMixin from '@/mixins/bindingMixin';
   import { getRandomContent } from '@/utils/util';
 
   export default class Index extends wepy.page {

@@ -166,7 +166,9 @@
         this.select_name = query
         this.getList(true)
       },
-      redirectDetail({jcno}){
+      redirectDetail(item){
+        let jcno = item.jcno
+        console.log(jcno)
         this.$navigate('/pages/person/declareDetail', { jcno });
       }
     };

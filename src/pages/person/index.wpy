@@ -124,16 +124,20 @@
   import tip from '@/utils/tip';
   import api from '@/api/api';
   import InputBox from '@/components/inputBox';
+  import placeholder from '@/components/placeholder';
   import { getRandomContent } from '@/utils/util';
 
   export default class Index extends wepy.page {
     config = {};
 
     components = {
-      'input-box': InputBox
+      'input-box': InputBox,
+      placeholder
     };
 
     data = {
+      userType: '',
+
       showInputBox: false,
       inputBoxType: 'insto', // insto outsto yardReceive
       title: '手动输入',
@@ -145,7 +149,7 @@
         let {query} = evt.detail.value
 
         if(query){
-          this.$navigate('/pages/person/plan')
+          this.$navigate('/pages/person/plan', {query})
         }else{
           tip.alert('请输入查询内容')
         }
@@ -172,6 +176,10 @@
             this.scanToReceive();
             break;
           case 'declare':
+            if(!['0', '9'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/person/declare');
             break;
 
@@ -215,6 +223,11 @@
     scanToInSto() {
       let that = this
 
+      if(!['0', '3', '4', '5'].includes(that.userType) ){
+        tip.alert('该账号无权使用')
+        return
+      }
+
       wx.scanCode({
         success(res){
           let jcno = res.result;
@@ -250,6 +263,11 @@
 
     scanToOutSto() {
       let that = this
+
+      if(!['0', '3', '4', '5', '7'].includes(that.userType) ){
+        tip.alert('该账号无权使用')
+        return
+      }
 
       wx.scanCode({
         success(res){
@@ -287,6 +305,11 @@
     // 货场接收
     scanToReceive() {
       let that = this;
+
+      if(!['0', '3', '6', '7'].includes(that.userType) ){
+        tip.alert('该账号无权使用')
+        return
+      }
 
       wx.scanCode({
         success(res) {
@@ -326,7 +349,7 @@
     onShow(){
     }
     onLoad(){
-      // wx.chooseMessageFile();
+      this.userType = wx.getStorageSync('user_type')
     }
 
 

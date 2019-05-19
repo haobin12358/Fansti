@@ -68,7 +68,10 @@
   import tip from '@/utils/tip';
 
   export default class GoodsYardReceive extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '货场接收'
+
+    };
 
     components = {};
 

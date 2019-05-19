@@ -100,13 +100,13 @@
     </picker>
 
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{list}}" @tap="chooseToRemove({{index}})">
-        <image class="img" src="{{item.url}}"></image>
+      <view class="photo-item" wx:for="{{list}}">
+        <image class="img" src="{{item.photourl}}" @tap.stop="previewImg({{item}})"></image>
 
-        <image wx:if="{{item.checked}}" class="remove" src="../../images/remove.png"></image>
+        <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{item}})"></image>
         <view class="info">
-          <view class="time">{{item.time}}</view>
-          <view >{{item.name}}</view>
+          <view class="time">{{item.createtime}}</view>
+          <view >{{item.czr}}</view>
         </view>
       </view>
 
@@ -114,9 +114,9 @@
 
     </view>
 
-    <view class="btn-wrap">
+    <!--<view class="btn-wrap">
       <view class="button" @tap="removeCheckedImgs">删除</view>
-    </view>
+    </view>-->
   </view>
 </template>
 
@@ -134,22 +134,33 @@
       type: 'in',
       jcno: '',
 
-      batchIndex: '0',
-      batchList: [1,2,3,4,5,6],
+      batchIndex: '',
+      batchList: [],
       list: []
     };
 
     computed = {};
 
     methods = {
+      previewImg(item){
+        let photoUrls = this.list.map(item => item.photourl)
+
+        wx.previewImage({
+          urls: photoUrls,
+          current: photoUrls
+        })
+      },
+
       handleBatchChange(evt){
         this.batchIndex= evt.detail.value
+        this.getInPhotoList()
       },
-      chooseToRemove(index){
-        console.log(index)
-        this.list[index].checked = !this.list[index].checked
+      removePhoto(item){
+        tip.alert('删除照片')
       },
       addPhoto(){
+        tip.alert('上传照片')
+        return
         let that = this
 
         wx.chooseImage({
@@ -168,6 +179,12 @@
           }
         })
       },
+
+      /*
+      chooseToRemove(index){
+        console.log(index)
+        this.list[index].checked = !this.list[index].checked
+      },
       removeCheckedImgs(){
         let ids = this.list.filter(item => item.checked).map(item => item.url)
 
@@ -177,14 +194,84 @@
             tip.success('删除成功!')
           }
         )
-      }
+      }*/
     };
 
-    onLoad(parmas) {
-      /*this.jcno = parmas.jcno
-      this.type = parmas.type */
-      this.jcno = 'E18080196'
+    // 入仓照片 获取批次并显示该批次(选中最新一次)下的照片
+    getBatchList(){
+      api.getJcInPhotoHead({
+        query: {
+          login_name: wx.getStorageSync('token'),
+          jcno: this.jcno,
+        }
+      }).then(
+        res => {
+          if(res.data.status == 200){
+            let data = res.data.data
 
+            this.batchList = data
+            this.batchIndex = data.length - 1
+            this.$apply()
+
+            this.getInPhotoList()
+          }
+        }
+      )
+    }
+    getInPhotoList(){
+      api.getJcPicIn({
+        query: {
+          login_name: wx.getStorageSync('token'),
+          jcno: this.jcno,
+          photo_head: this.batchList[this.batchIndex]
+        }
+      }).then(
+        res => {
+          if(res.data.status == 200){
+            let data = res.data.data
+
+            this.list = data
+            this.$apply()
+          }
+        }
+      )
+    }
+
+    getPhotoList(){
+      api.getJcPic({
+        query: {
+          login_name: wx.getStorageSync('token'),
+          jcno: this.jcno,
+        }
+      }).then(
+        res => {
+          if(res.data.status == 200){
+            let data = res.data.data
+            let photoObj = data[this.type]
+
+            this.list = photoObj.picture.map(item => {
+              return {
+                photourl: item,
+                czr: photoObj.czr,
+                createtime: photoObj.createtime
+              }
+            })
+            this.$apply()
+          }
+        }
+      )
+    }
+
+
+    onLoad(parmas) {
+      this.jcno = parmas.jcno
+      this.type = parmas.type
+
+      if(this.type == 'in'){
+        this.getBatchList()
+      }else {
+        this.getPhotoList()
+      }
     };
   }
 </script>

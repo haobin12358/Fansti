@@ -184,6 +184,8 @@
     }
 
     onLoad(params, {preload}) {
+      console.log(preload.selectPackerList)
+
       this.getPackerList()
       this.selectPackerList = preload.selectPackerList || []
     };

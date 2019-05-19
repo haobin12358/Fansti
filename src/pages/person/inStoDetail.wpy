@@ -156,7 +156,9 @@
 
 
   export default class InStoDetail extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '入库明细'
+    };
 
     components = {
       'date-time-picker': DateTimePicker
@@ -286,16 +288,15 @@
         rst = '请填写备注'
         return rst
       }
-      if (!this.picture.length) {
+      /*if (!this.picture.length) {
         rst = '请上传入仓照片'
         return rst
-      }
+      }*/
 
       return ''
     }
     onLoad(params, data) {
       this.formData = data.preload.res;
-      console.log(data.preload.res)
     }
   }
 </script>

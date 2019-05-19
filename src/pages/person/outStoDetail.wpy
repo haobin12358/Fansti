@@ -68,7 +68,9 @@
   import tip from '@/utils/tip';
 
   export default class OutStoDetail extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '出库确认'
+    };
 
     components = {};
 

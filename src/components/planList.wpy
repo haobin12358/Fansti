@@ -92,6 +92,7 @@
           &.danger{
             background: #ab3534;
           }
+
           text{
             position: absolute;
 
@@ -105,7 +106,7 @@
 
 <template>
     <view class="plan-list">
-      <view class="plan-item" wx:for="{{list}}" @tap="tapItemHandler({{item}})">
+      <view class="plan-item"  wx:for="{{list}}" @tap="tapItemHandler({{item}})">
         <view class="plan-item-left">
           <block wx:if="{{item.isphoto}}">
             <view>拍</view>
@@ -184,15 +185,10 @@
         <view wx:if="{{item.wphw == '危'}}" class="top-right-label danger">
           <text>危</text>
         </view>
-        <!--
-        <view wx:if="{{item.yanwu == 1}}" class="top-right-label top-right-label-delay">
-          <text class="top-right-label-text">延误</text>
+        <view wx:if="{{item.wphw == '普'}}" class="top-right-label">
+          <text>普</text>
         </view>
 
-
-        <view wx:if="{{item.dida == 1}}" class="top-right-label top-right-label-finish">
-          <text class="top-right-label-text">完成</text>
-        </view>-->
       </view>
     </view>
 </template>
@@ -215,9 +211,20 @@
 
     data = {};
 
-    computed = {};
+    computed = {
+    };
 
     methods = {
+      backColorClass(item){
+        switch (backcolor) {
+          case '黄色':
+            return 'warning'
+          case '红色':
+            return 'danger'
+          case '灰色':
+            return 'info'
+        }
+      },
       tapItemHandler(item){
         this.$emit('tapItem', item)
       }

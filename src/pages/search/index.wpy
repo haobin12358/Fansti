@@ -245,7 +245,6 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import Placeholder from '@/components/common/placeholder'
-  import BindingMixin from '@/mixins/bindingMixin'
   import {getRandomContent} from '@/utils/util'
 
 
