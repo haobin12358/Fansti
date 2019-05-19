@@ -761,7 +761,7 @@ class CControl():
         # wts中获取jcno/czr/hwpm
         user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
         ckmxd = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
-        photo_head = ckmxd["photo_ckmxd"]
+        photo_head = ckmxd["photo_head"]
         if photo_head:
             if photo_head == "6":
                 photo_head = int(photo_head)
@@ -771,6 +771,7 @@ class CControl():
             photo_head = 1
 
         add_model("AIR_HWYS_CKMXD", **{
+            "list_id": str(uuid.uuid1()),
             "jcno": args["jcno"],
             "salesman": wts["czr"],
             "hwpm": data["hwpm"],
@@ -791,16 +792,17 @@ class CControl():
             "jcno": args["jcno"],
             "type": "in",
             "createtime": datetime.datetime.now(),
-            "czr": user["user_name"],
+            "czr": user["username"],
             "photocount": len(data["pic_list"])
         })
         for row in data["pic_list"]:
             add_model("AIR_HWYS_PHOTOS", **{
+                "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
                 "phototype": "入仓",
                 "photourl": row["url"],
                 "createtime": datetime.datetime.now(),
-                "czr": user["user_name"],
+                "czr": user["username"],
                 "filename": row["filename"],
                 "photoheadid": photoheadid
             })
