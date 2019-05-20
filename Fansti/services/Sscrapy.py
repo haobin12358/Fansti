@@ -137,7 +137,7 @@ class Sscrapy(SBase):
         return self.session.query(D_ACCOUNTS.accounts_code)\
             .filter(and_(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
                         D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))),
-                         D_ACCOUNTS.accounts_code != None))\
+                         D_ACCOUNTS.b_airway == "1"))\
             .all()
 
     @close_session
@@ -145,7 +145,8 @@ class Sscrapy(SBase):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_m, AIR_HWYS_ENQUIRY.weight_m_custom,
                                    AIR_HWYS_ENQUIRY.weight_n, AIR_HWYS_ENQUIRY.weight_n_custom, AIR_HWYS_ENQUIRY.fuel,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
-                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min)\
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min,
+                                   AIR_HWYS_ENQUIRY.company)\
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
                     AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
         if accounts:
@@ -156,7 +157,8 @@ class Sscrapy(SBase):
     def get_q45_price(self, des, dep, accounts, pwkh, gtyt):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_q45, AIR_HWYS_ENQUIRY.weight_q45_custom, AIR_HWYS_ENQUIRY.fuel,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
-                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
+                                   AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min,
+                                   AIR_HWYS_ENQUIRY.company) \
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
                     AIR_HWYS_ENQUIRY.pwkh == pwkh, AIR_HWYS_ENQUIRY.gtyt == gtyt)
         if accounts:
@@ -166,7 +168,7 @@ class Sscrapy(SBase):
     @close_session
     def get_q100_price(self, des, dep, accounts, pwkh, gtyt):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_q100, AIR_HWYS_ENQUIRY.weight_q100_custom,
-                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel, AIR_HWYS_ENQUIRY.company,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
                                    AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
@@ -178,7 +180,7 @@ class Sscrapy(SBase):
     @close_session
     def get_q300_price(self, des, dep, accounts, pwkh, gtyt):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_q300, AIR_HWYS_ENQUIRY.weight_q300_custom,
-                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel, AIR_HWYS_ENQUIRY.company,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
                                    AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
@@ -190,7 +192,7 @@ class Sscrapy(SBase):
     @close_session
     def get_q500_price(self, des, dep, accounts, pwkh, gtyt):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_q500, AIR_HWYS_ENQUIRY.weight_q500_custom,
-                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel, AIR_HWYS_ENQUIRY.company,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
                                    AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,
@@ -202,7 +204,7 @@ class Sscrapy(SBase):
     @close_session
     def get_q1000_price(self, des, dep, accounts, pwkh, gtyt):
         price = self.session.query(AIR_HWYS_ENQUIRY.weight_q1000, AIR_HWYS_ENQUIRY.weight_q1000_custom,
-                                   AIR_HWYS_ENQUIRY.fuel,
+                                   AIR_HWYS_ENQUIRY.fuel, AIR_HWYS_ENQUIRY.company,
                                    AIR_HWYS_ENQUIRY.fuel_min, AIR_HWYS_ENQUIRY.safe, AIR_HWYS_ENQUIRY.safe_min,
                                    AIR_HWYS_ENQUIRY.awb, AIR_HWYS_ENQUIRY.attach, AIR_HWYS_ENQUIRY.attach_min) \
             .filter(AIR_HWYS_ENQUIRY.destination == des, AIR_HWYS_ENQUIRY.departure == dep,

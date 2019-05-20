@@ -1119,6 +1119,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     M：{0}, 
@@ -1132,6 +1137,7 @@ class Cscrapy():
                                     AWB：{13}
                                     附加费：{14}/kg（最低{15}）
                                     请输入航空公司以查询明确数据
+                                    例如：{15}
                                 """.format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
@@ -1139,7 +1145,7 @@ class Cscrapy():
                                            str("%.2f" % (float(price["weight_n"]) + float(price["weight_n_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,
@@ -1170,6 +1176,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     Q45：{0}, 
@@ -1178,10 +1189,11 @@ class Cscrapy():
                                     AWB：{5}
                                     附加费：{6}/kg（最低{7}）
                                     请输入航空公司以查询明确数据
+                                    例如：{8}
                                 """.format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,
@@ -1212,6 +1224,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     Q100：{0}, 
@@ -1220,10 +1237,11 @@ class Cscrapy():
                                     AWB：{5}
                                     附加费：{6}/kg（最低{7}）
                                     请输入航空公司以查询明确数据
+                                    例如：{8}
                                 """.format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,
@@ -1254,6 +1272,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     Q300：{0}, 
@@ -1262,10 +1285,11 @@ class Cscrapy():
                                     AWB：{5}
                                     附加费：{6}/kg（最低{7}）
                                     请输入航空公司以查询明确数据
+                                    例如：{8}
                                 """.format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,
@@ -1296,6 +1320,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     Q500：{0}, 
@@ -1304,10 +1333,11 @@ class Cscrapy():
                                     AWB：{5}
                                     附加费：{6}/kg（最低{7}）
                                     请输入航空公司以查询明确数据
+                                    例如：{8}
                                 """.format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,
@@ -1338,6 +1368,11 @@ class Cscrapy():
                     }
                 }
             elif len(price_list) > 1:
+                company = ""
+                for row in price_list:
+                    if company:
+                        company = company + ","
+                    company = company + row["company"]
                 price = price_list[0]
                 price_str = """
                                     Q1000：{0}, 
@@ -1346,10 +1381,11 @@ class Cscrapy():
                                     AWB：{5}
                                     附加费：{6}/kg（最低{7}）
                                     请输入航空公司以查询明确数据
+                                    例如：{8}
                                 """.format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
-                                           price["attach"], price["attach_min"]
+                                           price["attach"], price["attach_min"], company
                                            )
                 return {
                     "status": 200,

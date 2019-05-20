@@ -40,6 +40,7 @@ class CGoods():
         user = self.susers.get_user_type(args.get("login_name"))
         if not user:
             return import_status("ERROR_NONE_USER", "FANSTI_ERROR", "ERROR_NONE_USER")
+        user_message = get_model_return_dict(self.susers.get_user_name(args.get("login_name")))
         usertype = user.user_type
         if usertype:
             try:
@@ -54,11 +55,11 @@ class CGoods():
         elif usertype == 0:
             pass
         elif usertype == 30:
-            wts_filter.add(AIR_HWYS_WTS.dmczlx == args.get("login_name"))
+            wts_filter.add(AIR_HWYS_WTS.dmczlx == user_message["username"])
         elif usertype == 20:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
-            wts_filter.add(AIR_HWYS_WTS.company == accounts.get("compnay"))
+            wts_filter.add(AIR_HWYS_WTS.company == user_message["username"])
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)

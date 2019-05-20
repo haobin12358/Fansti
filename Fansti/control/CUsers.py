@@ -145,6 +145,7 @@ class CUsers():
             phone_list = str(phone_list).replace("[", "").replace("]", "").replace("\"", "") \
                 .replace("\'", "").replace("\\", "").replace(" ", "").replace("u", "").split(",")
             print(phone_list)
+        response["data"] = {}
         response['data']["user_type"] = usertype
         if data["login_name"] not in phone_list:
             response["data"]["is_show"] = 0
