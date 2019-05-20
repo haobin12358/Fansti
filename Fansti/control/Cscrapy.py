@@ -1093,24 +1093,14 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_mn_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    M：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                    N：{8}, 
-                    燃油费：{9}/kg（最低{10}）
-                    安全费：{11}/kg（最低{12}）
-                    AWB：{13}
-                    附加费：{14}/kg（最低{15}）
-                """.format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
+                price_str = """M：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||N：{8}, ||chr(13)||chr(10||燃油费：{9}/kg（最低{10}）||chr(13)||chr(10||安全费：{11}/kg（最低{12}）||chr(13)||chr(10||AWB：{13}||chr(13)||chr(10||附加费：{14}/kg（最低{15}）"""\
+                    .format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"],
                            str("%.2f" % (float(price["weight_n"]) + float(price["weight_n_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1125,20 +1115,8 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    M：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    N：{8}, 
-                                    燃油费：{9}/kg（最低{10}）
-                                    安全费：{11}/kg（最低{12}）
-                                    AWB：{13}
-                                    附加费：{14}/kg（最低{15}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{15}
-                                """.format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
+                price_str = """M：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||N：{8}, ||chr(13)||chr(10||燃油费：{9}/kg（最低{10}）||chr(13)||chr(10||安全费：{11}/kg（最低{12}）||chr(13)||chr(10||AWB：{13}||chr(13)||chr(10||附加费：{14}/kg（最低{15}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{15}"""\
+                    .format(str("%.2f" % (float(price["weight_m"]) + float(price["weight_m_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"],
@@ -1146,7 +1124,7 @@ class Cscrapy():
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1158,16 +1136,11 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_q45_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    Q45：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                """.format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
+                price_str = """Q45：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）"""\
+                    .format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1182,19 +1155,12 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    Q45：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{8}
-                                """.format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
+                price_str = """Q45：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{8}"""\
+                    .format(str("%.2f" % (float(price["weight_q45"]) + float(price["weight_q45_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1206,16 +1172,11 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_q100_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    Q100：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                """.format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
+                price_str = """Q100：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）"""\
+                    .format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1230,19 +1191,12 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    Q100：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{8}
-                                """.format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
+                price_str = """Q100：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{8}"""\
+                    .format(str("%.2f" % (float(price["weight_q100"]) + float(price["weight_q100_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1254,16 +1208,11 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_q300_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    Q300：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                """.format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
+                price_str = """Q300：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）"""\
+                    .format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1278,19 +1227,12 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    Q300：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{8}
-                                """.format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
+                price_str = """Q300：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{8}"""\
+                    .format(str("%.2f" % (float(price["weight_q300"]) + float(price["weight_q300_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1302,16 +1244,11 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_q500_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    Q500：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                """.format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
+                price_str = """Q500：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）"""\
+                    .format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1326,19 +1263,12 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    Q500：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{8}
-                                """.format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
+                price_str = """Q500：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{8}"""\
+                    .format(str("%.2f" % (float(price["weight_q500"]) + float(price["weight_q500_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1350,16 +1280,11 @@ class Cscrapy():
             price_list = get_model_return_list(self.sscrapy.get_q1000_price(des, dep, args["accounts"], pwkh, gtyt))
             if len(price_list) == 1:
                 price = price_list[0]
-                price_str = """
-                    Q1000：{0}, 
-                    燃油费：{1}/kg（最低{2}）
-                    安全费：{3}/kg（最低{4}）
-                    AWB：{5}
-                    附加费：{6}/kg（最低{7}）
-                """.format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
+                price_str = """Q1000：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）"""\
+                    .format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"], price["awb"],
                            price["attach"], price["attach_min"]
-                           )
+                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
@@ -1374,19 +1299,12 @@ class Cscrapy():
                         company = company + ","
                     company = company + row["company"]
                 price = price_list[0]
-                price_str = """
-                                    Q1000：{0}, 
-                                    燃油费：{1}/kg（最低{2}）
-                                    安全费：{3}/kg（最低{4}）
-                                    AWB：{5}
-                                    附加费：{6}/kg（最低{7}）
-                                    请输入航空公司以查询明确数据
-                                    例如：{8}
-                                """.format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
+                price_str = """Q1000：{0}, ||chr(13)||chr(10||燃油费：{1}/kg（最低{2}）||chr(13)||chr(10||安全费：{3}/kg（最低{4}）||chr(13)||chr(10||AWB：{5}||chr(13)||chr(10||附加费：{6}/kg（最低{7}）||chr(13)||chr(10||请输入航空公司以查询明确数据||chr(13)||chr(10||例如：{8}"""\
+                    .format(str("%.2f" % (float(price["weight_q1000"]) + float(price["weight_q1000_custom"]))),
                                            price["fuel"], price["fuel_min"], price["safe"], price["safe_min"],
                                            price["awb"],
                                            price["attach"], price["attach_min"], company
-                                           )
+                                           ).replace("None", "无")
                 return {
                     "status": 200,
                     "message": "询价成功",
