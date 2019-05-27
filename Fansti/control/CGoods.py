@@ -422,9 +422,10 @@ class CGoods():
         args = request.args.to_dict()
         jcno = args["jcno"]
         type = args["type"]
+        rcptto = args["rcptto"]
         import zipfile
-
         if type == "in":
+            jctype = "入仓"
             zip_name = "in.zip"
             zip_dir = 'E:\\fstfile\\photo\\{0}\\in\\in.zip'.format(jcno)
             f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\in\\in.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
@@ -434,6 +435,7 @@ class CGoods():
                 f.write(abs_dir)
             f.close()
         elif type == "out":
+            jctype = "出仓"
             zip_name = "out.zip"
             zip_dir = 'E:\\fstfile\\photo\\{0}\\out\\out.zip'.format(jcno)
             f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\out\\out.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
@@ -443,6 +445,7 @@ class CGoods():
                 f.write(abs_dir)
             f.close()
         else:
+            jctype = "称重"
             zip_name = "weight.zip"
             zip_dir = 'E:\\fstfile\\photo\\{0}\\weight\\weight.zip'.format(jcno)
             f = zipfile.ZipFile('E:\\fstfile\\photo\\{0}\\weight\\weight.zip'.format(jcno), 'w', zipfile.ZIP_STORED)
@@ -452,4 +455,70 @@ class CGoods():
                 f.write(abs_dir)
             f.close()
 
-        return send_from_directory(zip_dir, zip_name, as_attachment=True)
+        # 引入邮件所需要的包
+        import smtplib
+        import email
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+        from email.mime.image import MIMEImage
+        from email.mime.base import MIMEBase
+        from email.mime.application import MIMEApplication
+        from email.header import Header
+        print(1)
+        # 发件人地址，通过控制台创建的发件人地址
+        username = 'fst@fstwechat.com'
+        # 发件人密码，通过控制台创建的发件人密码
+        password = 'Fst201507fsT'
+        # 自定义的回复地址
+        replyto = 'chemfst@126.com'
+        # 收件人地址或是地址列表，支持多个收件人，最多30个
+        # rcptto = '***,***'
+        # rcptto = '1276121237@qq.com'
+        # 构建alternative结构
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = Header('泛思特{0}照片'.format(jctype))
+        msg['From'] = '%s <%s>' % (Header('泛思特客服'), username)
+        msg['To'] = rcptto
+        msg['Reply-to'] = replyto
+        msg['Message-id'] = email.utils.make_msgid()
+        msg['Date'] = email.utils.formatdate()
+        # 构建alternative的text/html部分
+        texthtml = MIMEText('<html>'
+                            '<body>'
+                            '<div><a>进仓单号为{0}的{1}照片已经确认并发送到您邮箱，请点击下方链接下载</a>'
+                            '</div><div><a href="https://fstwechat.com/fansti/download/{2}/{3}">下载地址</a></div>'
+                            '</body></html>'.format(jcno, jctype, jcno, type), _subtype='html', _charset='UTF-8')
+        msg.attach(texthtml)
+        # 发送邮件
+        try:
+            print(2)
+            client = smtplib.SMTP()
+            # python 2.7以上版本，若需要使用SSL，可以这样创建client
+            # client = smtplib.SMTP_SSL()
+            # SMTP普通端口为25或80
+            print(3)
+            client.connect('smtpdm.aliyun.com', 80)
+            # 开启DEBUG模式
+            print(4)
+            client.set_debuglevel(0)
+            print(5)
+            client.login(username, password)
+            # 发件人和认证地址必须一致
+            # 备注：若想取到DATA命令返回值,可参考smtplib的sendmaili封装方法:
+            #      使用SMTP.mail/SMTP.rcpt/SMTP.data方法
+            print(6)
+            a = client.sendmail(username, rcptto, msg.as_string())
+            # print(str(client.))
+            print(str(a))
+            client.quit()
+            return {
+                "status": 200,
+                "message": "发送成功"
+            }
+        except Exception as e:
+            print(e)
+            return {
+                "status": 405,
+                "status_code": 405899,
+                "message": str(e)
+            }
