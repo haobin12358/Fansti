@@ -1,7 +1,7 @@
 # *- coding:utf8 *-
 # from gevent import monkey
 # monkey.patch_all(thread=False)
-from flask import Flask
+from flask import Flask, Blueprint
 import flask_restful
 from flask_cors import CORS
 
@@ -15,6 +15,7 @@ from Fansti.apis.ANews import FSNews
 from Fansti.apis.AVotes import FSVotes
 from Fansti.apis.AControl import FSControl
 from Fansti.apis.ACommon import ACommon
+from Fansti.apis.ADownload import ADownload
 # # 处理高并发
 # from gevent.pywsgi import WSGIServer
 fansti = Flask(__name__)
@@ -31,8 +32,12 @@ api.add_resource(FSVotes, "/fansti/votes/<string:votes>")
 api.add_resource(FSpay, "/fansti/pay/<string:pay>")
 api.add_resource(FSControl, "/fansti/control/<string:control>")
 api.add_resource(ACommon, "/fansti/common/<string:common>")
+# fansti.add_url_rule("/download/<string:jcno>/<string:jctype>")
+v1 = Blueprint(__name__, 'v1', url_prefix='/fansti')
+v1.add_url_rule('/download/<string:jcno>/<string:jctype>', view_func=ADownload.as_view('jcno'))
+fansti.register_blueprint(v1)
 
-@fansti.route("/")
+@fansti.route("/download")
 def index():
     return "<html><body>Hello world</body></html>"
 
