@@ -55,7 +55,7 @@ class CControl():
         if args["time_use"]:
             args["time_use"] = datetime.datetime.strptime(args["time_use"], "%Y-%m-%d")
             today_date = args["time_use"]
-            wts_filter.add(or_(AIR_HWYS_WTS.jd_time == today_date, AIR_HWYS_WTS.jd_date == today_date))
+            wts_filter.add(AIR_HWYS_WTS.arrivetime == today_date)
 
         goods_list = get_model_return_list(self.sgoods.get_all_goods_by_filter(
             wts_filter, int(args["page_size"]), int(args["page_num"])))
@@ -148,6 +148,8 @@ class CControl():
         else:
             jc_abo["contract"] = None
             jc_abo["contract_time"] = None
+        if not jc_abo["ydno"]:
+            jc_abo["ydno"] = "暂无运单号"
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response
