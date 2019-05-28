@@ -76,6 +76,7 @@ const getEnquiryWhiteList = params => wxRequest(params, host+`/other/get_enquiry
 
 
 
+const exportZip = params => wxRequest(params, host + `/goods/export_zip`);
 
 
 export default {
@@ -110,5 +111,7 @@ export default {
   getDes,
   getAirPlaneAccounts,
   getEnquiry,
-  getEnquiryWhiteList
+  getEnquiryWhiteList,
+
+  exportZip
 }

@@ -510,6 +510,8 @@
         await this.setOpenid();
         await this.checkBinding();
       }
+
+      this.$apply()
     }
   }
 </script>

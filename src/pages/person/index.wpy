@@ -195,7 +195,7 @@
 
           </view>
 
-          <view wx:if="{{!isOldUser}}" class="newuser-shadow">
+          <view wx:if="{{!isOldUser || !canUsePacket}}" class="newuser-shadow">
             <image class="line1" src="../../images/paper_plane.png"></image>
             <view class="line2">
               与客服联系如何开启红包
@@ -281,6 +281,7 @@
     mixins = [BindingMixin];
 
     data = {
+      canUsePacket: false,
       showWGP: false,//  显示未领取红包
       showAGP: false, //  显示已领取红包
       showCT: false,  //  显示已完成票数
@@ -507,9 +508,10 @@
     init(){
       this.getCustom();
 
+      this.canUsePacket = wx.getStorageSync('user_type') == '2'
       if(this.isBinding){
 
-        if(this.isOldUser){
+        if(this.isOldUser && this.canUsePacket){
           this.getAllRed();
         }
       }

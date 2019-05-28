@@ -139,7 +139,7 @@
           <view class="row">
             <text>货物状态</text>
             <view>
-              <radio-group name="gtyt" @change="handleGoodsTypeChange">
+              <radio-group name="gtyt">
                 <label>固体
                   <radio color="#ffcd42" checked value="固体"></radio>
                 </label>
@@ -152,7 +152,7 @@
           <view class="row">
             <text>包装形式</text>
             <view>
-              <radio-group @change="handleGoodsTypeChange">
+              <radio-group>
                 <label>桶
                   <radio color="#ffcd42" checked></radio>
                 </label>
@@ -177,6 +177,8 @@
                    @select.user="doSelectAccounts" @query.user="doQueryAccounts"></searchList2>
     </block>
     <placeholder type="enquiry" wx:else></placeholder>
+
+    <enquiry-result :show.sync="showRes" :list.sync="resList" @hide.user="hideRes"></enquiry-result>
   </view>
 </template>
 
@@ -185,15 +187,20 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import searchList from '@/components/searchList';
+  import EnquiryResult from '@/components/enquiryResult';
   import placeholder from '@/components/common/placeholder';
+  import BindingMixin from '@/mixins/bindingMixin';
 
   export default class Index extends wepy.page {
     config = {};
 
+    mixins = [BindingMixin];
+
     components = {
       searchList,
       searchList2: searchList,
-      placeholder
+      placeholder,
+      'enquiry-result': EnquiryResult
     };
 
     data = {
@@ -222,6 +229,9 @@
       accountsList: [],
 
       showKh: false,
+
+      showRes: false,
+      resList: [],
     };
 
     computed = {};
@@ -245,6 +255,7 @@
 
       showAccountsSerList() {
         this.showAccounts = true;
+        this.getAirPlaneAccounts()
       },
       doSelectAccounts(item) {
         this.formData.accounts = item.label;
@@ -264,6 +275,11 @@
 
         let checkRst = this.checkFormData(formData);
 
+        if(checkRst){
+          tip.confirm(checkRst, false)
+          return
+        }
+
         if (formData.pw === 'p') {
           formData.pwkh = 'GEN';
         } else {
@@ -275,6 +291,7 @@
         }
         let query = Object.assign({}, formData)
         delete query.pw
+        delete query.kh
 
         api.getEnquiry({
           query
@@ -282,9 +299,22 @@
           res => {
             if (res.data.status == 200) {
               let data = res.data.data;
-              let rst = data.price.replace(/(\s|\\n)/g, ' ')
+              let rstList = data.price.split('||chr(13)||chr(10||')
 
-              wx.showModal({
+              rstList = rstList.map(item => {
+                let splitCharIndex = item.indexOf('：');
+
+                return {
+                  name: item.substr(0, splitCharIndex),
+                  value: item.substr(splitCharIndex + 1)
+                };
+              });
+
+              this.resList = rstList
+              this.showRes = true
+              this.$apply()
+
+              /*wx.showModal({
                 title: '询价结果',
                 content: rst,
                 confirmText: '复制结果',
@@ -296,15 +326,17 @@
                     })
                   }
                 }
-              })
+              })*/
             } else {
               tip.alert(res.data.message);
             }
           }
         );
+      },
+
+      hideRes(){
+        this.showRes = false
       }
-
-
     };
 
     checkFormData(formData){
@@ -362,26 +394,15 @@
       );
     }
 
-    onLoad() {
-      let loginName= wx.getStorageSync('token')
 
-      if(loginName){
-        api.getEnquiryWhiteList({}).then(
-          res => {
-            if (res.data.status == 200) {
-              let data = res.data.data;
-
-              this.canUse = data.includes(loginName)
-              this.$apply()
-            } else {
-              tip.alert(res.data.message);
-            }
-          }
-        );
-      }else{
-        this.canUse = false
+    async onLoad() {
+      if (!this.isBinding) {
+        await this.setOpenid();
+        await this.checkBinding();
       }
 
+      this.canUse = !!wx.getStorageSync('showEnquiry')
+      this.$apply()
     };
   }
 </script>

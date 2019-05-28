@@ -206,6 +206,7 @@
       }
       let res =await api.userBinding({method: 'POST', query});
 
+      // 绑定成功,清空数据,在几个首页触发自动登录
       if(res.data.status == 200){
         wx.setStorageSync('isNewUser', false);
         wx.setStorageSync('token', '');

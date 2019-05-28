@@ -1,0 +1,71 @@
+<style scoped lang="less">
+  @import "../styles/base";
+
+  .placeholder{
+    text-align: center;
+
+    .placeholder-icon {
+      margin-top: 277rpx;
+      width: 450rpx;
+      height: 150rpx;
+    }
+
+    .placeholder-text{
+      margin-top: 93rpx;
+      font-size: 32rpx;
+
+      navigator{
+        display: inline-block;
+
+        color: @mainBlueColor;
+      }
+    }
+
+  }
+</style>
+
+<template>
+  <view class="placeholder">
+    <image class="placeholder-icon" src="../../images/paper_plane.png"></image>
+    <view class="placeholder-text">
+      <block wx:if="{{type == 'binding'}}">
+        去绑定,<navigator url="/pages/person/binding"><text>绑定账户</text></navigator>后即可查看
+      </block>
+      <block wx:if="{{type == 'newUser'}}">
+        尚未与泛思特进行货物合作
+      </block>
+      <block wx:if="{{type == 'enquiry'}}">
+        尚未拥有询价权限
+      </block>
+      <view wx:if="{{type == 'empty'}}">
+        查询结果为空,换个搜索条件试试
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Placeholder extends wepy.component {
+      props = {
+        type: {
+          type: String,
+          default: 'binding'
+        }
+      };
+
+      data = {};
+
+      computed = {};
+
+      methods = {};
+
+      events = {};
+
+      onLoad() {
+
+        }
+    }
+</script>
+

@@ -42,7 +42,11 @@
         if (res2.data.message == '已绑定') {
           this.isBinding = true;
 
-          wx.setStorageSync('userType', res2.data.data.user_type);
+          console.log(res2.data.data)
+          wx.setStorageSync('showEnquiry', res2.data.data.is_show == 1);
+          wx.setStorageSync('user_type', res2.data.data.user_type);
+
+          console.log(wx.getStorageSync('showEnquiry'), wx.getStorageSync('user_type'))
           //  老用户
           if (res2.data.data.login_name) {
             //  老用户直接绑定token

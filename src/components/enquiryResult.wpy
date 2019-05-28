@@ -1,0 +1,117 @@
+<style lang="less" scoped>
+  @import "../styles/base";
+  @import "../styles/table";
+
+  .enquiry-result {
+    height: 100%;
+
+    .title{
+      padding: 40rpx;
+      color: @mainBlueColor;
+      text-align: center;
+      font-weight: bold;
+      font-size: 30rpx;
+    }
+
+    .two-column-table {
+
+      .tbody {
+        .tr {
+          .td {
+
+            &:first-child {
+              text-align: center;
+              justify-content: center;
+              flex: 0.3;
+            }
+            &:last-child {
+              text-align: center;
+              justify-content: center;
+            }
+          }
+
+          .td.file-link {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<template>
+  <popup :show.sync="show" @hide.user="hidePopup">
+    <scroll-view scroll-y class="enquiry-result" style="">
+      <view class="title">询价结果</view>
+
+      <view style="height: 100%;" class="two-column-table">
+        <view class="tbody">
+          <view wx:for="{{list}}" class="tr">
+            <view class="td">{{item.name}}</view>
+            <view class="td">{{item.value}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </popup>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import popup from '@/components/popup';
+
+  export default class EnquiryResult extends wepy.component {
+    config = {};
+
+    components = {
+      popup
+    };
+
+    data = {
+      show: {
+        type: Boolean,
+        twoWay: true	//双向绑定
+      },
+      list: {
+        type: Array,
+        default: []
+      }
+    };
+
+    computed = {};
+
+    methods = {
+      hidePopup() {
+        this.show = false;
+        this.$emit('hide')
+      }
+    };
+
+    onLoad() {
+      let txt = [
+        'M：240.00, ',
+        '燃油费：1.4/kg（最低50）',
+        '安全费：无/kg（最低无）',
+        'AWB：50',
+        '附加费：无/kg（最低无）',
+        'N：46.66, ',
+        '燃油费：1.4/kg（最低50）',
+        '安全费：无/kg（最低无）',
+        'AWB：50',
+        '附加费：无/kg（最低无）'
+      ];
+
+      let arr = txt.map(item => {
+        let splitCharIndex = item.indexOf('：');
+
+        return {
+          name: item.substr(0, splitCharIndex),
+          value: item.substr(splitCharIndex + 1)
+        };
+      });
+
+      console.log(arr)
+      this.list = arr
+    };
+  }
+</script>

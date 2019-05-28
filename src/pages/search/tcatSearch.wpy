@@ -89,15 +89,16 @@
       // return;
       let res = data.preload.res;
       let arr = [],
-      list = [];
+        list = [];
 
-      arr = res.freight.split('||chr(13)||chr(10)||')
+      arr = res.freight.split('||chr(13)||chr(10)||');
       for (let i = 0; i < arr.length; i++) {
+        let splitCharIndex = arr[i].indexOf('：');
+
         list.push({
-          i,
-          name: arr[i].split(':')[0],
-          value: arr[i].split(':')[1],
-        })
+          name: arr[i].substr(0, splitCharIndex),
+          value: arr[i].substr(splitCharIndex + 1)
+        });
       }
       this.list = list;
     }
