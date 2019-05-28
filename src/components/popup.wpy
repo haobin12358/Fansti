@@ -79,7 +79,6 @@
 
 
     onLoad() {
-      console.log('popup组件',this.show,this.cardHeight);
     }
   }
 </script>

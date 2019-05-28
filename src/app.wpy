@@ -34,10 +34,6 @@ export default class extends wepy.app {
 
       'pages/track/consignmentDetail',  //托运详情
 
-
-
-
-
       'pages/index/index',  //首页
       'pages/index/newsDetail', //新闻详情
 
@@ -51,7 +47,7 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '范思特',
+      navigationBarTitleText: '泛思特',
       navigationBarTextStyle: 'black'
     },
     tabBar: {
@@ -103,7 +99,7 @@ export default class extends wepy.app {
   onLaunch() {
     if(wx.getStorageSync('token')){
       wx.reLaunch({
-        url: '/pages/index/index'
+        url: '/pages/index/index' // todo
       })
     }else{
       wx.reLaunch({

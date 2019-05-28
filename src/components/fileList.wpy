@@ -2,36 +2,67 @@
   @import "../styles/base";
   @import "../styles/table";
 
-  .file-list-container {
+  .popup-screen{
+    width: 100%;
     height: 100%;
+    z-index: 1000;
+    background: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    opacity: 0.7;
+  }
 
-    .title{
-      padding: 40rpx;
-      color: @mainBlueColor;
-      text-align: center;
-      font-weight: bold;
-      font-size: 30rpx;
+  .popup-content {
+    position: fixed;
+    z-index: 2000;
+    top: 37rpx;
+    left: 50rpx;
+    width: 650rpx;
+    background: #ffffff;
+    border: 4 rpx solid @borderColor;
+    border-radius: 10rpx;
+
+    .hide-btn {
+      position: absolute;
+      right: -25rpx;
+      top: -25rpx;
+      width: 50rpx;
+      height: 50rpx;
     }
 
-    .two-column-table {
+    .file-list-container {
+      height: 100%;
 
-      .tbody {
-        .tr {
-          .td {
+      .title {
+        padding: 40rpx;
+        color: @mainBlueColor;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30rpx;
+      }
 
-            &:first-child {
-              text-align: center;
-              justify-content: center;
-              flex: 0.3;
+      .two-column-table {
+
+        .tbody {
+          .tr {
+            .td {
+
+              &:first-child {
+                text-align: center;
+                justify-content: center;
+                flex: 0.3;
+              }
+              &:last-child {
+                text-align: center;
+                justify-content: center;
+              }
             }
-            &:last-child {
-              text-align: center;
-              justify-content: center;
-            }
-          }
 
-          .td.file-link {
-            text-decoration: underline;
+            .td.file-link {
+              text-decoration: underline;
+            }
           }
         }
       }
@@ -40,27 +71,31 @@
 </style>
 
 <template>
-  <popup :show.sync="show" @hide.user="hidePopup">
-    <scroll-view scroll-y class="file-list-container">
-      <view class="title">{{title}}</view>
+  <block wx:if="{{show}}">
+    <view class="popup-screen" @touchstart.stop=""></view>
+    <view class="popup-content" style="height: {{cardHeight}}px;">
+      <scroll-view scroll-y class="file-list-container">
+        <view class="title">{{title}}</view>
 
-      <view style="height: 100%;" class="two-column-table">
-        <view class="tbody">
-          <view wx:for="{{list}}" class="tr" >
-            <view class="td">{{index+1}}</view>
-            <view class="td file-link" @tap="overviewFile({{item}})">{{item.file_name}}</view>
+        <view style="height: 100%;" class="two-column-table">
+          <view class="tbody">
+            <view wx:for="{{list}}" class="tr">
+              <view class="td">{{index+1}}</view>
+              <view class="td file-link" @tap.stop="overviewFile({{item}})">{{item.file_name}}</view>
+            </view>
           </view>
         </view>
-      </view>
-    </scroll-view>
-  </popup>
+      </scroll-view>
+
+      <image src="../images/close.png" class="hide-btn" @tap.stop="hidePopup"></image>
+    </view>
+  </block>
 </template>
 
 <script>
   import wepy from 'wepy';
   import CardMixin from '@/mixins/cardMixin';
   import placeholder from '@/components/placeholder';
-  import popup from '@/components/popup';
 
   export default class SearchList extends wepy.component {
     props = {
@@ -81,8 +116,7 @@
     mixins = [CardMixin];
 
     components = {
-      placeholder,
-      popup
+      placeholder
     };
 
     data = {};
@@ -93,7 +127,8 @@
       hidePopup() {
         this.show = false;
       },
-      overviewFile(filename){
+      overviewFile(item){
+        console.log('组件overviewFile')
         this.$emit('overview', item)
       },
     };

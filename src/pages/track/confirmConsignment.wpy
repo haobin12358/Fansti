@@ -112,12 +112,15 @@
         <view class="confirm-btn" @tap="confirmPic">
           确认照片
         </view>
-        <view class="confirm-btn send-email" @tap="confirmPic">
+        <view class="confirm-btn send-email" @tap="sendEmail">
           发送至邮箱
         </view>
       </view>
 
     </view>
+
+    <input-box wx:if="{{showInputBox}}" :title.sync="inpBoxTitle"
+               @inputConfirm.user="inputConfirm" @inputCancel.user="inputCancel"></input-box>
   </view>
 
 </template>
@@ -126,15 +129,21 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
+  import InputBox from '@/components/inputBox';
 
   export default class ConfirmConsignment extends wepy.page {
     config = {
       navigationBarTitleText: '确认照片'
     }
 
-    components = {};
+    components = {
+      'input-box': InputBox
+    };
 
     data = {
+      showInputBox: false,
+      inpBoxTitle: '接收照片的邮箱',
+
       type: '',
       title: '',
       createtime: '',
@@ -170,7 +179,33 @@
             }
           }
         })
-      }
+      },
+      sendEmail(){
+        this.showInputBox = true
+      },
+      inputConfirm(text){
+        this.showInputBox = false
+
+        api.exportZip({
+          query: {
+            jcno: this.jcno,
+            type: this.type,
+            rcptto: text
+          }
+        }).then(
+          res => {
+            if(res.data.status == 200){
+              tip.success('已发送至您的邮箱')
+            }
+          }
+        )
+
+      },
+
+      inputCancel(){
+        this.showInputBox = false
+        this.$apply()
+      },
     };
 
     events = {};
@@ -189,6 +224,16 @@
           wx.navigateBack();
         }
       )
+    }
+
+    exportZip(){
+      api.exportZip({
+        query: {
+          jcno: this.jcno,
+          type: this.type,
+          rcptto: ''
+        }
+      })
     }
 
     onLoad(params) {

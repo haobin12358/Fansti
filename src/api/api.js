@@ -24,6 +24,7 @@ const getSbnoList = params => wxRequest(params, host + `/control/get_sbno_list`)
 const getPacker = params => wxRequest(params, host + `/control/get_packer`);
 const getJcInPhotoHead = params => wxRequest(params, host + `/control/get_jc_in_photohead`);
 const getJcPicIn = params => wxRequest(params, host + `/control/get_jc_pic_in`);
+const exportZip = params => wxRequest(params, host + `/goods/export_zip`);
 
 // 修改 都是post
 const updateWts = params => wxRequest(params, host + `/control/update_wts?login_name=${params.login_name}&jcno=${params.jcno}`);  // 交单
@@ -156,5 +157,6 @@ export default {
   updateQrd,
   userLoginLocal,
   saveRoyalty,
-  updateRoyalty
+  updateRoyalty,
+  exportZip
 };

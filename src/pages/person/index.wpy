@@ -113,6 +113,7 @@
     <view class="btn-wrap" style="margin-top: 300rpx">
       <view class="button" @tap="doRebind">重新绑定</view>
     </view>
+    <view style="text-align: right">版本号 0.0.8</view>
 
     <input-box wx:if="{{showInputBox}}" :title.sync="title" :placeholder.sync="placeholder"
                @inputConfirm.user="inputConfirm" @inputCancel.user="inputCancel"></input-box>
@@ -148,11 +149,7 @@
       doSearch(evt) {
         let {query} = evt.detail.value
 
-        if(query){
-          this.$navigate('/pages/person/plan', {query})
-        }else{
-          tip.alert('请输入查询内容')
-        }
+        this.$navigate('/pages/person/plan', {query})
       },
       handleRedirect(command) {
         console.log('handle')
@@ -162,17 +159,17 @@
             break;
           case 'insto':
             this.inputBoxType = command
-            this.placeholder = '请输入进仓号-入库'
+            this.placeholder = '请输入运单号-入库'
             this.scanToInSto();
             break;
           case 'outsto':
             this.inputBoxType = command
-            this.placeholder = '请输入进仓号-出库'
+            this.placeholder = '请输入运单号-出库'
             this.scanToOutSto();
             break;
           case 'yardReceive':
             this.inputBoxType = command
-            this.placeholder = '请输入进仓号-货场接收'
+            this.placeholder = '请输入运单号-货场接收'
             this.scanToReceive();
             break;
           case 'declare':
@@ -191,6 +188,10 @@
       },
 
       inputConfirm(text){
+        if(!text){
+          tip.alert('请输入运单号')
+          return
+        }
         switch (this.inputBoxType) {
           case 'insto':
             this.getInAbo(text)
@@ -230,12 +231,10 @@
 
       wx.scanCode({
         success(res){
-          let jcno = res.result;
-          // let jcno = 'E15060029';
-
+          let jcno = res.result.substr(0,12);
           that.getInAbo(jcno)
         },
-        fail(){
+        fail(evt){
           that.showInputBox = true
           that.$apply()
         }
@@ -271,8 +270,7 @@
 
       wx.scanCode({
         success(res){
-          let jcno = res.result;
-          // let jcno = 'E15060029';
+          let jcno = res.result.substr(0,12);
 
           that.getOutAbo(jcno)
         },
@@ -313,10 +311,9 @@
 
       wx.scanCode({
         success(res) {
-          let jcno = res.result;
-          // let jcno = 'E15060029';
+          let jcno = res.result.substr(0,12);
 
-          that.getHcAbo()
+          that.getHcAbo(jcno)
         },
         fail() {
           that.showInputBox = true

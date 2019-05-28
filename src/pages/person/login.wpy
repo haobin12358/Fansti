@@ -141,7 +141,7 @@
 
   export default class Login extends wepy.page {
     config = {
-      navigationBarTitleText: '泛思特'
+      navigationBarTitleText: '登录'
     }
 
     components = {

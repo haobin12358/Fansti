@@ -347,8 +347,8 @@
         </form>
 
         <view class="detail-hd">
-          <view>进仓号：{{planDetail.jcno}}</view>
-          <view>运单号：{{planDetail.ydno}}</view>
+          <view>进仓号：{{planDetail.jcno || '暂无'}}</view>
+          <view>运单号：{{planDetail.ydno || '暂无'}}</view>
         </view>
 
         <view class="two-column-center-table">
@@ -415,8 +415,8 @@
       <!--电子交接单-->
       <view class="delivery-receipt"  wx:if="{{1 == activeName}}">
         <view class="delivery-receipt-hd">
-          <view>进仓号：{{deliveryReceipt.jcno}}</view>
-          <view>运单号：{{deliveryReceipt.ydno}}</view>
+          <view>进仓号：{{deliveryReceipt.jcno || '暂无'}}</view>
+          <view>运单号：{{deliveryReceipt.ydno || '暂无'}}</view>
         </view>
 
         <view class="delivery-receipt-bd">
@@ -634,7 +634,7 @@
         <view>
           <view class="cost-hd">
             <view>进仓号：{{cost.jcno}}</view>
-            <view>运单号：{{cost.ydno}}</view>
+            <view>运单号：{{cost.ydno || '暂无'}}</view>
           </view>
           <view class="two-column-center-table" style="font-size: 26rpx!important;">
             <view class="row">
@@ -661,7 +661,7 @@
                   </view>
 
 
-                  <view wx:if="{{item.is_update}}" class="price-right">
+                  <view wx:if="{{item.is_update == 1}}" class="price-right">
                     <view class="edit" @tap="doEditCost({{item}})">修改</view>
                     <view  class="del" @tap="doRemoveCost({{item}})">删除</view>
                   </view>
@@ -670,8 +670,8 @@
               </view>
             </view>
           </view>
-          <view class="btn-wrap" style="margin-top: 200rpx;">
-            <view class="button" @tap="doAddCost">添加成本</view>
+          <view wx:if="{{cost.price[0] && cost.price[0].is_update == 1}}" class="btn-wrap" style="margin-top: 200rpx;">
+            <view class="button" @tap="doAddCost" >添加成本</view>
           </view>
         </view>
       </view>
@@ -715,7 +715,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 2,
+      activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -742,7 +742,9 @@
         weight: {},
         by: {},
       },
-      cost: {}
+      cost: {
+        price: []
+      }
     };
 
     computed = {
@@ -934,7 +936,8 @@
           }
         )
       },
-      overviewFile({file_url}){
+      overviewFile(item){
+        let file_url = item.file_url
         tip.loading('下载文件中');
 
         wx.downloadFile({

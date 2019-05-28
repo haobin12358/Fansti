@@ -291,6 +291,17 @@
         </view>
       </view>
 
+      <view wx:if="{{detail.contentsb.length}}" class="two-column-table">
+        <view class="thead">
+          申报单文件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.contentsb}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
+      </view>
       <view wx:if="{{detail.contentfile.length}}" class="two-column-table">
         <view class="thead">
           报关单文件
@@ -302,7 +313,17 @@
           </view>
         </view>
       </view>
-
+      <view wx:if="{{detail.contentfx.length}}" class="two-column-table">
+        <view class="thead">
+          放行单文件
+        </view>
+        <view class="tbody">
+          <view wx:for="{{detail.contentfx}}" class="tr">
+            <view class="td">{{index+1}}</view>
+            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
+          </view>
+        </view>
+      </view>
       <view wx:if="{{detail.ydfile.length}}" class="two-column-table">
         <view class="thead">
           运单文件
@@ -314,31 +335,7 @@
           </view>
         </view>
       </view>
-       <view wx:if="{{detail.contentsb.length}}" class="two-column-table">
-        <view class="thead">
-          申报单文件
-        </view>
-        <view class="tbody">
-          <view wx:for="{{detail.contentsb}}" class="tr">
-            <view class="td">{{index+1}}</view>
-            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
-          </view>
-        </view>
-      </view>
-
-       <view wx:if="{{detail.contentfx.length}}" class="two-column-table">
-        <view class="thead">
-          放行单文件
-        </view>
-        <view class="tbody">
-          <view wx:for="{{detail.contentfx}}" class="tr">
-            <view class="td">{{index+1}}</view>
-            <view class="td file-link" @tap="overviewFile({{item.filename}})">{{item.filename}}</view>
-          </view>
-        </view>
-      </view>
-
-       <view wx:if="{{detail.contentdgd.length}}" class="two-column-table">
+      <view wx:if="{{detail.contentdgd.length}}" class="two-column-table">
         <view class="thead">
           DGD附件
         </view>
@@ -349,7 +346,6 @@
           </view>
         </view>
       </view>
-    </view>
 
 
     <view class="container-check-section">

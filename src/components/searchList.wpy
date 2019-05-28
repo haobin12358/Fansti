@@ -39,6 +39,7 @@
 
         .container-hd{
           .fj();
+
           input{
             flex: 1;
             margin-right: 20rpx;
@@ -99,7 +100,7 @@
   import CardMixin from '@/mixins/cardMixin';
   import placeholder from '@/components/placeholder';
 
-  ;
+
   export default class SearchList extends wepy.component {
     props = {
       show: {
