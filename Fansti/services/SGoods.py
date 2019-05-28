@@ -86,7 +86,7 @@ class SGoods(SBase):
     def get_goods_abo_by_jcno(self, jcno):
         return self.session.query(
             AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.enhwpm, AIR_HWYS_WTS.czr,
-            AIR_HWYS_WTS.company, AIR_HWYS_WTS.contract).filter_by(jcno=jcno).first()
+            AIR_HWYS_WTS.company, AIR_HWYS_WTS.contract, AIR_HWYS_WTS.xsr).filter_by(jcno=jcno).first()
 
     @close_session
     def get_goods_abo_by_filter(self, dcdfilter):
