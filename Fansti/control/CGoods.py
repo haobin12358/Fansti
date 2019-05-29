@@ -468,7 +468,8 @@ class CGoods():
         # 发件人地址，通过控制台创建的发件人地址
         username = 'fst@fstwechat.com'
         # 发件人密码，通过控制台创建的发件人密码
-        password = 'Fst201507fsT'
+        from Fansti.config.Inforcode import email_pwd
+        password = email_pwd
         # 自定义的回复地址
         replyto = 'chemfst@126.com'
         # 收件人地址或是地址列表，支持多个收件人，最多30个

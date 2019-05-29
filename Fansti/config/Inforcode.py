@@ -42,3 +42,4 @@ template_type_dir = {
 # config路径
 # FANSTICONFIG = "./fansticonfig.ini"
 FANSTICONFIG = "../Fansti/Fansti/fansticonfig.ini"
+email_pwd = "Fst201905fsT"
