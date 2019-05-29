@@ -493,14 +493,14 @@ class CControl():
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
 
-        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
-        make_log("accounts", accounts)
-        if args["login_name"] == accounts:
-            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        #accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        #make_log("accounts", accounts)
+        #if args["login_name"] == accounts:
+            #return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
 
-        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts(args["jcno"]))
-        if wts["ydno"]:
-            outwarehouse = get_model_return_dict(self.sgoods.get_outwarehouse(wts["ydno"]))
+        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts_ydno(args["jcno"]))
+        if wts:
+            outwarehouse = get_model_return_dict(self.sgoods.get_outwarehouse(args["jcno"]))
             if outwarehouse:
                 wts["is_button"] = 0
                 if outwarehouse["submit_time"]:
@@ -532,14 +532,14 @@ class CControl():
         if judge_keys(not_null_params, args.keys()) != 200:
             return judge_keys(not_null_params, args.keys())
 
-        accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
-        make_log("accounts", accounts)
-        if args["login_name"] == accounts:
-            return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
+        #accounts = get_model_return_dict(self.sgoods.get_accounts_by_jcno(args["jcno"]))
+        #make_log("accounts", accounts)
+        #if args["login_name"] == accounts:
+            #return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
 
-        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts(args["jcno"]))
-        if wts["ydno"]:
-            ingoodyard = get_model_return_dict(self.sgoods.get_ingoodyard(wts["ydno"]))
+        wts = get_model_return_dict(self.sgoods.get_ckmxd_wts_ydno(args["jcno"]))
+        if wts:
+            ingoodyard = get_model_return_dict(self.sgoods.get_ingoodyard(args["jcno"]))
             if ingoodyard:
                 wts["is_button"] = 0
                 if ingoodyard["submit_time"]:

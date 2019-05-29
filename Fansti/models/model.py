@@ -34,6 +34,7 @@ class D_MESSAGE_USER(Base):
     create_time = Column(DATE)                  # 创建时间
     create_user = Column(String(40))            # 创建人
     location = Column(String(40))               # 区域标识
+    open_id = Column(String(40))                # 微信授权
 
 class AIR_HWYS_WTS(Base):
     __tablename__ = "AIR_HWYS_WTS"

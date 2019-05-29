@@ -218,6 +218,11 @@ class SGoods(SBase):
             .filter_by(jcno=jcno).first()
 
     @close_session
+    def get_ckmxd_wts_ydno(self, ydno):
+        return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.hwpm, AIR_HWYS_WTS.ydno) \
+            .filter_by(ydno=ydno).first()
+
+    @close_session
     def get_ckmxd_abo(self, jcno):
         return self.session.query(AIR_HWYS_CKMXD.warehouse_address, AIR_HWYS_CKMXD.enter_time,
                                   AIR_HWYS_CKMXD.goods_quantity, AIR_HWYS_CKMXD.delivery_unit,

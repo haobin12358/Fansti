@@ -469,7 +469,7 @@ class CUsers():
     def user_login_local(self):
         data = json.loads(request.data)
         make_log("data", data)
-        true_data = ["phone", "login_name", "login_password"]
+        true_data = ["phone", "login_name", "login_password", "openid"]
         if judge_keys(true_data, data.keys()) != 200:
             return judge_keys(true_data, data.keys())
 
@@ -477,6 +477,14 @@ class CUsers():
             check_result = self.check_name_password(data.get("login_name"), data.get("login_password"))
             if check_result:
                 return check_result
+
+        openid = get_model_return_dict(self.susers.get_user_openid(data.get("login_name")))["open_id"]
+        if openid and openid != data.get("openid"):
+            return {
+                "status": 405,
+                "status_code": 405939,
+                "message": "该账号已被授权"
+            }
         usertype = get_model_return_dict(self.susers.get_user_type(data.get("login_name"))).get("user_type")
         if not self.check_username_phone(data["login_name"], data["phone"]):
             return {

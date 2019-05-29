@@ -107,3 +107,7 @@ class SUsers(SBase):
         if select_name:
             packer = packer.filter(D_MESSAGE_USER.username.like("%{0}%".format(select_name))).all()
         return packer
+
+    @close_session
+    def get_user_openid(self, login_name):
+        return self.session.query(D_MESSAGE_USER.open_id).filter_by(login_name=login_name).first()
