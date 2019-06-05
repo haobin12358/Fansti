@@ -11,8 +11,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/person/login', // 登录
-      'pages/person/index', // 操作首页
       'pages/person/declare', // 申报列表
+      'pages/person/index', // 操作首页
       'pages/person/planDetail', // 计划详情
       'pages/person/plan', // 计划列表
       'pages/person/addPhoto', // 添加照片
@@ -99,11 +99,11 @@ export default class extends wepy.app {
   onLaunch() {
     if(wx.getStorageSync('token')){
       wx.reLaunch({
-        url: '/pages/index/index' // todo
+        url: '/pages/person/index'
       })
     }else{
       wx.reLaunch({
-        url: '/pages/index/login'
+        url: '/pages/person/login'
       })
     }
   }

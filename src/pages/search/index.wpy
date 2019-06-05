@@ -159,7 +159,7 @@
         <view class="form-item">
           <view class="form-item-label">
             鉴定报告
-            <text class="sub-label">(库中已经有1220条数据)</text>
+            <text wx:if="{{showJdSearchResult}}" class="sub-label">(库中已经有{{jdSearchResultCount}}条数据)</text>
           </view>
           <view class="form-item-main">
             <input class="form-item-input" type="text" value="{{surveyReport}}" placeholder="可先点击查询进行模糊搜索" name="jd"></input>
@@ -271,6 +271,7 @@
 
       showJdSearchResult: false,
       jdSearchResult: [],
+      jdSearchResultCount: 0,
 
       isBinding: false,
       isOldUser: false,
@@ -412,7 +413,7 @@
 
     // 鉴定报告
     async getJdList(jd_name) {
-      let { data: { message, status, data } } = await api.getJdList({
+      let { data: { message, status, data, total } } = await api.getJdList({
         query: {
           jd_name
         }
@@ -425,6 +426,7 @@
           tip.alert('未查到结果');
         }
         this.jdSearchResult = data;
+        this.jdSearchResultCount = total
         this.$apply();
         // return data;
       } else {
@@ -506,6 +508,7 @@
     }
 
     async onLoad() {
+
     }
   }
 </script>

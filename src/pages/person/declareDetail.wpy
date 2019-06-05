@@ -65,7 +65,7 @@
   <view class="container">
     <view class="form-section-title">鉴定列表</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{jdList}}">
+      <view class="photo-item" wx:for="{{jdList}}" @tap="previewImage('jd', {{index}})">
         <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap="removePhoto('jd',{{index}})"></image>
@@ -291,8 +291,34 @@
             )
           }
         )
+      },
+      previewImage(type, index){
+        let current = '',
+          urls = []
+
+        switch (type) {
+          case 'jd':
+            current = this.jdList[index]
+            urls = this.jdList.map(item => item.file_url)
+            break
+          case 'sb':
+            current = this.sbList[index]
+            urls = this.sbList.map(item => item.file_url)
+            break
+          case 'bz':
+            current = this.bzList[index]
+            urls = this.bzList.map(item => item.file_url)
+            break
+        }
+
+        wx.previewImage({
+          current,
+          urls
+        })
       }
     };
+
+
 
     getJdList(){
       api.getCJdList({

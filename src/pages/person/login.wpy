@@ -157,6 +157,8 @@
 
     methods = {
       formSubmit(evt){
+        let that = this;
+
         let formData = evt.detail.value;
         console.log(formData)
 
@@ -173,29 +175,47 @@
           return
         }
 
-        api.userLoginLocal({
-          query: {
-            login_name: formData.username,
-            login_password: formData.password,
-            phone: formData.phone,
-          },
-          method: 'POST'
-        }).then(
-          res => {
-            if (res.data.status == 200) {
-              let data = res.data.data;
+        wx.login({
+          success(res) {
+            api.getOpenid({
+              query: {
+                code: res.code
+              }
+            }).then(
+              res => {
+                if (res.data.status == 200) {
+                  let data = res.data.data;
 
-              tip.success('登录成功')
-              wx.setStorageSync('user_type', data.user_type)
-              wx.setStorageSync('token', formData.username)
-              wx.switchTab({
-                url: '/pages/person/index'
-              })
-            } else {
-              tip.alert(res.data.message);
-            }
+                  api.userLoginLocal({
+                    query: {
+                      login_name: formData.username,
+                      login_password: formData.password,
+                      phone: formData.phone,
+                      openid: data.openid
+                    },
+                    method: 'POST'
+                  }).then(
+                    res => {
+                      if (res.data.status == 200) {
+                        let data = res.data.data;
+
+                        tip.success('登录成功')
+                        wx.setStorageSync('user_type', data.user_type)
+                        wx.setStorageSync('token', formData.username)
+                        wx.switchTab({
+                          url: '/pages/person/index'
+                        })
+                      } else {
+                        tip.alert(res.data.message);
+                      }
+                    }
+                  );
+                }
+              }
+            );
           }
-        );
+        })
+
       }
     };
 

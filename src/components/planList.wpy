@@ -17,15 +17,25 @@
         position: relative;
         overflow: hidden;
 
-        &.warning{
-          background: #FFFAD0;
+        .background{
+          position: absolute;
+          .wl(100%, 100%);
+          left: 0;
+          top: 0;
+          border-radius: 10rpx;
+          z-index: -1;
+
+          &.warning{
+            background: #FFFAD0;
+          }
+          &.info{
+            background: #EBEBEB;
+          }
+          &.danger{
+            background: #FFEFEF;
+          }
         }
-        &.info{
-          background: #EBEBEB;
-        }
-        &.danger{
-          background: #FFEFEF;
-        }
+
 
         .plan-item-left{
           width: 65rpx;
@@ -106,7 +116,11 @@
 
 <template>
     <view class="plan-list">
-      <view class="plan-item"  wx:for="{{list}}" @tap="tapItemHandler({{item}})">
+      <view class="plan-item" wx:for="{{list}}" @tap="tapItemHandler({{item}})">
+        <view wx:if="{{item.backcolor == '红色'}}" class="background danger"></view>
+        <view wx:if="{{item.backcolor == '灰色'}}" class="background info"></view>
+        <view wx:if="{{item.backcolor == '黄色'}}" class="background warning"></view>
+
         <view class="plan-item-left">
           <block wx:if="{{item.isphoto}}">
             <view>拍</view>

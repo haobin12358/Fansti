@@ -25,6 +25,7 @@ const getPacker = params => wxRequest(params, host + `/control/get_packer`);
 const getJcInPhotoHead = params => wxRequest(params, host + `/control/get_jc_in_photohead`);
 const getJcPicIn = params => wxRequest(params, host + `/control/get_jc_pic_in`);
 const exportZip = params => wxRequest(params, host + `/goods/export_zip`);
+const getOpenid = params => wxRequest(params, host + '/users/get_openid2');
 
 // 修改 都是post
 const updateWts = params => wxRequest(params, host + `/control/update_wts?login_name=${params.login_name}&jcno=${params.jcno}`);  // 交单
@@ -44,8 +45,7 @@ const uploadFilesUrl = host + `/control/upload_files`; // post 上传文件 url
 const userBinding = params => wxRequest(params, host + '/users/user_binding');
 //  查看绑定状态
 const getBinding = params => wxRequest(params, host + '/users/get_binding');
-//  获取微信id  POST
-const getOpenid = params => wxRequest(params, host + '/users/get_openid');
+
 
 //  获取新闻列表  POST
 const getAllNews = params => wxRequest(params, host + `/news/get_all?page_size=${params.page_size}&page_num=${params.page_num}`);

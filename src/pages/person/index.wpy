@@ -113,7 +113,7 @@
     <view class="btn-wrap" style="margin-top: 300rpx">
       <view class="button" @tap="doRebind">重新绑定</view>
     </view>
-    <view style="text-align: right">版本号 0.0.8</view>
+    <view style="text-align: right">版本号 0.0.10</view>
 
     <input-box wx:if="{{showInputBox}}" :title.sync="title" :placeholder.sync="placeholder"
                @inputConfirm.user="inputConfirm" @inputCancel.user="inputCancel"></input-box>
@@ -152,7 +152,6 @@
         this.$navigate('/pages/person/plan', {query})
       },
       handleRedirect(command) {
-        console.log('handle')
         switch (command) {
           case 'plan':
             this.$navigate('/pages/person/plan');
