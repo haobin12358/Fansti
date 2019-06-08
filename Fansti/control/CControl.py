@@ -1063,7 +1063,7 @@ class CControl():
                 "photourl": data["url"],
                 "createtime": datetime.datetime.now(),
                 "czr": user["username"],
-                "file_name": data["file_name"]
+                "filename": data["file_name"]
             })
         if args["file_type"] == "in":
             head = data["head"]
@@ -1083,7 +1083,7 @@ class CControl():
                     "photourl": data["url"],
                     "createtime": datetime.datetime.now(),
                     "czr": user["username"],
-                    "file_name": data["file_name"],
+                    "filename": data["file_name"],
                     "photoheadid": headid
                 })
         return {
