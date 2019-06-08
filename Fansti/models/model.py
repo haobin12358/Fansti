@@ -107,6 +107,7 @@ class AIR_HWYS_WTS(Base):
     link_sbd_file = Column(String(20), default='申报文件')# 申报文件
     usic = Column(String(100))
     hcsb = Column(String(100))
+    location = Column(String(100))
 
 class AIR_HWYS_DCD(Base):
     __tablename__ = "AIR_HWYS_DCD"

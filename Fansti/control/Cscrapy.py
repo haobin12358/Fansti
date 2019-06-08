@@ -997,12 +997,14 @@ class Cscrapy():
         jd_name = args.get("jd_name")
         try:
             jds = get_model_return_list(self.sscrapy.get_jds_by_name(jd_name))
+            print(jds)
             make_log("jds", jds)
             jd_name_list = [jd.get("chinesename") for jd in jds]
             response = import_status("SUCCESS_GET_INFO", "OK")
             # if not jd_name_list:
             #     jd_name_list = '无查询结果'
             response['data'] = jd_name_list
+            response["total"] = len(jd_name_list)
             return response
         except Exception as e:
             make_log("get jd names error", e)

@@ -43,6 +43,8 @@ class CControl():
             wts_filter.add(or_(AIR_HWYS_WTS.czr == args.get("login_name"), AIR_HWYS_WTS.xsr == args.get("login_name")))
         elif usertype == 0:
             pass
+        elif usertype in [3,4,5,6,7,8,9]:
+            wts_filter.add(AIR_HWYS_WTS.location == user.location)
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
@@ -412,6 +414,8 @@ class CControl():
                 price_dict["id"] = row["id"]
                 if row["byzd1"] == "1" and row["byzd3"] == "1":
                     price_dict["is_update"] = 1
+                elif row["byzd1"] == "1" and not row["byzd3"]:
+                    price_dict["is_update"] = 2
                 else:
                     price_dict["is_update"] = 0
                 jc_cb["price"].append(price_dict)
@@ -801,7 +805,7 @@ class CControl():
             add_model("AIR_HWYS_PHOTOS", **{
                 "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
-                "phototype": "入仓",
+                "phototype": "in",
                 "photourl": row["url"],
                 "createtime": datetime.datetime.now(),
                 "czr": user["username"],
@@ -1044,4 +1048,126 @@ class CControl():
         return {
             "status": 200,
             "message": "更新成功"
+        }
+
+    def add_new_file(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno", "file_type"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        if args["file_type"] in ["sb", "jd", "bzwj", "jdfj"]:
+            if args["file_type"] == "sb":
+                file_type = "申报单"
+            elif args["file_type"] == "jd":
+                file_type = "鉴定文件"
+            elif args["file_type"] == "bzwj":
+                file_type = "包装明细"
+            elif args["file_type"] == "jdfj":
+                file_type = "鉴定附件"
+            else:
+                file_type = "未知文件"
+            add_model("AIR_HWYS_DGD_UPLOAD", **{
+                "id": str(uuid.uuid1()),
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": file_type,
+                "file_url": data["url"],
+                "create_time": datetime.datetime.now(),
+                "create_user": user["username"],
+                "file_name": data["file_name"]
+            })
+        if args["file_type"] in ["out", "weight", "by"]:
+            add_model("AIR_HWYS_PHOTOS", **{
+                "id": str(uuid.uuid1()),
+                "jcno": args["jcno"],
+                "phototype": args["file_type"],
+                "photourl": data["url"],
+                "createtime": datetime.datetime.now(),
+                "czr": user["username"],
+                "filename": data["filename"]
+            })
+        if args["file_type"] == "in":
+            head = data["head"]
+            heads = get_model_return_dict(self.sgoods.get_photoheadid_by_head_jcno(head, args["jcno"]))
+            if not heads:
+                return {
+                    "status": 405,
+                    "status_code": 405992,
+                    "message": "未找到对应批次"
+                }
+            else:
+                headid = heads["id"]
+                add_model("AIR_HWYS_PHOTOS", **{
+                    "id": str(uuid.uuid1()),
+                    "jcno": args["jcno"],
+                    "phototype": args["file_type"],
+                    "photourl": data["url"],
+                    "createtime": datetime.datetime.now(),
+                    "czr": user["username"],
+                    "filename": data["filename"],
+                    "photoheadid": headid
+                })
+        return {
+            "status": 200,
+            "message": "保存成功"
+        }
+
+    def delete_file(self):
+        args = request.args.to_dict()
+        make_log("args", args)
+        not_null_params = ['login_name', "jcno", "file_type"]
+        if judge_keys(not_null_params, args.keys()) != 200:
+            return judge_keys(not_null_params, args.keys())
+        data = json.loads(request.data)
+        user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        if args["file_type"] in ["sb", "jd", "bzwj", "jdfj"]:
+            if args["file_type"] == "sb":
+                file_type = "申报单"
+            elif args["file_type"] == "jd":
+                file_type = "鉴定文件"
+            elif args["file_type"] == "bzwj":
+                file_type = "包装明细"
+            elif args["file_type"] == "jdfj":
+                file_type = "鉴定附件"
+            else:
+                file_type = "未知文件"
+            id = get_model_return_dict(self.sgoods.get_dgdid_by_url(data["photourl"]))
+            delete_photo = self.sgoods.delete_dgd_by_id(id["id"])
+            if not delete_photo:
+                return {
+                    "status": 405,
+                    "status_code": 405989,
+                    "message": "删除失败"
+                }
+            dgd_upload = get_model_return_dict(self.sgoods.get_dgd_by_id(id["id"]))
+            add_model("AIR_HWYS_DGD_UPLOAD_BAK", **{
+                "id": str(uuid.uuid1()),
+                "jcno": args["jcno"],
+                "ydno": wts["ydno"],
+                "file_type": file_type,
+                "file_url": data["photourl"],
+                "upload_create_time": dgd_upload["create_time"],
+                "uploade_create_user": dgd_upload["create_user"],
+                "delet_time": datetime.datetime.now(),
+                "delet_user": user["username"],
+                "file_name": data["file_name"]
+            })
+        if args["file_type"] in ["out", "weight", "by", "in"]:
+            id = get_model_return_dict(self.sgoods.get_photosid_by_url(data["photourl"]))
+            delete_photo = self.sgoods.delete_photos_by_id(id["id"])
+            if not delete_photo:
+                return {
+                    "status": 405,
+                    "status_code": 405989,
+                    "message": "删除失败"
+                }
+
+        return {
+            "status": 200,
+            "message": "删除成功"
         }

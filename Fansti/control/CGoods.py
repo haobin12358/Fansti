@@ -60,6 +60,8 @@ class CGoods():
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
             wts_filter.add(AIR_HWYS_WTS.company == user_message["username"])
+        elif usertype == 3:
+            wts_filter.add(AIR_HWYS_WTS.location == user.location)
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
@@ -293,7 +295,8 @@ class CGoods():
                 out_pic = "1"
                 import datetime
                 air_hwys_wts = get_model_return_dict(self.sgoods.get_AIR_HWYS_WTS_by_jcno(jcno))
-                if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
+                if air_hwys_wts and air_hwys_wts.get("jd_time") is None and air_hwys_wts.get("jd_date") is None:
+                # if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
                     new_reds = add_model("GET_RED_COIN", **{
                         "id": str(uuid.uuid1()),
                         "login_name": args["login_name"],
@@ -363,7 +366,8 @@ class CGoods():
                             return SYSTEM_ERROR
                     import datetime
                     air_hwys_wts = get_model_return_dict(self.sgoods.get_AIR_HWYS_WTS_by_jcno(jcno))
-                    if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
+                    if air_hwys_wts and air_hwys_wts.get("jd_time") is None and air_hwys_wts.get("jd_date") is None:
+                    # if not(air_hwys_wts and air_hwys_wts.get('jd_time') and air_hwys_wts.get('jd_date')):
                         new_reds = add_model("GET_RED_COIN", **{
                             "id": str(uuid.uuid1()),
                             "login_name": args["login_name"],

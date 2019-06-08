@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_JD, AIR_HWYS_LINES, SELECT_INFO, AIR_HWYS_DGR, AIR_HWYS_DGR_LEVEL, \
     AIR_HWYS_DGR_CONTAINER, AIR_HWYS_TACT, AIR_HWYS_ENQUIRY, D_ACCOUNTS, D_PORT
 from Fansti.services.SBase import SBase, close_session
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, distinct
 
 class Sscrapy(SBase):
 
@@ -14,7 +14,8 @@ class Sscrapy(SBase):
         return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
                                   AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2, AIR_HWYS_JD.principal,
                                   AIR_HWYS_JD.identificationunits, AIR_HWYS_JD.endtime)\
-            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).first()
+            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name)))\
+            .order_by(AIR_HWYS_JD.endtime.desc()).first()
 
     @close_session
     def get_chinessname_by_englishname(self, englishname):
@@ -109,9 +110,11 @@ class Sscrapy(SBase):
 
     @close_session
     def get_jds_by_name(self, name):
-        return self.session.query(AIR_HWYS_JD.chinesename, AIR_HWYS_JD.englishname, AIR_HWYS_JD.unno,
-                                  AIR_HWYS_JD.appearance, AIR_HWYS_JD.appearance2)\
-            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name))).offset(0).limit(20).all()
+        import datetime
+        return self.session.query(AIR_HWYS_JD.chinesename)\
+            .filter(AIR_HWYS_JD.chinesename.like('%{0}%'.format(name)))\
+            .filter(AIR_HWYS_JD.endtime > datetime.date(2017,1,1))\
+            .distinct().offset(0).limit(20).all()
 
     @close_session
     def get_all_select_count(self, name):

@@ -198,7 +198,7 @@ class SGoods(SBase):
     @close_session
     def get_jc_qrd(self, jcno):
         return self.session.query(AIR_HWYS_QRD.id, AIR_HWYS_QRD.jcno, AIR_HWYS_QRD.ydno, AIR_HWYS_QRD.fkdw,
-                                  AIR_HWYS_QRD.byzd1,
+                                  AIR_HWYS_QRD.byzd1, AIR_HWYS_QRD.byzd2,
                                   AIR_HWYS_QRD.byzd3, AIR_HWYS_QRD.curr, AIR_HWYS_QRD.amount, AIR_HWYS_QRD.doc)\
             .filter_by(jcno=jcno).filter_by(byzd1="1").all()
 
@@ -311,8 +311,35 @@ class SGoods(SBase):
     @close_session
     def get_photoheadid_by_head_jcno(self, jcno, photohead):
         return self.session.query(AIR_HWYS_PHOTO_HEAD.id, AIR_HWYS_PHOTO_HEAD.czr, AIR_HWYS_PHOTO_HEAD.createtime)\
-            .filter_by(photohead=photohead).filter_by(type="in").filter_by(jcno=jcno).first()
+            .filter_by(photohead=photohead).filter_by(type="in").filter_by(jcno=jcno)\
+            .order_by(AIR_HWYS_PHOTO_HEAD.createtime.desc()).first()
 
     @close_session
     def get_photo_by_headid(self, photoheadid):
         return self.session.query(AIR_HWYS_PHOTOS.photourl).filter_by(photoheadid=photoheadid).all()
+
+    @close_session
+    def delete_photos_by_id(self, id):
+        qrd = self.session.query(AIR_HWYS_PHOTOS).filter_by(id=id).first()
+        self.session.delete(qrd)
+        self.session.commit()
+        return True
+
+    @close_session
+    def delete_dgd_by_id(self, id):
+        qrd = self.session.query(AIR_HWYS_DGD_UPLOAD).filter_by(id=id).first()
+        self.session.delete(qrd)
+        self.session.commit()
+        return True
+
+    @close_session
+    def get_photosid_by_url(self, photourl):
+        return self.session.query(AIR_HWYS_PHOTOS.id).filter_by(photourl=photourl).first()
+
+    @close_session
+    def get_dgdid_by_url(self, file_url):
+        return self.session.query(AIR_HWYS_DGD_UPLOAD.id).filter_by(file_url=file_url).first()
+
+    @close_session
+    def get_dgd_by_id(self, id):
+        return self.session.query(AIR_HWYS_DGD_UPLOAD.create_time, AIR_HWYS_DGD_UPLOAD.create_user).filter_by(id=id).first()

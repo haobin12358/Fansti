@@ -50,7 +50,9 @@ class FSControl(Resource):
             "make_sb": "self.cgoods.make_sb()",
             "update_qrd": "self.cgoods.update_qrd()",
             "save_royalty": "self.cgoods.save_royalty()",
-            "update_royalty": "self.cgoods.update_royalty()"
+            "update_royalty": "self.cgoods.update_royalty()",
+            "delete_file": "self.cgoods.delete_file()",
+            "add_new_file": "self.cgoods.add_new_file()"
         }
 
         if control not in apis:
