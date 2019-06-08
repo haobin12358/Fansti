@@ -285,7 +285,10 @@ class CControl():
 
         photoheadid = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
         photo_dict = []
-        photohead = photoheadid["photo_head"]
+        if not photoheadid:
+            photohead = 1
+        else:
+            photohead = photoheadid["photo_head"]
         if photohead:
             photohead = int(photohead)
         else:
@@ -315,26 +318,10 @@ class CControl():
 
         jc_abo = {}
         jc_abo["jcno"] = args["jcno"]
-        jc_abo["in"] = {}
-        jc_abo["in"]["picture"] = []
-        jc_abo["in"]["length"] = 0
-        jc_abo["in"]["createtime"] = None
-        jc_abo["in"]["czr"] = None
-        jc_abo["out"] = {}
-        jc_abo["out"]["picture"] = []
-        jc_abo["out"]["length"] = 0
-        jc_abo["out"]["createtime"] = None
-        jc_abo["out"]["czr"] = None
-        jc_abo["weight"] = {}
-        jc_abo["weight"]["picture"] = []
-        jc_abo["weight"]["length"] = 0
-        jc_abo["weight"]["createtime"] = None
-        jc_abo["weight"]["czr"] = None
-        jc_abo["by"] = {}
-        jc_abo["by"]["picture"] = []
-        jc_abo["by"]["length"] = 0
-        jc_abo["by"]["createtime"] = None
-        jc_abo["by"]["czr"] = None
+        jc_abo["in"] = []
+        jc_abo["out"] = []
+        jc_abo["weight"] = []
+        jc_abo["by"] = []
         make_log("jc_abo", jc_abo)
         if not jc_abo:
             return SYSTEM_ERROR
@@ -344,39 +331,27 @@ class CControl():
             make_log("jc_abo_in", jc_abo_in)
             if jc_abo_in:
                 for in_order in jc_abo_in:
-                    jc_abo["in"]["picture"].append(in_order["photourl"])
-                    jc_abo["in"]["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
-                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
-                    jc_abo["in"]["czr"] = in_order["czr"]
-                jc_abo["in"]["length"] = len(jc_abo["in"]["picture"])
+                    in_order["createtime"] = in_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                jc_abo["in"] = jc_abo_in
             jc_abo_out = get_model_return_list(self.sgoods.get_out_order_by_jcno(args["jcno"]))
             make_log("jc_abo_out", jc_abo_out)
             if jc_abo_out:
                 for out_order in jc_abo_out:
-                    jc_abo["out"]["picture"].append(out_order["photourl"])
-                    jc_abo["out"]["createtime"] = out_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
-                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
-                    jc_abo["out"]["czr"] = out_order["czr"]
-                jc_abo["out"]["length"] = len(jc_abo["out"]["picture"])
+                    out_order["createtime"] = out_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                jc_abo["out"] = jc_abo_out
             jc_abo_weight = get_model_return_list(self.sgoods.get_weight_order_by_jcno(args["jcno"]))
             make_log("jc_abo_weight", jc_abo_weight)
             if jc_abo_weight:
                 for weight_order in jc_abo_weight:
-                    jc_abo["weight"]["picture"].append(weight_order["photourl"])
-                    jc_abo["weight"]["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
-                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
-                    jc_abo["weight"]["czr"] = weight_order["czr"]
-                jc_abo["weight"]["length"] = len(jc_abo["weight"]["picture"])
+                    weight_order["createtime"] = weight_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                jc_abo["weight"] = jc_abo_weight
 
             jc_abo_by = get_model_return_list(self.sgoods.get_by_order_by_jcno(args["jcno"]))
             make_log("jc_abo_by", jc_abo_by)
             if jc_abo_by:
                 for by_order in jc_abo_by:
-                    jc_abo["by"]["picture"].append(by_order["photourl"])
-                    jc_abo["by"]["createtime"] = by_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
-                    # jc_abo["in"]["czr"] = in_order["czr"].decode("gbk").encode("utf8")
-                    jc_abo["by"]["czr"] = by_order["czr"]
-                jc_abo["by"]["length"] = len(jc_abo["by"]["picture"])
+                    by_order["createtime"] = by_order["createtime"].strftime("%Y-%m-%d %H:%M:%S")
+                jc_abo["by"] = jc_abo_by
 
 
         response = import_status("SUCCESS_GET_JC", "OK")
@@ -1137,14 +1112,8 @@ class CControl():
             else:
                 file_type = "未知文件"
             id = get_model_return_dict(self.sgoods.get_dgdid_by_url(data["photourl"]))
-            delete_photo = self.sgoods.delete_dgd_by_id(id["id"])
-            if not delete_photo:
-                return {
-                    "status": 405,
-                    "status_code": 405989,
-                    "message": "删除失败"
-                }
             dgd_upload = get_model_return_dict(self.sgoods.get_dgd_by_id(id["id"]))
+            print(dgd_upload)
             add_model("AIR_HWYS_DGD_UPLOAD_BAK", **{
                 "id": str(uuid.uuid1()),
                 "jcno": args["jcno"],
@@ -1157,6 +1126,14 @@ class CControl():
                 "delet_user": user["username"],
                 "file_name": data["file_name"]
             })
+            delete_photo = self.sgoods.delete_dgd_by_id(id["id"])
+            if not delete_photo:
+                return {
+                    "status": 405,
+                    "status_code": 405989,
+                    "message": "删除失败"
+                }
+
         if args["file_type"] in ["out", "weight", "by", "in"]:
             id = get_model_return_dict(self.sgoods.get_photosid_by_url(data["photourl"]))
             delete_photo = self.sgoods.delete_photos_by_id(id["id"])

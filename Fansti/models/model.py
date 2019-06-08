@@ -592,12 +592,12 @@ class AIR_HWYS_DGD_UPLOAD_BAK(Base):
     file_type = Column(String(100))                 # 种类：申报单/包装明细/鉴定文件
     file_url = Column(String(200))                  # 存储路径
     upload_create_time = Column(DATE)               # 文件上传时间
-    upload_create_user = Column(String(100))        # 文件上传人
+    uploade_create_user = Column(String(100))        # 文件上传人
     file_name = Column(String(100))                 # 文件名称
     file_remark = Column(String(100))               # 文件备注信息
     upload_id = Column(String(100))                 # upload关联id
-    delete_time = Column(DATE)                      # 文件删除时间
-    delete_user = Column(String(100))               # 文件删除人
+    delet_time = Column(DATE)                      # 文件删除时间
+    delet_user = Column(String(100))               # 文件删除人
 
 class AIR_HWYS_PACK_ROYALTY(Base):
     __tablename__ = "AIR_HWYS_PACK_ROYALTY"
