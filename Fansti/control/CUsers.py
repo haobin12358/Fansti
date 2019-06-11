@@ -485,6 +485,17 @@ class CUsers():
                 "status_code": 405939,
                 "message": "该账号已被授权"
             }
+        if not openid:
+            id = get_model_return_dict(self.susers.get_id_by_name(data.get("login_name")))["id"]
+            update_user = self.susers.update_d_message_user(id, {
+                "open_id": data.get("openid")
+            })
+            if not update_user:
+                return {
+                    "status": 405,
+                    "status_code": 405976,
+                    "message": "绑定失败"
+                }
         usertype = get_model_return_dict(self.susers.get_user_type(data.get("login_name"))).get("user_type")
         if not self.check_username_phone(data["login_name"], data["phone"]):
             return {

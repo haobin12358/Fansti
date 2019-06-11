@@ -111,3 +111,13 @@ class SUsers(SBase):
     @close_session
     def get_user_openid(self, login_name):
         return self.session.query(D_MESSAGE_USER.open_id).filter_by(login_name=login_name).first()
+
+    @close_session
+    def update_d_message_user(self, id, user):
+        self.session.query(D_MESSAGE_USER).filter_by(id=id).update(user)
+        self.session.commit()
+        return True
+
+    @close_session
+    def get_id_by_name(self, login_name):
+        return self.session.query(D_MESSAGE_USER.id).filter_by(login_name=login_name).first()
