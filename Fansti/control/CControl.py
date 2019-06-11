@@ -372,16 +372,15 @@ class CControl():
 
         qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
         print(qrd)
+        wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
         jc_cb = {}
-        jc_cb["jcno"] = None
-        jc_cb["ydno"] = None
+        jc_cb["jcno"] = args["jcno"]
+        jc_cb["ydno"] = wts["ydno"]
         jc_cb["company"] = None
         jc_cb["price"] = []
         if qrd:
             for row in qrd:
                 price_dict = {}
-                jc_cb["jcno"] = row["jcno"]
-                jc_cb["ydno"] = row["ydno"]
                 jc_cb["company"] = row["fkdw"]
                 price_dict["curr"] = row["curr"]
                 price_dict["amount"] = row["amount"]

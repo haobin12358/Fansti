@@ -259,7 +259,7 @@ class SGoods(SBase):
     def get_sbno_list_like_ydno_jcno(self, select_name, page_size, page_num):
         return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.destination)\
             .filter(or_(AIR_HWYS_WTS.jcno.like("%{0}%".format(select_name)), AIR_HWYS_WTS.ydno.like("%{0}%".format(select_name)))) \
-            .offset((page_num - 1) * page_size).limit(page_size)\
+            .order_by(AIR_HWYS_WTS.jcno.desc()).offset((page_num - 1) * page_size).limit(page_size)\
             .all()
 
     @close_session
