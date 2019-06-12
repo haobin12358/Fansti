@@ -363,7 +363,7 @@
     async onLoad() {
       let userType = wx.getStorageSync('user_type');
 
-      this.hasAuth = ['0', '2', '3'].includes(userType);
+      this.hasAuth = ['0', '10', '3'].includes(userType);
       this.searchParams.login_name = wx.getStorageSync('token');
 
       if (this.hasAuth) {

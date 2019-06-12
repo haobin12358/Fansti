@@ -100,6 +100,9 @@ export default class extends wepy.app {
     if(wx.getStorageSync('token')){
       wx.reLaunch({
         url: '/pages/person/index'
+        // url: '/pages/person/addPhoto'
+        // url: '/pages/person/declareDetail'
+        // url: '/pages/person/declare'
       })
     }else{
       wx.reLaunch({

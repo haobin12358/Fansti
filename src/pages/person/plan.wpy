@@ -87,6 +87,7 @@
         this.searchDate = evt.detail.value
         this.getTodayList(true)
       },
+
       goPlanDetail({jcno}){
         this.$navigate('/pages/person/planDetail', { jcno });
       }

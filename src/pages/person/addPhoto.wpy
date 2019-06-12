@@ -110,7 +110,7 @@
         </view>
       </view>
 
-      <image src="../../images/plus.png" class="add-photo-block" @tap="addPhoto"></image>
+      <image wx:if="{{type != 'in' || batchIndex == batchList.length - 1}}" src="../../images/plus.png" class="add-photo-block" @tap="addPhoto"></image>
 
     </view>
 
@@ -156,24 +156,87 @@
         this.getInPhotoList()
       },
       removePhoto(item){
-        tip.alert('删除照片')
+        let that = this
+
+        tip.confirm('确认删除该图?').then(
+          ()=>{
+            api.deleteFile({
+              method: 'POST',
+              jcno: that.jcno,
+              login_name: wx.getStorageSync('token'),
+              file_type: that.type,
+              query: {
+                photourl: item.photourl,
+                file_name: item.filename
+              }
+            }).then(
+              res => {
+                if (res.data.status == 200) {
+                  if(this.type == 'in'){
+                    this.getInPhotoList()
+                  }else {
+                    this.getPhotoList()
+                  }
+                }
+              }
+            )
+          }
+        )
       },
       addPhoto(){
-        tip.alert('上传照片')
-        return
         let that = this
 
         wx.chooseImage({
           count: 1,
-          success({tempFilePaths}) {
+          success({tempFiles}) {
+            let file = tempFiles[0];
+
+            if(file.size > 5 * 1024 * 1024){
+              tip.confirm('图片过大,请上传小于5MB的图片!', false)
+              return
+            }
+
+            wx.showLoading()
             wx.uploadFile({
               url: api.uploadFilesUrl,
-              filePath: tempFilePaths[0],
+              filePath: file.path,
               name: 'file',
+              header: {
+                "Content-Type": "multipart/form-data"
+              },
               formData: {
                 FileType: that.type,
                 index: that.list.length + 1,
                 jcno: that.jcno
+              },
+              success: function(res) {
+                let data = JSON.parse(res.data).data
+                let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+
+                api.addNewFile({
+                  method: 'POST',
+                  jcno: that.jcno,
+                  login_name: wx.getStorageSync('token'),
+                  file_type: that.type,
+                  query: {
+                    url: data,
+                    file_name: fileName,
+                    head: that.type == 'in' ? that.batchList[that.batchIndex] : ''
+                  }
+                }).then(
+                  res => {
+                    if (res.data.status == 200) {
+                      if(that.type == 'in'){
+                        this.getInPhotoList()
+                      }else {
+                        that.getPhotoList()
+                      }
+                    }
+                  }
+                )
+              },
+              complete: function() {
+                wx.hideLoading()
               }
             })
           }
@@ -249,13 +312,7 @@
             let data = res.data.data
             let photoObj = data[this.type]
 
-            this.list = photoObj.picture.map(item => {
-              return {
-                photourl: item,
-                czr: photoObj.czr,
-                createtime: photoObj.createtime
-              }
-            })
+            this.list = photoObj
             this.$apply()
           }
         }

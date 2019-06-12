@@ -113,7 +113,7 @@
     <view class="btn-wrap" style="margin-top: 300rpx">
       <view class="button" @tap="doRebind">重新绑定</view>
     </view>
-    <view style="text-align: right">版本号 0.0.10</view>
+    <view style="text-align: right">版本号 0.0.13</view>
 
     <input-box wx:if="{{showInputBox}}" :title.sync="title" :placeholder.sync="placeholder"
                @inputConfirm.user="inputConfirm" @inputCancel.user="inputCancel"></input-box>
@@ -172,7 +172,7 @@
             this.scanToReceive();
             break;
           case 'declare':
-            if(!['0', '9'].includes(this.userType) ){
+            if(!['0','3', '9'].includes(this.userType) ){
               tip.alert('该账号无权使用')
               return
             }
@@ -262,7 +262,7 @@
     scanToOutSto() {
       let that = this
 
-      if(!['0', '3', '4', '5', '7'].includes(that.userType) ){
+      if(!['0', '3', '4', '5'].includes(that.userType) ){
         tip.alert('该账号无权使用')
         return
       }

@@ -37,6 +37,8 @@ const retrueOuthc = params => wxRequest(params, host + `/control/retrue_outhc?lo
 const makeSb = params => wxRequest(params, host + `/control/make_sb?login_name=${params.login_name}&jcno=${params.jcno}`);  // 提交申报单
 const updateQrd = params => wxRequest(params, host + `/control/update_qrd?login_name=${params.login_name}&jcno=${params.jcno}&qrd_type=${params.qrd_type}`);  // 添加/编辑/删除成本
 const userLoginLocal = params => wxRequest(params, host + `/users/user_login_local`);  // 内部办公登录
+const addNewFile = params => wxRequest(params, host + `/control/add_new_file?login_name=${params.login_name}&jcno=${params.jcno}&file_type=${params.file_type}`);  // 新增文件
+const deleteFile = params => wxRequest(params, host + `/control/delete_file?login_name=${params.login_name}&jcno=${params.jcno}&file_type=${params.file_type}`);  // 删除文件
 
 const uploadFilesUrl = host + `/control/upload_files`; // post 上传文件 url
 
@@ -158,5 +160,7 @@ export default {
   userLoginLocal,
   saveRoyalty,
   updateRoyalty,
-  exportZip
+  exportZip,
+  addNewFile,
+  deleteFile,
 };

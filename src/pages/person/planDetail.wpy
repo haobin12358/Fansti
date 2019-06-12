@@ -191,6 +191,7 @@
       padding: 55rpx;
       .fj();
       flex-wrap: wrap;
+      .fz30();
 
       .photo-item{
         .wl(300rpx, 300rpx);
@@ -287,23 +288,28 @@
       <view class="detail" wx:if="{{0 == activeName}}">
         <!--保存包装人员-->
         <view class="manager-choose-worker" wx:if="{{detailType == '2'}}">
-          <view class="choose-item" @tap="choosePackLeader">
-            <view class="hd">
-              包装负责人
+          <block wx:if="{{planDetail.save_button == 1}}">
+            <view class="choose-item" @tap="choosePackLeader">
+              <view class="hd">
+                包装负责人
+              </view>
+              <view class="bd">
+                {{packerLeader || '请选择包装负责人'}}
+              </view>
+              <image class="ft" src="../../images/index_arrow.png"></image>
             </view>
-            <view class="bd">
-              {{packerLeader || '请选择包装负责人'}}
+            <view class="choose-item" @tap="choosePacker">
+              <view class="hd">
+                包装人员
+              </view>
+              <view class="bd">
+                {{selectPackerListNames ||  '请选择包装人员'}}
+              </view>
+              <image class="ft" src="../../images/index_arrow.png"></image>
             </view>
-            <image class="ft" src="../../images/index_arrow.png"></image>
-          </view>
-          <view class="choose-item" @tap="choosePacker">
-            <view class="hd">
-              包装人员
-            </view>
-            <view class="bd">
-              {{selectPackerListNames ||  '请选择包装人员'}}
-            </view>
-            <image class="ft" src="../../images/index_arrow.png"></image>
+          </block>
+          <view wx:else style="text-align: center;color: gray;">
+            未到分配包装人员流程
           </view>
         </view>
 
@@ -313,7 +319,7 @@
             <view class="cell">
               <view class="column">
                 <view class="label">包装负责人</view>
-                <view class="value">{{planDetail.packer_leader}}</view>
+                <view class="value">{{planDetail.packer_leader || '暂无'}}</view>
               </view>
             </view>
             <view class="cell">
@@ -403,10 +409,10 @@
         </view>
 
 
-        <view wx:if="{{planDetail.show_button == 1}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
+        <view wx:if="{{planDetail.show_button == 1 && detailType == '1'}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
           <view class="button">提交交单时间</view>
         </view>
-        <view wx:if="{{planDetail.save_button == 1}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
+        <view wx:if="{{planDetail.save_button == 1 && detailType == '2'}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
           <view class="button">保 存</view>
         </view>
 
@@ -620,7 +626,7 @@
             {{photoList.weight && photoList.weight.length}}
           </view>
         </view>
-        <view class="photo-item disable" @tap="goAddPhoto('by')">
+        <view class="photo-item" @tap="goAddPhoto('by')">
           <view class="title">
             备用
           </view>
@@ -715,7 +721,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 0,
+      activeName: 2,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -1184,7 +1190,7 @@
           }
           return
         case 1:
-          if(['0', '3', '4', '5', '6', '7'].includes(this.userType)){
+          if(['0', '3', '4', '5', '6', '7', '10'].includes(this.userType)){
             this.getDeliveryReceipt()
             this.hasAuth = true
           }else{
@@ -1192,7 +1198,7 @@
           }
           return
         case 2:
-          if(['0', '3', '6', '7'].includes(this.userType)){
+          if(['0', '3', '6', '7', '10'].includes(this.userType)){
             this.getPhotos()
             this.hasAuth = true
           }else{
@@ -1200,7 +1206,7 @@
           }
           return
         case 3:
-          if(['0', '3', '4', '5', '6', '7', '8', '9'].includes(this.userType)){
+          if(['0', '3', '4', '5', '6', '7', '8', '9', '10'].includes(this.userType)){
             this.getCost()
             this.hasAuth = true
           }else{
@@ -1236,7 +1242,7 @@
     };
 
     onLoad(params){
-      this.jcno = params.jcno;
+      this.jcno = params.jcno
       this.userType = wx.getStorageSync('user_type')
     }
   }

@@ -1,24 +1,28 @@
 import wepy from 'wepy';
 import tip from './tip';
 
-const wxRequest = async(params = {}, url) => {
+const wxRequest = async (params = {}, url) => {
   let showLoading = true;
   showLoading = !params._noLoading;
-  if(showLoading){
+  if (showLoading) {
     tip.loading('');
-    wepy.showNavigationBarLoading()
+    wepy.showNavigationBarLoading();
   }
   let data = params.query || {};
   // data.time = TIMESTAMP;
-  let res = await wepy.request({
+
+  let res = null;
+
+  res = await wepy.request({
     url: url,
     method: params.method || 'GET',
     data: data,
-    header: { 'Content-Type': params.contentType || 'application/json' },
+    header: { 'Content-Type': params.contentType || 'application/json' }
   });
-  if(showLoading){
+
+  if (showLoading) {
     tip.loaded();
-    wepy.hideNavigationBarLoading()
+    wepy.hideNavigationBarLoading();
   }
   return res;
 };
@@ -26,4 +30,4 @@ const wxRequest = async(params = {}, url) => {
 
 module.exports = {
   wxRequest
-}
+};

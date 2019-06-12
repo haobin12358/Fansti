@@ -68,7 +68,7 @@
       <view class="photo-item" wx:for="{{jdList}}" @tap="previewImage('jd', {{index}})">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto('jd',{{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('jd',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
@@ -80,10 +80,10 @@
 
     <view class="form-section-title">申报单</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{sbList}}">
+      <view class="photo-item" wx:for="{{sbList}}" @tap="previewImage('sb', {{index}})">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto('sb',{{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('sb',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
@@ -95,10 +95,10 @@
 
     <view class="form-section-title">包装文件</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{bzList}}">
+      <view class="photo-item" wx:for="{{bzList}}" @tap="previewImage('bz', {{index}})">
         <image class="img" src="{{item.file_url}}"></image>
 
-        <image class="remove" src="../../images/remove.png" @tap="removePhoto('bz',{{index}})"></image>
+        <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('bz',{{index}})"></image>
         <!--<view class="info">
           <view class="time">{{item.time}}</view>
           <view >{{item.name}}</view>
@@ -110,9 +110,9 @@
 
 
 
-    <view class="btn-wrap">
+    <!--<view class="btn-wrap">
       <view class="button" @tap="doConfirm">上 传</view>
-    </view>
+    </view>-->
   </view>
 
 </template>
@@ -128,6 +128,8 @@
     components = {};
 
     data = {
+      jcno: '',
+
       list: [
         {
           url: 'http://dummyimage.com/200x100',
@@ -205,28 +207,24 @@
                 let data = JSON.parse(res.data).data
                 let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
 
-                console.log(data,type)
-                switch (type) {
-                  case 'jd':
-                    that.jdList.push({
-                      file_url: data,
-                      file_name: fileName
-                    })
-                    break
-                  case 'sb':
-                    that.sbList.push({
-                      file_url: data,
-                      file_name: fileName
-                    })
-                    break
-                  case 'bz':
-                    that.bzList.push({
-                      file_url: data,
-                      file_name: fileName
-                    })
-                    break
-                }
-                that.$apply()
+                let addType = type == 'bz' ? 'bzwj' : type
+
+                api.addNewFile({
+                  method: 'POST',
+                  jcno: that.jcno,
+                  login_name: wx.getStorageSync('token'),
+                  file_type: addType,
+                  query: {
+                    url: data,
+                    file_name: fileName
+                  }
+                }).then(
+                  res => {
+                    if (res.data.status == 200) {
+                      that.getFileList(type)
+                    }
+                  }
+                )
               },
               complete: function() {
                 wx.hideLoading()
@@ -236,62 +234,44 @@
         })
       },
       removePhoto(type, index){
+        let addType = type == 'bz' ? 'bzwj' : type
+        let that = this
+
+        let deleteFile = null
         switch (type) {
           case 'jd':
-            this.jdList.splice(index, 1)
+            deleteFile = that.jdList[index]
             break
           case 'sb':
-            this.sbList.splice(index, 1)
+            deleteFile = that.sbList[index]
             break
           case 'bz':
-            this.bzList.splice(index, 1)
+            deleteFile = that.bzList[index]
             break
         }
-      },
 
-      doConfirm(){
-        tip.confirm('确认上传?').then(
+        tip.confirm('确认删除该图?').then(
           ()=>{
-            let query = {
-              jd_list: this.jdList.map(item =>{
-                return {
-                  url: item.file_url,
-                  file_name: item.file_name
-                }
-              }),
-              sb_list: this.sbList.map(item =>{
-                return {
-                  url: item.file_url,
-                  file_name: item.file_name
-                }
-              }),
-              bzmx_list: this.bzList.map(item =>{
-                return {
-                  url: item.file_url,
-                  file_name: item.file_name
-                }
-              }),
-            }
-
-            api.makeSb({
+            api.deleteFile({
               method: 'POST',
-              jcno: this.jcno,
+              jcno: that.jcno,
               login_name: wx.getStorageSync('token'),
-              query
+              file_type: addType,
+              query: {
+                photourl: deleteFile.file_url,
+                file_name: deleteFile.file_name
+              }
             }).then(
               res => {
-                if(res.data.status == 200){
-                  tip.success('上传成功!', 1000).then(
-                    () => {
-                      wx.navigateBack()
-                    }
-                  )
+                if (res.data.status == 200) {
+                  that.getFileList(type)
                 }
               }
             )
           }
         )
       },
+
       previewImage(type, index){
         let current = '',
           urls = []
@@ -318,9 +298,21 @@
       }
     };
 
+    getFileList(type) {
+      switch (type) {
+        case 'jd':
+          this.getJdList();
+          break;
+        case 'sb':
+          this.getSbList();
+          break;
+        case 'bz':
+          this.getBzList();
+          break;
+      }
+    }
 
-
-    getJdList(){
+    getJdList() {
       api.getCJdList({
         query: {
           jcno: this.jcno,
@@ -359,7 +351,7 @@
       );
     }
     getBzList(){
-      api.getSbList({
+      api.getBzsmList({
         query: {
           jcno: this.jcno,
           login_name: wx.getStorageSync('token')

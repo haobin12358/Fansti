@@ -430,9 +430,9 @@
         </view>
       </view>
 
-      <view class="check-action-section" wx:if="{{showConfirmAll}}">
+     <!-- <view class="check-action-section" wx:if="{{showConfirmAll}}">
         <view class="check-btn" @tap="confirmAllImg">全部确认</view>
-      </view>
+      </view>-->
     </view>
   </view>
 
