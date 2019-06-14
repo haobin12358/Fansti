@@ -197,7 +197,11 @@ class CControl():
                 "kf_ry": None,
                 "kf_bz": None,
                 "hc_ry": None,
-                "hc_bz": None
+                "hc_bz": None,
+                "xfcl": None,
+                "yjlxr": None,
+                "wdjly": None,
+                "cell_type": None
             })
 
         # 库房确认时间/货场确认时间处理
@@ -381,8 +385,7 @@ class CControl():
         if qrd:
             for row in qrd:
                 price_dict = {}
-                jc_cb["company"] = row["fkdw"]
-                price_dict["curr"] = row["curr"]
+                price_dict["curr"] = "%.2f" % float(row["curr"])
                 price_dict["amount"] = row["amount"]
                 price_dict["doc"] = row["doc"]
                 price_dict["id"] = row["id"]

@@ -193,7 +193,9 @@ class SGoods(SBase):
                                   AIR_HWYS_DZJJD.lb_flag, AIR_HWYS_DZJJD.lb_num,
                                   AIR_HWYS_DZJJD.in_mark, AIR_HWYS_DZJJD.out_mark, AIR_HWYS_DZJJD.ybzbl_flag,
                                   AIR_HWYS_DZJJD.nbzsm, AIR_HWYS_DZJJD.bzpm, AIR_HWYS_DZJJD.kf_ry,
-                                  AIR_HWYS_DZJJD.kf_bz, AIR_HWYS_DZJJD.hc_ry, AIR_HWYS_DZJJD.hc_bz)\
+                                  AIR_HWYS_DZJJD.kf_bz, AIR_HWYS_DZJJD.hc_ry, AIR_HWYS_DZJJD.hc_bz,
+                                  AIR_HWYS_DZJJD.xfcl, AIR_HWYS_DZJJD.yjlxr, AIR_HWYS_DZJJD.wdjly,
+                                  AIR_HWYS_DZJJD.cell_type)\
             .filter_by(jcno=jcno).first()
 
     @close_session
@@ -206,12 +208,14 @@ class SGoods(SBase):
     @close_session
     def get_fkdw(self, company):
         return self.session.query(D_CHARGE_COMPANY.id, D_CHARGE_COMPANY.code, D_CHARGE_COMPANY.company)\
-            .filter(D_CHARGE_COMPANY.company.like("%{0}%".format(company))).all()
+            .filter(or_(func.lower(D_CHARGE_COMPANY.company).like("%{0}%".format(company.lower())),
+                        func.lower(D_CHARGE_COMPANY.code).like("%{0}%".format(company.lower())))).all()
 
     @close_session
     def get_fkzl(self, charge_cname):
         return self.session.query(D_CHARGE_TYPE.charge_code, D_CHARGE_TYPE.charge_cname, D_CHARGE_TYPE.d_price)\
-            .filter(D_CHARGE_TYPE.charge_cname.like("%{0}%".format(charge_cname))).all()
+            .filter(or_(func.lower(D_CHARGE_TYPE.charge_cname).like("%{0}%".format(charge_cname.lower())),
+                        func.lower(D_CHARGE_TYPE.charge_code).like("%{0}%".format(charge_cname.lower())))).all()
 
     @close_session
     def get_ckmxd_wts(self, jcno):

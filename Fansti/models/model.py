@@ -477,6 +477,10 @@ class AIR_HWYS_DZJJD(Base):
     hc_bz = Column(String(2000))                    # 货场要求
     creat_time = Column(DATE)                       # 创建时间
     ungoods_flag = Column(String(10))               # 无货转库房标识
+    xfcl = Column(String(100))                      # 吸附材料
+    yjlxr = Column(String(100))                     # 应急联系人及电话
+    wdjly = Column(String(20))                      # 是否温度记录仪
+    cell_type = Column(String(20))                  # 是否含有锂电池
 
 class AIR_HWYS_QRD(Base):
     __tablename__ = "AIR_HWYS_QRD"
