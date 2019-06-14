@@ -133,7 +133,7 @@ class Sscrapy(SBase):
         return self.session.query(D_PORT.port_aircode).filter(and_(or_(D_PORT.port_aircode.like("%{0}%".format(select_name)),
                                                                   D_PORT.port_cname.like("%{0}%".format(select_name))),
                                                               D_PORT.port_aircode != None))\
-            .all()
+            .order_by(D_PORT.port_aircode.asc()).all()
 
     @close_session
     def get_accounts(self, select_name):
@@ -141,7 +141,7 @@ class Sscrapy(SBase):
             .filter(and_(or_(D_ACCOUNTS.accounts_code.like("%{0}%".format(select_name)),
                         D_ACCOUNTS.accounts_name.like("%{0}%".format(select_name))),
                          D_ACCOUNTS.b_airway == "1"))\
-            .all()
+            .order_by(D_ACCOUNTS.accounts_code.asc()).all()
 
     @close_session
     def get_mn_price(self, des, dep, accounts, pwkh, gtyt):

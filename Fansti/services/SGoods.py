@@ -165,6 +165,7 @@ class SGoods(SBase):
         return self.session.query(AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.czr, AIR_HWYS_WTS.destination,
                                   AIR_HWYS_WTS.jsbzcc, AIR_HWYS_WTS.company, AIR_HWYS_WTS.contract, AIR_HWYS_WTS.hwpm,
                                   AIR_HWYS_WTS.wh_require, AIR_HWYS_WTS.instruction, AIR_HWYS_WTS.arrivetime,
+                                  AIR_HWYS_WTS.accounts,
                                   AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jd_date, AIR_HWYS_WTS.jd_time, AIR_HWYS_WTS.contract)\
             .filter_by(jcno=jcno).first()
 

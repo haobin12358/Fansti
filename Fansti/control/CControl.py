@@ -376,7 +376,7 @@ class CControl():
         jc_cb = {}
         jc_cb["jcno"] = args["jcno"]
         jc_cb["ydno"] = wts["ydno"]
-        jc_cb["company"] = None
+        jc_cb["company"] = wts["accounts"]
         jc_cb["price"] = []
         if qrd:
             for row in qrd:
