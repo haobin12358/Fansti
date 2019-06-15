@@ -5,7 +5,7 @@ const wxRequest = async (params = {}, url) => {
   let showLoading = true;
   showLoading = !params._noLoading;
   if (showLoading) {
-    tip.loading('');
+    tip.loading('数据加载中...');
     wepy.showNavigationBarLoading();
   }
   let data = params.query || {};

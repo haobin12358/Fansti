@@ -200,7 +200,7 @@
                         let data = res.data.data;
 
                         tip.success('登录成功')
-                        wx.setStorageSync('user_type', data.user_type)
+                        wx.setStorageSync('user_type', data.user_type.toString())
                         wx.setStorageSync('token', formData.username)
                         wx.switchTab({
                           url: '/pages/person/index'

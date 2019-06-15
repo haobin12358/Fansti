@@ -221,7 +221,7 @@
       this.getFeeType()
 
       this.jcno = params.jcno
-      // this.jcno = 'E18080196'
+      // this.jcno = 'E18080196' // todo
       if(data.preload){
         console.log(data.preload.detail)
         this.isEdit = true

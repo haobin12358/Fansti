@@ -10,10 +10,13 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/track/index',  //跟踪首页
+      'pages/track/confirmConsignment',  //确认托运照片
+
       'pages/person/login', // 登录
+      'pages/person/planDetail', // 计划详情
       'pages/person/declare', // 申报列表
       'pages/person/index', // 操作首页
-      'pages/person/planDetail', // 计划详情
       'pages/person/plan', // 计划列表
       'pages/person/addPhoto', // 添加照片
       'pages/person/inStoDetail', // 入库明细
@@ -28,8 +31,7 @@ export default class extends wepy.app {
       'pages/person/personCard',  //个人名片
       'pages/person/editPersonCard',  //编辑个人名片
 
-      'pages/track/index',  //跟踪首页
-      'pages/track/confirmConsignment',  //确认托运照片
+
 
 
       'pages/track/consignmentDetail',  //托运详情
@@ -100,6 +102,7 @@ export default class extends wepy.app {
     if(wx.getStorageSync('token')){
       wx.reLaunch({
         url: '/pages/person/index'
+        // url: '/pages/person/planDetail'
         // url: '/pages/person/addPhoto'
         // url: '/pages/person/declareDetail'
         // url: '/pages/person/declare'

@@ -3,8 +3,17 @@
   @import "../../styles/table";
 
   .container {
-    padding-top: 20rpx;
-    padding-bottom: 180rpx;
+    /*padding-top: 20rpx;*/
+    /*padding-bottom: 180rpx;*/
+    box-sizing: border-box;
+
+    .section-page{
+      height: 100%;
+    }
+
+    .bottom-empty{
+      height: 50rpx;
+    }
 
     /*详情*/
     .detail{
@@ -85,7 +94,12 @@
           flex: 1;
         }
       }
-
+      .detail-table{
+        .row{
+          border-bottom: 1px solid @borderColor;
+          margin:0  10rpx;
+        }
+      }
       .detail-ft{
         display: flex;
         justify-content: center;
@@ -99,6 +113,8 @@
 
     /*电子交接单*/
     .delivery-receipt{
+      .section-page();
+
       .delivery-receipt-hd{
         color: @mainBlueColor;
         padding: 0 40rpx;
@@ -151,7 +167,7 @@
           border-bottom: 1px solid @mainBlueColor;
           .file-item{
             flex: 1;
-            padding: 70rpx 55rpx;
+            padding: 30rpx 55rpx;
             font-weight: bold;
             color: @mainBlueColor;
             text-align: center;
@@ -225,6 +241,8 @@
 
     /*成本*/
     .cost {
+      .section-page();
+
       .cost-hd {
         color: @mainBlueColor;
         padding: 0 40rpx;
@@ -265,6 +283,7 @@
       bottom: 0;
       .wl(100%, 90rpx);
       .fj();
+      border-top: 1px dotted @borderColor;
 
       text-align: center;
       color: #999999;
@@ -282,405 +301,461 @@
 </style>
 
 <template>
-  <view class="container">
+  <view class="container" style="height: {{containerHeight - 45}}px;">
     <block wx:if="{{hasAuth}}">
-      <!--详情-->
-      <view class="detail" wx:if="{{0 == activeName}}">
-        <!--保存包装人员-->
-        <view class="manager-choose-worker" wx:if="{{detailType == '2'}}">
-          <block wx:if="{{planDetail.save_button == 1}}">
-            <view class="choose-item" @tap="choosePackLeader">
-              <view class="hd">
-                包装负责人
+      <swiper style="height: 100%" indicator-dots="{{false}}" current="{{activeName}}" autoplay="{{false}}"
+      @change="onSwiperChange">
+        <swiper-item>
+          <!--详情-->
+          <scroll-view scroll-y style="height: 100%" class="detail">
+            <!--保存包装人员-->
+            <view class="manager-choose-worker" wx:if="{{detailType == '2'}}">
+              <block wx:if="{{planDetail.save_button == 1}}">
+                <view class="choose-item" @tap="choosePackLeader">
+                  <view class="hd">
+                    包装负责人
+                  </view>
+                  <view class="bd">
+                    {{packerLeader || '请选择包装负责人'}}
+                  </view>
+                  <image class="ft" src="../../images/index_arrow.png"></image>
+                </view>
+                <view class="choose-item" @tap="choosePacker">
+                  <view class="hd">
+                    包装人员
+                  </view>
+                  <view class="bd">
+                    {{selectPackerListNames ||  '请选择包装人员'}}
+                  </view>
+                  <image class="ft" src="../../images/index_arrow.png"></image>
+                </view>
+              </block>
+              <view wx:else style="text-align: center;color: gray;">
+                未到分配包装人员流程
               </view>
-              <view class="bd">
-                {{packerLeader || '请选择包装负责人'}}
-              </view>
-              <image class="ft" src="../../images/index_arrow.png"></image>
             </view>
-            <view class="choose-item" @tap="choosePacker">
-              <view class="hd">
-                包装人员
-              </view>
-              <view class="bd">
-                {{selectPackerListNames ||  '请选择包装人员'}}
-              </view>
-              <image class="ft" src="../../images/index_arrow.png"></image>
-            </view>
-          </block>
-          <view wx:else style="text-align: center;color: gray;">
-            未到分配包装人员流程
-          </view>
-        </view>
 
-        <!--确认包装-->
-        <form @submit="doConfirmPack" wx:if="{{detailType == '3'}}">
-          <view class="confirm-pack">
-            <view class="cell">
-              <view class="column">
-                <view class="label">包装负责人</view>
-                <view class="value">{{planDetail.packer_leader || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="cell">
-              <view class="column">
-                <view class="label">包装人员</view>
-                <view class="value list">
-                  <view class="item" style="line-height: 55rpx;" wx:for="{{planDetail.packer_list}}">
-                    {{item.packer}}
+            <!--确认包装-->
+            <form @submit="doConfirmPack" wx:if="{{detailType == '3'}}">
+              <view class="confirm-pack">
+                <view class="cell">
+                  <view class="column">
+                    <view class="label">包装负责人</view>
+                    <view class="value">{{planDetail.packer_leader || '暂无'}}</view>
                   </view>
                 </view>
-              </view>
-              <view class="column">
-                <view class="label">提成比例</view>
-                <view class="value list">
-                  <view class="item input" wx:for="{{planDetail.packer_list}}">
-                    <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%
+                <view class="cell">
+                  <view class="column">
+                    <view class="label">包装人员</view>
+                    <view class="value list">
+                      <view class="item" style="line-height: 55rpx;" wx:for="{{planDetail.packer_list}}">
+                        {{item.packer}}
+                      </view>
+                    </view>
                   </view>
+                  <view class="column">
+                    <view class="label">提成比例</view>
+                    <view class="value list">
+                      <view class="item input" wx:for="{{planDetail.packer_list}}">
+                        <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%
+                      </view>
+                    </view>
+                  </view>
+
+                </view>
+                <view class="btn-wrap" style="margin-top: 0;" wx:if="{{planDetail.retrue_packer_button || planDetail.retrue_ok_button}}">
+                  <button form-type="submit" name="confirm" @tap="signConPackType('0')" class="button plain"
+                          wx:if="{{planDetail.retrue_packer_button}}">
+                    确认包装
+                  </button>
+                  <button wx:if="{{planDetail.retrue_ok_button}}" form-type="submit" name="over" @tap="signConPackType('1')" class="button plain">确认完成
+                  </button>
                 </view>
               </view>
+            </form>
 
+            <view class="detail-hd" style="margin-top: 10rpx;">
+              <view>进仓号：{{planDetail.jcno || '暂无'}}</view>
+              <view>运单号：{{planDetail.ydno || '暂无'}}</view>
             </view>
-            <view class="btn-wrap" style="margin-top: 0;">
-              <button form-type="submit" name="confirm" @tap="signConPackType('0')" class="button plain"
-                      wx:if="{{planDetail.retrue_packer_button}}">
-                确认包装
-              </button>
-              <button wx:if="{{planDetail.retrue_ok_button}}" form-type="submit" name="over" @tap="signConPackType('1')" class="button plain">确认完成
-              </button>
-            </view>
-          </view>
-        </form>
 
-        <view class="detail-hd">
-          <view>进仓号：{{planDetail.jcno || '暂无'}}</view>
-          <view>运单号：{{planDetail.ydno || '暂无'}}</view>
-        </view>
-
-        <view class="two-column-center-table">
-          <view class="row">
-            <view class="cell">操作人：</view>
-            <view class="cell">{{planDetail.czr || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">目的港：</view>
-            <view class="cell">{{planDetail.destination || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">件数：</view>
-            <view class="cell">{{planDetail.jsbzcc || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">航空公司：</view>
-            <view class="cell">{{planDetail.company || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">航班号：</view>
-            <view class="cell">{{planDetail.contract || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">航班日期：</view>
-            <view class="cell">{{planDetail.contract_time || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">货场要求：</view>
-            <view class="cell">{{planDetail.instruction || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">仓库要求：</view>
-            <view class="cell">{{planDetail.wh_require || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">货物品名：</view>
-            <view class="cell">{{planDetail.hwpm || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">操作时间：</view>
-            <view class="cell">{{planDetail.arrivetime || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">订单号：</view>
-            <view class="cell">{{planDetail.hxno || '暂无'}}</view>
-          </view>
-          <view class="row">
-            <view class="cell">交单时间：</view>
-            <view class="cell">{{planDetail.jd_date || '暂无'}}</view>
-          </view>
-        </view>
-
-
-        <view wx:if="{{planDetail.show_button == 1 && detailType == '1'}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
-          <view class="button">提交交单时间</view>
-        </view>
-        <view wx:if="{{planDetail.save_button == 1 && detailType == '2'}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
-          <view class="button">保 存</view>
-        </view>
-
-      </view>
-
-      <!--电子交接单-->
-      <view class="delivery-receipt"  wx:if="{{1 == activeName}}">
-        <view class="delivery-receipt-hd">
-          <view>进仓号：{{deliveryReceipt.jcno || '暂无'}}</view>
-          <view>运单号：{{deliveryReceipt.ydno || '暂无'}}</view>
-        </view>
-
-        <view class="delivery-receipt-bd">
-          <view class="detail-form">
-            <view class="row">
-              <view class="form-item">
-                <view class="label">库房确认时间:</view>
-                <view class="value">{{deliveryReceipt.kfqr_date || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">货场确认时间:</view>
-                <view class="value">{{deliveryReceipt.hcqr_date || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">客服:</view>
-                <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">操作人:</view>
-                <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">入库交接单:</view>
-                <view class="value">{{deliveryReceipt.rkd_flag || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">无货转库房:</view>
-                <view class="value">{{deliveryReceipt.ungoods_flag || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">随机文件:</view>
-                <view class="value">{{deliveryReceipt.sjwj_flag || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">随货文件:</view>
-                <view class="value">{{deliveryReceipt.goods_file || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">托盘材质:</view>
-                <view class="value">{{deliveryReceipt.tp_mass || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">货物状态:</view>
-                <view class="value">{{deliveryReceipt.state_goods || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">托盘尺寸:</view>
-                <view class="value">{{deliveryReceipt.tp_size || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">温度区间:</view>
-                <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">加冰种类:</view>
-                <view class="value">{{deliveryReceipt.ice_type || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">打托盘:</view>
-                <view class="value">{{deliveryReceipt.dtp || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">加冰处理:</view>
-                <view class="value">{{deliveryReceipt.is_ice || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">加冰用量:</view>
-                <view class="value">{{deliveryReceipt.ice_num || '暂无'}}</view>
-              </view>
-            </view>
-            <view class="row">
-              <view class="form-item">
-                <view class="label">内唛头:</view>
-                <view class="value">{{deliveryReceipt.in_mark || '暂无'}}</view>
-              </view>
-              <view class="form-item">
-                <view class="label">外唛头:</view>
-                <view class="value">{{deliveryReceipt.out_mark || '暂无'}}</view>
-              </view>
-            </view>
-          </view>
-
-          <view class="form-section-title" style="margin-top: 80rpx;">
-            包装
-          </view>
-          <view class="two-column-center-table">
-            <view class="row">
-              <view class="cell">原包装是否保留：</view>
-              <view class="cell">{{deliveryReceipt.ybzbl_flag || '暂无'}}</view>
-            </view>
-            <view class="row">
-              <view class="cell">内包装说明：</view>
-              <view class="cell">{{deliveryReceipt.nbzsm || '暂无'}}</view>
-            </view>
-            <view class="row">
-              <view class="cell">包装名：</view>
-              <view class="cell">{{deliveryReceipt.bzpm || '暂无'}}</view>
-            </view>
-          </view>
-
-          <view class="form-section-title">
-            文件
-          </view>
-          <view class="file-list">
-            <view class="file-item active" @tap="getDelRecFile('sb')">
-              申报单
-            </view>
-            <view class="file-item" @tap="getDelRecFile('bz')">
-              包装说明
-            </view>
-            <view class="file-item" @tap="getDelRecFile('jd')">
-              鉴定
-            </view>
-          </view>
-          <view wx:if="{{delRecFile}}">
-            <view class="two-column-table del-rec-file">
-              <view class="thead">
-                {{delRecFile.title}}
-              </view>
-              <view class="tbody">
-                <view wx:for="{{delRecFile.list}}" class="tr">
-                  <view class="td">{{index+1}}</view>
-                  <view class="td file-link" @tap="overviewFile({{item.file_url}})">{{item.file_name}}</view>
-                </view>
-              </view>
-            </view>
-          </view>
-
-
-          <view class="form-section-title">
-            提交
-          </view>
-          <form @submit="confirmDeliveryReceipt">
-            <view class="two-column-center-table">
+            <view class="two-column-center-table detail-table">
               <view class="row">
-                <view class="cell">
-                  库房人员:
-                </view>
-                <view class="cell">
-                <textarea class="textarea-remark" name="kf_bz"
-                          auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
-                </view>
+                <view class="cell">操作人：</view>
+                <view class="cell">{{planDetail.czr || '暂无'}}</view>
               </view>
               <view class="row">
-                <view class="cell">
-                  货场人员:
-                </view>
-                <view class="cell">
-                <textarea class="textarea-remark" name="hc_bz"
-                          auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
-                </view>
+                <view class="cell">目的港：</view>
+                <view class="cell">{{planDetail.destination || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">件数：</view>
+                <view class="cell">{{planDetail.jsbzcc || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">航空公司：</view>
+                <view class="cell">{{planDetail.company || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">航班号：</view>
+                <view class="cell">{{planDetail.contract || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">航班日期：</view>
+                <view class="cell">{{planDetail.contract_time || '暂无'}}</view>
+              </view>
+              <view class="row" >
+                <view class="cell">货场要求：</view>
+                <view class="cell" style="font-size: 30rpx">{{planDetail.instruction || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">仓库要求：</view>
+                <view class="cell" style="font-size: 30rpx">{{planDetail.wh_require || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">货物品名：</view>
+                <view class="cell">{{planDetail.hwpm || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">操作时间：</view>
+                <view class="cell">{{planDetail.arrivetime || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">订单号：</view>
+                <view class="cell">{{planDetail.hxno || '暂无'}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">交单时间：</view>
+                <view class="cell">{{planDetail.jd_date || '暂无'}}</view>
               </view>
             </view>
 
-            <view class="btn-wrap">
-              <button class="button" @tap="delRecOutConfirm" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
-              <button class="button" @tap="delRecHcConfirm" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
-            </view>
-          </form>
 
-        </view>
-      </view>
-
-      <!--照片-->
-      <view class="photo" wx:if="{{2 == activeName}}">
-        <view class="photo-item" @tap="goAddPhoto('in')">
-          <view class="title">
-            入仓照片
-          </view>
-          <view class="num">
-            {{photoList.in && photoList.in.length}}
-          </view>
-        </view>
-        <view class="photo-item" @tap="goAddPhoto('out')">
-          <view class="title">
-            出仓照片
-          </view>
-          <view class="num">
-            {{photoList.out && photoList.out.length}}
-          </view>
-        </view>
-        <view class="photo-item" @tap="goAddPhoto('weight')">
-          <view class="title">
-            称重照片
-          </view>
-          <view class="num">
-            {{photoList.weight && photoList.weight.length}}
-          </view>
-        </view>
-        <view class="photo-item" @tap="goAddPhoto('by')">
-          <view class="title">
-            备用
-          </view>
-          <view class="num">
-            {{photoList.by && photoList.by.length}}
-          </view>
-        </view>
-      </view>
-      <!--成本-->
-      <view class="cost" wx:if="{{3 == activeName}}">
-        <view>
-          <view class="cost-hd">
-            <view>进仓号：{{cost.jcno}}</view>
-            <view>运单号：{{cost.ydno || '暂无'}}</view>
-          </view>
-          <view class="two-column-center-table" style="font-size: 26rpx!important;">
-            <view class="row">
-              <view class="cell">公司：</view>
-              <view class="cell">{{cost.company}}</view>
+            <view wx:if="{{planDetail.show_button == 1 && detailType == '1'}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
+              <view class="button">提交交单时间</view>
             </view>
-            <view class="row">
-              <view class="cell">总价：</view>
-              <view class="cell">
-                <view  wx:for="{{cost.price}}" class="price-item" >
-                  <view class="two-column-center-table" style="flex: 1;">
-                    <view class="row" style="">
-                      <view class="cell">种类</view>
-                      <view class="cell">{{item.doc}}</view>
+            <view wx:if="{{planDetail.save_button == 1 && detailType == '2'}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
+              <view class="button">保 存</view>
+            </view>
+
+            <view class="bottom-empty"></view>
+          </scroll-view>
+        </swiper-item>
+        <swiper-item>
+          <!--电子交接单-->
+          <scroll-view scroll-y style="height: 100%" class="delivery-receipt">
+            <view class="delivery-receipt-hd">
+              <view>进仓号：{{deliveryReceipt.jcno || '暂无'}}</view>
+              <view>运单号：{{deliveryReceipt.ydno || '暂无'}}</view>
+            </view>
+
+            <view class="delivery-receipt-bd">
+              <view class="detail-form">
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">库房确认时间:</view>
+                    <view class="value">{{deliveryReceipt.kfqr_date || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">货场确认时间:</view>
+                    <view class="value">{{deliveryReceipt.hcqr_date || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">客服:</view>
+                    <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">操作人:</view>
+                    <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">入库交接单:</view>
+                    <view class="value">{{deliveryReceipt.rkd_flag || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">无货转库房:</view>
+                    <view class="value">{{deliveryReceipt.ungoods_flag || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">随机文件:</view>
+                    <view class="value">{{deliveryReceipt.sjwj_flag || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">随货文件:</view>
+                    <view class="value">{{deliveryReceipt.goods_file || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">托盘材质:</view>
+                    <view class="value">{{deliveryReceipt.tp_mass || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">货物状态:</view>
+                    <view class="value">{{deliveryReceipt.state_goods || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">托盘尺寸:</view>
+                    <view class="value">{{deliveryReceipt.tp_size || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">温度区间:</view>
+                    <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">加冰种类:</view>
+                    <view class="value">{{deliveryReceipt.ice_type || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">打托盘:</view>
+                    <view class="value">{{deliveryReceipt.dtp || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">加冰处理:</view>
+                    <view class="value">{{deliveryReceipt.is_ice || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">加冰用量:</view>
+                    <view class="value">{{deliveryReceipt.ice_num || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">内唛头:</view>
+                    <view class="value">{{deliveryReceipt.in_mark || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">外唛头:</view>
+                    <view class="value">{{deliveryReceipt.out_mark || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">吸附材料:</view>
+                    <view class="value">{{deliveryReceipt.xfcl || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">是否含有锂电池:</view>
+                    <view class="value">{{deliveryReceipt.cell_type || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">是否温度记录仪:</view>
+                    <view class="value">{{deliveryReceipt.wdjly || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">应急联系人及电话:</view>
+                    <view class="value">{{deliveryReceipt.yjlxr || '暂无'}}</view>
+                  </view>
+                </view>
+
+              </view>
+
+              <view class="form-section-title" style="margin-top: 80rpx;">
+                包装
+              </view>
+              <view class="two-column-center-table">
+                <view class="row">
+                  <view class="cell">原包装是否保留：</view>
+                  <view class="cell">{{deliveryReceipt.ybzbl_flag || '暂无'}}</view>
+                </view>
+                <view class="row">
+                  <view class="cell">内包装说明：</view>
+                  <view class="cell">{{deliveryReceipt.nbzsm || '暂无'}}</view>
+                </view>
+                <view class="row">
+                  <view class="cell">包装名：</view>
+                  <view class="cell">{{deliveryReceipt.bzpm || '暂无'}}</view>
+                </view>
+              </view>
+
+              <view class="form-section-title">
+                文件
+              </view>
+              <view class="file-list">
+                <view class="file-item active" @tap="getDelRecFile('sb')">
+                  申报单
+                </view>
+                <view class="file-item" @tap="getDelRecFile('bz')">
+                  包装说明
+                </view>
+                <view class="file-item" @tap="getDelRecFile('jd')">
+                  鉴定
+                </view>
+              </view>
+              <view wx:if="{{delRecFile}}">
+                <view class="two-column-table del-rec-file">
+                  <view class="thead">
+                    {{delRecFile.title}}
+                  </view>
+                  <view class="tbody">
+                    <view wx:for="{{delRecFile.list}}" class="tr">
+                      <view class="td">{{index+1}}</view>
+                      <view class="td file-link" @tap="overviewFile({{item.file_url}})">{{item.file_name}}</view>
                     </view>
-                    <view class="row">
-                      <view class="cell">单价</view>
-                      <view class="cell">{{item.curr}}</view>
+                  </view>
+                </view>
+              </view>
+
+
+              <view class="form-section-title">
+                提交
+              </view>
+              <form @submit="confirmDeliveryReceipt">
+                <view class="two-column-center-table">
+                  <!--<view class="row">
+                    <view class="cell" style="width: 150rpx;">
+                      库房人员:
                     </view>
-                    <view class="row">
-                      <view class="cell">数量</view>
-                      <view class="cell">{{item.amount}}</view>
+                    <view class="cell">
+                  <textarea class="textarea-remark" name="kf_bz" style="width: 450rpx;"
+                            auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
+                    </view>
+                  </view>
+                  <view class="row">
+                    <view class="cell">
+                      货场人员:
+                    </view>
+                    <view class="cell">
+                  <textarea class="textarea-remark" name="hc_bz" style="width: 450rpx;"
+                            auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
+                    </view>
+                  </view>-->
+
+                  <view class="row">
+                    <view class="cell" style="width: 150rpx;">
+                      库房人员:
+                    </view>
+                    <view class="cell">
+                  <input name="kf_bz"
+                         placeholder="请填写库房备注"/>
+                    </view>
+                  </view>
+                  <view class="row">
+                    <view class="cell">
+                      货场人员:
+                    </view>
+                    <view class="cell">
+                       <input name="hc_bz" placeholder="请填写货场备注"></input>
                     </view>
                   </view>
 
 
-                  <view wx:if="{{item.is_update == 1}}" class="price-right">
-                    <view class="edit" @tap="doEditCost({{item}})">修改</view>
-                    <view  class="del" @tap="doRemoveCost({{item}})">删除</view>
-                  </view>
                 </view>
 
+                <view class="btn-wrap">
+                  <button class="button" @tap="delRecOutConfirm" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
+                  <button class="button" @tap="delRecHcConfirm" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
+                </view>
+              </form>
+
+            </view>
+
+            <view class="bottom-empty"></view>
+          </scroll-view>
+        </swiper-item>
+        <swiper-item>
+          <!--照片-->
+          <scroll-view scroll-y style="height: 100%">
+            <view class="photo">
+              <view class="photo-item" @tap="goAddPhoto('in')">
+                <view class="title">
+                  入仓照片
+                </view>
+                <view class="num">
+                  {{photoList.in && photoList.in.length}}
+                </view>
+              </view>
+              <view class="photo-item" @tap="goAddPhoto('out')">
+                <view class="title">
+                  出仓照片
+                </view>
+                <view class="num">
+                  {{photoList.out && photoList.out.length}}
+                </view>
+              </view>
+              <view class="photo-item" @tap="goAddPhoto('weight')">
+                <view class="title">
+                  称重照片
+                </view>
+                <view class="num">
+                  {{photoList.weight && photoList.weight.length}}
+                </view>
+              </view>
+              <view class="photo-item" @tap="goAddPhoto('by')">
+                <view class="title">
+                  备用
+                </view>
+                <view class="num">
+                  {{photoList.by && photoList.by.length}}
+                </view>
               </view>
             </view>
-          </view>
-          <view wx:if="{{cost.price[0] && cost.price[0].is_update == 1}}" class="btn-wrap" style="margin-top: 200rpx;">
-            <view class="button" @tap="doAddCost" >添加成本</view>
-          </view>
-        </view>
-      </view>
+          </scroll-view>
+        </swiper-item>
+        <swiper-item>
+          <!--成本-->
+          <scroll-view scroll-y style="height: 100%" class="cost">
+            <view>
+              <view class="cost-hd">
+                <view>进仓号：{{cost.jcno || '暂无'}}</view>
+                <view>运单号：{{cost.ydno || '暂无'}}</view>
+              </view>
+              <view class="two-column-center-table" style="font-size: 26rpx!important;">
+                <view class="row">
+                  <view class="cell">公司：</view>
+                  <view class="cell">{{cost.company || '暂无'}}</view>
+                </view>
+                <view class="row">
+                  <view class="cell">总价：</view>
+                  <view class="cell" style="padding-right: 20rpx;">
+                    <view  wx:for="{{cost.price}}" class="price-item" >
+                      <view class="two-column-center-table" style="flex: 1;">
+                        <view class="row" style="">
+                          <view class="cell" style="flex: 0.3;text-align: left;">种类</view>
+                          <view class="cell">{{item.doc}}</view>
+                        </view>
+                        <view class="row">
+                          <view class="cell" style="flex: 0.3;text-align: left;">单价</view>
+                          <view class="cell">{{item.curr}}</view>
+                        </view>
+                        <view class="row">
+                          <view class="cell" style="flex: 0.3;text-align: left;">数量</view>
+                          <view class="cell">{{item.amount}}</view>
+                        </view>
+                      </view>
+
+
+                      <view wx:if="{{item.is_update == 2}}" class="price-right">
+                        <view class="edit" @tap="doEditCost({{item}})">修改</view>
+                        <view  class="del" @tap="doRemoveCost({{item}})">删除</view>
+                      </view>
+                    </view>
+
+                  </view>
+                </view>
+              </view>
+              <view wx:if="{{cost.price[0] && cost.price[0].is_update == 2}}" class="btn-wrap" style="margin-top: 200rpx;">
+                <view class="button" @tap="doAddCost" >添加成本</view>
+              </view>
+            </view>
+            <view class="bottom-empty"></view>
+          </scroll-view>
+        </swiper-item>
+      </swiper>
     </block>
     <placeholder wx:else type="auth"></placeholder>
 
@@ -705,6 +780,7 @@
   import searchList from '@/components/searchList';
   import fileList from '@/components/fileList';
   import placeholder from '@/components/placeholder';
+  import CardMixin from '../../mixins/cardMixin';
 
   const numReg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^[0-9]\.[0-9]([0-9])?$)/
   export default class PlanDetail extends wepy.page {
@@ -716,12 +792,14 @@
       placeholder
     };
 
+    mixins = [CardMixin]
+
     data = {
       hasAuth: false,
       userType: '',
 
       jcno: '',
-      activeName: 2,
+      activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -762,6 +840,14 @@
     methods = {
       switchTab(index) {
         this.activeName = index;
+        wx.setNavigationBarTitle({
+          title: this.tabs[this.activeName]
+        });
+
+        this.refreshTab()
+      },
+      onSwiperChange(evt){
+        this.activeName = evt.detail.current;
         wx.setNavigationBarTitle({
           title: this.tabs[this.activeName]
         });
@@ -1083,7 +1169,7 @@
 
             this.planDetail = data
             this.packerLeader = data.packer_leader
-            this.selectPackerList = data.packer_list
+            this.selectPackerList = data.packer_list || []
             this.$apply()
 
             this.receivePackageList()
@@ -1181,27 +1267,27 @@
           this.hasAuth = true
           this.getPlanDetail()
 
-          if(['0', '3', '4'].includes(this.userType)){
+          if([ '4'].includes(this.userType)){
             this.detailType = '2'
-          }else if(this.userType == '5'){
-            this.detailType = '3'
-          }else {
-            this.detailType = '1'
+          } else if (['0', '3', '5'].includes(this.userType)) {
+            this.detailType = '3';
+          } else {
+            this.detailType = '1';
           }
-          return
+          return;
         case 1:
-          if(['0', '3', '4', '5', '6', '7', '10'].includes(this.userType)){
-            this.getDeliveryReceipt()
-            this.hasAuth = true
-          }else{
-            this.hasAuth = false
+          if (['0', '3', '4', '5', '6', '7', '8', '9', '10'].includes(this.userType)) {
+            this.getDeliveryReceipt();
+            this.hasAuth = true;
+          } else {
+            this.hasAuth = false;
           }
-          return
+          return;
         case 2:
-          if(['0', '3', '6', '7', '10'].includes(this.userType)){
-            this.getPhotos()
-            this.hasAuth = true
-          }else{
+          if (['0', '3', '4', '5', '6', '7', '8', '9', '10'].includes(this.userType)) {
+            this.getPhotos();
+            this.hasAuth = true;
+          } else {
             this.hasAuth = false
           }
           return
