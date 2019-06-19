@@ -267,8 +267,7 @@ class CControl():
         photoheadid = get_model_return_dict(self.sgoods.get_photoheadid_by_head_jcno(args["jcno"], args["photo_head"]))
         photos = get_model_return_list(self.sgoods.get_photo_by_headid(photoheadid["id"]))
         for row in photos:
-            row["czr"] = photoheadid["czr"]
-            row["createtime"] = photoheadid["createtime"].strftime("%Y/%m/%d %H:%M:%S")
+            row["createtime"] = row["createtime"].strftime("%Y/%m/%d %H:%M:%S")
         return {
             "status": 200,
             "message": "获取入仓照片成功",

@@ -321,7 +321,7 @@ class SGoods(SBase):
 
     @close_session
     def get_photo_by_headid(self, photoheadid):
-        return self.session.query(AIR_HWYS_PHOTOS.photourl).filter_by(photoheadid=photoheadid).all()
+        return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime).filter_by(photoheadid=photoheadid).all()
 
     @close_session
     def delete_photos_by_id(self, id):
