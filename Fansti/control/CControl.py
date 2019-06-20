@@ -372,15 +372,31 @@ class CControl():
         make_log("accounts", accounts)
         if args["login_name"] == accounts:
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
-
-        qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
-        print(qrd)
         wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
+        user = get_model_return_dict(self.susers.get_user_type(args["login_name"]))
+        user_type = user["user_type"]
+        if user_type in [4, 5, 6, 7, 8, 9]:
+            qrd = get_model_return_dict(self.sgoods.get_jc_qrd_by_loginname(args["jcno"], args["login_name"]))
+        elif user_type in [0, 10, 3]:
+            qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
+        else:
+            qrd = []
+        print(qrd)
+        cw_lock = get_model_return_dict(self.sgoods.get_cw_lock(args["jcno"]))
+
         jc_cb = {}
         jc_cb["jcno"] = args["jcno"]
         jc_cb["ydno"] = wts["ydno"]
         jc_cb["company"] = wts["accounts"]
         jc_cb["price"] = []
+        if cw_lock and cw_lock["cb_flag"] == "1":
+            jc_cb["is_insert"] = 0  # 不可新增
+        elif cw_lock and not cw_lock["cb_flag"]:
+            jc_cb["is_insert"] = 1
+        elif not cw_lock:
+            jc_cb["is_insert"] = 1  # 可以新增
+        else:
+            jc_cb["is_insert"] = 2  # 数据库特殊情况
         if qrd:
             for row in qrd:
                 price_dict = {}
@@ -388,12 +404,12 @@ class CControl():
                 price_dict["amount"] = row["amount"]
                 price_dict["doc"] = row["doc"]
                 price_dict["id"] = row["id"]
-                if row["byzd1"] == "1" and row["byzd3"] == "1":
-                    price_dict["is_update"] = 1
-                elif row["byzd1"] == "1" and not row["byzd3"]:
-                    price_dict["is_update"] = 2
+                if not row["byzd3"]:
+                    price_dict["is_update"] = 1 #  可以编辑
+                elif row["byzd3"] == "1":
+                    price_dict["is_update"] = 0 #  不可以编辑
                 else:
-                    price_dict["is_update"] = 0
+                    price_dict["is_update"] = 2 #  数据库异常
                 jc_cb["price"].append(price_dict)
         return {
             "status": 200,

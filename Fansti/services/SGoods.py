@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.getcwd()))
 from Fansti.models.model import AIR_HWYS_WTS, AIR_HWYS_DCD, AIR_HWYS_PHOTOS, AIR_HWYS_FILE, AIR_HWYS_DCD_JLD, \
     GOODS_RETRUE, AIR_HWYS_DZJJD, AIR_HWYS_QRD, D_CHARGE_COMPANY, D_CHARGE_TYPE, AIR_HWYS_CKMXD, AIR_HWYS_OUTWAREHOUSE, \
-    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD, AIR_HWYS_PACK_ROYALTY, AIR_HWYS_PHOTO_HEAD
+    AIR_HWYS_INGOODYARD, AIR_HWYS_DGD_UPLOAD, AIR_HWYS_PACK_ROYALTY, AIR_HWYS_PHOTO_HEAD, AIR_HWYS_CW_LOCK
 from Fansti.services.SBase import SBase, close_session
 from sqlalchemy import func, or_
 
@@ -206,6 +206,13 @@ class SGoods(SBase):
             .filter_by(jcno=jcno).filter_by(byzd1="1").all()
 
     @close_session
+    def get_jc_qrd_by_loginname(self, jcno, login_name):
+        return self.session.query(AIR_HWYS_QRD.id, AIR_HWYS_QRD.jcno, AIR_HWYS_QRD.ydno, AIR_HWYS_QRD.fkdw,
+                                  AIR_HWYS_QRD.byzd1, AIR_HWYS_QRD.byzd2,
+                                  AIR_HWYS_QRD.byzd3, AIR_HWYS_QRD.curr, AIR_HWYS_QRD.amount, AIR_HWYS_QRD.doc)\
+            .filter_by(jcno=jcno).filter_by(byzd2=login_name).filter_by(byzd1="1").all()
+
+    @close_session
     def get_fkdw(self, company):
         return self.session.query(D_CHARGE_COMPANY.id, D_CHARGE_COMPANY.code, D_CHARGE_COMPANY.company)\
             .filter(or_(func.lower(D_CHARGE_COMPANY.company).like("%{0}%".format(company.lower())),
@@ -348,3 +355,7 @@ class SGoods(SBase):
     @close_session
     def get_dgd_by_id(self, id):
         return self.session.query(AIR_HWYS_DGD_UPLOAD.create_time, AIR_HWYS_DGD_UPLOAD.create_user).filter_by(id=id).first()
+
+    @close_session
+    def get_cw_lock(self, jcno):
+        return self.session.query(AIR_HWYS_CW_LOCK.jcno, AIR_HWYS_CW_LOCK.cb_flag).filter_by(jcno=jcno).first()

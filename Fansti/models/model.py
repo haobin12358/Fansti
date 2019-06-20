@@ -660,5 +660,13 @@ class D_PORT(Base):
     port_cname = Column(String(50))                 # 目的地名称
     port_aircode = Column(String(20))               # 需要判断非空
 
+class AIR_HWYS_CW_LOCK(Base):
+    __tablename__ = "AIR_HWYS_CW_LOCK"
+    lock_id = Column(String(32), primary_key=True)
+    jcno = Column(String(32), nullable=False)
+    create_time = Column(DATE)
+    zd_flag = Column(String(10))
+    cb_flag = Column(String(10))
+
 if __name__ == "__main__":
     Base.metadata.create_all(mysql_engine)
