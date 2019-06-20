@@ -101,7 +101,7 @@
 
     <view class="choose-photo">
       <view class="photo-item" wx:for="{{list}}">
-        <image class="img" src="{{item.photourl}}" @tap.stop="previewImg({{item}})"></image>
+        <image class="img" src="{{item.photourl}}" @tap.stop="previewImg({{item.photourl}})"></image>
 
         <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{item}})"></image>
         <view class="info">
@@ -110,7 +110,8 @@
         </view>
       </view>
 
-      <image wx:if="{{type != 'in' || batchIndex == batchList.length - 1}}" src="../../images/plus.png" class="add-photo-block" @tap="addPhoto"></image>
+      <image wx:if="{{type != 'in' || batchIndex == batchList.length - 1}}" src="../../images/plus.png"
+             class="add-photo-block" @tap="newAddPhoto"></image>
 
     </view>
 
@@ -147,7 +148,7 @@
 
         wx.previewImage({
           urls: photoUrls,
-          current: photoUrls
+          current: item
         })
       },
 
@@ -183,82 +184,97 @@
           }
         )
       },
-      addPhoto(){
+      newAddPhoto(){
         let that = this
 
         wx.chooseImage({
-          count: 1,
-          success({tempFiles}) {
-            let file = tempFiles[0];
+          success: function({tempFiles}){
+            let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
 
-            if(file.size > 5 * 1024 * 1024){
-              tip.confirm('图片过大,请上传小于5MB的图片!', false)
-              return
+            if(filterFiles.length != tempFiles.length){
+              tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
+                () => {
+                  that.afterChoose(filterFiles)
+                }
+              )
+            }else{
+              that.afterChoose(filterFiles)
             }
-
-            wx.showLoading()
-            wx.uploadFile({
-              url: api.uploadFilesUrl,
-              filePath: file.path,
-              name: 'file',
-              header: {
-                "Content-Type": "multipart/form-data"
-              },
-              formData: {
-                FileType: that.type,
-                index: that.list.length + 1,
-                jcno: that.jcno
-              },
-              success: function(res) {
-                let data = JSON.parse(res.data).data
-                let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
-
-                api.addNewFile({
-                  method: 'POST',
-                  jcno: that.jcno,
-                  login_name: wx.getStorageSync('token'),
-                  file_type: that.type,
-                  query: {
-                    url: data,
-                    file_name: fileName,
-                    head: that.type == 'in' ? that.batchList[that.batchIndex] : ''
-                  }
-                }).then(
-                  res => {
-                    if (res.data.status == 200) {
-                      if(that.type == 'in'){
-                        this.getInPhotoList()
-                      }else {
-                        that.getPhotoList()
-                      }
-                    }
-                  }
-                )
-              },
-              complete: function() {
-                wx.hideLoading()
-              }
-            })
           }
         })
       },
-
-      /*
-      chooseToRemove(index){
-        console.log(index)
-        this.list[index].checked = !this.list[index].checked
-      },
-      removeCheckedImgs(){
-        let ids = this.list.filter(item => item.checked).map(item => item.url)
-
-        console.log(ids)
-        tip.confirm(`确认删除${ids.length}张照片?`).then(
-          ()=>{
-            tip.success('删除成功!')
-          }
-        )
-      }*/
     };
+    afterChoose(filterFiles){
+      let that = this
+      let proms = filterFiles.map(i => that.uploadFiles(i))
+
+      Promise.all(proms).then(
+        rsts => {
+          let succCount = rsts.filter(i => i).length,
+            failCount = rsts.length - succCount
+
+          tip.toast(`成功上传${succCount}张,失败${failCount}张`, ()=>{
+            if(that.type == 'in'){
+              this.getInPhotoList()
+            }else {
+              that.getPhotoList()
+            }
+          })
+        }
+      )
+    }
+    uploadFiles(file){
+      let that = this
+
+      tip.loading()
+      return new Promise(
+        (resolve, reject) => {
+          wx.uploadFile({
+            url: api.uploadFilesUrl,
+            filePath: file.path,
+            name: 'file',
+            header: {
+              "Content-Type": "multipart/form-data"
+            },
+            formData: {
+              FileType: that.type,
+              index: that.list.length + 1,
+              jcno: that.jcno
+            },
+            success: function(res) {
+              let data = JSON.parse(res.data).data
+              let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+
+              api.addNewFile({
+                method: 'POST',
+                jcno: that.jcno,
+                login_name: wx.getStorageSync('token'),
+                file_type: that.type,
+                query: {
+                  url: data,
+                  file_name: fileName,
+                  head: that.type == 'in' ? that.batchList[that.batchIndex] : ''
+                }
+              }).then(
+                res => {
+                  if (res.data.status == 200) {
+                    resolve(true)
+                  }else {
+                    reject(false);
+                  }
+                }
+              )
+            },
+            fail: function(){
+              reject(false)
+            },
+          })
+        }
+      )
+
+    }
+
+
 
     // 入仓照片 获取批次并显示该批次(选中最新一次)下的照片
     getBatchList(){

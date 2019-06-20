@@ -65,7 +65,7 @@
   <view class="container">
     <view class="form-section-title">鉴定列表</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{jdList}}" @tap="previewImage('jd', {{index}})">
+      <view class="photo-item" wx:for="{{jdList}}" @tap="previewImage({{jdList}}, {{item.file_url}})">
         <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('jd',{{index}})"></image>
@@ -75,12 +75,12 @@
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('jd')"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="newAddPhoto('jd')"></image>
     </view>
 
     <view class="form-section-title">申报单</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{sbList}}" @tap="previewImage('sb', {{index}})">
+      <view class="photo-item" wx:for="{{sbList}}" @tap="previewImage({{sbList}}, {{item.file_url}})">
         <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('sb',{{index}})"></image>
@@ -90,12 +90,12 @@
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('sb')"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="newAddPhoto('sb')"></image>
     </view>
 
     <view class="form-section-title">包装文件</view>
     <view class="choose-photo">
-      <view class="photo-item" wx:for="{{bzList}}" @tap="previewImage('bz', {{index}})">
+      <view class="photo-item" wx:for="{{bzList}}" @tap="previewImage({{bzList}}, {{item.file_url}})">
         <image class="img" src="{{item.file_url}}"></image>
 
         <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto('bz',{{index}})"></image>
@@ -105,7 +105,7 @@
         </view>-->
       </view>
 
-      <image src="../../images/plus.png" class="photo-item" @tap="addPhoto('bz')"></image>
+      <image src="../../images/plus.png" class="photo-item" @tap="newAddPhoto('bz')"></image>
     </view>
 
 
@@ -164,9 +164,28 @@
     computed = {};
 
     methods = {
+      newAddPhoto(type){
+        let that = this
+
+        wx.chooseImage({
+          success: function({tempFiles}){
+            let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
+
+            if(filterFiles.length != tempFiles.length){
+              tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
+                () => {
+                  that.afterChoose(filterFiles,type)
+                }
+              )
+            }else{
+              that.afterChoose(filterFiles,type)
+            }
+          }
+        })
+      },
       addPhoto(type){
         let that = this,
-          index = 1;
+          index = 1
 
         switch (type) {
           case 'jd':
@@ -272,24 +291,8 @@
         )
       },
 
-      previewImage(type, index){
-        let current = '',
-          urls = []
-
-        switch (type) {
-          case 'jd':
-            current = this.jdList[index]
-            urls = this.jdList.map(item => item.file_url)
-            break
-          case 'sb':
-            current = this.sbList[index]
-            urls = this.sbList.map(item => item.file_url)
-            break
-          case 'bz':
-            current = this.bzList[index]
-            urls = this.bzList.map(item => item.file_url)
-            break
-        }
+      previewImage(files, current){
+        let urls = files.map(item => item.file_url)
 
         wx.previewImage({
           current,
@@ -297,6 +300,88 @@
         })
       }
     };
+
+    afterChoose(filterFiles, type){
+      let that = this
+      let proms = filterFiles.map(i => that.uploadFiles(i, type))
+
+      Promise.all(proms).then(
+        rsts => {
+          let succCount = rsts.filter(i => i).length,
+            failCount = rsts.length - succCount
+
+          tip.toast(`成功上传${succCount}张,失败${failCount}张`, ()=>{
+            that.getFileList(type)
+          })
+        }
+      )
+    }
+    uploadFiles(file, type){
+      let that = this,
+        index = 1;
+
+      switch (type) {
+        case 'jd':
+          index = this.jdList.length + 1
+          break
+        case 'sb':
+          index = that.sbList.length + 1
+          break
+        case 'bz':
+          index = that.sbList.length + 1
+          break
+      }
+      tip.loading()
+      return new Promise(
+        (resolve, reject) => {
+          wx.uploadFile({
+            url: api.uploadFilesUrl,
+            filePath: file.path,
+            name: 'file',
+            header: {
+              "Content-Type": "multipart/form-data"
+            },
+            formData: {
+              FileType: type,
+              index: index,
+              jcno: that.jcno
+            },
+            success: function(res) {
+              let data = JSON.parse(res.data).data
+              let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+
+              let addType = type == 'bz' ? 'bzwj' : type;
+
+              api.addNewFile({
+                method: 'POST',
+                jcno: that.jcno,
+                login_name: wx.getStorageSync('token'),
+                file_type: addType,
+                query: {
+                  url: data,
+                  file_name: fileName
+                }
+              }).then(
+                res => {
+                  if (res.data.status == 200) {
+                    resolve(true);
+                  } else {
+                    reject(false);
+                  }
+                }
+              );
+            },
+            fail: function() {
+              reject(false);
+            },
+            complete: function() {
+              wx.hideLoading()
+            }
+          })
+        }
+      )
+
+    }
 
     getFileList(type) {
       switch (type) {

@@ -114,7 +114,7 @@
       <view class="button" @tap="doRebind">重新绑定</view>
     </view>
 
-    <view style="text-align: right">版本号 0.0.15</view>
+    <view style="text-align: right">版本号 0.0.16</view>
 
     <input-box wx:if="{{showInputBox}}" :title.sync="title" :placeholder.sync="placeholder"
                @inputConfirm.user="inputConfirm" @inputCancel.user="inputCancel"></input-box>

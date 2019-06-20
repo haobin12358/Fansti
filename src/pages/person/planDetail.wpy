@@ -1267,8 +1267,8 @@
           this.hasAuth = true
           this.getPlanDetail()
 
-          if([ '4'].includes(this.userType)){
-            this.detailType = '2'
+          if (['4'].includes(this.userType)) {
+            this.detailType = '2';
           } else if (['0', '3', '5'].includes(this.userType)) {
             this.detailType = '3';
           } else {

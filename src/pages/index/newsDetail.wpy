@@ -84,8 +84,8 @@
             <text>{{news.news_from}}</text>
             <text>{{news.news_time}}</text>
           </view>
-          <!--<wxparser rich-text="{{news.news_all}}"></wxparser>-->
-          <wxparser rich-text="{{richText2}}"></wxparser>
+          <wxparser rich-text="{{news.news_all}}"></wxparser>
+          <!--<wxparser rich-text="{{richText2}}"></wxparser>-->
         </scroll-view>
       </view>
 
