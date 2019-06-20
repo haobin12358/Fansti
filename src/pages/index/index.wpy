@@ -131,7 +131,7 @@
         </view>
 
         <view class="weight-level">
-          <view>重量等级</view>
+          <view>重量（kg）</view>
           <input name="weight" maxlength="11" type="digit"/>
         </view>
 
@@ -250,6 +250,7 @@
         this.formData.des = item.label
       },
       doQueryDes(query){
+        query = query.toString().toUpperCase()
         this.getDesList(query)
       },
 

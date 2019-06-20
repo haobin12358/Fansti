@@ -211,7 +211,7 @@
         wx.setStorageSync('isNewUser', false);
         wx.setStorageSync('token', '');
         wx.reLaunch({
-          url: '/pages/index/index'
+          url: '/pages/track/index'
         });
       }else{
         tip.alert(res.data.message)

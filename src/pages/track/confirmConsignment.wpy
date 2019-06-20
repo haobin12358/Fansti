@@ -106,8 +106,8 @@
           <image class="swiper-item" id="id{{index}}" wx:for="{{checkImgs}}" wx:key="*this" src="{{item}}" @tap="showImg({{index}})"></image>
         </scroll-view>
       </view>
-      <view class="card-ft" wx:if="{{isconfirm == 'false' && isCommon}}">
-        <view class="confirm-btn" @tap="confirmPic">
+      <view class="card-ft" wx:if="{{isCommon}}">
+        <view wx:if="{{isconfirm == 'false'}}" class="confirm-btn" @tap="confirmPic">
           确认照片
         </view>
         <view class="confirm-btn send-email" @tap="sendEmail">

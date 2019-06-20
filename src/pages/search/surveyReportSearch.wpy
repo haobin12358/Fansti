@@ -80,7 +80,7 @@
     events = {};
 
     onLoad(params, data) {
-      this.res = data.preload.res;
+      this.res = data.preload.res.filter(i => i.name != '委托公司');
     }
   }
 </script>
