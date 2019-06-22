@@ -375,9 +375,9 @@ class CControl():
         wts = get_model_return_dict(self.sgoods.get_control_goods(args["jcno"]))
         user = get_model_return_dict(self.susers.get_user_type(args["login_name"]))
         user_type = user["user_type"]
-        if user_type in [4, 5, 6, 7, 8, 9]:
+        if user_type in ['4', '5', '6', '7', '8', '9']:
             qrd = get_model_return_dict(self.sgoods.get_jc_qrd_by_loginname(args["jcno"], args["login_name"]))
-        elif user_type in [0, 10, 3]:
+        elif user_type in ['0', '10', '3']:
             qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
         else:
             qrd = []
