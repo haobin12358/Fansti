@@ -376,7 +376,7 @@ class CControl():
         user = get_model_return_dict(self.susers.get_user_type(args["login_name"]))
         user_type = user["user_type"]
         if user_type in ['4', '5', '6', '7', '8', '9']:
-            qrd = get_model_return_dict(self.sgoods.get_jc_qrd_by_loginname(args["jcno"], args["login_name"]))
+            qrd = get_model_return_list(self.sgoods.get_jc_qrd_by_loginname(args["jcno"], args["login_name"]))
         elif user_type in ['0', '10', '3']:
             qrd = get_model_return_list(self.sgoods.get_jc_qrd(args["jcno"]))
         else:
@@ -934,7 +934,7 @@ class CControl():
                 "fkdw": data["fkdw"],
                 "createtime": datetime.datetime.now(),
                 "byzd1": "1",
-                "byzd2": user["username"]
+                "byzd2": args["login_name"]
             })
         if args["qrd_type"] == "update":
             update_qrd = self.sgoods.update_qrd_by_id(data["id"], {
@@ -946,7 +946,7 @@ class CControl():
                 "fkdw": data["fkdw"],
                 "createtime": datetime.datetime.now(),
                 "byzd1": "1",
-                "byzd2": user["username"]
+                "byzd2": args["login_name"]
             })
             if not update_qrd:
                 return SYSTEM_ERROR
