@@ -716,11 +716,11 @@
               </view>
               <view class="two-column-center-table" style="font-size: 26rpx!important;">
                 <view class="row">
-                  <view class="cell">公司：</view>
+                  <view class="cell">公司</view>
                   <view class="cell">{{cost.company || '暂无'}}</view>
                 </view>
                 <view class="row">
-                  <view class="cell">总价：</view>
+                  <view class="cell">总价</view>
                   <view class="cell" style="padding-right: 20rpx;">
                     <view  wx:for="{{cost.price}}" class="price-item" >
                       <view class="two-column-center-table" style="flex: 1;">
@@ -739,7 +739,7 @@
                       </view>
 
 
-                      <view wx:if="{{item.is_update == 2}}" class="price-right">
+                      <view wx:if="{{item.is_update == 1}}" class="price-right">
                         <view class="edit" @tap="doEditCost({{item}})">修改</view>
                         <view  class="del" @tap="doRemoveCost({{item}})">删除</view>
                       </view>
@@ -748,7 +748,7 @@
                   </view>
                 </view>
               </view>
-              <view wx:if="{{cost.price[0] && cost.price[0].is_update == 2}}" class="btn-wrap" style="margin-top: 200rpx;">
+              <view wx:if="{{cost.is_insert}}" class="btn-wrap" style="margin-top: 200rpx;">
                 <view class="button" @tap="doAddCost" >添加成本</view>
               </view>
             </view>
@@ -799,7 +799,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 0,
+      activeName: 3,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -839,14 +839,11 @@
 
     methods = {
       switchTab(index) {
+        console.log('switchtab')
         this.activeName = index;
-        wx.setNavigationBarTitle({
-          title: this.tabs[this.activeName]
-        });
-
-        this.refreshTab()
       },
       onSwiperChange(evt){
+        console.log('onSwiperChange')
         this.activeName = evt.detail.current;
         wx.setNavigationBarTitle({
           title: this.tabs[this.activeName]
@@ -1298,7 +1295,6 @@
           }else{
             this.hasAuth = false
           }
-          this.getCost()
           return
       }
     }
