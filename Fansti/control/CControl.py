@@ -404,6 +404,7 @@ class CControl():
                 price_dict["amount"] = row["amount"]
                 price_dict["doc"] = row["doc"]
                 price_dict["id"] = row["id"]
+                price_dict["fkdw"] = row["fkdw"]
                 if not row["byzd3"]:
                     price_dict["is_update"] = 1 #  可以编辑
                 elif row["byzd3"] == "1":
@@ -928,22 +929,24 @@ class CControl():
                 "id": str(uuid.uuid1()),
                 "ydno": wts["ydno"],
                 "jcno": args["jcno"],
-                "doc": data["doc"],
+                "doc": data["charge_cname"],
                 "curr": data["curr"],
                 "amount": data["amount"],
-                "fkdw": data["fkdw"],
+                "fkdw": data["company"],
                 "createtime": datetime.datetime.now(),
                 "byzd1": "1",
-                "byzd2": args["login_name"]
+                "byzd2": args["login_name"],
+                "rate": "1",
+                "currcode": "CNY"
             })
         if args["qrd_type"] == "update":
             update_qrd = self.sgoods.update_qrd_by_id(data["id"], {
                 "ydno": wts["ydno"],
                 "jcno": args["jcno"],
-                "doc": data["doc"],
+                "doc": data["charge_cname"],
                 "curr": data["curr"],
                 "amount": data["amount"],
-                "fkdw": data["fkdw"],
+                "fkdw": data["company"],
                 "createtime": datetime.datetime.now(),
                 "byzd1": "1",
                 "byzd2": args["login_name"]
