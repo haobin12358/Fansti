@@ -41,24 +41,24 @@ class SGoods(SBase):
     def get_in_order_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
                                   AIR_HWYS_PHOTOS.filename)\
-            .filter_by(jcno=jcno).filter_by(phototype='in').all()
+            .filter_by(jcno=jcno).filter_by(phototype='in').order_by(AIR_HWYS_PHOTOS.createtime.desc()).all()
 
     @close_session
     def get_out_order_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
                                   AIR_HWYS_PHOTOS.filename) \
-            .filter_by(jcno=jcno).filter_by(phototype='out').all()
+            .filter_by(jcno=jcno).filter_by(phototype='out').order_by(AIR_HWYS_PHOTOS.createtime.desc()).all()
 
     @close_session
     def get_weight_order_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime,
                                   AIR_HWYS_PHOTOS.filename) \
-            .filter_by(jcno=jcno).filter_by(phototype='weight').all()
+            .filter_by(jcno=jcno).filter_by(phototype='weight').order_by(AIR_HWYS_PHOTOS.createtime.desc()).all()
 
     @close_session
     def get_by_order_by_jcno(self, jcno):
         return self.session.query(AIR_HWYS_PHOTOS.photourl, AIR_HWYS_PHOTOS.czr, AIR_HWYS_PHOTOS.createtime) \
-            .filter_by(jcno=jcno).filter_by(phototype='by').all()
+            .filter_by(jcno=jcno).filter_by(phototype='by').order_by(AIR_HWYS_PHOTOS.createtime.desc()).all()
 
     @close_session
     def get_content_by_jcno(self, jcno):

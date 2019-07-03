@@ -66,12 +66,13 @@ class CControl():
             if row["flag_date"]:
                 row["flag_date"] = row["flag_date"].strftime("%Y-%m-%d")
                 row["backcolor"] = "灰色"
-            if row["transtime"]:
-                if row["transtime"] == datetime.datetime.now().date():
-                    row["backcolor"] = "黄色"
-                else:
-                    row["backcolor"] = "白色"
-                row["transtime"] = row["transtime"].strftime("%Y-%m-%d")
+            else:
+                if row["transtime"]:
+                    if row["transtime"] == datetime.datetime.now().date():
+                        row["backcolor"] = "黄色"
+                    else:
+                        row["backcolor"] = "白色"
+                    row["transtime"] = row["transtime"].strftime("%Y-%m-%d")
             if "backcolor" not in row.keys():
                 row["backcolor"] = "白色"
             if row["isphoto"]:
