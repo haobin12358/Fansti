@@ -66,6 +66,8 @@ class CControl():
             if row["flag_date"]:
                 row["flag_date"] = row["flag_date"].strftime("%Y-%m-%d")
                 row["backcolor"] = "灰色"
+                if row["transtime"]:
+                    row["transtime"] = row["transtime"].strftime("%Y-%m-%d")
             else:
                 if row["transtime"]:
                     if row["transtime"] == datetime.datetime.now().date():
