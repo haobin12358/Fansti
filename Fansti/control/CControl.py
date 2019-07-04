@@ -139,7 +139,8 @@ class CControl():
         if jc_abo["arrivetime"]:
             jc_abo["arrivetime"] = jc_abo["arrivetime"].strftime("%Y/%m/%d")
         if jc_abo["jd_date"]:
-            jc_abo["jd_date"] = jc_abo["jd_date"].strftime("%Y/%m/%d")
+            print(jc_abo["jd_date"])
+            jc_abo["jd_date"] = jc_abo["jd_date"].strftime("%Y/%m/%d %H:%M:%S")
             jc_abo["show_button"] = 0
         else:
             jc_abo["show_button"] = 1
@@ -155,6 +156,7 @@ class CControl():
             jc_abo["contract_time"] = None
         if not jc_abo["ydno"]:
             jc_abo["ydno"] = "暂无运单号"
+        print(jc_abo)
         response = import_status("SUCCESS_GET_JC", "OK")
         response["data"] = jc_abo
         return response

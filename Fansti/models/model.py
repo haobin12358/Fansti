@@ -84,11 +84,11 @@ class AIR_HWYS_WTS(Base):
     accounts = Column(String(100))                    # 客户名
     link_hkqr = Column(String(20), default='成本')     # 成本链接
     link_ajd = Column(String(20), default='安检单')    # 安检单链接
-    jd_date = Column(DATE)                            # 交单日期
+    jd_date = Column(DATETIME)                            # 交单日期
     flag_date = Column(DATE)                            # 安卓端上传图片标识日期
     enhwpm = Column(String(4000))                       # 货物品名（英文）
     wpzd = Column(String(200))                          # 根据危险品普品带入账单信息
-    jd_time = Column(DATE)                              # 交单时间精确
+    jd_time = Column(DATETIME)                              # 交单时间精确
     consignore = Column(String(100))                    # 委托人
     message_flag = Column(String(30), default='1')      # 短信发送标识 TODO
     wh_require = Column(String(1000))                   # 仓库要求
