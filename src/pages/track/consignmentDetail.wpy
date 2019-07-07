@@ -224,7 +224,7 @@
           </view>
         </view>
       </view>
-      <view class="line-detail">
+      <view wx:if="{{showJcno}}" class="line-detail">
         <view class="line-left">
           <view class="item-label">
             <image class="label-img" src="../../images/house.png"></image>
@@ -232,7 +232,6 @@
           </view>
           <view class="item-value">
             {{detail.jcno || '暂无'}}
-
           </view>
         </view>
       </view>
@@ -351,10 +350,10 @@
 
     <view class="container-check-section">
       <!--入仓照片-->
-      <view class="check-img-section">
+      <view wx:if="{{showJcPic}}" class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
-            <text class="check-type">1. 入仓照片</text>
+            <text class="check-type">入仓照片</text>
             <text class="check-time">{{detail.in.createtime}}</text>
           </view>
           <view class="hd-right">
@@ -383,7 +382,7 @@
       <view class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
-            <text class="check-type">2. 出仓照片</text>
+            <text class="check-type">出仓照片</text>
             <text class="check-time">{{detail.out.createtime}}</text>
           </view>
           <view class="hd-right">
@@ -409,7 +408,7 @@
       <view class="check-img-section">
         <view class="check-img-section-hd">
           <view class="hd-left">
-            <text class="check-type">3. 称重照片</text>
+            <text class="check-type">称重照片</text>
             <text class="check-time">{{detail.weight_pic.createtime}}</text>
           </view>
           <view class="hd-right">
@@ -431,7 +430,7 @@
         </view>
       </view>
 
-      <view class="check-action-section" wx:if="{{showConfirmAll && isCommon}}">
+      <view class="check-action-section" wx:if="{{canConfirm && showConfirmAll}}">
         <view class="check-btn" @tap="confirmAllImg">全部确认</view>
       </view>
     </view>
@@ -453,6 +452,9 @@
 
     data = {
       isCommon: false,
+      canConfirm: false,
+      showJcno: true,
+      showJcPic: true,
       detail: {
 
       },
@@ -618,6 +620,9 @@
       this.getJcAbo(this.jcno);
 
       this.isCommon = wx.getStorageSync('user_type') == '2'
+      this.canConfirm = ['0', '2', '10'].includes(wx.getStorageSync('user_type'))
+      this.showJcno = !['2', '20', '30'].includes(wx.getStorageSync('user_type'))
+      this.showJcPic = !['20', '30'].includes(wx.getStorageSync('user_type'))
     }
   }
 </script>

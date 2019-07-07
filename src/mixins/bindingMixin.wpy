@@ -44,7 +44,7 @@
 
           console.log(res2.data.data)
           wx.setStorageSync('showEnquiry', res2.data.data.is_show == 1);
-          wx.setStorageSync('user_type', res2.data.data.user_type);
+          wx.setStorageSync('user_type', res2.data.data.user_type.toString());
 
           console.log(wx.getStorageSync('showEnquiry'), wx.getStorageSync('user_type'))
           //  老用户

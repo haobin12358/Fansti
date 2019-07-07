@@ -106,11 +106,11 @@
           <image class="swiper-item" id="id{{index}}" wx:for="{{checkImgs}}" wx:key="*this" src="{{item}}" @tap="showImg({{index}})"></image>
         </scroll-view>
       </view>
-      <view class="card-ft" wx:if="{{isCommon}}">
-        <view wx:if="{{isconfirm == 'false'}}" class="confirm-btn" @tap="confirmPic">
+      <view class="card-ft" >
+        <view wx:if="{{canConfirm && isconfirm == 'false'}}" class="confirm-btn" @tap="confirmPic">
           确认照片
         </view>
-        <view class="confirm-btn send-email" @tap="sendEmail">
+        <view wx:if="{{isCommon}}" class="confirm-btn send-email" @tap="sendEmail">
           发送至邮箱
         </view>
       </view>
@@ -143,6 +143,7 @@
       inpBoxTitle: '接收照片的邮箱',
 
       isCommon: false,  // 是普通客户 user_type 2
+      canConfirm: false, // 0, 2, 10
       type: '',
       title: '',
       createtime: '',
@@ -235,6 +236,7 @@
       this.jcno = params.jcno;
 
       this.isCommon = wx.getStorageSync('user_type') == '2'
+      this.canConfirm = ['0', '2', '10'].includes(wx.getStorageSync('user_type'))
     }
   }
 </script>

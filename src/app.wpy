@@ -62,7 +62,7 @@ export default class extends wepy.app {
         selectedIconPath: "images/tabbar_search_active.png"
       },{
         pagePath: "pages/person/index",
-        text: "操作",
+        text: "我的",
         iconPath: "images/tabbar_person.png",
         selectedIconPath: "images/tabbar_person_active.png"
       }]

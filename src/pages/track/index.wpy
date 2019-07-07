@@ -239,7 +239,7 @@
       </view>
 
       <view class="container-bd">
-        <freight-consignment-list :list.sync="goodsList" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
+        <freight-consignment-list :list.sync="goodsList" :showJcno.sync="showJcno" @tapItem.user="goConsignmentDetail"></freight-consignment-list>
       </view>
     </view>
     <load-more :type.sync="loadingType"></load-more>
@@ -290,7 +290,7 @@
       },
       searchParam: {},
       goodsList: [],
-
+      showJcno: false,
 
       loadingType: 'normal', // 加载状态
     };
@@ -373,6 +373,7 @@
         await this.checkBinding();
       }
 
+      this.showJcno = !['2', '20', '30'].includes(wx.getStorageSync('user_type'))
       this.searchParams.login_name= wx.getStorageSync('token');
 
       if (this.isOldUser) {

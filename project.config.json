@@ -11,8 +11,36 @@
 	"appid": "wxad55d967c5abf395",
 	"projectname": "%E6%B3%9B%E6%80%9D%E7%89%B9%20%E5%A4%96%E9%83%A8",
 	"miniprogramRoot": "dist/",
-	"libVersion": "2.6.2",
+	"libVersion": "2.7.2",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"condition": {}
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "更新",
+					"pathName": "pages/search/index",
+					"query": "",
+					"scene": null
+				}
+			]
+		}
+	}
 }

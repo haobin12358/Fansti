@@ -21,6 +21,10 @@
 
         .fz28();
 
+        &.hide-jcno{
+          height: 260rpx;
+        }
+
         .line-progress{
           display: flex;
           align-items: center;
@@ -112,7 +116,7 @@
 
 <template>
   <view class="freight-consignment-list">
-    <view wx:for="{{listCmp}}" wx:key="hxno" class="goods-item" @tap.stop="tapItemHandler({{item.jcno}})">
+    <view wx:for="{{listCmp}}" wx:key="hxno" class="goods-item {{showJcno?'':'hide-jcno'}}" @tap.stop="tapItemHandler({{item.jcno}})">
       <view class="line-progress">
         <block wx:for="{{item.stateGather}}" wx:for-item="stateItem">
           <block wx:if="{{stateItem == 1}}">
@@ -133,7 +137,7 @@
           </block>
         </block>
       </view>
-      <view class="line-detail">
+      <view wx:if="{{showJcno}}" class="line-detail">
         <view class="line-left">
           <view class="item-label">
             <image class="label-img" src="../images/customer.png"></image>
@@ -220,7 +224,12 @@
         //  Object Array String Number Boolean
         type: Array,
         default: []
-      }
+      },
+      showJcno: {
+        //  Object Array String Number Boolean
+        type: Boolean,
+        default: false
+      },
     };
 
     data = {
