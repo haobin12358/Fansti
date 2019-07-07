@@ -103,7 +103,7 @@ export default class extends wepy.app {
       wx.reLaunch({
         url: '/pages/person/index'
         // url: '/pages/person/planDetail'
-        // url: '/pages/person/addPhoto'
+        // url: '/pages/person/addCost'
         // url: '/pages/person/declareDetail'
         // url: '/pages/person/declare'
       })

@@ -93,7 +93,9 @@
         doc: '',
         curr: '',
         amount: '',
-        fkdw: ''
+        fkdw: '',
+        company: '',
+        charge_cname: '',
       },
 
       showPayUnit: false,
@@ -112,6 +114,7 @@
         this.showPayUnit = true
       },
       doChangePayUnit(item){
+        this.formData.company = item.company;
         this.formData.fkdw = item.label;
       },
       doQueryPayUnit(query) {
@@ -121,6 +124,7 @@
         this.showFeeType = true;
       },
       doChangeFeeType(item) {
+        this.formData.charge_cname = item.charge_cname;
         this.formData.doc = item.label;
         this.formData.curr = item.d_price;
       },
@@ -135,6 +139,8 @@
       doConfirmCost(evt) {
         let formData = evt.detail.value
 
+        formData.company = this.formData.company;
+        formData.charge_cname = this.formData.charge_cname;
         if(!formData.fkdw){
           tip.alert('请选择付款单位')
           return
@@ -221,7 +227,6 @@
       this.getFeeType()
 
       this.jcno = params.jcno
-      // this.jcno = 'E18080196'
       if(data.preload){
         console.log(data.preload.detail)
         this.isEdit = true

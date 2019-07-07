@@ -547,17 +547,17 @@
                     <view class="value">{{deliveryReceipt.xfcl || '暂无'}}</view>
                   </view>
                   <view class="form-item">
-                    <view class="label">是否含有锂电池:</view>
+                    <view class="label">含锂电池:</view>
                     <view class="value">{{deliveryReceipt.cell_type || '暂无'}}</view>
                   </view>
                 </view>
                 <view class="row">
                   <view class="form-item">
-                    <view class="label">是否温度记录仪:</view>
+                    <view class="label">温度记录仪:</view>
                     <view class="value">{{deliveryReceipt.wdjly || '暂无'}}</view>
                   </view>
                   <view class="form-item">
-                    <view class="label">应急联系人及电话:</view>
+                    <view class="label">应急人信息:</view>
                     <view class="value">{{deliveryReceipt.yjlxr || '暂无'}}</view>
                   </view>
                 </view>
@@ -799,7 +799,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 3,
+      activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -936,13 +936,13 @@
               login_name: wx.getStorageSync('token'),
               jcno: this.jcno,
               query: {
-                retrue_type: 'hc'
+                wts_type: 'jd'
               }
             }).then(
               res => {
                 if(res.data.status == 200){
-                  tip.success('货场确认成功', 1500)
-                  this.getDeliveryReceipt()
+                  tip.success('提交交单成功', 1500)
+                  this.getPlanDetail()
                 }
               }
             )

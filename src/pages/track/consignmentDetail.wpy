@@ -430,9 +430,9 @@
         </view>
       </view>
 
-     <!-- <view class="check-action-section" wx:if="{{showConfirmAll}}">
+      <view class="check-action-section" wx:if="{{showConfirmAll}}">
         <view class="check-btn" @tap="confirmAllImg">全部确认</view>
-      </view>-->
+      </view>
     </view>
   </view>
 
@@ -455,6 +455,7 @@
 
       },
       shouldRefresh: false,  // onShow是否触发getJcAbo
+      canConfirm: false,
     };
 
     computed = {
@@ -620,6 +621,7 @@
     onLoad(params) {
       this.getJcAbo(params.jcno);
 
+      this.canConfirm = ['0', '3', '10'].includes(wx.getStorageSync('user_type'))
     }
   }
 </script>

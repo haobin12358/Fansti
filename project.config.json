@@ -34,10 +34,10 @@
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "计划详情",
 					"pathName": "pages/person/planDetail",
-					"query": "jcno=E19060811",
+					"query": "jcno=E19070205",
 					"scene": null
 				}
 			]

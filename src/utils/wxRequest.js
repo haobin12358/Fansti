@@ -24,6 +24,10 @@ const wxRequest = async (params = {}, url) => {
     tip.loaded();
     wepy.hideNavigationBarLoading();
   }
+
+  /*if(res.data.status != 200){
+    tip.error(res.data.message)
+  }*/
   return res;
 };
 

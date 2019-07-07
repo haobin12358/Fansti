@@ -108,14 +108,14 @@
           <image class="swiper-item" id="id{{index}}" wx:for="{{checkImgs}}" wx:key="*this" src="{{item}}" @tap="showImg({{index}})"></image>
         </scroll-view>
       </view>
-      <!--<view class="card-ft" wx:if="{{isconfirm == 'false'}}">
+      <view class="card-ft" wx:if="{{isconfirm == 'false' && canConfirm}}">
         <view class="confirm-btn" @tap="confirmPic">
           确认照片
         </view>
         <view class="confirm-btn send-email" @tap="sendEmail">
           发送至邮箱
         </view>
-      </view>-->
+      </view>
 
     </view>
 
@@ -149,8 +149,8 @@
       createtime: '',
       currentViewIndex: 0,
       checkImgs: [],
-      isconfirm: 'false'
-
+      isconfirm: 'false',
+      canConfirm: false,
     };
 
     computed = {};
@@ -243,6 +243,8 @@
       this.isconfirm = params.isconfirm;
       this.createtime = params.createtime;
       this.jcno = params.jcno;
+
+      this.canConfirm = ['0', '3', '10'].includes(wx.getStorageSync('user_type'))
     }
   }
 </script>
