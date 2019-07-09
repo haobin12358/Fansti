@@ -765,7 +765,10 @@ class CControl():
         # wts中获取jcno/czr/hwpm
         user = get_model_return_dict(self.susers.get_user_name(args["login_name"]))
         ckmxd = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
-        photo_head = ckmxd["photo_head"]
+        if ckmxd:
+            photo_head = ckmxd["photo_head"]
+        else:
+            photo_head = None
         if photo_head:
             if photo_head == "6":
                 photo_head = int(photo_head)
