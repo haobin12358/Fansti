@@ -747,6 +747,30 @@ class CControl():
         files.save(filepath)
         response = import_status("SUCCESS_MESSAGE_SAVE_FILE", "OK")
         url = Inforcode.ip + Inforcode.WindowsImag + "/" + str(formdata.get("jcno")) + "/" + str(formdata.get("FileType")) + "/" + filename
+        if formdata.get("FileType") in ["in", "out", "by", "weight"]:
+            user = get_model_return_dict(self.susers.get_user_name(formdata.get("login_name")))
+            if formdata.get("FileType") == "in":
+                photoheadid = get_model_return_dict(self.sgoods.get_photoheadid_by_head_jcno(formdata.get("jcno"), formdata.get("photohead")))
+                if photoheadid:
+                    photohead = photoheadid["id"]
+                else:
+                    return {
+                        "status": 405,
+                        "status_code": 405967,
+                        "message": "找不到批次"
+                    }
+            else:
+                photohead = None
+            add_model("AIR_HWYS_PHOTOS", **{
+                "id": str(uuid.uuid1()),
+                "jcno": formdata.get("jcno"),
+                "phototype": formdata.get("FileType"),
+                "photourl": url,
+                "createtime": datetime.datetime.now(),
+                "czr": user["username"],
+                "filename": str(files.filename),
+                "photoheadid": photohead
+            })
         print(url)
         response["data"] = url
         return response
