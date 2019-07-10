@@ -21,7 +21,7 @@ class SGoods(SBase):
         return self.session.query(
             AIR_HWYS_WTS.ydno, AIR_HWYS_WTS.jcno, AIR_HWYS_WTS.destination, AIR_HWYS_WTS.hxno, AIR_HWYS_WTS.jsbzcc,
             AIR_HWYS_WTS.accounts, AIR_HWYS_WTS.xsr, AIR_HWYS_WTS.flag_date, AIR_HWYS_WTS.transtime, AIR_HWYS_WTS.isphoto,
-            AIR_HWYS_WTS.wphw)\
+            AIR_HWYS_WTS.wphw, AIR_HWYS_WTS.createtime)\
                 .order_by(func.nvl(AIR_HWYS_WTS.jd_date, AIR_HWYS_WTS.jd_time).desc(), AIR_HWYS_WTS.jcno.desc())\
                 .filter(*wtsfilter).offset((page_num - 1) * page_size).limit(page_size).all()
 
@@ -240,7 +240,7 @@ class SGoods(SBase):
                                   AIR_HWYS_CKMXD.goods_quantity, AIR_HWYS_CKMXD.delivery_unit,
                                   AIR_HWYS_CKMXD.goods_weight, AIR_HWYS_CKMXD.cargo_size, AIR_HWYS_CKMXD.client_name,
                                   AIR_HWYS_CKMXD.remark, AIR_HWYS_CKMXD.photo_head)\
-            .filter_by(jcno=jcno).order_by(AIR_HWYS_CKMXD.create_time.desc()).first()
+            .filter_by(jcno=jcno).order_by(AIR_HWYS_CKMXD.enter_time.desc()).first()
 
     @close_session
     def get_outwarehouse(self, ydno):
@@ -325,6 +325,10 @@ class SGoods(SBase):
         return self.session.query(AIR_HWYS_PHOTO_HEAD.id, AIR_HWYS_PHOTO_HEAD.czr, AIR_HWYS_PHOTO_HEAD.createtime)\
             .filter_by(photohead=photohead).filter_by(type="in").filter_by(jcno=jcno)\
             .order_by(AIR_HWYS_PHOTO_HEAD.createtime.desc()).first()
+
+    @close_session
+    def get_photohead_by_headid(self, headid):
+        return self.session.query(AIR_HWYS_PHOTO_HEAD.photohead).filter_by(id=headid).first()
 
     @close_session
     def get_photo_by_headid(self, photoheadid):

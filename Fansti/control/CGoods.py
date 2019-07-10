@@ -66,11 +66,17 @@ class CGoods():
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
             wts_filter.add(AIR_HWYS_WTS.accounts == accounts.get("compnay"))
+        import datetime
+        from calendar import monthrange
+        two_month_ago = datetime.datetime.now() + \
+                        datetime.timedelta(days=-monthrange(datetime.datetime.now().year, datetime.datetime.now().month)[1])
         goods_list = get_model_return_list(self.sgoods.get_all_goods_by_filter(
             wts_filter, int(args["page_size"]), int(args["page_num"])))
 
         make_log("goods_list", goods_list)
-        for goods in goods_list:
+        i = len(goods_list) - 1
+        while i >= 0:
+            goods = goods_list[i]
             if goods["transtime"]:
                 goods["transtime"] = goods["transtime"].strftime("%Y-%m-%d")
             if goods["flag_date"]:
@@ -127,8 +133,12 @@ class CGoods():
             jdtime = jdtime.jd_time or jdtime.jd_date
             if not jdtime:
                 goods["jiaodan"] = "0"
+                if two_month_ago > goods["createtime"]:
+                    goods_list.remove(goods)
             else:
                 goods["jiaodan"] = "1"
+            if goods["createtime"]:
+                goods["createtime"] = goods["createtime"].strftime("%Y-%m-%d")
             qifei = get_model_return_dict(self.sgoods.get_std(goods["jcno"]))
             make_log("qifei", qifei)
             if not qifei:
@@ -150,6 +160,7 @@ class CGoods():
                 goods["yanwu"] = "0"
             else:
                 goods["yanwu"] = "1"
+            i = i - 1
         response = import_status("SUCCESS_GET_GOODS", "OK")
         response["data"] = goods_list
         return response

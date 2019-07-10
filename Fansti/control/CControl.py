@@ -63,6 +63,8 @@ class CControl():
             wts_filter, int(args["page_size"]), int(args["page_num"])))
 
         for row in goods_list:
+            if row["createtime"]:
+                row["createtime"] = row["createtime"].strftime("%Y-%m-%d")
             if row["flag_date"]:
                 row["flag_date"] = row["flag_date"].strftime("%Y-%m-%d")
                 row["backcolor"] = "灰色"
@@ -292,6 +294,7 @@ class CControl():
             return import_status("ERROR_NONE_PERMISSION", "FANSTI_ERROR", "ERROR_NONE_PERMISSION")
 
         photoheadid = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
+        print(photoheadid)
         photo_dict = []
         if not photoheadid:
             photohead = 1
@@ -768,6 +771,7 @@ class CControl():
         ckmxd = get_model_return_dict(self.sgoods.get_ckmxd_abo(args["jcno"]))
         if ckmxd:
             photo_head = ckmxd["photo_head"]
+            print(photo_head)
         else:
             photo_head = None
         if photo_head:
@@ -785,6 +789,7 @@ class CControl():
             "hwpm": data["hwpm"],
             "warehouse_address": data["warehouse_address"],
             "enter_time": datetime.datetime.strptime(data["enter_time"], "%Y-%m-%d %H:%M:%S"),
+            "create_time": datetime.datetime.now(),
             "goods_quantity": data["goods_quantity"],
             "delivery_unit": data["delivery_unit"],
             "goods_weight": data["goods_weight"],

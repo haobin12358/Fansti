@@ -70,7 +70,7 @@ class AIR_HWYS_WTS(Base):
     hwpm = Column(String(2000))                     # 货物品名（中文）
     instruction = Column(String(500))               # 其他要求
     confirm = Column(String(2000))                  # 空运费杂费确认
-    createtime = Column(DATE, default=datetime.datetime.now())# 创建时间
+    createtime = Column(DATETIME, default=datetime.datetime.now())# 创建时间
     czr = Column(String(50))                        # 操作人
     xsr = Column(String(50))                        # 销售人
     link_sbd = Column(String(20), default='申报单') # 申报单链接
