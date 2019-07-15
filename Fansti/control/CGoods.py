@@ -61,7 +61,9 @@ class CGoods():
             make_log("accounts", accounts)
             wts_filter.add(AIR_HWYS_WTS.company == user_message["username"])
         elif usertype == 3:
-            wts_filter.add(AIR_HWYS_WTS.location == user.location)
+            from sqlalchemy import or_
+            wts_filter.add(or_(AIR_HWYS_WTS.location == user.location, AIR_HWYS_WTS.czr == args["login_name"],
+                               AIR_HWYS_WTS.xsr == args["login_name"]))
         else:
             accounts = get_model_return_dict(self.susers.get_compnay_by_loginname(args["login_name"]))
             make_log("accounts", accounts)
