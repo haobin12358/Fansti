@@ -47,7 +47,7 @@ export default class extends wepy.app {
       backgroundColor: '#ffffff',
       list: [{
         pagePath: "pages/index/index",
-        text: "首页",
+        text: "询价",
         iconPath: "images/tabbar_index.png",
         selectedIconPath: "images/tabbar_index_active.png"
       },{
