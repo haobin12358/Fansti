@@ -33,17 +33,28 @@
 
           .list{
             margin-top: 20rpx;
-            .item{
+            .fj(flex-start);
+            flex-wrap: wrap;
+
+            .photo-item{
               .wl(220rpx, 220rpx);
               margin-right: 10rpx;
               margin-bottom: 10rpx;
+              position: relative;
 
               &:nth-child(3n){
                 margin-right: 0;
               }
 
-              &.add-photo-block{
+              .img{
+                .wl(100%, 100%);
+              }
 
+              .remove{
+                position: absolute;
+                top: 0rpx;
+                right: 0rpx;
+                .wl(35rpx, 35rpx);
               }
             }
           }
@@ -134,9 +145,12 @@
         <view class="form-item photo">
           <view class="label">入仓照片</view>
           <view class="list">
-            <image wx:for="{{picture}}" class="item" src="{{item.url}}"></image>
+            <view wx:for="{{picture}}" @tap="previewImage({{index}})" class="photo-item">
+              <image class="img" src="{{item.url}}"></image>
+              <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{index}})"></image>
+            </view>
 
-            <image src="../../images/plus.png" class="item add-photo-block" @tap="addPhoto"></image>
+            <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
           </view>
         </view>
       </view>
@@ -178,41 +192,18 @@
         let that = this
 
         wx.chooseImage({
-          count: 1,
           success({tempFiles}) {
-            let file = tempFiles[0];
+            let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
 
-            if(file.size > 5 * 1024 * 1024){
-              tip.confirm('图片过大,请上传小于5MB的图片!', false)
-              return
+            if(filterFiles.length != tempFiles.length){
+              tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
+                () => {
+                  that.afterChoose(filterFiles)
+                }
+              )
+            }else{
+              that.afterChoose(filterFiles)
             }
-
-            wx.showLoading()
-            wx.uploadFile({
-              url: api.uploadFilesUrl,
-              filePath: file.path,
-              name: 'file',
-              header: {
-                "Content-Type": "multipart/form-data"
-              },
-              formData: {
-                FileType: 'in',
-                index: that.picture.length + 1,
-                jcno: that.formData.jcno
-              },
-              success: function(res) {
-                let data = JSON.parse(res.data).data
-
-                that.picture.push({
-                  url: data,
-                  filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
-                })
-                that.$apply()
-              },
-              complete: function() {
-                wx.hideLoading()
-              }
-            })
           }
         })
       },
@@ -251,7 +242,71 @@
         );
       },
 
+      removePhoto(index){
+        this.picture.splice(index, 1)
+      },
+      previewImage(index){
+        let urls = this.picture.map(item => item.url)
+
+        wx.previewImage({
+          current: urls[index],
+          urls
+        })
+      }
+
     };
+    afterChoose(filterFiles){
+      let that = this
+      let proms = filterFiles.map(i => that.uploadFiles(i))
+
+      Promise.all(proms).then(
+        rsts => {
+          let succCount = rsts.filter(i => i).length,
+            failCount = rsts.length - succCount
+
+          tip.toast(`成功上传${succCount}张,失败${failCount}张`)
+        }
+      )
+    }
+    uploadFiles(file){
+      let that = this
+
+      tip.loading()
+      return new Promise(
+        (resolve, reject) => {
+          wx.uploadFile({
+            url: api.uploadFilesUrl,
+            filePath: file.path,
+            name: 'file',
+            header: {
+              "Content-Type": "multipart/form-data"
+            },
+            formData: {
+              FileType: 'in',
+              index: that.picture.length + 1,
+              jcno: that.formData.jcno
+            },
+            success: function(res) {
+              let data = JSON.parse(res.data).data
+
+              that.picture.push({
+                url: data,
+                filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
+              })
+              that.$apply()
+              resolve(true)
+            },
+            fail: function(){
+                reject(false)
+            },
+            complete: function() {
+              wx.hideLoading()
+            }
+          })
+        }
+      )
+
+    }
 
     checkFormData(formData) {
       let rst = ''
