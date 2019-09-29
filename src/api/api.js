@@ -31,6 +31,9 @@ const api={
   upload_dgr: title + 'scrapy/upload_dgr',//上传dgr信息模板
   upload_enquiry: title + 'scrapy/upload_enquiry',//上传询价模板
   get_template_file: title + 'scrapy/get_template_file',//下载模板
+
+  get_jd_num: title + 'other/get_jd_num',//获取鉴定报告数
+  update_jd_num: title + 'other/update_jd_num',//修改鉴定模板
 }
 
 export default api

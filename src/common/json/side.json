@@ -41,6 +41,12 @@
       "MNurl":"/enquiry",
       "MNicon":"icon",
       "children":[]
+    },
+    {
+      "MNname":"鉴定报告数",
+      "MNurl":"/jd_num",
+      "MNicon":"icon",
+      "children":[]
     }
   ]
 }

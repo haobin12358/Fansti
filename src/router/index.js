@@ -105,6 +105,16 @@ export const constantRouterMap = [
     }
     ]
   },
+{
+    path: '/jd_num',
+    component: Layout,
+    children: [{
+      path: '',
+      component: () => import('../views/jd_num'),
+      name: 'jd_num',
+    }
+    ]
+  },
 
 
 
