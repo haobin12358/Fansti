@@ -122,13 +122,17 @@
         <view wx:if="{{item.backcolor == '黄色'}}" class="background warning"></view>
 
         <view class="plan-item-left">
-          <block wx:if="{{item.isphoto}}">
+          <block wx:if="{{item.icon === '拍照'}}">
             <view>拍</view>
             <view>照</view>
           </block>
-          <block wx:else>
+          <block wx:elif="{{item.icon === '交货'}}">
             <view>交</view>
             <view>货</view>
+          </block>
+          <block wx:else>
+            <view></view>
+            <view></view>
           </block>
         </view>
         <view class="plan-item-right">
