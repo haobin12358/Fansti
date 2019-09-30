@@ -36,6 +36,7 @@ const getDgr = params => wxRequest(params, host+'/scrapy/get_dgr');
 const getJd = params => wxRequest(params, host+'/scrapy/get_jd');
 //  模糊查询鉴定信息
 const getJdList = params => wxRequest(params, host+'/scrapy/get_jd_names');
+const getJdNum = params => wxRequest(params, host+'/other/get_jd_num');
 //  查询tact
 const getTact = params => wxRequest(params, host+'/scrapy/get_tact');
 //  查询hscode 爬虫
@@ -113,5 +114,6 @@ export default {
   getEnquiry,
   getEnquiryWhiteList,
 
-  exportZip
+  exportZip,
+  getJdNum
 }
