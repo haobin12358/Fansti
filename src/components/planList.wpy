@@ -42,7 +42,7 @@
           height: 100%;
           border-right: 1px solid #C6C6C6;
 
-          .fjc(center);
+          .fjc(start);
         }
         .plan-item-right{
           flex: 1;
@@ -122,6 +122,7 @@
         <view wx:if="{{item.backcolor == '黄色'}}" class="background warning"></view>
 
         <view class="plan-item-left">
+          <view style="margin:35rpx 0 20rpx;">{{index + 1}}</view>
           <block wx:if="{{item.icon === '拍照'}}">
             <view>拍</view>
             <view>照</view>

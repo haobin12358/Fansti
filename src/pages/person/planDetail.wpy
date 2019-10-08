@@ -393,6 +393,10 @@
                 <view class="cell">{{planDetail.jsbzcc || '暂无'}}</view>
               </view>
               <view class="row">
+                <view class="cell">毛重：</view>
+                <view class="cell">{{planDetail.jzmz || '暂无'}}</view>
+              </view>
+              <view class="row">
                 <view class="cell">航空公司：</view>
                 <view class="cell">{{planDetail.company || '暂无'}}</view>
               </view>
@@ -1326,6 +1330,7 @@
     onLoad(params){
       this.jcno = params.jcno
       this.userType = wx.getStorageSync('user_type')
+
     }
   }
 </script>

@@ -69,6 +69,7 @@ const retrueGoods = params => wxRequest(params, host + `/goods/retrue_goods?logi
 const getDgr = params => wxRequest(params, host + '/scrapy/get_dgr');
 //  查询鉴定信息
 const getJd = params => wxRequest(params, host + '/scrapy/get_jd');
+const getJdNum = params => wxRequest(params, host + '/other/get_jd_num');
 //  模糊查询鉴定信息
 const getJdList = params => wxRequest(params, host + '/scrapy/get_jd_names');
 //  查询tact
@@ -163,4 +164,5 @@ export default {
   exportZip,
   addNewFile,
   deleteFile,
+  getJdNum,
 };

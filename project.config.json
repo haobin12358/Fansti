@@ -37,7 +37,14 @@
 					"id": 0,
 					"name": "计划详情",
 					"pathName": "pages/person/planDetail",
-					"query": "jcno=E19070205",
+					"query": "jcno=E19091190",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "计划列表",
+					"pathName": "pages/person/plan",
+					"query": "",
 					"scene": null
 				}
 			]

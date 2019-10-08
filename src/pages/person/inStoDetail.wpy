@@ -323,10 +323,10 @@
         rst = '请填写件数'
         return rst
       }
-      if (!formData.delivery_unit) {
+      /*if (!formData.delivery_unit) {
         rst = '请填写送货单位'
         return rst
-      }
+      }*/
       if (!formData.goods_weight) {
         rst = '请填写重量'
         return rst
@@ -335,14 +335,14 @@
         rst = '请填写货物尺寸'
         return rst
       }
-      if (!formData.client_name) {
+      /*if (!formData.client_name) {
         rst = '请填写客户名称'
         return rst
       }
       if (!formData.remark) {
         rst = '请填写备注'
         return rst
-      }
+      }*/
       /*if (!this.picture.length) {
         rst = '请上传入仓照片'
         return rst
