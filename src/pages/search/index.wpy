@@ -425,8 +425,8 @@
         } else {
           tip.alert('未查到结果');
         }
+        this.jdSearchResult = data;
         this.$apply();
-        // return data;
       } else {
         tip.alert(message);
       }

@@ -31,7 +31,7 @@
         </picker>
       </view>
       <view>
-        <picker @change="changeSearchDate" mode="date" value="{{searchForm.date}}">
+        <picker @change="changeSearchDate" @cancel="doSearchAllDate" mode="date" value="{{searchForm.date}}">
           {{searchDateTxt}}
         </picker>
       </view>
@@ -111,6 +111,7 @@
 
     computed = {
       searchDateTxt(){
+        if (this.searchForm.date === '')  return '全部日期'
         if(this.searchForm.date == getCurrentTime(true)){
           return '今天 '+this.searchForm.date
         }else {
@@ -137,6 +138,10 @@
       // 日期
       changeSearchDate(evt){
         this.searchForm.date = evt.detail.value
+        this.getTodayList(true)
+      },
+      doSearchAllDate(){
+        this.searchForm.date = ''
         this.getTodayList(true)
       },
 
