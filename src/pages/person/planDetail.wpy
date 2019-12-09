@@ -190,9 +190,12 @@
               margin-bottom: 10rpx;
             }
 
-            .content{
-              .textarea-remark{
-                min-height: 100rpx;
+            .textarea-remark{
+              min-height: 100rpx;
+              border: 1px solid @mainBlueColor;
+              border-radius: 10rpx;
+              &.hidden{
+                display: none;
               }
             }
           }
@@ -618,34 +621,33 @@
               <view class="form-section-title">
                 提交
               </view>
-              <form @submit="confirmDeliveryReceipt">
+              <form class="del-rec-confirm-form" @submit="confirmDeliveryReceipt">
                 <view class="two-column-center-table">
-                  <!--<view class="row">
+                  <view class="row">
                     <view class="cell" style="width: 150rpx;">
-                      库房人员:
+                      库房人员备注:
                     </view>
                     <view class="cell">
-                  <textarea class="textarea-remark" name="kf_bz" style="width: 450rpx;"
+                      <textarea class="{{textareaClass}}" value="{{deliveryReceipt['kf_bz']}}" name="kf_bz" style="width: 450rpx;"
                             auto-height cursor-spacing="20" placeholder="请填写库房备注"></textarea>
                     </view>
                   </view>
                   <view class="row">
                     <view class="cell">
-                      货场人员:
+                      货场人员备注:
                     </view>
                     <view class="cell">
-                  <textarea class="textarea-remark" name="hc_bz" style="width: 450rpx;"
+                      <textarea class="{{textareaClass}}" value="{{deliveryReceipt['hc_bz']}}" name="hc_bz" style="width: 450rpx;"
                             auto-height cursor-spacing="20" placeholder="请填写货场备注"></textarea>
                     </view>
-                  </view>-->
+                  </view>
 
-                  <view class="row">
+                  <!--<view class="row">
                     <view class="cell" style="width: 150rpx;">
                       库房人员:
                     </view>
                     <view class="cell">
-                  <input name="kf_bz"
-                         placeholder="请填写库房备注"/>
+                      &lt;!&ndash;<input name="kf_bz" value="{{deliveryReceipt['kf_bz']}}" disabled="{{deliveryReceipt.kf_button != 1}}" placeholder="请填写库房备注"/>&ndash;&gt;
                     </view>
                   </view>
                   <view class="row">
@@ -653,16 +655,21 @@
                       货场人员:
                     </view>
                     <view class="cell">
-                       <input name="hc_bz" placeholder="请填写货场备注"></input>
+                       <input name="hc_bz" value="{{deliveryReceipt['hc_bz']}}" placeholder="请填写货场备注"></input>
                     </view>
-                  </view>
+                  </view>-->
 
 
                 </view>
 
                 <view class="btn-wrap">
-                  <button class="button" @tap="delRecOutConfirm" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
+                  <button class="button" form-type="submit" name="kf" wx:if="{{deliveryReceipt.kf_button == 1}}"
+                          @tap="signConDeliveryType('0')">库房确认</button>
+                  <button class="button" form-type="submit" name="hc" wx:if="{{deliveryReceipt.hc_button == 1}}"
+                          @tap="signConDeliveryType('1')">货场确认</button>
+                  <!--<button class="button" @tap="delRecOutConfirm" wx:if="{{deliveryReceipt.kf_button == 1}}">库房确认</button>
                   <button class="button" @tap="delRecHcConfirm" wx:if="{{deliveryReceipt.hc_button == 1}}">货场确认</button>
+                  -->
                 </view>
               </form>
 
@@ -803,7 +810,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 0,
+      activeName: 1,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -823,6 +830,7 @@
       showFileList: false,
       showFileTitle: '',
       delRecFileList: [],
+      confirmDeliveryType: '',
 
       photoList: {
         in: {},
@@ -838,16 +846,17 @@
     computed = {
       selectPackerListNames(){
           return  this.selectPackerList.map(item=>item.packer).join(',')
+      },
+      textareaClass(){
+        return `textarea-remark ${this.showFileList && 'hidden'}`
       }
     };
 
     methods = {
       switchTab(index) {
-        console.log('switchtab')
         this.activeName = index;
       },
       onSwiperChange(evt){
-        console.log('onSwiperChange')
         this.activeName = evt.detail.current;
         wx.setNavigationBarTitle({
           title: this.tabs[this.activeName]
@@ -1061,30 +1070,43 @@
 
         })
       },
-
-      // 废弃 不填form 备注的话
-      confirmDeliveryReceipt(){
-        console.log('提交')
-        return
-        wx.scanCode({
-          scanType: 'barCode'
-        })
+      
+      signConDeliveryType(type){
+        this.confirmDeliveryType = type
+        this.$apply()
       },
-
-      delRecOutConfirm(){
-        tip.confirm('再次确认').then(
+      // 库房/货场
+      confirmDeliveryReceipt(evt) {
+        // 同包装确认,该段异步不能去掉
+        tip.confirm(`再次确认`).then(
           ()=>{
-            api.retrueOuthc({
+            let formData = evt.detail.value,
+              type = '',
+              bz = '',
+              txt = ''
+
+            if (this.confirmDeliveryType === '0') {
+              type = 'kfqr';
+              bz = formData['kf_bz'];
+              txt = '库房'
+            } else {
+              type = 'hcqr';
+              bz = formData['hc_bz'];
+              txt = '货场'
+            }
+
+            api.updateDzjjd({
               method: 'POST',
               login_name: wx.getStorageSync('token'),
               jcno: this.jcno,
               query: {
-                retrue_type: 'out'
+                dzjjd_type: type,
+                bz
               }
             }).then(
               res => {
                 if(res.data.status == 200){
-                  tip.success('库房确认成功', 1500)
+                  tip.success(`${txt}确认成功`, 1500)
                   this.getDeliveryReceipt()
                 }
               }
@@ -1092,16 +1114,23 @@
           }
         )
       },
-
-      delRecHcConfirm(){
+      
+      
+      // 库房确认
+      delRecOutConfirm(isKF = false, bz = ''){
+      
+      },
+      // 货场确认
+      /*delRecHcConfirm(){
         tip.confirm('再次确认').then(
           ()=>{
-            api.retrueOuthc({
+            api.updateDzjjd({
               method: 'POST',
               login_name: wx.getStorageSync('token'),
               jcno: this.jcno,
               query: {
-                retrue_type: 'hc'
+                dzjjd_type: 'hcqr',
+                bz: ''
               }
             }).then(
               res => {
@@ -1113,7 +1142,7 @@
             )
           }
         )
-      },
+      },*/
 
       /*照片*/
       goAddPhoto(type){
