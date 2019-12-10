@@ -65,7 +65,7 @@
       searchForm: {
         flight: 0,
         origin: 0,
-        date: getCurrentTime(true),
+        date: '',
 
       },
 

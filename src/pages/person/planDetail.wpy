@@ -191,7 +191,7 @@
             }
 
             .textarea-remark{
-              min-height: 100rpx;
+              /*min-height: 100rpx;*/
               border: 1px solid @mainBlueColor;
               border-radius: 10rpx;
               &.hidden{
@@ -810,7 +810,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 1,
+      activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
