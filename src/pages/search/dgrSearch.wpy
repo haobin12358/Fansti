@@ -39,7 +39,7 @@
         <view class="tbody">
           <view class="tr">
             <view class="td">
-              联合国正确运输编号:
+              UN/ID NO:
             </view>
             <view class="td">
               {{res[0].unno|| '暂无' }}
@@ -59,7 +59,7 @@
             <block wx:for="{{wrapItem.dgr_type}}">
               <view class="tr tr-unname">
                 <view class="td">
-                  | 联合国正确运输名称:
+                  | 运输专用名称:
                 </view>
                 <view class="td">
                   {{wrapItem.unname|| '暂无' }}
@@ -67,7 +67,7 @@
               </view>
               <view class="tr">
                 <view class="td">
-                  型号等级:
+                  包装等级:
                 </view>
                 <view class="td">
                   {{item.dgr_level|| '暂无' }}
@@ -77,7 +77,7 @@
               <!--固定货机3个-->
               <view class="tr">
                 <view class="td">
-                  货机容量:
+                  仅限货机每包装件的最大净数量:
                 </view>
                 <view class="td">
                   {{item.airfreighter_capacity|| '暂无' }}
@@ -102,7 +102,7 @@
               <!--固定客机3个-->
               <view class="tr">
                 <view class="td">
-                  客机容量:
+                  客机和货机每包装件的最大净数量:
                 </view>
                 <view class="td">
                   {{item.airliner_capacity|| '暂无' }}
@@ -127,7 +127,7 @@
 
               <view class="tr">
                 <view class="td">
-                  型号备注:
+                  特殊规定:
                 </view>
                 <view class="td">
                   {{item.message|| '暂无' }}
