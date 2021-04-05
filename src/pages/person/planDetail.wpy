@@ -17,10 +17,10 @@
 
     /*详情*/
     .detail{
-      padding: 0 20rpx;
+      padding: 0 40rpx;
+      box-sizing: border-box;
       .detail-hd{
         color: #999;
-        padding: 0 20rpx;
         .fj();
         margin: 30rpx 0;
         .fz32();
@@ -34,10 +34,43 @@
           }
         }
       }
-      .detail-table{
-        .row{
-          border-bottom: 1px solid @borderColor;
-          margin:0  10rpx;
+
+      .detail-table {
+        .row {
+          display: flex;
+
+          .form-item {
+            flex: 1;
+            display: flex;
+            margin-bottom: 10rpx;
+
+            .label {
+              color: #999999;
+              flex: 1.2;
+              /*text-align: justify;*/
+              /*text-align-last: justify;*/
+            }
+
+            .value {
+              color: #333333;
+              flex: 1;
+              padding-left: 14rpx;
+              /*word-break: break-all;*/
+            }
+          }
+        }
+      }
+      .detail-request-list{
+        .detail-request-item{
+          display: flex;
+          justify-content: space-between;
+          padding: 20rpx 10rpx;
+          color: #666;
+          border-bottom: 1px solid rgba(197, 197, 197, .4);
+
+          &:first-child{
+            border-top: 1px solid rgba(197, 197, 197, .4);
+          }
         }
       }
       .detail-ft{
@@ -277,60 +310,84 @@
               <view>运单号 <text>{{planDetail.ydno || '暂无'}}</text> </view>
             </view>
 
-            <view class="two-column-center-table detail-table">
-              <view class="row">
-                <view class="cell">操作人：</view>
-                <view class="cell">{{planDetail.czr || '暂无'}}</view>
+            <view class="detail-bd">
+              <view class="detail-table">
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">客服：</view>
+                    <view class="value">{{planDetail.czr || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">目的港：</view>
+                    <view class="value">{{planDetail.destination || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">件数：</view>
+                    <view class="value">{{planDetail.jsbzcc || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">毛重：</view>
+                    <view class="value">{{planDetail.jzmz || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+
+                  <view class="form-item">
+                    <view class="label">航空公司：</view>
+                    <view class="value">{{planDetail.company || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">航班号：</view>
+                    <view class="value">{{planDetail.contract || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">航班日期：</view>
+                    <view class="value">{{planDetail.contract_time || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">货物品名：</view>
+                    <view class="value">{{planDetail.hwpm || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">操作时间：</view>
+                    <view class="value">{{planDetail.arrivetime || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">订单号：</view>
+                    <view class="value">{{planDetail.hxno || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">地面操作类型：</view>
+                    <!--todo-->
+                    <view class="value">{{planDetail.jd_date || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">交单时间：</view>
+                    <view class="value">{{planDetail.jd_date || '暂无'}}</view>
+                  </view>
+                </view>
               </view>
-              <view class="row">
-                <view class="cell">目的港：</view>
-                <view class="cell">{{planDetail.destination || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">件数：</view>
-                <view class="cell">{{planDetail.jsbzcc || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">毛重：</view>
-                <view class="cell">{{planDetail.jzmz || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">航空公司：</view>
-                <view class="cell">{{planDetail.company || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">航班号：</view>
-                <view class="cell">{{planDetail.contract || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">航班日期：</view>
-                <view class="cell">{{planDetail.contract_time || '暂无'}}</view>
-              </view>
-              <view class="row" >
-                <view class="cell">货场要求：</view>
-                <view class="cell" style="font-size: 30rpx">{{planDetail.instruction || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">仓库要求：</view>
-                <view class="cell" style="font-size: 30rpx">{{planDetail.wh_require || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">货物品名：</view>
-                <view class="cell">{{planDetail.hwpm || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">操作时间：</view>
-                <view class="cell">{{planDetail.arrivetime || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">订单号：</view>
-                <view class="cell">{{planDetail.hxno || '暂无'}}</view>
-              </view>
-              <view class="row">
-                <view class="cell">交单时间：</view>
-                <view class="cell">{{planDetail.jd_date || '暂无'}}</view>
+              <view class="detail-request-list">
+                <div class="detail-request-item">
+                  <view>货场要求</view>
+                  <view>{{planDetail.instruction || '暂无'}}</view>
+                </div>
+                <div class="detail-request-item">
+                  <view>仓库要求</view>
+                  <view>{{planDetail.wh_require || '暂无'}}</view>
+                </div>
+
               </view>
             </view>
+
 
 
             <view wx:if="{{planDetail.show_button == 1 && detailType == '1'}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
@@ -702,7 +759,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 1,
+      activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
