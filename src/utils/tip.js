@@ -5,6 +5,7 @@ export default class Tips {
   constructor() {
     this.isLoading = false;
   }
+
   /**
    * 弹出提示框
    */
@@ -13,7 +14,7 @@ export default class Tips {
     setTimeout(() => {
       wx.showToast({
         title: title,
-        icon: "success",
+        icon: 'success',
         mask: true,
         duration: duration
       });
@@ -30,7 +31,7 @@ export default class Tips {
   /**
    * 弹出确认窗口
    */
-  static confirm(text = '', showCancel = true,payload = {}, title = "提示") {
+  static confirm(text = '', showCancel = true, payload = {}, title = '提示') {
     return new Promise((resolve, reject) => {
       wx.showModal({
         title: title,
@@ -50,7 +51,7 @@ export default class Tips {
     });
   }
 
-  static toast(title, onHide, icon = "none") {
+  static toast(title, onHide, icon = 'none') {
     setTimeout(() => {
       wx.showToast({
         title: title,
@@ -74,7 +75,7 @@ export default class Tips {
   static alert(title) {
     wx.showToast({
       title: title,
-      image: "/images/alert.png",
+      image: '/images/alert.png',
       mask: false,
       duration: 1500
     });
@@ -87,7 +88,7 @@ export default class Tips {
   static error(title, onHide) {
     wx.showToast({
       title: title,
-      image: "/images/error.png",
+      image: '/images/error.png',
       mask: true,
       duration: 800
     });
@@ -102,7 +103,7 @@ export default class Tips {
   /**
    * 弹出加载提示
    */
-  static loading(title = "加载中") {
+  static loading(title = '加载中') {
     if (Tips.isLoading) {
       return;
     }
@@ -129,7 +130,7 @@ export default class Tips {
       path: url,
       desc: desc,
       success: function(res) {
-        Tips.toast("分享成功");
+        Tips.toast('分享成功');
       }
     };
   }

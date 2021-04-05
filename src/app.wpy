@@ -1,7 +1,9 @@
 <style lang="less">
   @import "./styles/base";
+  page{
+    border-top: 1px solid #C5C5C5;
+  }
 </style>
-
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
@@ -10,20 +12,27 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      // 入库
+      // 'pages/person/inSto/index', // 入库明细
+
+      'pages/person/planDetail', // 计划详情
+
+      'pages/search/index', //查询首页
+      'pages/search/dgrSearch', //dgr
+
+
       'pages/person/index', // 操作首页
       'pages/track/index',  //跟踪首页
 
       'pages/person/addPhoto', // 添加照片
       'pages/track/confirmConsignment',  //确认托运照片
       'pages/person/login', // 登录
-      'pages/person/planDetail', // 计划详情
       'pages/person/declare', // 申报列表
       'pages/person/plan', // 计划列表
       'pages/person/inStoDetail', // 入库明细
       'pages/person/selectPacker', // 选择包装人员
       'pages/person/addCost', // 添加成本
       'pages/person/declareDetail', // 申报详情
-      'pages/search/index', //查询首页
       'pages/person/formTest', // 计划详情
       'pages/person/goodsYardReceive', // 货场接收
       'pages/person/outStoDetail', // 出库确认
@@ -42,7 +51,6 @@ export default class extends wepy.app {
       'pages/search/surveyReportSearch', //鉴定报告
       'pages/search/flightSearch', //航班时刻
       'pages/search/tcatSearch', //tcac
-      'pages/search/dgrSearch', //dgr
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
     ],
@@ -99,6 +107,7 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+    return
     if(wx.getStorageSync('token')){
       wx.reLaunch({
         url: '/pages/person/index'

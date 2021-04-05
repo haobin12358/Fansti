@@ -5,8 +5,7 @@
 </style>
 
 <template>
-  <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" @columnchange="changeDateTimeColumn"
-          range="{{dateTimeArray}}">
+  <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" @columnchange="changeDateTimeColumn" range="{{dateTimeArray}}">
     <view>
       <input class="hidden" type="text" name="{{name}}" value="{{date}}"/>
       {{date}}
@@ -58,8 +57,8 @@
     onLoad() {
       this._initDateFormat()
       let date = new Date
-      let startYear = date.getFullYear()
-      let endYear = startYear
+      let startYear = date.getFullYear() - 5
+      let endYear = startYear + 10
 
       let min = date.getMinutes()
       date.setMinutes(min + this.minutes)

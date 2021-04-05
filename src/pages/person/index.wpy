@@ -3,43 +3,43 @@
 
   .container {
     .search-bar {
-      padding: 20rpx 40rpx;
+      margin: 20rpx 40rpx;
+      border: 1px solid @mainFontColor;
       .fj();
       position: relative;
+      border-radius: 4rpx;
 
       .input-wrap {
         flex: 1;
-        height: 55rpx;
-        margin-right: 20rpx;
-        padding-left: 30rpx;
+        height: 60rpx;
+        padding-left: 20rpx;
 
         display: flex;
         align-items: center;
-        border: 1px solid #A0AFBA;
-        border-radius: 10rpx;
 
         .search-icon {
           .wl(30rpx, 30rpx);
-          margin-right: 25rpx;
+          margin-right: 10rpx;
         }
 
         input {
           flex: 1;
+          .sc(21rpx, @mainFontColor);
         }
       }
 
       button {
-        height: 55rpx;
-        line-height: 55rpx;
         .fz(26rpx);
+        border-radius:0 4rpx 4rpx 0;
       }
     }
 
     .list {
       .sc(32rpx, @mainBlueColor);
+      padding: 0 40rpx;
 
       .list-item {
-        padding: 25rpx 40rpx 25rpx 40rpx;
+        padding: 25rpx 20rpx 25rpx;
         .fj();
         border-bottom: 1px solid #C5C5C5;
 
@@ -64,7 +64,7 @@
       <view class="search-bar">
         <view class="input-wrap">
           <image class="search-icon" src="../../images/search.png"></image>
-          <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港" />
+          <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港/订单号/临时编号" />
         </view>
         <button class="type-blue" form-type="submit">搜索</button>
       </view>
@@ -111,7 +111,7 @@
     </view>
 
     <view class="btn-wrap" style="margin-top: 300rpx">
-      <view class="button" @tap="doRebind">重新绑定</view>
+      <view class="button type-blue" @tap="doRebind">重新绑定</view>
     </view>
 
     <!--<view style="text-align: right">版本号 0.0.21</view>-->

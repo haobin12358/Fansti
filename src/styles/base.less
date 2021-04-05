@@ -8,6 +8,8 @@
 @borderColor: #dfdfdf;
 @shadowColor: #3A5266;
 
+
+
 page{
   font-family:@myFont,@myFontSans;
   font-size: 28rpx;
@@ -146,8 +148,7 @@ page{
 
   .button{
     padding: 20rpx 50rpx;
-    border: 1px solid @mainYellowColor;
-    .type-yellow;
+    .type-blue();
     border-radius: 10rpx;
     font-weight: bold;
     .fz(28rpx);
@@ -166,5 +167,15 @@ page{
     &.plain{
       .type-yellow-plain;
     }
+
+    &.type-blue{
+      .type-blue();
+      border: none;
+    }
   }
+}
+
+.lh(@height: auto){
+  height: @height;
+  line-height: @height;
 }

@@ -17,81 +17,21 @@
 
     /*详情*/
     .detail{
-      /*管理者选择包装者*/
-      .manager-choose-worker{
-        margin-bottom: 40rpx;
-        .choose-item{
-          padding: 20rpx 40rpx;
-          border-bottom: 1px solid #C5C5C5;
-          .fj(center);
-
-          .hd{
-            width: 150rpx;
-            color: @mainBlueColor;
-          }
-          .bd{
-            .sc(24rpx, #333333);
-            flex: 1;
-            margin: 0 10rpx;
-          }
-          .ft{
-            .wl(10rpx, 20rpx);
-          }
-        }
-      }
-
-      /*确认包装*/
-      .confirm-pack{
-        .cell{
-          padding:20rpx 40rpx;
-          border-bottom: 1px solid @borderColor;
-          .fj(stretch, flex-start);
-
-          .column{
-            flex: 1;
-            .fj(flex-start, flex-start);
-
-            .label{
-              color: @mainBlueColor;
-              margin-right: 10rpx;
-            }
-            .value{
-              color: #333333;
-
-              &.list{
-                flex: 1;
-                .fjc();
-                .item{
-                  &.input{
-                    text-align: center;
-                    .fj(flex-end);
-
-                    input{
-                      margin-right: 8rpx;
-                      width: 80rpx;
-                      border-bottom: 1px solid @borderColor;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        .btn-wrap{
-          padding:20rpx 40rpx;
-          border-bottom: 1px solid @borderColor;
-        }
-      }
-
+      padding: 0 20rpx;
       .detail-hd{
-        color: @mainBlueColor;
-        padding: 0 40rpx;
+        color: #999;
+        padding: 0 20rpx;
         .fj();
-        margin-bottom: 60rpx;
+        margin: 30rpx 0;
+        .fz32();
 
         view{
           flex: 1;
+
+          text{
+            color: @mainBlueColor;
+            font-weight: bold;
+          }
         }
       }
       .detail-table{
@@ -114,36 +54,41 @@
     /*电子交接单*/
     .delivery-receipt{
       .section-page();
+      .fz28();
 
       .delivery-receipt-hd{
         color: @mainBlueColor;
         padding: 0 40rpx;
         .fj();
-        margin-bottom: 60rpx;
+        margin: 30rpx 0;
+        .fz32();
 
         view{
           flex: 1;
+
+          text{
+            color: @mainBlueColor;
+            font-weight: bold;
+          }
         }
       }
 
       .delivery-receipt-bd{
         // 电子交接单,两列
-
         .detail-form{
+          padding: 0 40rpx;
+
           .row{
             display: flex;
-            .fz(24rpx);
 
             .form-item{
               flex: 1;
-
               display: flex;
+              margin-bottom: 10rpx;
 
               .label{
-                padding-left: 10rpx;
-                padding-right: 10rpx;
                 color: #999999;
-                flex: .8;
+                flex: 1.2;
                 /*text-align: justify;*/
                 /*text-align-last: justify;*/
               }
@@ -159,12 +104,15 @@
         }
 
         .form-section-title{
-          .type-blue;
+          background: #e8e8e8;
+          color: #666;
           padding-left: 20rpx;
+          .fz24();
+          .lh(40rpx);
         }
         .file-list{
           display: flex;
-          border-bottom: 1px solid @mainBlueColor;
+
           .file-item{
             flex: 1;
             padding: 30rpx 55rpx;
@@ -173,8 +121,8 @@
             text-align: center;
 
             &:nth-child(2){
-              border-left: 1px solid @mainBlueColor;
-              border-right: 1px solid @mainBlueColor;
+              border-left: 1px solid #EEEEEE;
+              border-right: 1px solid #EEEEEE;
             }
           }
         }
@@ -192,6 +140,7 @@
 
             .textarea-remark{
               /*min-height: 100rpx;*/
+              padding: 5rpx;
               border: 1px solid @mainBlueColor;
               border-radius: 10rpx;
               &.hidden{
@@ -281,22 +230,28 @@
     .fix-bottom-tabbar{
       background: white;
       z-index: 10;
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      .wl(100%, 90rpx);
+      .wl(100%, 55rpx);
       .fj();
-      border-top: 1px dotted @borderColor;
-
+      border-top: 1px solid @mainBlueColor;
+      border-bottom: 1px solid @mainBlueColor;
       text-align: center;
       color: #999999;
 
       view{
         flex: 1;
+        .sc(28rpx, @mainBlueColor);
+        height: 55rpx;
+        line-height: 55rpx;
+        border-right: 1px solid @mainBlueColor;
+
+        &:last-child{
+          border-right: none;
+        }
 
         &.active{
           font-weight: bold;
-          color: @mainBlueColor;
+          background: @mainBlueColor;
+          color: white;
         }
       }
     }
@@ -305,81 +260,21 @@
 
 <template>
   <view class="container" style="height: {{containerHeight - 45}}px;">
+    <view class="fix-bottom-tabbar">
+      <view wx:for="{{tabs}}" wx:key="*this" class="{{index == activeName ? 'active' : ''}}"
+            @tap="switchTab({{index}})">
+        {{item}}
+      </view>
+    </view>
     <block wx:if="{{hasAuth}}">
       <swiper style="height: 100%" indicator-dots="{{false}}" current="{{activeName}}" autoplay="{{false}}"
       @change="onSwiperChange">
         <swiper-item>
           <!--详情-->
           <scroll-view scroll-y style="height: 100%" class="detail">
-            <!--保存包装人员-->
-            <view class="manager-choose-worker" wx:if="{{detailType == '2'}}">
-              <block wx:if="{{planDetail.save_button == 1}}">
-                <view class="choose-item" @tap="choosePackLeader">
-                  <view class="hd">
-                    包装负责人
-                  </view>
-                  <view class="bd">
-                    {{packerLeader || '请选择包装负责人'}}
-                  </view>
-                  <image class="ft" src="../../images/index_arrow.png"></image>
-                </view>
-                <view class="choose-item" @tap="choosePacker">
-                  <view class="hd">
-                    包装人员
-                  </view>
-                  <view class="bd">
-                    {{selectPackerListNames ||  '请选择包装人员'}}
-                  </view>
-                  <image class="ft" src="../../images/index_arrow.png"></image>
-                </view>
-              </block>
-              <view wx:else style="text-align: center;color: gray;">
-                未到分配包装人员流程
-              </view>
-            </view>
-
-            <!--确认包装-->
-            <form @submit="doConfirmPack" wx:if="{{detailType == '3'}}">
-              <view class="confirm-pack">
-                <view class="cell">
-                  <view class="column">
-                    <view class="label">包装负责人</view>
-                    <view class="value">{{planDetail.packer_leader || '暂无'}}</view>
-                  </view>
-                </view>
-                <view class="cell">
-                  <view class="column">
-                    <view class="label">包装人员</view>
-                    <view class="value list">
-                      <view class="item" style="line-height: 55rpx;" wx:for="{{planDetail.packer_list}}">
-                        {{item.packer}}
-                      </view>
-                    </view>
-                  </view>
-                  <view class="column">
-                    <view class="label">提成比例</view>
-                    <view class="value list">
-                      <view class="item input" wx:for="{{planDetail.packer_list}}">
-                        <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%
-                      </view>
-                    </view>
-                  </view>
-
-                </view>
-                <view class="btn-wrap" style="margin-top: 0;" wx:if="{{planDetail.retrue_packer_button || planDetail.retrue_ok_button}}">
-                  <button form-type="submit" name="confirm" @tap="signConPackType('0')" class="button plain"
-                          wx:if="{{planDetail.retrue_packer_button}}">
-                    确认包装
-                  </button>
-                  <button wx:if="{{planDetail.retrue_ok_button}}" form-type="submit" name="over" @tap="signConPackType('1')" class="button plain">确认完成
-                  </button>
-                </view>
-              </view>
-            </form>
-
-            <view class="detail-hd" style="margin-top: 10rpx;">
-              <view>进仓号：{{planDetail.jcno || '暂无'}}</view>
-              <view>运单号：{{planDetail.ydno || '暂无'}}</view>
+            <view class="detail-hd">
+              <view>进仓号 <text>{{planDetail.jcno || '暂无'}}</text> </view>
+              <view>运单号 <text>{{planDetail.ydno || '暂无'}}</text> </view>
             </view>
 
             <view class="two-column-center-table detail-table">
@@ -452,8 +347,8 @@
           <!--电子交接单-->
           <scroll-view scroll-y style="height: 100%" class="delivery-receipt">
             <view class="delivery-receipt-hd">
-              <view>进仓号：{{deliveryReceipt.jcno || '暂无'}}</view>
-              <view>运单号：{{deliveryReceipt.ydno || '暂无'}}</view>
+              <view>进仓号 <text>{{deliveryReceipt.jcno || '暂无'}}</text> </view>
+              <view>运单号 <text>{{deliveryReceipt.ydno || '暂无'}}</text> </view>
             </view>
 
             <view class="delivery-receipt-bd">
@@ -474,7 +369,8 @@
                     <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
                   </view>
                   <view class="form-item">
-                    <view class="label">操作人:</view>
+                    <view class="label">销售:</view>
+                    <!--todo-->
                     <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
                   </view>
                 </view>
@@ -518,6 +414,18 @@
                     <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
                   </view>
                 </view>
+                <!--todo-->
+                <view class="row">
+                  <view class="form-item">
+                    <view class="label">温控:</view>
+                    <view class="value">{{deliveryReceipt.tp_size || '暂无'}}</view>
+                  </view>
+                  <view class="form-item">
+                    <view class="label">航司冷藏箱:</view>
+                    <view class="value">{{deliveryReceipt.temperature || '暂无'}}</view>
+                  </view>
+                </view>
+
                 <view class="row">
                   <view class="form-item">
                     <view class="label">加冰种类:</view>
@@ -558,25 +466,14 @@
                     <view class="value">{{deliveryReceipt.cell_type || '暂无'}}</view>
                   </view>
                 </view>
-                <view class="row">
-                  <view class="form-item">
-                    <view class="label">温度记录仪:</view>
-                    <view class="value">{{deliveryReceipt.wdjly || '暂无'}}</view>
-                  </view>
-                  <view class="form-item">
-                    <view class="label">应急人信息:</view>
-                    <view class="value">{{deliveryReceipt.yjlxr || '暂无'}}</view>
-                  </view>
-                </view>
-
               </view>
 
-              <view class="form-section-title" style="margin-top: 80rpx;">
+              <view class="form-section-title" style="margin-top: 40rpx;">
                 包装
               </view>
-              <view class="two-column-center-table">
+              <view class="two-column-center-table label-left" style="font-size: 28rpx;padding: 0 40rpx;">
                 <view class="row">
-                  <view class="cell">原包装是否保留：</view>
+                  <view class="cell">原包装：</view>
                   <view class="cell">{{deliveryReceipt.ybzbl_flag || '暂无'}}</view>
                 </view>
                 <view class="row">
@@ -589,7 +486,7 @@
                 </view>
               </view>
 
-              <view class="form-section-title">
+              <view class="form-section-title" style="margin-top: 40rpx;">
                 文件
               </view>
               <view class="file-list">
@@ -622,7 +519,7 @@
                 提交
               </view>
               <form class="del-rec-confirm-form" @submit="confirmDeliveryReceipt">
-                <view class="two-column-center-table">
+                <view class="two-column-center-table label-left" style="padding: 20rpx 40rpx;">
                   <view class="row">
                     <view class="cell" style="width: 150rpx;">
                       库房人员备注:
@@ -771,12 +668,7 @@
     <placeholder wx:else type="auth"></placeholder>
 
 
-    <view class="fix-bottom-tabbar">
-      <view wx:for="{{tabs}}" wx:key="*this" class="{{index == activeName ? 'active' : ''}}"
-      @tap="switchTab({{index}})">
-        {{item}}
-      </view>
-    </view>
+
     <packer-list :show.sync="showPackerList" :list.sync="packerList" title="请搜索,选择包装负责人"
                  @query.user="queryPakcerList" @select.user="doSelectLeaderPacker"></packer-list>
     <file-list :show.sync="showFileList" :title.sync="showFileTitle" :list.sync="delRecFileList"
@@ -810,7 +702,7 @@
       userType: '',
 
       jcno: '',
-      activeName: 0,
+      activeName: 1,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
       tabs: ['详情', '电子交接单', '照片', '成本'],
 
@@ -1070,7 +962,7 @@
 
         })
       },
-      
+
       signConDeliveryType(type){
         this.confirmDeliveryType = type
         this.$apply()
@@ -1114,11 +1006,11 @@
           }
         )
       },
-      
-      
+
+
       // 库房确认
       delRecOutConfirm(isKF = false, bz = ''){
-      
+
       },
       // 货场确认
       /*delRecHcConfirm(){
@@ -1357,7 +1249,7 @@
     };
 
     onLoad(params){
-      this.jcno = params.jcno
+      this.jcno = params.jcno || 'E15060029'
       this.userType = wx.getStorageSync('user_type')
 
     }

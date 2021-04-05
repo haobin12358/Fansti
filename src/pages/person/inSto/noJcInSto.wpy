@@ -1,0 +1,32 @@
+<style lang="less" scoped>
+@import "../../styles/base";
+
+.container {
+
+}
+</style>
+
+<template>
+  <view class="container">
+    无进仓号
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+
+export default class noJcInSto extends wepy.page {
+  config = {};
+
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  onLoad() {
+  };
+}
+</script>

@@ -8,6 +8,7 @@ const wxRequest = async (params = {}, url) => {
     tip.loading('数据加载中...');
     wepy.showNavigationBarLoading();
   }
+  // request api没有分query和data字段,因此在post时就比较有些不合理
   let data = params.query || {};
   // data.time = TIMESTAMP;
 
