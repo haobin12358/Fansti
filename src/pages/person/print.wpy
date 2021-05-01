@@ -1,0 +1,178 @@
+<style lang="less" scoped>
+@import "../../styles/base";
+
+.container {
+  padding: 0 20rpx;
+
+  .print-location {
+    padding: 50rpx 0;
+    display: flex;
+    justify-content: center;
+    .fz(50rpx);
+  }
+
+  .print-no {
+    height: 56rpx;
+    .fj();
+    background: #ebebeb;
+    padding: 0 20rpx;
+
+    &-left {
+      font-weight: bold;
+    }
+  }
+
+  .print-info {
+    padding: 30rpx 20rpx;
+    .fj();
+
+    &-item {
+      flex: 1;
+      display: flex;
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="print-location">
+      <view style="margin-right: 20rpx;color: #999999;">库位</view>
+      <view style="font-weight: bold;">C1</view>
+    </view>
+    <view class="print-no">
+      <view class="print-no-left">
+        0202
+      </view>
+      <view>
+        5件
+      </view>
+    </view>
+    <view class="print-info">
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">库位</view>
+        <view>C1</view>
+      </div>
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">库位</view>
+        <view>C1</view>
+      </div>
+    </view>
+    <view class="print-bar">
+      <canvas canvas-id="printBar" style="width: 710rpx;height: 200rpx;"></canvas>
+      <view style="text-align: center;font-size: 50rpx;">
+        123456789
+      </view>
+    </view>
+
+    <view class="btn-wrap">
+      <view class="button" @tap="onPrint">打印</view>
+    </view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { barcode } from '@/utils/qrcode/index.js';
+
+const app = getApp()
+export default class print extends wepy.page {
+  config = {};
+
+  components = {};
+
+  data = {
+    isIos: false
+  };
+
+  computed = {};
+
+  methods = {
+    onPrint() {
+      if (!wx.openBluetoothAdapter) {
+        wx.showModal({
+          title: '提示',
+          content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+        });
+        return;
+      }
+
+      // 开启蓝牙
+      wx.openBluetoothAdapter({
+        success: (res) => {
+          console.log('openBluetoothAdapter success', res);
+          this.checkPermission();
+        }, fail: () => {
+          wx.showModal({
+            title: '提示',
+            content: '蓝牙初始化失败，请打开蓝牙'
+          });
+        }
+      });
+    }
+  };
+  checkPermission () {  //android 6.0以上需授权地理位置权限
+    let that = this
+
+    if(this.isIos) {
+      that.startBluetoothDevicesDiscovery()
+    }else {
+      console.log('[开始授权]');
+      wepy.getSetting().then(
+        res=>{
+          if(res.authSetting['scope.userLocation']){
+            that.startBluetoothDevicesDiscovery()
+          }else {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              complete (res) {
+                that.startBluetoothDevicesDiscovery()
+              }
+            })
+          }
+        }
+      )
+    }
+  }
+  // 开始扫描
+  startBluetoothDevicesDiscovery() {
+    wx.startBluetoothDevicesDiscovery({
+      success: (res) => {
+        console.log('startBluetoothDevicesDiscovery success', res);
+        this.onBluetoothDeviceFound()
+      },
+      fail: (res) => {
+        console.log('startBluetoothDevicesDiscovery fail', res);
+      }
+    });
+  }
+  onBluetoothDeviceFound() {
+    setTimeout(() =>{
+      wx.getBluetoothDevices({
+        success(res) {
+          var devices = []
+          var num = 0
+          for (var i = 0; i < res.devices.length; ++i) {
+            if (res.devices[i].name != "未知设备") {
+              devices[num] = res.devices[i]
+              num++
+            }
+          }
+
+          console.log(devices);
+        }
+      })
+    }, 3000)
+  }
+
+  onLoad() {
+    barcode('printBar', '123456789', 710, 200);
+    let {system} = wx.getSystemInfoSync()
+
+    console.log(system);
+    // todo
+    this.isIos = /^ios/i.test(system)
+  };
+}
+</script>

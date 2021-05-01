@@ -68,7 +68,7 @@
 
           .fj(space-between, flex-end);
           .sc(20rpx, black);
-          text-shadow:1px 1px 0px #fff;
+          text-shadow:0px -1px 0px #fff;
 
           .time{
             flex: 1;
@@ -125,6 +125,8 @@
   import wepy from 'wepy';
   import api from '@/api/api';
   import tip from '@/utils/tip';
+  import { promiseQueue } from '@/utils/util';
+
 
   export default class AddPhoto extends wepy.page {
     config = {};
@@ -210,16 +212,24 @@
 
       Promise.all(proms).then(
         rsts => {
-          let succCount = rsts.filter(i => i).length,
-            failCount = rsts.length - succCount
+          let uploadedFile = rsts.filter(i => i)
+          console.log(uploadedFile);
+          let newProms = uploadedFile.map(i => that.addNewFile(i))
 
-          tip.toast(`成功上传${succCount}张,失败${failCount}张`, ()=>{
-            if(that.type == 'in'){
-              this.getInPhotoList()
-            }else {
-              that.getPhotoList()
+          promiseQueue(newProms).then(
+            newRsts => {
+              let succCount = newRsts.filter(i => i).length,
+                failCount = filterFiles.length - succCount
+
+              tip.toast(`成功上传${succCount}张,失败${failCount}张`, ()=>{
+                if(that.type == 'in'){
+                  this.getInPhotoList()
+                }else {
+                  that.getPhotoList()
+                }
+              })
             }
-          })
+          )
         }
       )
     }
@@ -245,25 +255,10 @@
               let data = JSON.parse(res.data).data
               let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
 
-              api.addNewFile({
-                method: 'POST',
-                jcno: that.jcno,
-                login_name: wx.getStorageSync('token'),
-                file_type: that.type,
-                query: {
-                  url: data,
-                  file_name: fileName,
-                  head: that.type == 'in' ? that.batchList[that.batchIndex] : ''
-                }
-              }).then(
-                res => {
-                  if (res.data.status == 200) {
-                    resolve(true)
-                  }else {
-                    reject(false);
-                  }
-                }
-              )
+              resolve({
+                url: data,
+                file_name: fileName
+              })
             },
             fail: function(){
               reject(false)
@@ -271,9 +266,32 @@
           })
         }
       )
-
     }
+    addNewFile(params){
+      let that = this
 
+      return () => new Promise((resolve, reject) => {
+        api.addNewFile({
+          method: 'POST',
+          jcno: that.jcno,
+          login_name: wx.getStorageSync('token'),
+          file_type: that.type,
+          query: {
+            url: params.url,
+            file_name: params['file_name'],
+            head: that.type == 'in' ? that.batchList[that.batchIndex] : ''
+          }
+        }).then(
+          res => {
+            if (res.data.status == 200) {
+              resolve(true)
+            }else {
+              reject(false);
+            }
+          }
+        )
+      })
+    }
 
 
     // 入仓照片 获取批次并显示该批次(选中最新一次)下的照片
@@ -337,8 +355,9 @@
 
 
     onLoad(parmas) {
-      this.jcno = parmas.jcno
-      this.type = parmas.type
+      // todo
+      this.jcno = parmas.jcno || 'E15060029'
+      this.type = parmas.type || 'out'
 
       if(this.type == 'in'){
         this.getBatchList()

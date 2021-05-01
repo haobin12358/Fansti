@@ -169,6 +169,22 @@ function convertStarArray(score) {
   return arr;
 }
 
+// promise同步执行
+function promiseQueue(promises) {
+  let result = [];
+
+  return new Promise(resolve => {
+    promises.reduce((prev, curr) => {
+      return prev.then(()=>{
+        return curr()
+      }).then(res=>{
+        result.push(res)
+        ;(promises.length === result.length) && resolve(result)
+      })
+    }, Promise.resolve())
+  })
+}
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -181,5 +197,6 @@ module.exports = {
   mul: mul,
   accAdd: accAdd,
   convertStarArray: convertStarArray,
-  getRandomContent
+  getRandomContent,
+  promiseQueue
 };

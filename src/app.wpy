@@ -14,17 +14,18 @@ export default class extends wepy.app {
     pages: [
       // 入库
       // 'pages/person/inSto/index', // 入库明细
+      'pages/person/print', // 打印
+      'pages/person/printTest', // 打印
+      'pages/person/addPhoto', // 添加照片
+      'pages/search/index', //查询首页
 
       'pages/person/planDetail', // 计划详情
-
-      'pages/search/index', //查询首页
       'pages/search/dgrSearch', //dgr
 
 
       'pages/person/index', // 操作首页
       'pages/track/index',  //跟踪首页
 
-      'pages/person/addPhoto', // 添加照片
       'pages/track/confirmConsignment',  //确认托运照片
       'pages/person/login', // 登录
       'pages/person/declare', // 申报列表
@@ -94,10 +95,16 @@ export default class extends wepy.app {
         version: "0.2.1",
         provider: "wx9d4d4ffa781ff3ac"
       }
+    },
+    "permission": {
+      "scope.userLocation": {
+        "desc": "连接蓝牙打印机前需要获取您的地理位置, 请点击允许!" // 高速公路行驶持续后台定位
+      }
     }
   }
 
   globalData = {
+    systemInfo: {}
   }
 
   constructor () {
