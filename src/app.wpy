@@ -14,6 +14,7 @@ export default class extends wepy.app {
     pages: [
 
       // 入库
+      'pages/person/inStoDetail', // 入库明细
       'pages/person/inSto/noJcInSto', // 无进仓号入库
       'pages/person/inSto/index', // 入库菜单
       'pages/person/inSto/inSto', // 入库列表
@@ -42,7 +43,6 @@ export default class extends wepy.app {
       'pages/person/login', // 登录
       'pages/person/declare', // 申报列表
       'pages/person/plan', // 计划列表
-      'pages/person/inStoDetail', // 入库明细
       'pages/person/selectPacker', // 选择包装人员
       'pages/person/addCost', // 添加成本
       'pages/person/declareDetail', // 申报详情

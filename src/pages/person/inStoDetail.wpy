@@ -82,7 +82,7 @@
 <template>
   <view class="container">
     <view class="detail-hd">
-      <view class="row">
+      <view class="row" wx:if="{{formData.jcno}}">
         <view>进仓号：<text style="font-weight: bold;margin-left: 28rpx;">{{formData.jcno || '暂无'}}</text></view>
         <view>运单号：<text style="font-weight: bold;">{{formData.ydno || '暂无'}}</text></view>
       </view>
@@ -94,6 +94,12 @@
     </view>
     <form @submit="doSubmit">
       <view class="form">
+        <view class="form-item">
+          <view class="label">临时单号</view>
+          <view class="value">
+            {{formData.jcno}}
+          </view>
+        </view>
         <view class="form-item">
           <view class="label">库房存放地</view>
           <view class="value">
@@ -156,6 +162,7 @@
       </view>
 
       <view class="btn-wrap">
+        <button class="button plain" form-type="submit" @tap="goPrint">打印面单</button>
         <button class="button" form-type="submit">保 存</button>
       </view>
     </form>
@@ -188,6 +195,9 @@
     computed = {};
 
     methods = {
+      goPrint() {
+        this.$navigate('/pages/person/print');
+      },
       addPhoto(){
         let that = this
 
@@ -351,7 +361,9 @@
       return ''
     }
     onLoad(params, data) {
-      this.formData = data.preload.res;
+      if(data.preload){
+        this.formData = data.preload.res;
+      }
     }
   }
 </script>

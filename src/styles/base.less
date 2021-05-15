@@ -43,6 +43,11 @@ page{
   background: @mainBlueColor;
 }
 
+.type-blue-plain{
+  background: #ffffff;
+  color: @mainBlueColor;
+}
+
 
 
 //  文字省略 ...
@@ -165,7 +170,8 @@ page{
     }
 
     &.plain{
-      .type-yellow-plain;
+      .type-blue-plain;
+      border: 1px solid @mainBlueColor;
     }
 
     &.type-blue{

@@ -37,8 +37,59 @@
     }
   }
 
-  &-bd {
+  .order-list {
+    .order-item {
+      border-radius: 10rpx;
+      margin-bottom: 20rpx;
 
+      &-hd {
+        .fj();
+        font-size: 32rpx;
+        border-radius: 10rpx 10rpx 2rpx 2rpx;
+
+        &-lf {
+          width: 56rpx;
+          background: #5A738A;
+          color: white;
+          text-align: center;
+        }
+
+        &-rt {
+          flex: 1;
+          background: #EBEBEB;
+          .fj();
+          padding: 0 20rpx;
+          color: #333;
+        }
+
+        .jcno {
+          font-weight: bold;
+        }
+      }
+
+      &-bd {
+        padding: 20rpx;
+        border-radius: 0px 0px 10px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 28rpx;
+        border: 1px solid #EEEEEE;
+
+        &-col {
+          width: 50%;
+          display: flex;
+
+          .label{
+            color: #999;
+            margin-right: 30rpx;
+          }
+
+          .value{
+            color: #333333;
+          }
+        }
+      }
+    }
   }
 }
 </style>
@@ -47,7 +98,7 @@
   <view class="container">
     <view class="container-hd">
       <view class="container-hd-one">
-        <image src="../../../images/scan.png"></image>
+        <image src="../../../images/scan.png" @tap="scanToInSto"></image>
         <form @submit="doSearch" style="position: relative;flex: 1;">
           <view class="search-bar" style="">
             <view class="input-wrap">
@@ -66,9 +117,38 @@
     </view>
 
     <view class="order-list">
-      <view class="order-item">
+      <view wx:for="{{[1,2,3]}}" wx:for-index="idx" wx:for-item="i" class="order-item">
+        <view class="order-item-hd">
+          <view class="order-item-hd-lf">{{idx}}</view>
+          <view class="order-item-hd-rt">
+            <view>0202011230001</view>
+            <view>C1</view>
+          </view>
+        </view>
+        <view class="order-item-bd">
+          <view class="order-item-bd-col">
+            <view class="label">接货人</view>
+            <view class="value">张三</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">快递公司</view>
+            <view class="value">顺丰快递</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">件数</view>
+            <view class="value">8</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">快递单号</view>
+            <view class="value">123123123</view>
+          </view>
 
+        </view>
       </view>
+    </view>
+
+    <view class="btn-wrap">
+      <button class="type-blue" @tap="addInSto">新 增</button>
     </view>
   </view>
 </template>
@@ -108,15 +188,56 @@ export default class noJcInSto extends wepy.page {
 
   methods = {
     doSearch(evt) {
-      let { query } = evt.detail.value
+      let { query } = evt.detail.value;
 
       let parmas = {
         time_use: this.time_use,
         dmczlx: this.dmczlx,
         select_name: query
-      }
+      };
 
       console.log(parmas);
+    },
+    scanToInSto() {
+      let that = this;
+
+      if (!['0', '3', '4', '5'].includes(that.userType)) {
+        tip.alert('该账号无权使用');
+        return;
+      }
+
+      wx.scanCode({
+        success(res) {
+          let jcno = res.result.substr(0, 12);
+          that.getInAbo(jcno);
+        },
+        fail(evt) {
+          that.showInputBox = true;
+          that.$apply();
+        }
+      });
+    },
+    getInAbo(jcno) {
+      api.getInAbo({
+        query: {
+          jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.$preload('res', data);
+            this.$navigate('/pages/person/inStoDetail');
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    },
+    addInSto(){
+      this.$navigate('/pages/person/inStoDetail');
     }
   };
 
