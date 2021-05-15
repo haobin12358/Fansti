@@ -26,8 +26,6 @@ const getInJcno = params => wxRequest(params, host + `control/get_in_jcno`);
 const getInAboNojcno = params => wxRequest(params, host + `control/get_in_abo_nojcno`);
 const getInNoJcno = params => wxRequest(params, host + `control/get_in_no_jcno`);
 
-const getHandoverList = params => wxRequest(params, host + `control/get_handover_list`);
-const addIn = params => wxRequest(params, host + `control/add_in?login_name=${params.login_name}&jcno=${params.jcno}`);
 const updateNojcno = params => wxRequest(params, host + `control/update_nojcno?login_name=${params.login_name}&temporary_no=${params.temporary_no}`);
 const getInAboJcno = params => wxRequest(params, host + `control/get_in_abo_jcno`);
 
@@ -133,6 +131,26 @@ const makeVote = params => wxRequest(params, host + `/votes/make_vote`);
 
 
 export default {
+  getReceivedList,
+  getHistoryList,
+  getReceivingList,
+  deleteFree,
+  getTruckCurr,
+  getFree,
+  updateFreeList,
+  freeList,
+  getOutedList,
+  getOutingList,
+  getBzjhAbo,
+  getBzjhList,
+  picOcr,
+  getLevel,
+  getInJcno,
+  getInAboNojcno,
+  getInNoJcno,
+  updateNojcno,
+  getInAboJcno,
+
   userBinding,
   getBinding,
   getOpenid,
