@@ -179,3 +179,38 @@ page{
   height: @height;
   line-height: @height;
 }
+
+.search-bar {
+  border: 1px solid @mainFontColor;
+  .fj();
+  position: relative;
+  border-radius: 4rpx;
+
+  .input-wrap {
+    flex: 1;
+    height: 60rpx;
+    padding-left: 20rpx;
+
+    display: flex;
+    align-items: center;
+
+    .search-icon {
+      .wl(30rpx, 30rpx);
+      margin-right: 10rpx;
+    }
+
+    input {
+      flex: 1;
+      .sc(21rpx, #999);
+    }
+  }
+
+  button {
+    .fz(26rpx);
+    border-radius:0 4rpx 4rpx 0;
+  }
+}
+
+.selector-box + .selector-box{
+  margin-left: 20rpx;
+}

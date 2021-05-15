@@ -2,31 +2,133 @@
 @import "../../../styles/base";
 
 .container {
+  padding: 20rpx 20rpx 0;
 
+  &-hd {
+    margin-bottom: 21rpx;
+
+    &-one {
+      .fj();
+      margin-bottom: 21rpx;
+
+      image {
+        .wl(48rpx, 48rpx);
+        margin-right: 20rpx;
+      }
+    }
+
+    &-two {
+      .fj();
+
+      .selector-box {
+        flex: 1;
+        width: 220rpx;
+        border: 1rpx solid #A0AFBA;
+        height: 60rpx;
+        border-radius: 4rpx;
+        .fj();
+        padding: 0 20rpx;
+        .sc(21rpx, #999);
+
+        image {
+          .wl(20rpx, 20rpx);
+        }
+      }
+    }
+  }
+
+  &-bd {
+
+  }
 }
 </style>
 
 <template>
   <view class="container">
-    无进仓号入库
+    <view class="container-hd">
+      <view class="container-hd-one">
+        <image src="../../../images/scan.png"></image>
+        <view class="search-bar" style="flex: 1;">
+          <view class="input-wrap">
+            <image class="search-icon" src="../../../images/search.png"></image>
+            <input type="text" placeholder="请输入临时编号"/>
+          </view>
+          <button class="type-blue" form-type="submit">搜索</button>
+        </view>
+      </view>
+      <view class="container-hd-two">
+        <view class="selector-box">
+          <view>
+            全部区域
+          </view>
+          <image src="../../../images/arrow-down.png"></image>
+        </view>
+        <selector-box :value.sync=""></selector-box>
+
+      </view>
+    </view>
+
+    <view class="order-list">
+      <view class="order-item">
+
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import SelectorBox from '@/components/common/SelectorBox';
+import LoadMore from '@/components/common/loadMore';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+
 
 export default class noJcInSto extends wepy.page {
-  config = {};
+  config = {
+    navigationBarTitleText: '无进仓号入库'
+  };
 
-  components = {};
+  components = {
+    'selector-box': SelectorBox,
+    'load-more': LoadMore
+  };
 
-  data = {};
+  data = {
+    searchForm: {},
+    loadingType: 'normal', // 加载状态
+    planList: [],
+    pageNum: 1,
+    pageSize: 10,
+    total: 0
+  };
 
   computed = {};
 
   methods = {};
 
+  getList(replace = false) {
+    this.loadingType = 'loading';
+    this.$apply();
+
+    if (replace) {
+      this.pageNum = 1;
+    }
+
+    let params = {
+      query: {
+        page_num: this.pageNum,
+        page_size: this.pageSize,
+        login_name: wx.getStorageSync('token'),
+        time_use: '',
+        dmczlx: ''
+      }
+    };
+    api.getInNoJcno(params);
+  }
+
   onLoad() {
+    // this.getList()
   };
 }
 </script>

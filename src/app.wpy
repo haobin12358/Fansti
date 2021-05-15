@@ -12,11 +12,14 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      // 入库
       'pages/person/index', // 操作首页
+
+      // 入库
+      'pages/person/inSto/noJcInSto', // 无进仓号入库
       'pages/person/inSto/index', // 入库菜单
       'pages/person/inSto/inSto', // 入库列表
-      'pages/person/inSto/noJcInSto', // 无进仓号入库
+
+
 
       'pages/person/outSto/index', // 出库菜单
       'pages/person/yardReceive/index', // 货场菜单

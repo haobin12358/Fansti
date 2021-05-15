@@ -24,7 +24,7 @@
 
         input {
           flex: 1;
-          .sc(21rpx, @mainFontColor);
+          .sc(21rpx, #999);
         }
       }
 
@@ -117,7 +117,7 @@
 
     </view>
 
-    <view class="btn-wrap" style="margin-top: 300rpx">
+    <view class="btn-wrap" style="margin-top: 200rpx">
       <view class="button type-blue" @tap="doRebind">重新绑定</view>
     </view>
 

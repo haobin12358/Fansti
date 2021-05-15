@@ -7,27 +7,27 @@ const mock = true;
 const host = mock ? 'https://fansti.sanbinit.cn/fansti' : 'https://fstwechat.com/fansti';
 
 // 三期
-const getReceivedList = params => wxRequest(params, host + `control/get_received`);
-const getHistoryList = params => wxRequest(params, host + `control/get_history`);
-const getReceivingList = params => wxRequest(params, host + `control/get_receiving`);
+const getReceivedList = params => wxRequest(params, host + `/control/get_received`);
+const getHistoryList = params => wxRequest(params, host + `/control/get_history`);
+const getReceivingList = params => wxRequest(params, host + `/control/get_receiving`);
 const deleteFree = params => wxRequest(params, host + `control/delete_free?login_name=${params.login_name}`); // post
-const getTruckCurr = params => wxRequest(params, host + `control/get_truck_curr`);
-const getFree = params => wxRequest(params, host + `control/get_free?login_name=${params.login_name}`);
+const getTruckCurr = params => wxRequest(params, host + `/control/get_truck_curr`);
+const getFree = params => wxRequest(params, host + `/control/get_free?login_name=${params.login_name}`);
 const updateFreeList = params => wxRequest(params, host + `control/update_free_list?login_name=${params.login_name}`);
-const freeList = params => wxRequest(params, host + `control/free_list`);
-const getOutedList = params => wxRequest(params, host + `control/get_outed_list`);
-const getOutingList = params => wxRequest(params, host + `control/get_outing_list`);
+const freeList = params => wxRequest(params, host + `/control/free_list`);
+const getOutedList = params => wxRequest(params, host + `/control/get_outed_list`);
+const getOutingList = params => wxRequest(params, host + `/control/get_outing_list`);
 
-const getBzjhAbo = params => wxRequest(params, host + `control/get_bzjh_abo`);
-const getBzjhList = params => wxRequest(params, host + `control/get_bzjh_list`);
-const picOcr = params => wxRequest(params, host + `control/pic_ocr?login_name=${params.login_name}`);
-const getLevel = params => wxRequest(params, host + `control/get_level`);
-const getInJcno = params => wxRequest(params, host + `control/get_in_jcno`);
-const getInAboNojcno = params => wxRequest(params, host + `control/get_in_abo_nojcno`);
-const getInNoJcno = params => wxRequest(params, host + `control/get_in_no_jcno`);
+const getBzjhAbo = params => wxRequest(params, host + `/control/get_bzjh_abo`);
+const getBzjhList = params => wxRequest(params, host + `/control/get_bzjh_list`);
+const picOcr = params => wxRequest(params, host + `/control/pic_ocr?login_name=${params.login_name}`);
+const getLevel = params => wxRequest(params, host + `/control/get_level`);
+const getInJcno = params => wxRequest(params, host + `/control/get_in_jcno`);
+const getInAboNojcno = params => wxRequest(params, host + `/control/get_in_abo_nojcno`);
+const getInNoJcno = params => wxRequest(params, host + `/control/get_in_no_jcno`);
 
-const updateNojcno = params => wxRequest(params, host + `control/update_nojcno?login_name=${params.login_name}&temporary_no=${params.temporary_no}`);
-const getInAboJcno = params => wxRequest(params, host + `control/get_in_abo_jcno`);
+const updateNojcno = params => wxRequest(params, host + `/control/update_nojcno?login_name=${params.login_name}&temporary_no=${params.temporary_no}`);
+const getInAboJcno = params => wxRequest(params, host + `/control/get_in_abo_jcno`);
 
 
 

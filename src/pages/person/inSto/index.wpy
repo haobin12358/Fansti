@@ -29,7 +29,7 @@
 <template>
   <view class="container">
     <view class="list">
-      <view class="list-item" @tap="handleRedirect('noIn')">
+      <view class="list-item" @tap="handleRedirect('noJcno')">
         <view class="item-hd">
           无进仓入库列表
         </view>
@@ -59,7 +59,11 @@ export default class inStoIndex extends wepy.page {
 
   methods = {
     handleRedirect(command){
-      console.log(command);
+      if (command === 'noJcno') {
+        this.$navigate('/pages/person/inSto/noJcInSto')
+      }else {
+        this.$navigate('/pages/person/inSto/inSto')
+      }
     }
   };
 

@@ -1,0 +1,52 @@
+<style scoped lang="less">
+@import "../../styles/base";
+
+.selector-box{
+  flex: 1;
+  width: 220rpx;
+  border: 1rpx solid #A0AFBA;
+  height: 60rpx;
+  border-radius: 4rpx;
+  .fj();
+  padding: 0 20rpx;
+  .sc(21rpx, #999);
+
+  image{
+    .wl(20rpx, 20rpx);
+  }
+}</style>
+
+<template>
+  <view class="selector-box">
+    <view>
+      全部区域
+    </view>
+    <image src="../../images/arrow-down.png"></image>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Placeholder extends wepy.component {
+  props = {
+    value: {
+      type: [String, Number],
+      default: ''
+    }
+  };
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {
+
+  }
+}
+</script>
+
