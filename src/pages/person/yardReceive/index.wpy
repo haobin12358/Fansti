@@ -1,0 +1,69 @@
+<style lang="less" scoped>
+@import "../../../styles/base";
+
+.container {
+  .list {
+    .sc(32rpx, @mainBlueColor);
+    padding: 0 40rpx;
+
+    .list-item {
+      padding: 25rpx 20rpx 25rpx;
+      .fj();
+      border-bottom: 1px solid #C5C5C5;
+
+      .item-hd {
+        flex: 1;
+      }
+      .item-ft {
+        .wl(14rpx, 25rpx);
+
+        &.share {
+          .wl(25rpx, 25rpx);
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="list">
+      <view class="list-item" @tap="handleRedirect('noIn')">
+        <view class="item-hd">
+          当日待接收列表
+        </view>
+        <image class="item-ft" src="../../../images/index_arrow.png"></image>
+      </view>
+      <view class="list-item" @tap="handleRedirect('in')">
+        <view class="item-hd">
+          当日接收列表
+        </view>
+        <image class="item-ft" src="../../../images/index_arrow.png"></image>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+
+export default class inStoIndex extends wepy.page {
+  config = {};
+
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {
+    handleRedirect(command){
+      console.log(command);
+    }
+  };
+
+  onLoad() {
+  };
+}
+</script>

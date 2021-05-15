@@ -2,9 +2,9 @@ import {
   wxRequest
 } from '@/utils/wxRequest';
 
-const mock = false;
+const mock = true;
 
-const host = mock ? 'https://dsn.apizza.net/mock/60c954072cfff536376e5acb0392c590' : 'https://fstwechat.com/fansti';
+const host = mock ? 'https://fansti.sanbinit.cn/fansti' : 'https://fstwechat.com/fansti';
 
 // 计划
 const getTodayList = params => wxRequest(params, host + `/control/get_today_list`);

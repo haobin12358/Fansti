@@ -13,18 +13,24 @@ export default class extends wepy.app {
   config = {
     pages: [
       // 入库
-      // 'pages/person/inSto/index', // 入库明细
+      'pages/person/index', // 操作首页
+      'pages/person/inSto/index', // 入库菜单
+      'pages/person/outSto/index', // 出库菜单
+      'pages/person/yardReceive/index', // 货场菜单
+      'pages/history', // 操作首页
+
+
+
+      'pages/track/index',  //跟踪首页m
       'pages/person/print', // 打印
       'pages/person/printTest', // 打印
       'pages/person/addPhoto', // 添加照片
+
       'pages/search/index', //查询首页
-
       'pages/person/planDetail', // 计划详情
+
+
       'pages/search/dgrSearch', //dgr
-
-
-      'pages/person/index', // 操作首页
-      'pages/track/index',  //跟踪首页
 
       'pages/track/confirmConsignment',  //确认托运照片
       'pages/person/login', // 登录

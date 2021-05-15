@@ -71,27 +71,27 @@
     </form>
 
     <view class="list">
-      <view class="list-item" @tap="handleRedirect('plan')">
+      <view class="list-item" @tap="handleRedirect('inSto')">
         <view class="item-hd">
-          当日计划
+          入库计划
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('insto')">
+      <view class="list-item" @tap="handleRedirect('package')">
         <view class="item-hd">
-          扫码入库
+          包装计划
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
-      <view class="list-item" @tap="handleRedirect('outsto')">
+      <view class="list-item" @tap="handleRedirect('outSto')">
         <view class="item-hd">
-          扫码出库
+          出库计划
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
       <view class="list-item" @tap="handleRedirect('yardReceive')">
         <view class="item-hd">
-          货场接收
+          货场计划
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
@@ -101,6 +101,13 @@
         </view>
         <image class="item-ft" src="../../images/index_arrow.png"></image>
       </view>
+      <view class="list-item" @tap="handleRedirect('history')">
+        <view class="item-hd">
+          历史走货查询
+        </view>
+        <image class="item-ft" src="../../images/index_arrow.png"></image>
+      </view>
+
       <view class="list-item" @tap="handleRedirect('share')">
         <view class="item-hd">
           分享小程序
@@ -154,30 +161,27 @@
       },
       handleRedirect(command) {
         switch (command) {
-          case 'plan':
+          case 'inSto':
+            this.$navigate('/pages/person/inSto/index');
+            break;
+          case 'package':
             this.$navigate('/pages/person/plan');
             break;
-          case 'insto':
-            this.inputBoxType = command
-            this.placeholder = '请输入运单号-入库'
-            this.scanToInSto();
-            break;
-          case 'outsto':
-            this.inputBoxType = command
-            this.placeholder = '请输入运单号-出库'
-            this.scanToOutSto();
+          case 'outSto':
+            this.$navigate('/pages/person/outSto/index');
             break;
           case 'yardReceive':
-            this.inputBoxType = command
-            this.placeholder = '请输入运单号-货场接收'
-            this.scanToReceive();
-            break;
+            this.$navigate('/pages/person/yardReceive/index');
+            break
           case 'declare':
             if(!['0','3', '9'].includes(this.userType) ){
               tip.alert('该账号无权使用')
               return
             }
             this.$navigate('/pages/person/declare');
+            break;
+          case 'history':
+            this.$navigate('/pages/history');
             break;
 
           case 'share':
