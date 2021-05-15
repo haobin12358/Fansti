@@ -48,23 +48,20 @@
     <view class="container-hd">
       <view class="container-hd-one">
         <image src="../../../images/scan.png"></image>
-        <view class="search-bar" style="flex: 1;">
-          <view class="input-wrap">
-            <image class="search-icon" src="../../../images/search.png"></image>
-            <input type="text" placeholder="请输入临时编号"/>
+        <form @submit="doSearch" style="position: relative;flex: 1;">
+          <view class="search-bar" style="">
+            <view class="input-wrap">
+              <image class="search-icon" src="../../../images/search.png"></image>
+              <input type="text" name="query" placeholder="请输入临时编号"/>
+            </view>
+            <button class="type-blue" form-type="submit">搜索</button>
           </view>
-          <button class="type-blue" form-type="submit">搜索</button>
-        </view>
+        </form>
       </view>
       <view class="container-hd-two">
-        <view class="selector-box">
-          <view>
-            全部区域
-          </view>
-          <image src="../../../images/arrow-down.png"></image>
-        </view>
-        <selector-box :value.sync=""></selector-box>
-
+        <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
+        <input type="text" style="flex: 1" placeholder="库位">
+        <selector-box-date :value="time_use" mode="date"></selector-box-date>
       </view>
     </view>
 
@@ -82,6 +79,7 @@ import SelectorBox from '@/components/common/SelectorBox';
 import LoadMore from '@/components/common/loadMore';
 import api from '@/api/api';
 import tip from '@/utils/tip';
+import { flightOptions } from '@/utils/config';
 
 
 export default class noJcInSto extends wepy.page {
@@ -91,11 +89,14 @@ export default class noJcInSto extends wepy.page {
 
   components = {
     'selector-box': SelectorBox,
-    'load-more': LoadMore
+    'load-more': LoadMore,
+    'selector-box-date': SelectorBox
   };
 
   data = {
-    searchForm: {},
+    dmczlx: '',
+    time_use: '',
+    flightOptions: flightOptions,
     loadingType: 'normal', // 加载状态
     planList: [],
     pageNum: 1,
@@ -105,7 +106,19 @@ export default class noJcInSto extends wepy.page {
 
   computed = {};
 
-  methods = {};
+  methods = {
+    doSearch(evt) {
+      let { query } = evt.detail.value
+
+      let parmas = {
+        time_use: this.time_use,
+        dmczlx: this.dmczlx,
+        select_name: query
+      }
+
+      console.log(parmas);
+    }
+  };
 
   getList(replace = false) {
     this.loadingType = 'loading';

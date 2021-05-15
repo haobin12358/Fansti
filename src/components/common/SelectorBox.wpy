@@ -9,8 +9,16 @@
   border-radius: 4rpx;
   .fj();
   padding: 0 20rpx;
-  .sc(21rpx, #999);
+  .sc(24rpx, #999);
+  &-bd{
+    flex: 1;
+    height: 100%;
 
+    picker{
+      line-height: 60rpx;
+      .sc(24rpx, #999);
+    }
+  }
   image{
     .wl(20rpx, 20rpx);
   }
@@ -18,8 +26,14 @@
 
 <template>
   <view class="selector-box">
-    <view>
-      全部区域
+    <view class="selector-box-bd">
+      <picker wx:if="{{mode === 'select'}}" @change="handleChange" range="{{options}}" value="{{pickerValue}}"
+              range-key="label">
+        {{options[pickerValue].label}}
+      </picker>
+      <picker wx:else mode="date" @change="handleDateChange" @cancel="doSearchAllDate">
+        {{value || '全部日期'}}
+      </picker>
     </view>
     <image src="../../images/arrow-down.png"></image>
   </view>
@@ -32,20 +46,43 @@ export default class Placeholder extends wepy.component {
   props = {
     value: {
       type: [String, Number],
-      default: ''
-    }
+      default: '',
+      twoWay: true
+    },
+    mode: {
+      type: String,
+      default: 'select'
+    },
+    options: {
+      type: Array,
+      default: () => []
+    },
   };
 
-  data = {};
+  data = {
+    pickerValue: 0
+  };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    handleChange(evt) {
+      // console.log(evt.detail.value, this.pickerValue);
+      this.pickerValue = evt.detail.value
+      this.value = this.options[this.pickerValue].value
+    },
+    handleDateChange(evt) {
+      this.value = evt.detail.value
+    },
+    doSearchAllDate() {
+      this.value = ''
+    }
+  };
 
   events = {};
 
   onLoad() {
-
+    console.log(this.options);
   }
 }
 </script>
