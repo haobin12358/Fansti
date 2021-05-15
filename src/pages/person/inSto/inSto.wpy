@@ -8,14 +8,14 @@
 
 <template>
   <view class="container">
-    无进仓号入库
+    入库列表
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 
-export default class noJcInSto extends wepy.page {
+export default class inSto extends wepy.page {
   config = {};
 
   components = {};
