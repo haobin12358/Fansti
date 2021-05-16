@@ -1,118 +1,133 @@
 <style lang="less" scoped>
-    @import "../styles/base";
+@import "../styles/base";
 
-    .plan-list {
-      padding: 0 20rpx;
+.plan-list {
+  padding: 0 20rpx;
 
-      .plan-item{
-        margin-bottom: 20rpx;
-        height: 220rpx;
-        border-radius: 10rpx;
-        border: 1px solid @borderColor;
-        box-sizing: border-box;
-        color: @mainBlueColor;
+  .plan-item-wrap {
+    display: flex;
+    align-items: center;
+  }
 
-        .fj();
+  .plan-item {
+    flex: 1;
+    margin-bottom: 20rpx;
+    height: 220rpx;
+    border-radius: 10rpx;
+    border: 1px solid @borderColor;
+    box-sizing: border-box;
+    color: @mainBlueColor;
 
-        position: relative;
-        overflow: hidden;
+    .fj();
 
-        .background{
-          position: absolute;
-          .wl(100%, 100%);
-          left: 0;
-          top: 0;
-          border-radius: 10rpx;
-          z-index: -1;
+    position: relative;
+    overflow: hidden;
 
-          &.warning{
-            background: #FFFAD0;
-          }
-          &.info{
-            background: #EBEBEB;
-          }
-          &.danger{
-            background: #FFEFEF;
+    .background {
+      position: absolute;
+      .wl(100%, 100%);
+      left: 0;
+      top: 0;
+      border-radius: 10rpx;
+      z-index: -1;
+
+      &.warning {
+        background: #FFFAD0;
+      }
+
+      &.info {
+        background: #EBEBEB;
+      }
+
+      &.danger {
+        background: #FFEFEF;
+      }
+    }
+
+
+    .plan-item-left {
+      width: 65rpx;
+      height: 100%;
+      border-right: 1px solid #C6C6C6;
+
+      .fjc(start);
+    }
+
+    .plan-item-right {
+      flex: 1;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 15rpx 35rpx 15rpx 10rpx;
+      .fz28;
+      .fjc();
+
+      .line-detail {
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+
+        .line-right {
+          min-width: 45%;
+          .fj();
+        }
+
+        .item-label {
+          display: inline-block;
+          margin-right: 20rpx;
+          width: 4em;
+          text-align: right;
+          color: #999;
+
+
+          .text-number {
+            padding-left: 20rpx;
           }
         }
 
-
-        .plan-item-left{
-          width: 65rpx;
-          height: 100%;
-          border-right: 1px solid #C6C6C6;
-
-          .fjc(start);
-        }
-        .plan-item-right{
+        .item-value {
+          display: inline-block;
+          color: #333;
           flex: 1;
-          height: 100%;
-          box-sizing: border-box;
-          padding: 15rpx 35rpx 15rpx 10rpx;
-          .fz28;
-          .fjc();
-
-          .line-detail{
-            width: 100%;
-
-            display: flex;
-            justify-content: space-between;
-
-            .line-right{
-              min-width: 45%;
-            }
-
-            .item-label{
-              display: inline-block;
-              margin-right: 20rpx;
-              width: 4em;
-              text-align: right;
-              color: #999;
-
-
-              .text-number{
-                padding-left: 20rpx;
-              }
-            }
-            .item-value{
-              display: inline-block;
-              color: #333;
-            }
-          }
-        }
-
-        .top-right-label{
-          position: absolute;
-          top: -60rpx;
-          right: -60rpx;
-
-          width: 120rpx;
-          height: 120rpx;
-          line-height: 50rpx;
-          text-align: center;
-          border-radius:50%;
-
-          color: #ffffff;
-          background: #306fb0;
-
-          &.danger{
-            background: #ab3534;
-          }
-
-          text{
-            position: absolute;
-
-            bottom: 10rpx;
-            left: 20rpx;
-          }
         }
       }
     }
+
+    .top-right-label {
+      position: absolute;
+      top: -60rpx;
+      right: -60rpx;
+
+      width: 120rpx;
+      height: 120rpx;
+      line-height: 50rpx;
+      text-align: center;
+      border-radius: 50%;
+
+      color: #ffffff;
+      background: #306fb0;
+
+      &.danger {
+        background: #ab3534;
+      }
+
+      text {
+        position: absolute;
+
+        bottom: 10rpx;
+        left: 20rpx;
+      }
+    }
+  }
+}
 </style>
 
 <template>
-    <view class="plan-list">
-      <view class="plan-item" wx:for="{{list}}" @tap="tapItemHandler({{item}})">
+  <view class="plan-list">
+    <view class="plan-item-wrap" wx:for="{{list}}">
+      <checkbox wx:if="{{pageType === 1}}" value="{{index}}"
+                style="margin-right: 20rpx;width: 36rpx;height: 36rpx;"></checkbox>
+      <view class="plan-item" @tap="tapItemHandler({{item}})">
         <view wx:if="{{item.backcolor == '红色'}}" class="background danger"></view>
         <view wx:if="{{item.backcolor == '灰色'}}" class="background info"></view>
         <view wx:if="{{item.backcolor == '黄色'}}" class="background warning"></view>
@@ -183,13 +198,28 @@
               <view class="item-label">
                 <text space="emsp">件数</text>
               </view>
-              <view class="item-value">
+              <input wx:if="{{pageType === 3}}" class="item-value" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
+              <view wx:else class="item-value">
                 {{item.jsbzcc || '暂无'}}
               </view>
             </view>
           </view>
-          <view class="line-detail">
+          <view wx:if="{{pageType === 3}}" class="line-detail">
             <view class="line-left">
+              <view class="item-label" style="color: red;" @tap.stop="handleRemove({{item}})">
+                <text>删除</text>
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <text space="emsp">费用</text>
+              </view>
+              <input class="item-value" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
+            </view>
+          </view>
+
+          <view wx:if="{{pageType <= 2}}" class="line-detail">
+            <view wx:if="{{pageType !== 2}}" class="line-left">
               <view class="item-label">
                 <text>包装状态</text>
               </view>
@@ -197,6 +227,15 @@
                 {{item.hxno || '暂无'}}
               </view>
             </view>
+            <view wx:else class="line-left">
+              <view class="item-label">
+                <text>临时单号</text>
+              </view>
+              <view class="item-value">
+                {{item.temporary_no || '暂无'}}
+              </view>
+            </view>
+
             <view class="line-right">
               <view class="item-label">
                 <text space="emsp">销售</text>
@@ -219,50 +258,65 @@
 
       </view>
     </view>
+
+  </view>
 </template>
 
 <script>
-  import wepy from 'wepy';
+import wepy from 'wepy';
 
 
-  export default class PlanList extends wepy.component {
-    config = {};
+export default class PlanList extends wepy.component {
+  config = {};
 
-    components = {};
+  components = {};
 
-    props = {
-      list: {
-        type: Array,
-        default: []
-      },
-      pageType: {
-        type: Number,
-        default: 0
+  props = {
+    list: {
+      type: Array,
+      default: []
+    },
+    // 0计划 1待出库 2入库列表 3费用
+    pageType: {
+      type: Number,
+      default: 3
+    }
+  };
+
+  data = {};
+
+  computed = {};
+
+  methods = {
+    tapStop(){
+
+    },
+    backColorClass(item) {
+      switch (backcolor) {
+        case '黄色':
+          return 'warning';
+        case '红色':
+          return 'danger';
+        case '灰色':
+          return 'info';
       }
-    };
+    },
+    tapItemHandler(item) {
+      this.$emit('tapItem', item);
+    },
+    handleChangeFee(item, evt) {
+      let val = evt.detail.value
 
-    data = {};
+      // 校验逻辑去成本搞
+      console.log('[handleChangeFee]', item, evt);
+    },
+    handleRemove(item) {
+      this.$emit('removeItem', item);
+    }
+  };
 
-    computed = {
-    };
-
-    methods = {
-      backColorClass(item){
-        switch (backcolor) {
-          case '黄色':
-            return 'warning'
-          case '红色':
-            return 'danger'
-          case '灰色':
-            return 'info'
-        }
-      },
-      tapItemHandler(item){
-        this.$emit('tapItem', item)
-      }
-    };
-
-    onLoad() {
-    };
-  }
+  onLoad() {
+    console.log(this.pageType);
+  };
+}
 </script>

@@ -36,7 +36,7 @@
         </picker>
       </view>
     </view>
-    <plan-list :list.sync="planList" @tapItem.user="goPlanDetail"></plan-list>
+    <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
     <load-more :type.sync="loadingType"></load-more>
 
   </view>
@@ -62,6 +62,7 @@
     };
 
     data = {
+      pageType: 0,
       searchForm: {
         flight: 0,
         origin: 0,
@@ -162,7 +163,7 @@
       let location = this.originOptions[this.searchForm.origin].value
 
       api.getTodayList({
-        // _noLoading: true,
+        _noLoading: true,
         query: {
           page_num: this.pageNum,
           page_size: this.pageSize,

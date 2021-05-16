@@ -2,31 +2,271 @@
 @import "../../../styles/base";
 
 .container {
+  padding: 20rpx 20rpx 0;
 
+  &-hd {
+    margin-bottom: 21rpx;
+
+    &-one {
+      .fj();
+      margin-bottom: 21rpx;
+
+      image {
+        .wl(48rpx, 48rpx);
+        margin-right: 20rpx;
+      }
+    }
+
+    &-two {
+      .fj();
+
+      .selector-box {
+        flex: 1;
+        width: 220rpx;
+        border: 1rpx solid #A0AFBA;
+        height: 60rpx;
+        border-radius: 4rpx;
+        .fj();
+        padding: 0 20rpx;
+        .sc(21rpx, #999);
+
+        image {
+          .wl(20rpx, 20rpx);
+        }
+      }
+    }
+  }
+
+  .order-list {
+    .order-item {
+      border-radius: 10rpx;
+      margin-bottom: 20rpx;
+
+      &-hd {
+        .fj();
+        font-size: 32rpx;
+        border-radius: 10rpx 10rpx 2rpx 2rpx;
+
+        &-lf {
+          width: 56rpx;
+          background: #5A738A;
+          color: white;
+          text-align: center;
+        }
+
+        &-rt {
+          flex: 1;
+          background: #EBEBEB;
+          .fj();
+          padding: 0 20rpx;
+          color: #333;
+        }
+
+        .jcno {
+          font-weight: bold;
+        }
+      }
+
+      &-bd {
+        padding: 20rpx;
+        border-radius: 0px 0px 10px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 28rpx;
+        border: 1px solid #EEEEEE;
+
+        &-col {
+          width: 50%;
+          display: flex;
+
+          .label{
+            color: #999;
+            margin-right: 30rpx;
+          }
+
+          .value{
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
 
 <template>
   <view class="container">
-    入库列表
+    <view class="container-hd">
+      <view class="container-hd-one">
+        <image src="../../../images/scan.png" @tap="scanToInSto"></image>
+        <form @submit="doSearch" style="position: relative;flex: 1;">
+          <view class="search-bar" style="">
+            <view class="input-wrap">
+              <image class="search-icon" src="../../../images/search.png"></image>
+              <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港/订单号/临时编号"/>
+            </view>
+            <button class="type-blue" form-type="submit">搜索</button>
+          </view>
+        </form>
+      </view>
+      <view class="container-hd-two">
+        <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
+        <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
+        <selector-box-date :value="time_use" mode="date"></selector-box-date>
+      </view>
+    </view>
+
+    <view class="order-list">
+      <view wx:for="{{[1,2,3]}}" wx:for-index="idx" wx:for-item="i" class="order-item">
+        <view class="order-item-hd">
+          <view class="order-item-hd-lf">{{idx}}</view>
+          <view class="order-item-hd-rt">
+            <view>0202011230001</view>
+            <view>C1</view>
+          </view>
+        </view>
+        <view class="order-item-bd">
+          <view class="order-item-bd-col">
+            <view class="label">接货人</view>
+            <view class="value">张三</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">快递公司</view>
+            <view class="value">顺丰快递</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">件数</view>
+            <view class="value">8</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">快递单号</view>
+            <view class="value">123123123</view>
+          </view>
+
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-wrap">
+      <button class="type-blue" @tap="addInSto">新 增</button>
+    </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import SelectorBox from '@/components/common/SelectorBox';
+import LoadMore from '@/components/common/loadMore';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import { flightOptions, originOptions } from '@/utils/config';
 
-export default class inSto extends wepy.page {
-  config = {};
 
-  components = {};
+export default class noJcInSto extends wepy.page {
+  config = {
+    navigationBarTitleText: '入库列表'
+  };
 
-  data = {};
+  components = {
+    'selector-box': SelectorBox,
+    'selector-box-origin': SelectorBox,
+    'load-more': LoadMore,
+    'selector-box-date': SelectorBox
+  };
+
+  data = {
+    dmczlx: '',
+    origin: '',
+    time_use: '',
+    flightOptions: flightOptions,
+    originOptions: originOptions,
+    loadingType: 'normal', // 加载状态
+    planList: [],
+    pageNum: 1,
+    pageSize: 10,
+    total: 0
+  };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    doSearch(evt) {
+      let { query } = evt.detail.value;
+
+      let parmas = {
+        time_use: this.time_use,
+        dmczlx: this.dmczlx,
+        select_name: query,
+        origin: this.origin
+      };
+
+      console.log(parmas);
+    },
+    scanToInSto() {
+      let that = this;
+
+      if (!['0', '3', '4', '5'].includes(that.userType)) {
+        tip.alert('该账号无权使用');
+        return;
+      }
+
+      wx.scanCode({
+        success(res) {
+          let jcno = res.result.substr(0, 12);
+          that.getInAbo(jcno);
+        },
+        fail(evt) {
+          that.showInputBox = true;
+          that.$apply();
+        }
+      });
+    },
+    getInAbo(jcno) {
+      api.getInAbo({
+        query: {
+          jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.$preload('res', data);
+            this.$navigate('/pages/person/inStoDetail');
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    },
+    addInSto(){
+      this.$navigate('/pages/person/inStoDetail');
+    }
+  };
+
+  getList(replace = false) {
+    this.loadingType = 'loading';
+    this.$apply();
+
+    if (replace) {
+      this.pageNum = 1;
+    }
+
+    let params = {
+      query: {
+        page_num: this.pageNum,
+        page_size: this.pageSize,
+        login_name: wx.getStorageSync('token'),
+        time_use: '',
+        dmczlx: ''
+      }
+    };
+    api.getInNoJcno(params);
+  }
 
   onLoad() {
+    // this.getList()
   };
 }
 </script>
