@@ -247,7 +247,7 @@ export default class InStoDetail extends wepy.page {
 
       func({
         method: 'POST',
-        temporary_no: '',
+        temporary_no: formData.temporary_no,
         jcno: this.formData.jcno,
         login_name: wx.getStorageSync('token'),
         query: formData
@@ -392,6 +392,7 @@ export default class InStoDetail extends wepy.page {
   onLoad(params, data) {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
+      this.formData = data.preload.item || {};
     } else {
       this.formData = data.preload.res;
     }
