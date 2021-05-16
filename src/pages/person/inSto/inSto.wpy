@@ -262,9 +262,9 @@ export default class noJcInSto extends wepy.page {
   }
 
 
-  onLoad() {
+  onShow() {
     // this.getInAbo('E15060029')
-    this.getList()
+    this.getList(true)
   };
 }
 </script>

@@ -7,7 +7,6 @@
   .detail-hd {
     color: @mainBlueColor;
     padding: 20rpx;
-    margin-bottom: 20rpx;
 
     .row {
       .fj();
@@ -393,7 +392,6 @@ export default class InStoDetail extends wepy.page {
   onLoad(params, data) {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
-      console.log('乌云djhc');
     } else {
       this.formData = data.preload.res;
     }
