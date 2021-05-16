@@ -325,7 +325,26 @@
       }
     }
 
+    /*货场接收*/
+    .yard-receiver{
+      .yard-receiver-hd{
+        padding: 40rpx 40rpx 30rpx 40rpx;
+        border-bottom: 1px solid #C5C5C5;
+        margin-bottom: 30rpx;
 
+        .row{
+          .fj();
+          color: @mainBlueColor;
+
+          .cell{
+            flex: 1;
+            .value{
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
 
     /*底部fix tab*/
     .fix-bottom-tabbar{
@@ -856,8 +875,41 @@
         </swiper-item>
         <swiper-item>
           <!--成本-->
-          <scroll-view scroll-y style="height: 100%" class="cost">
+          <scroll-view scroll-y style="height: 100%" class="yard-receiver">
+            <view class="yard-receiver-hd">
+              <view class="row">
+                <view class="cell">
+                  进仓号：<text class="value" style="margin-left: 1em;">{{yardRes.jcno}}</text>
+                </view>
+                <view class="cell">
+                  运单号：<text class="value">{{yardRes.ydno || '暂无'}}</text>
+                </view>
+              </view>
+              <view class="row">
+                <view class="cell">
+                  业务员：<text class="value" style="margin-left: 1em;">{{yardRes.czr || '暂无'}}</text>
+                </view>
+              </view>
+              <view class="row">
+                <view class="cell">
+                  货物品名：<text class="value">{{yardRes.hwpm || '暂无'}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="two-column-center-table">
+              <view class="row">
+                <view class="cell">货场接收确认人：</view>
+                <view class="cell">{{yardRes.submitter || ''}}</view>
+              </view>
+              <view class="row">
+                <view class="cell">货场接收确认时间：</view>
+                <view class="cell">{{yardRes.submit_time || ''}}</view>
+              </view>
+            </view>
 
+            <view wx:if="{{yardRes.is_button == 1}}" class="btn-wrap" style="margin-top: 500rpx">
+              <view class="button" @tap="doYardConfirm">货场接收确认</view>
+            </view>
           </scroll-view>
         </swiper-item>
       </swiper>
@@ -929,7 +981,9 @@
       },
       cost: {
         price: []
-      }
+      },
+
+      yardRes: {}
     };
 
     computed = {
@@ -1267,8 +1321,35 @@
             )
           }
         )
-      }
+      },
+      doYardConfirm() {
+        tip.confirm('确认接收?').then(
+          ()=>{
+            api.retrueOuthc({
+              method: 'POST',
+              jcno: this.jcno,
+              login_name: wx.getStorageSync('token'),
+              query: {
+                retrue_type: 'hc'
+              }
+            }).then(
+              res => {
+                if (res.data.status == 200) {
+                  let data = res.data.data;
 
+                  tip.success('确认成功', 1500).then(
+                    () => {
+                      wx.navigateBack()
+                    }
+                  )
+                } else {
+                  tip.alert(res.data.message);
+                }
+              }
+            );
+          }
+        )
+      }
     };
 
     // 获取详情
@@ -1418,6 +1499,9 @@
             this.hasAuth = false
           }
           return
+        case 4:
+          this.getHcAbo()
+          return
       }
     }
 
@@ -1436,6 +1520,29 @@
         wx.setStorageSync('PACKAGE_LIST', '');
       }
     }
+
+    getHcAbo(jcno){
+      let that = this;
+
+      api.getHcAbo({
+        query: {
+          jcno: this.jcno,
+          login_name: wx.getStorageSync('token')
+        }
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            this.yardRes = data
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    }
+
 
     onShow() {
       wx.setNavigationBarTitle({
