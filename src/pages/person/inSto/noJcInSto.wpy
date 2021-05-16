@@ -43,15 +43,18 @@
       margin-bottom: 20rpx;
 
       &-hd {
-        .fj();
+        display: flex;
         font-size: 32rpx;
         border-radius: 10rpx 10rpx 2rpx 2rpx;
+        height: 56rpx;
 
         &-lf {
           width: 56rpx;
           background: #5A738A;
           color: white;
           text-align: center;
+          border-radius: 10rpx 0 0 0;
+          line-height: 56rpx;
         }
 
         &-rt {
@@ -60,6 +63,7 @@
           .fj();
           padding: 0 20rpx;
           color: #333;
+          border-radius:0 10rpx 0 0;
         }
 
         .jcno {
@@ -255,14 +259,15 @@ export default class noJcInSto extends wepy.page {
         page_size: this.pageSize,
         login_name: wx.getStorageSync('token'),
         time_use: '',
-        dmczlx: ''
+        select_name: '',
+        warehouse_address: ''
       }
     };
     api.getInNoJcno(params);
   }
 
   onLoad() {
-    // this.getList()
+    this.getList()
   };
 }
 </script>

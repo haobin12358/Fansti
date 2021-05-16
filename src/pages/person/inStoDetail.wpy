@@ -2,19 +2,15 @@
   @import "../../styles/base";
 
   .container {
-    padding-bottom: 100rpx;
+    padding: 0 20rpx 100rpx;
 
     .detail-hd{
       color: @mainBlueColor;
-      padding: 0 40rpx;
+      padding: 20rpx;
       margin-bottom: 20rpx;
 
       .row{
         .fj();
-
-        &:first-child{
-          margin-bottom: 10rpx;
-        }
 
         view{
           flex: 1;
@@ -24,9 +20,13 @@
     }
     .form{
       .form-item{
-        padding: 30rpx;
+        padding: 20rpx;
         border-top: 1px solid #C5C5C5;
         .fj(space-between);
+
+        &:first-child{
+          border-top: none;
+        }
 
         &.photo{
           display: block;
@@ -83,21 +83,22 @@
   <view class="container">
     <view class="detail-hd">
       <view class="row" wx:if="{{formData.jcno}}">
-        <view>进仓号：<text style="font-weight: bold;margin-left: 28rpx;">{{formData.jcno || '暂无'}}</text></view>
-        <view>运单号：<text style="font-weight: bold;">{{formData.ydno || '暂无'}}</text></view>
-      </view>
-      <view class="row">
-        <view>
-          货物品名：<text style="font-weight: bold;">{{formData.hwpm || '暂无'}}</text>
-        </view>
+        <view>进仓号<text style="font-weight: bold;margin-left: 28rpx;">{{formData.jcno || '暂无'}}</text></view>
+        <view>运单号<text style="font-weight: bold;margin-left: 28rpx;">{{formData.ydno || '暂无'}}</text></view>
       </view>
     </view>
     <form @submit="doSubmit">
       <view class="form">
-        <view class="form-item">
+        <view class="form-item" wx:if="{{formData.temporary_no}}">
           <view class="label">临时单号</view>
           <view class="value">
-            {{formData.jcno}}
+            {{formData.temporary_no}}
+          </view>
+        </view>
+        <view class="form-item">
+          <view class="label">货物品名</view>
+          <view class="value">
+            {{formData.hwpm || '暂无'}}
           </view>
         </view>
         <view class="form-item">
@@ -297,14 +298,19 @@
               jcno: that.formData.jcno
             },
             success: function(res) {
-              let data = JSON.parse(res.data).data
+              let resData = JSON.parse(res.data)
+              let data = resData.data
 
-              that.picture.push({
-                url: data,
-                filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
-              })
-              that.$apply()
-              resolve(true)
+              if(resData.status === 200) {
+                that.picture.push({
+                  url: data,
+                  filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
+                })
+                that.$apply()
+                resolve(true)
+              }else{
+                resolve(false)
+              }
             },
             fail: function(){
                 reject(false)
