@@ -815,12 +815,21 @@
               </view>
               <view class="photo-item" @tap="goAddPhoto('by')">
                 <view class="title">
-                  备用
+                  集装器板条
                 </view>
                 <view class="num">
                   {{photoList.by && photoList.by.length}}
                 </view>
               </view>
+              <view class="photo-item" @tap="goAddPhoto('by')">
+                <view class="title">
+                  包装视频
+                </view>
+                <view class="num">
+                  {{photoList.by && photoList.by.length}}
+                </view>
+              </view>
+
             </view>
           </scroll-view>
         </swiper-item>
