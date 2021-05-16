@@ -19,6 +19,74 @@
     .detail{
       padding: 0 40rpx;
       box-sizing: border-box;
+
+      /*管理者选择包装者*/
+      .manager-choose-worker{
+        margin-bottom: 40rpx;
+        .choose-item{
+          padding: 20rpx 40rpx;
+          border-bottom: 1px solid #C5C5C5;
+          .fj(center);
+
+          .hd{
+            width: 150rpx;
+            color: @mainBlueColor;
+          }
+          .bd{
+            .sc(24rpx, #333333);
+            flex: 1;
+            margin: 0 10rpx;
+          }
+          .ft{
+            .wl(10rpx, 20rpx);
+          }
+        }
+      }
+
+      /*确认包装*/
+      .confirm-pack{
+        .cell{
+          padding:20rpx 40rpx;
+          border-bottom: 1px solid @borderColor;
+          .fj(stretch, flex-start);
+
+          .column{
+            flex: 1;
+            .fj(flex-start, flex-start);
+
+            .label{
+              color: @mainBlueColor;
+              margin-right: 10rpx;
+            }
+            .value{
+              color: #333333;
+
+              &.list{
+                flex: 1;
+                .fjc();
+                .item{
+                  &.input{
+                    text-align: center;
+                    .fj(flex-end);
+
+                    input{
+                      margin-right: 8rpx;
+                      width: 80rpx;
+                      border-bottom: 1px solid @borderColor;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .btn-wrap{
+          padding:20rpx 40rpx;
+          border-bottom: 1px solid @borderColor;
+        }
+      }
+
       .detail-hd{
         color: #999;
         .fj();
@@ -305,6 +373,72 @@
         <swiper-item>
           <!--详情-->
           <scroll-view scroll-y style="height: 100%" class="detail">
+            <!--保存包装人员-->
+            <view class="manager-choose-worker" wx:if="{{detailType == '2'}}">
+              <block wx:if="{{planDetail.save_button == 1}}">
+                <view class="choose-item" @tap="choosePackLeader">
+                  <view class="hd">
+                    包装负责人
+                  </view>
+                  <view class="bd">
+                    {{packerLeader || '请选择包装负责人'}}
+                  </view>
+                  <image class="ft" src="../../images/index_arrow.png"></image>
+                </view>
+                <view class="choose-item" @tap="choosePacker">
+                  <view class="hd">
+                    包装人员
+                  </view>
+                  <view class="bd">
+                    {{selectPackerListNames ||  '请选择包装人员'}}
+                  </view>
+                  <image class="ft" src="../../images/index_arrow.png"></image>
+                </view>
+              </block>
+              <view wx:else style="text-align: center;color: gray;">
+                未到分配包装人员流程
+              </view>
+            </view>
+
+            <!--确认包装-->
+            <form @submit="doConfirmPack" wx:if="{{detailType == '3'}}">
+              <view class="confirm-pack">
+                <view class="cell">
+                  <view class="column">
+                    <view class="label">包装负责人</view>
+                    <view class="value">{{planDetail.packer_leader || '暂无'}}</view>
+                  </view>
+                </view>
+                <view class="cell" wx:if="{{planDetail.packer_list.length}}">
+                  <view class="column">
+                    <view class="label">包装人员</view>
+                    <view class="value list">
+                      <view class="item" style="line-height: 55rpx;" wx:for="{{planDetail.packer_list}}">
+                        {{item.packer}}
+                      </view>
+                    </view>
+                  </view>
+                  <view class="column">
+                    <view class="label">提成比例</view>
+                    <view class="value list">
+                      <view class="item input" wx:for="{{planDetail.packer_list}}">
+                        <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%
+                      </view>
+                    </view>
+                  </view>
+
+                </view>
+                <view class="btn-wrap" style="margin-top: 0;" wx:if="{{planDetail.retrue_packer_button || planDetail.retrue_ok_button}}">
+                  <button form-type="submit" name="confirm" @tap="signConPackType('0')" class="button plain"
+                          wx:if="{{planDetail.retrue_packer_button}}">
+                    确认包装
+                  </button>
+                  <button wx:if="{{planDetail.retrue_ok_button}}" form-type="submit" name="over" @tap="signConPackType('1')" class="button plain">确认完成
+                  </button>
+                </view>
+              </view>
+            </form>
+
             <view class="detail-hd">
               <view>进仓号 <text>{{planDetail.jcno || '暂无'}}</text> </view>
               <view>运单号 <text>{{planDetail.ydno || '暂无'}}</text> </view>
@@ -720,6 +854,12 @@
             <view class="bottom-empty"></view>
           </scroll-view>
         </swiper-item>
+        <swiper-item>
+          <!--成本-->
+          <scroll-view scroll-y style="height: 100%" class="cost">
+
+          </scroll-view>
+        </swiper-item>
       </swiper>
     </block>
     <placeholder wx:else type="auth"></placeholder>
@@ -761,7 +901,7 @@
       jcno: '',
       activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
-      tabs: ['详情', '电子交接单', '照片', '成本'],
+      tabs: ['详情', '电子交接单', '照片', '成本', '货场接收'],
 
       planDetail: {},
 
