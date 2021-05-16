@@ -1,95 +1,101 @@
 <style lang="less" scoped>
-  @import "../../styles/base";
+@import "../../styles/base";
 
-  .container {
-    padding: 0 20rpx 100rpx;
+.container {
+  padding: 0 20rpx 100rpx;
 
-    .detail-hd{
-      color: @mainBlueColor;
-      padding: 20rpx;
-      margin-bottom: 20rpx;
+  .detail-hd {
+    color: @mainBlueColor;
+    padding: 20rpx;
+    margin-bottom: 20rpx;
 
-      .row{
-        .fj();
+    .row {
+      .fj();
 
-        view{
-          flex: 1;
-        }
-      }
-
-    }
-    .form{
-      .form-item{
-        padding: 20rpx;
-        border-top: 1px solid #C5C5C5;
-        .fj(space-between);
-
-        &:first-child{
-          border-top: none;
-        }
-
-        &.photo{
-          display: block;
-
-          .list{
-            margin-top: 20rpx;
-            .fj(flex-start);
-            flex-wrap: wrap;
-
-            .photo-item{
-              .wl(220rpx, 220rpx);
-              margin-right: 10rpx;
-              margin-bottom: 10rpx;
-              position: relative;
-
-              &:nth-child(3n){
-                margin-right: 0;
-              }
-
-              .img{
-                .wl(100%, 100%);
-              }
-
-              .remove{
-                position: absolute;
-                top: 0rpx;
-                right: 0rpx;
-                .wl(35rpx, 35rpx);
-              }
-            }
-          }
-        }
-
-        .label{
-          width: 160rpx;
-          margin-right: 10rpx;
-          color: @mainBlueColor;
-        }
-        .value{
-          flex: 1;
-          .sc(24rpx, #333333);
-
-          textarea{
-            width: 520rpx;
-          }
-        }
+      view {
+        flex: 1;
       }
     }
 
   }
+
+  .form {
+    .form-item {
+      padding: 20rpx;
+      border-top: 1px solid #C5C5C5;
+      .fj(space-between);
+
+      &:first-child {
+        border-top: none;
+      }
+
+      &.photo {
+        display: block;
+
+        .list {
+          margin-top: 20rpx;
+          .fj(flex-start);
+          flex-wrap: wrap;
+
+          .photo-item {
+            .wl(220rpx, 220rpx);
+            margin-right: 10rpx;
+            margin-bottom: 10rpx;
+            position: relative;
+
+            &:nth-child(3n) {
+              margin-right: 0;
+            }
+
+            .img {
+              .wl(100%, 100%);
+            }
+
+            .remove {
+              position: absolute;
+              top: 0rpx;
+              right: 0rpx;
+              .wl(35rpx, 35rpx);
+            }
+          }
+        }
+      }
+
+      .label {
+        width: 160rpx;
+        margin-right: 10rpx;
+        color: @mainBlueColor;
+      }
+
+      .value {
+        flex: 1;
+        .sc(24rpx, #333333);
+
+        textarea {
+          width: 520rpx;
+        }
+      }
+    }
+  }
+
+}
 </style>
 
 <template>
   <view class="container">
-    <view class="detail-hd">
-      <view class="row" wx:if="{{formData.jcno}}">
-        <view>进仓号<text style="font-weight: bold;margin-left: 28rpx;">{{formData.jcno || '暂无'}}</text></view>
-        <view>运单号<text style="font-weight: bold;margin-left: 28rpx;">{{formData.ydno || '暂无'}}</text></view>
+    <view class="detail-hd" wx:if="{{!isNoJc}}">
+      <view class="row">
+        <view>进仓号
+          <text style="font-weight: bold;margin-left: 28rpx;">{{formData.jcno || '暂无'}}</text>
+        </view>
+        <view>运单号
+          <text style="font-weight: bold;margin-left: 28rpx;">{{formData.ydno || '暂无'}}</text>
+        </view>
       </view>
     </view>
     <form @submit="doSubmit">
       <view class="form">
-        <view class="form-item" wx:if="{{formData.temporary_no}}">
+        <view class="form-item" wx:if="{{isNoJc}}">
           <view class="label">临时单号</view>
           <view class="value">
             {{formData.temporary_no}}
@@ -97,14 +103,18 @@
         </view>
         <view class="form-item">
           <view class="label">货物品名</view>
-          <view class="value">
+          <view class="value" wx:if="{{!isNoJc}}">
             {{formData.hwpm || '暂无'}}
+          </view>
+          <view class="value" wx:else>
+            <input type="text" name="hwpm" placeholder="请输入">
           </view>
         </view>
         <view class="form-item">
           <view class="label">库房存放地</view>
           <view class="value">
-            <textarea placeholder="请填写" auto-height value="{{formData.warehouse_address}}" name="warehouse_address"></textarea>
+            <textarea placeholder="请填写" auto-height value="{{formData.warehouse_address}}"
+                      name="warehouse_address"></textarea>
           </view>
         </view>
         <view class="form-item">
@@ -149,7 +159,7 @@
             <textarea auto-height placeholder="请填写" value="{{formData.remark}}" name="remark"/>
           </view>
         </view>
-        <view class="form-item photo">
+        <view class="form-item photo" wx:if="{{!isNoJc || formData.temporary_no}}">
           <view class="label">入仓照片</view>
           <view class="list">
             <view wx:for="{{picture}}" @tap="previewImage({{index}})" class="photo-item">
@@ -171,207 +181,222 @@
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import api from '@/api/api';
-  import tip from '@/utils/tip';
-  import DateTimePicker from '@/components/dateTimePicker';
+import wepy from 'wepy';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import DateTimePicker from '@/components/dateTimePicker';
 
 
-  export default class InStoDetail extends wepy.page {
-    config = {
-      navigationBarTitleText: '入库明细'
-    };
+export default class InStoDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '入库明细'
+  };
 
-    components = {
-      'date-time-picker': DateTimePicker
-    };
+  components = {
+    'date-time-picker': DateTimePicker
+  };
 
-    data = {
-      date: '',
-      picture: [],
-      formData: {
-      }
-    };
+  data = {
+    isNoJc: false,
+    date: '',
+    picture: [],
+    formData: {}
+  };
 
-    computed = {};
+  computed = {};
 
-    methods = {
-      goPrint() {
-        this.$navigate('/pages/person/print');
-      },
-      addPhoto(){
-        let that = this
+  methods = {
+    goPrint() {
+      this.$navigate('/pages/person/print');
+    },
+    addPhoto() {
+      let that = this;
 
-        wx.chooseImage({
-          success({tempFiles}) {
-            let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
+      wx.chooseImage({
+        success({ tempFiles }) {
+          let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024);
 
-            if(filterFiles.length != tempFiles.length){
-              tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
-                () => {
-                  that.afterChoose(filterFiles)
-                }
-              )
-            }else{
-              that.afterChoose(filterFiles)
-            }
-          }
-        })
-      },
-      doSubmit(evt){
-        let formData = evt.detail.value
-
-        let checkRst = this.checkFormData(formData)
-
-        if(checkRst){
-          tip.alert(checkRst)
-          return
-        }
-
-        formData.hwpm = this.formData.hwpm
-        formData.enter_time += ':00'
-        formData.pic_list = this.picture
-        formData.receiver_name = ''
-        api.addIn({
-          method: 'POST',
-          jcno: this.formData.jcno,
-          login_name: wx.getStorageSync('token'),
-          query: formData
-        }).then(
-          res => {
-            if (res.data.status == 200) {
-              let data = res.data.data;
-
-              tip.success('保存成功').then(
-                () => {
-                  wx.navigateBack()
-                }
-              )
-            } else {
-              tip.alert(res.data.message);
-            }
-          }
-        );
-      },
-
-      removePhoto(index){
-        this.picture.splice(index, 1)
-      },
-      previewImage(index){
-        let urls = this.picture.map(item => item.url)
-
-        wx.previewImage({
-          current: urls[index],
-          urls
-        })
-      }
-
-    };
-    afterChoose(filterFiles){
-      let that = this
-      let proms = filterFiles.map(i => that.uploadFiles(i))
-
-      Promise.all(proms).then(
-        rsts => {
-          let succCount = rsts.filter(i => i).length,
-            failCount = rsts.length - succCount
-
-          tip.toast(`成功上传${succCount}张,失败${failCount}张`)
-        }
-      )
-    }
-    uploadFiles(file){
-      let that = this
-
-      tip.loading()
-      return new Promise(
-        (resolve, reject) => {
-          wx.uploadFile({
-            url: api.uploadFilesUrl,
-            filePath: file.path,
-            name: 'file',
-            header: {
-              "Content-Type": "multipart/form-data"
-            },
-            formData: {
-              FileType: 'in',
-              index: that.picture.length + 1,
-              jcno: that.formData.jcno,
-              photo_head: that.formData.photo_head,
-            },
-            success: function(res) {
-              let resData = JSON.parse(res.data)
-              let data = resData.data
-
-              if(resData.status === 200) {
-                that.picture.push({
-                  url: data,
-                  filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
-                })
-                that.$apply()
-                resolve(true)
-              }else{
-                resolve(false)
+          if (filterFiles.length != tempFiles.length) {
+            tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
+              () => {
+                that.afterChoose(filterFiles);
               }
-            },
-            fail: function(){
-                reject(false)
-            },
-            complete: function() {
-              wx.hideLoading()
-            }
-          })
+            );
+          } else {
+            that.afterChoose(filterFiles);
+          }
         }
-      )
+      });
+    },
+    doSubmit(evt) {
+      let formData = evt.detail.value;
 
+      let checkRst = this.checkFormData(formData);
+
+      if (checkRst) {
+        tip.alert(checkRst);
+        return;
+      }
+
+      formData.hwpm = formData.hwpm ? formData.hwpm : this.formData.hwpm;
+      formData.enter_time += ':00';
+      formData.pic_list = this.picture;
+      formData.receiver_name = '';
+      formData.temporary_no = formData.temporary_no ? formData.temporary_no : '';
+
+      let func = this.isNoJc ? api.updateNojcno : api.addIn;
+
+      func({
+        method: 'POST',
+        temporary_no: '',
+        jcno: this.formData.jcno,
+        login_name: wx.getStorageSync('token'),
+        query: formData
+      }).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            tip.success('保存成功').then(
+              () => {
+                wx.navigateBack();
+              }
+            );
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      );
+    },
+
+    removePhoto(index) {
+      this.picture.splice(index, 1);
+    },
+    previewImage(index) {
+      let urls = this.picture.map(item => item.url);
+
+      wx.previewImage({
+        current: urls[index],
+        urls
+      });
     }
 
-    checkFormData(formData) {
-      let rst = ''
+  };
 
-      if (!formData.warehouse_address) {
-        rst = '请填库房存放地'
-        return rst
-      }
-      if (!formData.enter_time) {
-        rst = '请选择进仓时间'
-        return rst
-      }
-      if (!formData.goods_quantity) {
-        rst = '请填写件数'
-        return rst
-      }
-      /*if (!formData.delivery_unit) {
-        rst = '请填写送货单位'
-        return rst
-      }*/
-      if (!formData.goods_weight) {
-        rst = '请填写重量'
-        return rst
-      }
-      if (!formData.cargo_size) {
-        rst = '请填写货物尺寸'
-        return rst
-      }
-      /*if (!formData.client_name) {
-        rst = '请填写客户名称'
-        return rst
-      }
-      if (!formData.remark) {
-        rst = '请填写备注'
-        return rst
-      }*/
-      /*if (!this.picture.length) {
-        rst = '请上传入仓照片'
-        return rst
-      }*/
+  afterChoose(filterFiles) {
+    let that = this;
+    let proms = filterFiles.map(i => that.uploadFiles(i));
 
-      return ''
+    Promise.all(proms).then(
+      rsts => {
+        let succCount = rsts.filter(i => i).length,
+          failCount = rsts.length - succCount;
+
+        tip.toast(`成功上传${succCount}张,失败${failCount}张`);
+      }
+    );
+  }
+
+  uploadFiles(file) {
+    let that = this;
+
+    tip.loading();
+    return new Promise(
+      (resolve, reject) => {
+        wx.uploadFile({
+          url: api.uploadFilesUrl,
+          filePath: file.path,
+          name: 'file',
+          header: {
+            'Content-Type': 'multipart/form-data'
+          },
+          formData: {
+            FileType: 'in',
+            index: that.picture.length + 1,
+            jcno: that.formData.jcno,
+            photo_head: that.formData.photo_head
+          },
+          success: function(res) {
+            let resData = JSON.parse(res.data);
+            let data = resData.data;
+
+            if (resData.status === 200) {
+              that.picture.push({
+                url: data,
+                filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
+              });
+              that.$apply();
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          },
+          fail: function() {
+            reject(false);
+          },
+          complete: function() {
+            wx.hideLoading();
+          }
+        });
+      }
+    );
+
+  }
+
+  checkFormData(formData) {
+    let rst = '';
+
+    if (this.isNoJc && !formData.hwpm) {
+      rst = '请填货物品名';
+      return rst;
     }
-    onLoad(params, data) {
-      if(data.preload){
-        this.formData = data.preload.res;
-      }
+     if (!formData.warehouse_address) {
+      rst = '请填库房存放地';
+      return rst;
+    }
+    if (!formData.enter_time) {
+      rst = '请选择进仓时间';
+      return rst;
+    }
+    if (!formData.goods_quantity) {
+      rst = '请填写件数';
+      return rst;
+    }
+    /*if (!formData.delivery_unit) {
+      rst = '请填写送货单位'
+      return rst
+    }*/
+    if (!formData.goods_weight) {
+      rst = '请填写重量';
+      return rst;
+    }
+    if (!formData.cargo_size) {
+      rst = '请填写货物尺寸';
+      return rst;
+    }
+    /*if (!formData.client_name) {
+      rst = '请填写客户名称'
+      return rst
+    }
+    if (!formData.remark) {
+      rst = '请填写备注'
+      return rst
+    }*/
+    /*if (!this.picture.length) {
+      rst = '请上传入仓照片'
+      return rst
+    }*/
+
+    return '';
+  }
+
+  onLoad(params, data) {
+    if (data.preload.isNoJc) {
+      this.isNoJc = true;
+      console.log('乌云djhc');
+    } else {
+      this.formData = data.preload.res;
     }
   }
+}
 </script>

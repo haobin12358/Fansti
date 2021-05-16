@@ -121,7 +121,7 @@
     </view>
 
     <view class="order-list">
-      <view wx:for="{{[1,2,3]}}" wx:for-index="idx" wx:for-item="i" class="order-item">
+      <view wx:for="{{planList}}" wx:for-index="idx" class="order-item">
         <view class="order-item-hd">
           <view class="order-item-hd-lf">{{idx}}</view>
           <view class="order-item-hd-rt">
@@ -150,6 +150,7 @@
         </view>
       </view>
     </view>
+    <load-more :type.sync="loadingType"></load-more>
 
     <view class="btn-wrap">
       <button class="type-blue" @tap="addInSto">新 增</button>
@@ -241,6 +242,7 @@ export default class noJcInSto extends wepy.page {
       );
     },
     addInSto(){
+      this.$preload('isNoJc', true);
       this.$navigate('/pages/person/inStoDetail');
     }
   };
@@ -254,6 +256,7 @@ export default class noJcInSto extends wepy.page {
     }
 
     let params = {
+      _noLoading: true,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
@@ -263,11 +266,32 @@ export default class noJcInSto extends wepy.page {
         warehouse_address: ''
       }
     };
-    api.getInNoJcno(params);
+    api.getInNoJcno(params).then(
+      res => {
+        if (res.data.status == 200) {
+          if (replace) {
+            this.planList = res.data.data;
+          } else {
+            this.planList = [...this.planList, ...res.data.data];
+          }
+
+          if (res.data.data.length == this.pageSize) {
+            this.loadingType = 'normal';
+          } else {
+            this.loadingType = 'nomore';
+          }
+
+          this.pageNum++;
+          this.$apply();
+        }else {
+          tip.alert(res.data.message);
+        }
+      }
+    )
   }
 
-  onLoad() {
-    this.getList()
+  onShow() {
+    this.getList(true)
   };
 }
 </script>
