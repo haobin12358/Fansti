@@ -231,6 +231,7 @@
         formData.hwpm = this.formData.hwpm
         formData.enter_time += ':00'
         formData.pic_list = this.picture
+        formData.receiver_name = ''
         api.addIn({
           method: 'POST',
           jcno: this.formData.jcno,
@@ -295,7 +296,8 @@
             formData: {
               FileType: 'in',
               index: that.picture.length + 1,
-              jcno: that.formData.jcno
+              jcno: that.formData.jcno,
+              photo_head: that.formData.photo_head,
             },
             success: function(res) {
               let resData = JSON.parse(res.data)
