@@ -1,0 +1,207 @@
+<style lang="less" scoped>
+@import "../../styles/base";
+
+.container {
+  padding-bottom: 50rpx;
+  &-hd {
+    display: flex;
+    padding: 20rpx 40rpx;
+
+    &-item {
+      flex: 1;
+      font-size: 32rpx;
+
+
+      .label {
+        color: #999;
+        margin-right: 10rpx;
+      }
+
+      .value {
+        color: @mainBlueColor;
+      }
+    }
+  }
+
+  .form {
+    .fz28;
+    padding: 0 20rpx;
+
+    .form-item {
+      .fj();
+      padding: 20rpx;
+      border-bottom: 1px solid rgba(197, 197, 197, .4);
+
+      .label {
+        color: #666;
+      }
+
+      .value {
+        color: #333;
+      }
+
+      &.photo {
+        display: block;
+
+        .list {
+          margin-top: 20rpx;
+          .fj(flex-start);
+          flex-wrap: wrap;
+
+          .photo-item {
+            .wl(220rpx, 220rpx);
+            margin-right: 10rpx;
+            margin-bottom: 10rpx;
+            position: relative;
+
+            &:nth-child(3n) {
+              margin-right: 0;
+            }
+
+            .img {
+              .wl(100%, 100%);
+            }
+
+            .remove {
+              position: absolute;
+              top: 0rpx;
+              right: 0rpx;
+              .wl(35rpx, 35rpx);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="container-hd">
+      <view class="container-hd-item">
+        <text class="label">进仓号</text>
+        <text class="value">{{formData.jcno || '暂无'}}</text>
+      </view>
+      <view class="container-hd-item">
+        <text class="label">运单号</text>
+        <text class="value">{{formData.ydno || '暂无'}}</text>
+      </view>
+    </view>
+    <view class="form">
+      <view class="form-item">
+        <view class="label">客户名称</view>
+        <view class="value">{{formData.client_name || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">进仓时间</view>
+        <view class="value">{{formData.enter_time || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">快递公司</view>
+        <view class="value">{{formData.delivery_unit || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">快递单号</view>
+        <view class="value">{{formData.delivery_number || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">始发方电话</view>
+        <view class="value">{{formData.originator_phone || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">库位</view>
+        <view class="value">{{formData.warehouse_address || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">货物品名</view>
+        <view class="value">{{formData.hwpm || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">件数</view>
+        <view class="value">{{formData.goods_quantity || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">重量</view>
+        <view class="value">{{formData.goods_weight || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">货物尺寸</view>
+        <view class="value">{{formData.cargo_size || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">批号</view>
+        <view class="value">{{formData.batch_number || '暂无'}}</view>
+      </view>
+      <view class="form-item">
+        <view class="label">备注</view>
+        <view class="value">{{formData.remark || '暂无'}}</view>
+      </view>
+      <view class="form-item photo">
+        <view class="label">入仓照片</view>
+        <view class="list">
+          <view wx:for="{{formdata.pic_list}}" @tap="previewImage({{index}})" class="photo-item">
+            <image class="img" src="{{item.photourl}}"></image>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="btn-wrap">
+      <button class="button plain" @tap="addInSto">扫 码</button>
+      <button class="button type-blue" @tap="goDetail">详 情</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/tip';
+
+export default class planConfirm extends wepy.page {
+  config = {
+    navigationBarTitleText: '包装确认'
+  };
+
+  components = {};
+
+  data = {
+    formData: {}
+  };
+
+  computed = {};
+
+  methods = {
+    scanToInSto() {
+      let that = this;
+
+      wx.scanCode({
+        success(res) {
+          let jcno = res.result.substr(0, 12);
+
+          if(this.formData.jcno === jcno) {
+            wx.redirectTo({
+              url: `/pages/person/planDetail?jcno=${this.formData.jcno}`
+            })
+          }else{
+
+          }
+        },
+        fail(evt) {
+          that.$apply();
+        }
+      });
+    },
+    goDetail() {
+      wx.redirectTo({
+        url: `/pages/person/planDetail?jcno=${this.formData.jcno}`
+      })
+    }
+  };
+
+  onLoad(params, data) {
+    this.formData = data.preload.res;
+  };
+}
+</script>

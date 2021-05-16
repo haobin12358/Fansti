@@ -12,18 +12,33 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-
       // 入库
-      'pages/person/inStoDetail', // 入库明细
-      'pages/person/inSto/noJcInSto', // 无进仓号入库
-      'pages/person/inSto/index', // 入库菜单
-      'pages/person/inSto/inSto', // 入库列表
-
       'pages/person/index', // 操作首页
+      'pages/person/plan', // 计划列表
+      'pages/person/inSto/noJcInSto', // 无进仓号入库
+      'pages/person/inSto/inSto', // 入库列表
+      'pages/person/planConfirm', // 包装确认
+      'pages/person/inSto/index', // 入库菜单
+      'pages/person/inStoDetail', // 入库明细
 
-
+      // 出库
+      'pages/person/outSto/toOutSto', // 待出库菜单
       'pages/person/outSto/index', // 出库菜单
+      'pages/person/outSto/toOutStoFee', // 待出库菜单
+      'pages/person/outSto/outSto', // 已出库菜单
+
+
+
       'pages/person/yardReceive/index', // 货场菜单
+
+
+
+
+
+      'pages/index/index',  //首页
+      'pages/index/newsDetail', //新闻详情
+
+
       'pages/history', // 操作首页
 
 
@@ -42,7 +57,6 @@ export default class extends wepy.app {
       'pages/track/confirmConsignment',  //确认托运照片
       'pages/person/login', // 登录
       'pages/person/declare', // 申报列表
-      'pages/person/plan', // 计划列表
       'pages/person/selectPacker', // 选择包装人员
       'pages/person/addCost', // 添加成本
       'pages/person/declareDetail', // 申报详情
@@ -58,8 +72,7 @@ export default class extends wepy.app {
 
       'pages/track/consignmentDetail',  //托运详情
 
-      'pages/index/index',  //首页
-      'pages/index/newsDetail', //新闻详情
+
 
       'pages/search/surveyReportSearch', //鉴定报告
       'pages/search/flightSearch', //航班时刻
@@ -126,6 +139,8 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
+    wx.setStorageSync('token', '董博')
+    wx.setStorageSync('user_type', '0')
     return
     if(wx.getStorageSync('token')){
       wx.reLaunch({

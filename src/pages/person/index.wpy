@@ -264,45 +264,7 @@
       );
     }
 
-    scanToOutSto() {
-      let that = this
 
-      if(!['0', '3', '4', '5'].includes(that.userType) ){
-        tip.alert('该账号无权使用')
-        return
-      }
-
-      wx.scanCode({
-        success(res){
-          let jcno = res.result.substr(0,12);
-
-          that.getOutAbo(jcno)
-        },
-        fail() {
-          that.showInputBox = true
-          that.$apply()
-        }
-      })
-    }
-    getOutAbo(jcno){
-      api.getOutAbo({
-        query: {
-          jcno,
-          login_name: wx.getStorageSync('token')
-        }
-      }).then(
-        res => {
-          if (res.data.status == 200) {
-            let data = res.data.data;
-
-            this.$preload('res', data);
-            this.$navigate('/pages/person/outStoDetail')
-          } else {
-            tip.alert(res.data.message);
-          }
-        }
-      );
-    }
 
     // 货场接收
     scanToReceive() {

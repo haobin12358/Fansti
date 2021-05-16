@@ -82,7 +82,7 @@ export default class Placeholder extends wepy.component {
   events = {};
 
   onLoad() {
-    console.log(this.options);
+    // console.log(this.options);
   }
 }
 </script>

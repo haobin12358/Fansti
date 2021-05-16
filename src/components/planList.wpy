@@ -2,7 +2,7 @@
 @import "../styles/base";
 
 .plan-list {
-  padding: 0 20rpx;
+  /*padding: 0 20rpx;*/
 
   .plan-item-wrap {
     display: flex;
@@ -12,14 +12,12 @@
   .plan-item {
     flex: 1;
     margin-bottom: 20rpx;
-    height: 220rpx;
+    /*height: 220rpx;*/
     border-radius: 10rpx;
     border: 1px solid @borderColor;
     box-sizing: border-box;
     color: @mainBlueColor;
-
-    .fj();
-
+    display: flex;
     position: relative;
     overflow: hidden;
 
@@ -47,7 +45,7 @@
 
     .plan-item-left {
       width: 65rpx;
-      height: 100%;
+      /*height: 100%;*/
       border-right: 1px solid #C6C6C6;
 
       .fjc(start);
@@ -58,14 +56,19 @@
       height: 100%;
       box-sizing: border-box;
       padding: 15rpx 35rpx 15rpx 10rpx;
-      .fz28;
+      //.fz24;
       .fjc();
+      font-size: 24rpx;
 
       .line-detail {
         width: 100%;
-
+        margin-bottom: 15rpx;
         display: flex;
         justify-content: space-between;
+
+        &:last-child{
+          margin-bottom: 0;
+        }
 
         .line-right {
           min-width: 45%;
@@ -135,11 +138,11 @@
         <view class="plan-item-left">
           <view style="margin:15rpx 0 65rpx;">{{index + 1}}</view>
           <block wx:if="{{item.icon === '拍照'}}">
-            <view style="margin-bottom: 10rpx">拍</view>
+            <view>拍</view>
             <view>照</view>
           </block>
           <block wx:elif="{{item.icon === '交货'}}">
-            <view style="margin-bottom: 10rpx">交</view>
+            <view>交</view>
             <view>货</view>
           </block>
           <block wx:else>
@@ -198,7 +201,7 @@
               <view class="item-label">
                 <text space="emsp">件数</text>
               </view>
-              <input wx:if="{{pageType === 3}}" class="item-value" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
+              <input wx:if="{{pageType === 3}}" placeholder="请输入" class="item-value" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
               <view wx:else class="item-value">
                 {{item.jsbzcc || '暂无'}}
               </view>
@@ -214,7 +217,7 @@
               <view class="item-label">
                 <text space="emsp">费用</text>
               </view>
-              <input class="item-value" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
+              <input class="item-value" placeholder="请输入" style="width: 100rpx" type="text" @input="handleChangeFee({{item}})" @tap.stop="tapStop"/>
             </view>
           </view>
 

@@ -298,9 +298,9 @@
 
       .cost-hd {
         color: @mainBlueColor;
-        padding: 0 40rpx;
+        padding: 20rpx 40rpx 0;
         .fj();
-        margin-bottom: 60rpx;
+        margin-bottom: 40rpx;
 
         view{
           flex: 1;
@@ -430,15 +430,15 @@
                 </view>
                 <view class="cell" wx:if="{{planDetail.packer_list.length}}">
                   <view class="column">
-                    <view class="label">包装人员</view>
+                    <view class="label" style="line-height: 60rpx;">包装人员</view>
                     <view class="value list">
-                      <view class="item" style="line-height: 55rpx;" wx:for="{{planDetail.packer_list}}">
+                      <view class="item" style="line-height: 60rpx;" wx:for="{{planDetail.packer_list}}">
                         {{item.packer}}
                       </view>
                     </view>
                   </view>
                   <view class="column">
-                    <view class="label">提成比例</view>
+                    <view class="label" style="line-height: 60rpx;">提成比例</view>
                     <view class="value list">
                       <view class="item input" wx:for="{{planDetail.packer_list}}">
                         <input type="text" name="rate{{index}}" value="{{item.royalty_rate}}"/>%

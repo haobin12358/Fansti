@@ -27,3 +27,16 @@ export const originOptions = [
   }
 ];
 
+export const packageOptions = [
+  {
+    label: '全部包装',
+    value: ''
+  }, {
+    label: '未包装',
+    value: '0'
+  }, {
+    label: '已包装',
+    value: '1'
+  }
+];
+
