@@ -1363,7 +1363,7 @@
 
     // 获取详情
     getPlanDetail() {
-      api.getCJcAbo({
+      api.getBzjhAbo({
         query: {
           jcno: this.jcno,
           login_name: wx.getStorageSync('token')
