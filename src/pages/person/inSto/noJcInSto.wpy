@@ -185,6 +185,7 @@ export default class noJcInSto extends wepy.page {
   data = {
     dmczlx: '',
     time_use: '',
+    select_name: '',
     flightOptions: flightOptions,
     loadingType: 'normal', // 加载状态
     planList: [],
@@ -200,7 +201,7 @@ export default class noJcInSto extends wepy.page {
       let { query } = evt.detail.value;
 
       this.select_name = query
-      this.getList()
+      this.getList(true)
     },
     scanToInSto() {
       let that = this;
@@ -270,16 +271,19 @@ export default class noJcInSto extends wepy.page {
 
     if (replace) {
       this.pageNum = 1;
+      this.planList = []
+      this.$apply()
     }
 
     let params = {
-      _noLoading: true,
+      _noLoading: !replace,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
         login_name: wx.getStorageSync('token'),
-        time_use: '',
-        select_name: '',
+        time_use: this.time_use,
+        select_name: this.select_name,
+        dmczlx: this.dmczlx,
         warehouse_address: ''
       }
     };
