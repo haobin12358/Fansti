@@ -219,10 +219,12 @@ export default class noJcInSto extends wepy.page {
 
     if (replace) {
       this.pageNum = 1;
+      this.planList = []
+      this.$apply()
     }
 
     let params = {
-      _noLoading: true,
+      _noLoading: !replace,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
