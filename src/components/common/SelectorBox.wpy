@@ -10,6 +10,10 @@
   .fj();
   padding: 0 20rpx;
   .sc(24rpx, #999);
+
+  &.small{
+    .fz(16rpx);
+  }
   &-bd{
     flex: 1;
     height: 100%;
@@ -70,12 +74,18 @@ export default class Placeholder extends wepy.component {
       // console.log(evt.detail.value, this.pickerValue);
       this.pickerValue = evt.detail.value
       this.value = this.options[this.pickerValue].value
+      this.$apply()
+      this.$emit('change')
     },
     handleDateChange(evt) {
       this.value = evt.detail.value
+      this.$apply()
+      this.$emit('change')
     },
     doSearchAllDate() {
       this.value = ''
+      this.$apply()
+      this.$emit('change')
     }
   };
 
