@@ -39,7 +39,7 @@ const getJcPic = params => wxRequest(params, host + `/control/get_jc_pic`);
 const getJcCb = params => wxRequest(params, host + `/control/get_jc_cb`);
 const getFkdw = params => wxRequest(params, host + `/control/get_fkdw`);
 const getFyzl = params => wxRequest(params, host + `/control/get_fyzl`);
-const getInAbo = params => wxRequest(params, host + `/control/get_in_abo`);
+const getInAbo = params => wxRequest(params, host + `/control/get_in_abo_jcno`);
 const getOutAbo = params => wxRequest(params, host + `/control/get_out_abo`);
 const getHcAbo = params => wxRequest(params, host + `/control/get_hc_abo`);
 const getSbList = params => wxRequest(params, host + `/control/get_sb_list`);

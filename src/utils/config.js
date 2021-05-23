@@ -40,3 +40,16 @@ export const packageOptions = [
   }
 ];
 
+export const weightOptions = [
+  {
+    label: '全部称重',
+    value: ''
+  }, {
+    label: '未称重',
+    value: '0'
+  }, {
+    label: '已称重',
+    value: '1'
+  }
+];
+
