@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "../../styles/base";
+@import "src/styles/base";
 
 .container {
 

@@ -162,7 +162,7 @@
       handleRedirect(command) {
         switch (command) {
           case 'inSto':
-            this.$navigate('/pages/person/inSto/index');
+            this.$navigate('/pages/operation/inSto/index');
             break;
           case 'package':
             this.$navigate('/pages/person/plan');

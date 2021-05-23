@@ -14,22 +14,27 @@ export default class extends wepy.app {
     pages: [
       // 入库
       'pages/person/index', // 操作首页
+
       'pages/person/plan', // 计划列表
-      'pages/person/inSto/noJcInSto', // 无进仓号入库
-      'pages/person/inSto/inSto', // 入库列表
       'pages/person/planConfirm', // 包装确认
-      'pages/person/inSto/index', // 入库菜单
       'pages/person/inStoDetail', // 入库明细
+
+
+      // 'pages/person/yardReceive/yardReceive', // 货场菜单
+      // 'pages/person/yardReceive/toYardReceive', // 货场菜单
+      // 'pages/person/yardReceive/index', // 货场菜单
 
       // 出库
       'pages/person/outSto/toOutSto', // 待出库菜单
+      'pages/person/outSto/outSto', // 已出库菜单
       'pages/person/outSto/index', // 出库菜单
       'pages/person/outSto/toOutStoFee', // 待出库菜单
-      'pages/person/outSto/outSto', // 已出库菜单
 
 
 
-      'pages/person/yardReceive/index', // 货场菜单
+
+
+
 
 
 
@@ -39,7 +44,6 @@ export default class extends wepy.app {
       'pages/index/newsDetail', //新闻详情
 
 
-      'pages/history', // 操作首页
 
 
 
@@ -61,7 +65,7 @@ export default class extends wepy.app {
       'pages/person/addCost', // 添加成本
       'pages/person/declareDetail', // 申报详情
       'pages/person/formTest', // 计划详情
-      'pages/person/goodsYardReceive', // 货场接收
+      // 'pages/person/goodsYardReceive', // 货场接收
       'pages/person/outStoDetail', // 出库确认
       'pages/person/shareList', //分享列表
       'pages/person/personCard',  //个人名片
@@ -79,6 +83,17 @@ export default class extends wepy.app {
       'pages/search/tcatSearch', //tcac
       'pages/search/casSearch', //cas
       'pages/search/hsCodeSearch', //hs code
+    ],
+    subPackages: [
+      {
+        root: 'pages/operation',
+        pages: [
+          'history', // 操作首页
+          'inSto/noJcInSto', // 无进仓号入库
+          'inSto/inSto', // 入库列表
+          'inSto/index', // 入库菜单
+        ]
+      }
     ],
     window: {
       backgroundTextStyle: 'light',
