@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "../../../styles/base";
+@import "src/styles/base";
 
 .container {
   .list {
@@ -33,13 +33,13 @@
         <view class="item-hd">
           待出库
         </view>
-        <image class="item-ft" src="../../../images/index_arrow.png"></image>
+        <image class="item-ft" src="../resources/index_arrow.png"></image>
       </view>
       <view class="list-item" @tap="handleRedirect('out')">
         <view class="item-hd">
           已出库
         </view>
-        <image class="item-ft" src="../../../images/index_arrow.png"></image>
+        <image class="item-ft" src="../resources/index_arrow.png"></image>
       </view>
     </view>
   </view>
@@ -60,9 +60,9 @@ export default class inStoIndex extends wepy.page {
   methods = {
     handleRedirect(command){
       if(command === 'noOut') {
-        this.$navigate('/pages/person/outSto/toOutSto');
+        this.$navigate('/pages/operation/outSto/toOutSto');
       }else {
-        this.$navigate('/pages/person/outSto/outSto');
+        this.$navigate('/pages/operation/outSto/outSto');
       }
     }
   };

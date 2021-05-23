@@ -24,19 +24,6 @@ export default class extends wepy.app {
       // 'pages/person/yardReceive/toYardReceive', // 货场菜单
       // 'pages/person/yardReceive/index', // 货场菜单
 
-      // 出库
-      'pages/person/outSto/toOutSto', // 待出库菜单
-      'pages/person/outSto/outSto', // 已出库菜单
-      'pages/person/outSto/index', // 出库菜单
-      'pages/person/outSto/toOutStoFee', // 待出库菜单
-
-
-
-
-
-
-
-
 
 
 
@@ -89,9 +76,16 @@ export default class extends wepy.app {
         root: 'pages/operation',
         pages: [
           'history', // 操作首页
+
           'inSto/noJcInSto', // 无进仓号入库
           'inSto/inSto', // 入库列表
           'inSto/index', // 入库菜单
+
+          // 出库
+          'outSto/toOutSto', // 待出库菜单
+          'outSto/outSto', // 已出库菜单
+          'outSto/index', // 出库菜单
+          'outSto/toOutStoFee', // 待出库菜单
         ]
       }
     ],

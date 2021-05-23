@@ -168,7 +168,7 @@
             this.$navigate('/pages/person/plan');
             break;
           case 'outSto':
-            this.$navigate('/pages/person/outSto/index');
+            this.$navigate('/pages/operation/outSto/index');
             break;
           case 'yardReceive':
             this.$navigate('/pages/person/yardReceive/index');
@@ -312,6 +312,9 @@
     onShow(){
     }
     onLoad(){
+      // todo
+      this.$navigate('/pages/operation/outSto/index')
+
       this.userType = wx.getStorageSync('user_type')
     }
 

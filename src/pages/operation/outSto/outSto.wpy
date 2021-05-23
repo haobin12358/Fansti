@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "../../../styles/base";
+@import "src/styles/base";
 
 .container {
   padding: 20rpx 20rpx 0;
@@ -112,7 +112,9 @@ import tip from '@/utils/tip';
 import LoadMore from '@/components/common/loadMore';
 
 export default class outSto extends wepy.page {
-  config = {};
+  config = {
+    navigationBarTitleText: '已出库'
+  };
 
   components = {
     'selector-box-origin': SelectorBox,

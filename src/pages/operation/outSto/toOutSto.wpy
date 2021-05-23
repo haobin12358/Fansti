@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import "../../../styles/base";
+@import "src/styles/base";
 
 .container {
   padding: 20rpx 20rpx 0;
@@ -98,11 +98,11 @@
   <view class="container">
     <view class="container-hd">
       <view class="container-hd-one">
-        <image src="../../../images/scan.png" @tap="scanToOutSto"></image>
+        <image src="../resources/scan.png" @tap="scanToOutSto"></image>
         <form @submit="doSearch" style="position: relative;flex: 1;">
           <view class="search-bar" style="">
             <view class="input-wrap">
-              <image class="search-icon" src="../../../images/search.png"></image>
+              <image class="search-icon" src="../resources/search.png"></image>
               <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港/订单号/临时编号"/>
             </view>
             <button class="type-blue" form-type="submit">搜索</button>
@@ -112,15 +112,16 @@
       <view class="container-hd-two">
         <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
         <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
-        <selector-box-package :value="origin" :options="packageOptions"></selector-box-package>
-        <selector-box-date :value="package" mode="date"></selector-box-date>
+        <selector-box-package :value="bzflag" :options="packageOptions"></selector-box-package>
+        <selector-box-date :value="time_use" mode="date"></selector-box-date>
       </view>
     </view>
 
     <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
+    <load-more :type.sync="loadingType"></load-more>
 
     <view class="btn-wrap">
-      <button class="type-blue" @tap="doSaveFee">保存</button>
+      <button class="type-blue" @tap="goFee">下一步</button>
     </view>
   </view>
 </template>
@@ -137,7 +138,7 @@ import { flightOptions, originOptions, packageOptions } from '@/utils/config';
 
 export default class noJcInSto extends wepy.page {
   config = {
-    navigationBarTitleText: '短驳费分摊'
+    navigationBarTitleText: '待出库'
   };
 
   components = {
@@ -154,12 +155,14 @@ export default class noJcInSto extends wepy.page {
     origin: '',
     package: '',
     time_use: '',
+    select_name: '',
+    bzflag: '',
     flightOptions: flightOptions,
     originOptions: originOptions,
     packageOptions: packageOptions,
     loadingType: 'normal', // 加载状态
-    pageType: 3,
-    planList: [{}],
+    pageType: 1,
+    planList: [],
     pageNum: 1,
     pageSize: 10,
     total: 0
@@ -171,14 +174,8 @@ export default class noJcInSto extends wepy.page {
     doSearch(evt) {
       let { query } = evt.detail.value;
 
-      let parmas = {
-        time_use: this.time_use,
-        dmczlx: this.dmczlx,
-        select_name: query,
-        origin: this.origin
-      };
-
-      console.log(parmas);
+      this.select_name = query
+      this.getList(true)
     },
     scanToOutSto() {
       let that = this
@@ -219,8 +216,8 @@ export default class noJcInSto extends wepy.page {
         }
       );
     },
-    doSaveFee(){
-
+    goFee(){
+      this.$navigate('/pages/person/outSto/toOutStoFee');
     }
   };
 
@@ -230,23 +227,55 @@ export default class noJcInSto extends wepy.page {
 
     if (replace) {
       this.pageNum = 1;
+      this.planList = []
+      this.$apply()
     }
 
     let params = {
+      _noLoading: !replace,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
         login_name: wx.getStorageSync('token'),
-        time_use: '',
-        select_name: '',
-        dmczlx: ''
+        time_use: this.time_use,
+        select_name: this.select_name,
+        location: this.origin,
+        dmczlx: this.dmczlx,
+        bzflag: this.bzflag
       }
     };
-    api.getInJcno(params);
+    api.getOutingList(params).then(
+      res => {
+        if (res.data.status == 200) {
+          if (replace) {
+            this.planList = res.data.data;
+          } else {
+            this.planList = [...this.planList, ...res.data.data];
+          }
+
+          if (res.data.data.length == this.pageSize) {
+            this.loadingType = 'normal';
+          } else {
+            this.loadingType = 'nomore';
+          }
+
+          this.pageNum++;
+          this.$apply();
+        }else {
+          tip.alert(res.data.message);
+        }
+      }
+    )
+  }
+
+  onReachBottom() {
+    if(this.loadingType != 'nomore'){
+      this.getList();
+    }
   }
 
   onLoad() {
-    // this.getList()
+    this.getList(true)
   };
 }
 </script>
