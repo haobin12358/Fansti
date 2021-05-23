@@ -112,8 +112,8 @@
       <view class="container-hd-two">
         <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
         <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
-        <selector-box-package :value="origin" :options="packageOptions"></selector-box-package>
-        <selector-box-date :value="package" mode="date"></selector-box-date>
+        <selector-box-package :value="bzflag" :options="packageOptions"></selector-box-package>
+        <selector-box-date :value="time_use" mode="date"></selector-box-date>
       </view>
     </view>
 
@@ -155,6 +155,8 @@ export default class noJcInSto extends wepy.page {
     origin: '',
     package: '',
     time_use: '',
+    select_name: '',
+    bzflag: '',
     flightOptions: flightOptions,
     originOptions: originOptions,
     packageOptions: packageOptions,
@@ -172,14 +174,8 @@ export default class noJcInSto extends wepy.page {
     doSearch(evt) {
       let { query } = evt.detail.value;
 
-      let parmas = {
-        time_use: this.time_use,
-        dmczlx: this.dmczlx,
-        select_name: query,
-        origin: this.origin
-      };
-
-      console.log(parmas);
+      this.select_name = query
+      this.getList(true)
     },
     scanToOutSto() {
       let that = this
@@ -231,18 +227,21 @@ export default class noJcInSto extends wepy.page {
 
     if (replace) {
       this.pageNum = 1;
+      this.planList = []
+      this.$apply()
     }
 
     let params = {
-      _noLoading: true,
+      _noLoading: !replace,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
         login_name: wx.getStorageSync('token'),
-        time_use: '',
-        select_name: '',
-        location: '',
-        dmczlx: ''
+        time_use: this.time_use,
+        select_name: this.select_name,
+        location: this.origin,
+        dmczlx: this.dmczlx,
+        bzflag: this.bzflag
       }
     };
     api.getOutingList(params).then(
@@ -269,8 +268,14 @@ export default class noJcInSto extends wepy.page {
     )
   }
 
+  onReachBottom() {
+    if(this.loadingType != 'nomore'){
+      this.getList();
+    }
+  }
+
   onLoad() {
-    this.getList()
+    this.getList(true)
   };
 }
 </script>

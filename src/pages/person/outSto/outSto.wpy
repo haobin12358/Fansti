@@ -2,31 +2,202 @@
 @import "../../../styles/base";
 
 .container {
+  padding: 20rpx 20rpx 0;
 
+  &-hd {
+    .fj();
+    margin-bottom: 20rpx;
+
+    .cancel-out {
+      .type-blue;
+      padding: 0 37rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      margin-left: 20rpx;
+      border-radius: 4rpx;
+      text-align: center;
+      width: 4em;
+
+      &.disabled{
+        opacity: .5;
+      }
+    }
+  }
+
+  .order-list {
+    .order-item {
+      margin-bottom: 20rpx;
+
+      &.choosed{
+        .order-item-bd{
+          border-color: @mainBlueColor;
+        }
+      }
+
+      &-bd {
+        padding: 20rpx;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 28rpx;
+        border: 1px solid #EEEEEE;
+        border-radius: 10px;
+
+        &-col {
+          width: 50%;
+          display: flex;
+
+          .label {
+            color: #999;
+            margin-right: 30rpx;
+            width: 120rpx;
+          }
+
+          .value {
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
 
 <template>
   <view class="container">
-    已出库
+    <view class="container-hd">
+      <selector-box-origin :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
+      <selector-box-date :value="time_use" mode="date" @change.user="doSearch"></selector-box-date>
+      <view class="{{chooseItem.id ? 'cancel-out' : 'cancel-out disabled'}}">
+        {{chooseItem.id ? '取消出库' : '请选择'}}
+      </view>
+    </view>
+
+    <view class="order-list">
+      <view class="{{chooseItem.id === item.id ? 'order-item choosed' : 'order-item'}}" wx:for="{{planList}}" @tap="tapItem({{item}})">
+        <view class="order-item-bd">
+          <view class="order-item-bd-col">
+            <view class="label">车次</view>
+            <view class="value">{{item.truck_times || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">车号</view>
+            <view class="value">{{item.truck_num || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">车辆类型</view>
+            <view class="value">{{item.truck_type || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">整车费用</view>
+            <view class="value">{{item.vehicle_cost || '暂无'}}</view>
+          </view>
+
+        </view>
+
+      </view>
+    </view>
+    <load-more :type.sync="loadingType"></load-more>
+
+
+
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import SelectorBox from '@/components/common/SelectorBox';
+import { originOptions } from '@/utils/config';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import LoadMore from '@/components/common/loadMore';
 
 export default class outSto extends wepy.page {
   config = {};
 
-  components = {};
+  components = {
+    'selector-box-origin': SelectorBox,
+    'selector-box-date': SelectorBox,
+    'load-more': LoadMore,
+  };
 
-  data = {};
+  data = {
+    origin: '',
+    time_use: '',
+    originOptions: originOptions,
+
+    loadingType: 'normal', // 加载状态
+    planList: [],
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    chooseItem: {}
+  };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    doSearch(){
+      this.getList(true)
+    },
+    tapItem(item) {
+      this.chooseItem = item
+      this.$apply()
+    }
+  };
+
+  getList(replace = false) {
+    this.loadingType = 'loading';
+    this.$apply();
+
+    if (replace) {
+      this.pageNum = 1;
+      this.planList = []
+      this.$apply()
+    }
+
+    let params = {
+      _noLoading: !replace,
+      query: {
+        page_num: this.pageNum,
+        page_size: this.pageSize,
+        login_name: wx.getStorageSync('token'),
+        location: this.origin,
+        time_use: this.time_use
+      }
+    };
+    api.getOutedList(params).then(
+      res => {
+        if (res.data.status == 200) {
+          if (replace) {
+            this.planList = res.data.data;
+          } else {
+            this.planList = [...this.planList, ...res.data.data];
+          }
+
+          if (res.data.data.length == this.pageSize) {
+            this.loadingType = 'normal';
+          } else {
+            this.loadingType = 'nomore';
+          }
+
+          this.pageNum++;
+          this.$apply();
+        }else {
+          tip.alert(res.data.message);
+        }
+      }
+    )
+  }
+
+
+  onReachBottom() {
+    if(this.loadingType != 'nomore'){
+      this.getList();
+    }
+  }
 
   onLoad() {
+    this.getList(true)
   };
 }
 </script>
