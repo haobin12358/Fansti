@@ -12,20 +12,19 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      // 入库
       'pages/person/index', // 操作首页
-
+      'pages/person/todayList', // 计划列表
       'pages/person/plan', // 计划列表
       'pages/person/planConfirm', // 包装确认
+
+      // 入库
       'pages/person/inStoDetail', // 入库明细
 
 
-      // 'pages/person/yardReceive/yardReceive', // 货场菜单
-      // 'pages/person/yardReceive/toYardReceive', // 货场菜单
-      // 'pages/person/yardReceive/index', // 货场菜单
 
-
-
+      'pages/person/yardReceive/yardReceive', // 货场菜单
+      'pages/person/yardReceive/toYardReceive', // 货场菜单
+      'pages/person/yardReceive/index', // 货场菜单
 
       'pages/index/index',  //首页
       'pages/index/newsDetail', //新闻详情
@@ -86,6 +85,8 @@ export default class extends wepy.app {
           'outSto/outSto', // 已出库菜单
           'outSto/index', // 出库菜单
           'outSto/toOutStoFee', // 待出库菜单
+
+
         ]
       }
     ],

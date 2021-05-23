@@ -1,0 +1,220 @@
+<style lang="less" scoped>
+@import "../../styles/base";
+
+.container {
+  color: @mainBlueColor;
+
+  .search-form{
+    margin: 25rpx 0;
+    padding: 0 30rpx;
+    .fj();
+
+    view{
+      border-bottom: 1px solid @mainBlueColor;
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="search-form">
+      <view>
+        <picker @change="changeFlight" range="{{flightOptions}}" value="{{searchForm.flight}}"
+                range-key="label">
+          {{flightOptions[searchForm.flight].label}}
+        </picker>
+      </view>
+      <view>
+        <picker @change="changeOrigin" value="{{searchForm.origin}}" range="{{originOptions}}" range-key="label">
+          {{originOptions[searchForm.origin].label}}
+        </picker>
+      </view>
+      <view>
+        <picker @change="changeSearchDate" @cancel="doSearchAllDate" mode="date" value="{{searchForm.date}}">
+          {{searchDateTxt}}
+        </picker>
+      </view>
+    </view>
+    <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
+    <load-more :type.sync="loadingType"></load-more>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import PlanList from '@/components/planList';
+import LoadMore from '@/components/common/loadMore';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import { getCurrentTime } from '@/utils/util';
+
+
+export default class Plan extends wepy.page {
+  config = {
+    navigationBarTitleText: '当日计划'
+  };
+
+  components = {
+    'plan-list': PlanList,
+    'load-more': LoadMore
+  };
+
+  data = {
+    pageType: 0,
+    searchForm: {
+      flight: 0,
+      origin: 0,
+      date: '',
+
+    },
+
+    flightOptions: [
+      {
+        label: '全部',
+        value: ''
+      },{
+        label: 'CA',
+        value: 'CA'
+      },{
+        label: 'BGS',
+        value: 'BGS'
+      }
+    ],
+    originOptions: [
+      {
+        label: '全部区域',
+        value: ''
+      },{
+        label: '北京',
+        value: '0'
+      },{
+        label: '上海',
+        value: '1'
+      },{
+        label: '广州',
+        value: '2'
+      }
+    ],
+
+
+    showAll: false,
+    searchDate: getCurrentTime(true),
+
+    loadingType: 'normal', // 加载状态
+    planList: [],
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    select_name: '',
+  };
+
+  computed = {
+    searchDateTxt(){
+      if (this.searchForm.date === '')  return '全部日期'
+      if(this.searchForm.date == getCurrentTime(true)){
+        return '今天 '+this.searchForm.date
+      }else {
+        return this.searchForm.date
+      }
+    }
+  };
+
+  watch={};
+
+  methods = {
+    // 搜索条件
+    // 航空
+    changeFlight(evt){
+      this.searchForm.flight = evt.detail.value
+      this.getTodayList(true)
+    },
+    // 区域
+    changeOrigin(evt){
+      this.searchForm.origin = evt.detail.value
+      this.getTodayList(true)
+    },
+
+    // 日期
+    changeSearchDate(evt){
+      this.searchForm.date = evt.detail.value
+      this.getTodayList(true)
+    },
+    doSearchAllDate(){
+      this.searchForm.date = ''
+      this.getTodayList(true)
+    },
+
+    goPlanDetail({jcno}){
+      this.$navigate('/pages/person/planDetail', { jcno });
+    }
+  };
+
+  getTodayList(replace = false) {
+    this.loadingType = 'loading';
+    this.$apply();
+
+    if(replace){
+      this.pageNum = 1;
+    }
+
+    let dmczlx = this.flightOptions[this.searchForm.flight].value
+    let location = this.originOptions[this.searchForm.origin].value
+
+    api.getTodayList({
+      // _noLoading: true,
+      query: {
+        page_num: this.pageNum,
+        page_size: this.pageSize,
+        dmczlx: dmczlx,
+        location: location,
+        time_use: this.searchForm.date,
+        select_name: this.select_name,
+        login_name: wx.getStorageSync('token')
+      }
+    }).then(
+      res => {
+        if (res.data.status == 200) {
+          if(replace){
+            this.planList = res.data.data;
+          }else{
+            this.planList = [...this.planList, ...res.data.data];
+          }
+          // 设置标题
+          wx.setNavigationBarTitle({title: `计划查询${this.select_name ?  '-'+ this.select_name: ''} ${res.data.total_size}票`})
+
+
+          if (res.data.data.length == this.pageSize) {
+            this.loadingType = 'normal';
+          } else {
+            this.loadingType = 'nomore';
+          }
+
+          this.pageNum++;
+          this.$apply();
+        } else {
+          tip.alert(res.data.message);
+        }
+      }
+    );
+  }
+
+  setTitle(total){
+    let title = ''
+  }
+
+  onReachBottom() {
+    if(this.loadingType != 'nomore'){
+      this.getTodayList();
+    }
+  }
+
+  onLoad(parmas) {
+    if(parmas.query){
+      this.select_name = parmas.query
+    }
+    this.getTodayList()
+  }
+}
+</script>
