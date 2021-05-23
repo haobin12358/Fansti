@@ -150,7 +150,7 @@
             let data = res.data.data;
 
             this.$preload('res', data);
-            this.$navigate('/pages/person/planConfirm');
+            this.$navigate('/pages/person/planConfirm', { jcno });
           } else {
             tip.alert(res.data.message);
           }
@@ -221,6 +221,7 @@
       if(parmas.query){
         this.select_name = parmas.query
       }
+      // this.getInAbo('E15060029')
       this.getTodayList(true)
     }
   }

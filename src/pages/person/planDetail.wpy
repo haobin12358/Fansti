@@ -960,9 +960,9 @@
       userType: '',
 
       jcno: '',
+      isYard: false,
       activeName: 0,
       detailType: '1', // 三种详情页展示类型  1: 16-3  2: 16-10 3:16-11
-      tabs: ['详情', '电子交接单', '照片', '成本', '货场接收'],
 
       planDetail: {},
 
@@ -1001,6 +1001,15 @@
       },
       textareaClass(){
         return `textarea-remark ${this.showFileList && 'hidden'}`
+      },
+      tabs() {
+        let tabs = ['详情', '电子交接单', '照片', '成本']
+
+        if(this.isYard) {
+          tabs.push('货场接收')
+        }
+
+        return tabs
       }
     };
 
@@ -1562,9 +1571,9 @@
     };
 
     onLoad(params){
-      this.jcno = params.jcno || 'E15060029'
+      this.jcno = params.jcno
+      this.isYard = !!params.isYard
       this.userType = wx.getStorageSync('user_type')
-
     }
   }
 </script>
