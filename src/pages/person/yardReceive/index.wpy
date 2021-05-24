@@ -59,7 +59,11 @@ export default class inStoIndex extends wepy.page {
 
   methods = {
     handleRedirect(command){
-      console.log(command);
+      if (command === 'in') {
+        this.$navigate('/pages/person/yardReceive/yardReceive')
+      }else {
+        this.$navigate('/pages/person/yardReceive/toYardReceive')
+      }
     }
   };
 

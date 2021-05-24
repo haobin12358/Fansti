@@ -270,7 +270,9 @@ import wepy from 'wepy';
 
 
 export default class PlanList extends wepy.component {
-  config = {};
+  config = {
+    navigationBarTitleText: '包装计划'
+  };
 
   components = {};
 
