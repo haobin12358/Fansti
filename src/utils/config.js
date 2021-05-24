@@ -53,3 +53,29 @@ export const weightOptions = [
   }
 ];
 
+export const wpOptions = [
+  {
+    label: '全部',
+    value: ''
+  }, {
+    label: '危',
+    value: '危'
+  }, {
+    label: '普',
+    value: '普'
+  }
+];
+
+export const khOptions = [
+  {
+    label: '全部',
+    value: ''
+  }, {
+    label: '客机',
+    value: '0'
+  }, {
+    label: '货机',
+    value: '1'
+  }
+];
+

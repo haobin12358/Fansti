@@ -2,31 +2,269 @@
 @import "src/styles/base";
 
 .container {
+  padding: 20rpx 20rpx 0;
 
+  &-hd {
+    .row {
+      margin-bottom: 20rpx;
+      display: flex;
+    }
+  }
+
+  .order-list {
+    .order-item {
+      border-radius: 10rpx;
+      margin-bottom: 20rpx;
+
+      &-hd {
+        display: flex;
+        font-size: 32rpx;
+        border-radius: 10rpx 10rpx 2rpx 2rpx;
+        height: 56rpx;
+        background: #5A738A;
+
+        &-lf {
+          width: 56rpx;
+          color: white;
+          text-align: center;
+          border-radius: 10rpx 10px 0 0;
+          line-height: 56rpx;
+        }
+
+        .jcno {
+          font-weight: bold;
+        }
+      }
+
+      &-bd {
+        padding: 20rpx;
+        border-radius: 0px 0px 10px 10px;
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 28rpx;
+        border: 1px solid #EEEEEE;
+
+        &-col {
+          width: 40%;
+          display: flex;
+
+          &:nth-child(2n) {
+            width: 60%;
+          }
+
+          .label {
+            color: #999;
+            margin-right: 30rpx;
+          }
+
+          .value {
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
 
 <template>
   <view class="container">
-    历史走货记录
+    <view class="container-hd">
+      <view class="container-hd-one row">
+        <selector-box :value="origin" :options="originOptions"></selector-box>
+        <selector-box-date :value="starttime" mode="date"></selector-box-date>
+        <selector-box-date2 :value="endtime" mode="date"></selector-box-date2>
+      </view>
+
+      <view class="row">
+        <selector-box-dv :value="data_value" :options="dataValueOptions"></selector-box-dv>
+        <selector-box-wp :value="wphw" :options="wpOptions"></selector-box-wp>
+        <selector-box-hk :value="iskh" :options="khOptions"></selector-box-hk>
+      </view>
+
+      <view class="row">
+        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{company}}" name="company" @input="inputCompany" placeholder="航司">
+        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{destination}}" name="destination"
+               placeholder="目的港">
+        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{un}}" name="un" placeholder="un">
+      </view>
+    </view>
+
+    <view class="order-list">
+      <view wx:for="{{planList}}" @tap="goEdit({{item}})" wx:for-index="idx" class="order-item">
+        <view class="order-item-hd">
+          <view class="order-item-hd-lf">{{idx + 1}}</view>
+        </view>
+        <view class="order-item-bd">
+          <view class="order-item-bd-col">
+            <view class="label">运价等级1</view>
+            <view class="value">{{item.type || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">价格1</view>
+            <view class="value">{{item.charge || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">运价等级2</view>
+            <view class="value">{{item.type2 || '暂无'}}</view>
+          </view>
+          <view class="order-item-bd-col">
+            <view class="label">价格2</view>
+            <view class="value">{{item.charge2 || '暂无'}}</view>
+          </view>
+
+        </view>
+      </view>
+    </view>
+    <load-more :type.sync="loadingType"></load-more>
+
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import SelectorBox from '@/components/common/SelectorBox';
+import LoadMore from '@/components/common/loadMore';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import PlanList from '@/components/planList';
+import { flightOptions, originOptions, weightOptions, wpOptions, khOptions } from '@/utils/config';
+
+
 
 export default class history extends wepy.page {
   config = {};
 
-  components = {};
+  components = {
+    'selector-box': SelectorBox,
+    'selector-box-date': SelectorBox,
+    'selector-box-date2': SelectorBox,
 
-  data = {};
+    'selector-box-dv': SelectorBox,
+    'selector-box-wp': SelectorBox,
+    'selector-box-hk': SelectorBox,
+
+    'load-more': LoadMore,
+
+
+  };
+
+  data = {
+    origin: '',
+    starttime: '',
+    endtime: '',
+    originOptions,
+
+    data_value: '',
+    dataValueOptions: [],
+    wphw: '',
+    iskh: '',
+    wpOptions,
+    khOptions,
+
+    company: '',
+    destination: '',
+    un: '',
+
+    loadingType: 'normal', // 加载状态
+    planList: [],
+    pageNum: 1,
+    pageSize: 10,
+    total: 0
+  };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    inputCompany(evt) {
+      this.company = evt.detail.value
+    }
+  };
+
+  getLevelList() {
+    api.getLevel({
+      query: {
+        login_name: wx.getStorageSync('token')
+      }
+    }).then(res => {
+      if (res.data.status == 200) {
+        let data = res.data.data;
+
+        this.dataValueOptions = data.map(v => ({
+          label: v.data_text,
+          value: v.data_value
+        }));
+        this.dataValueOptions.unshift({
+          label: '全部',
+          value: ''
+        });
+        this.$apply();
+      } else {
+        tip.alert(res.data.message);
+      }
+    });
+  }
+
+  getList(replace = false) {
+    this.loadingType = 'loading';
+    this.$apply();
+
+    if (replace) {
+      this.pageNum = 1;
+      this.planList = [];
+      this.$apply();
+    }
+
+    let params = {
+      _noLoading: !replace,
+      query: {
+        page_num: this.pageNum,
+        page_size: this.pageSize,
+        login_name: wx.getStorageSync('token'),
+        origin: this.origin,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        data_value: this.data_value,
+        wphw: this.wphw,
+        iskh: this.iskh,
+        company: this.company,
+        destination: this.destination,
+        un: this.un,
+      }
+    };
+    api.getHistoryList(params).then(
+      res => {
+        if (res.data.status == 200) {
+          if (replace) {
+            this.planList = res.data.data;
+          } else {
+            this.planList = [...this.planList, ...res.data.data];
+          }
+
+          if (res.data.data.length == this.pageSize) {
+            this.loadingType = 'normal';
+          } else {
+            this.loadingType = 'nomore';
+          }
+
+          this.pageNum++;
+          this.$apply();
+        } else {
+          tip.alert(res.data.message);
+        }
+      }
+    );
+  }
+
+  onReachBottom() {
+    if (this.loadingType != 'nomore') {
+      this.getList();
+    }
+  }
 
   onLoad() {
+    this.getLevelList()
+    this.getList(true)
   };
 }
 </script>
