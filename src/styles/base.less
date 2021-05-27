@@ -151,6 +151,16 @@ page{
   margin-top: 100rpx;
   .fj(center);
 
+  &.fixed{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 150rpx;
+    background: #ffffff;
+    border-top: 1px solid #C5C5C5;
+  }
+
   .button{
     padding: 20rpx 50rpx;
     .type-blue();
@@ -217,6 +227,16 @@ page{
   }
 }
 
-.selector-box + .selector-box{
+.search-from-item + .search-from-item{
   margin-left: 20rpx;
+}
+
+.search-from-item-input{
+  flex: 1;
+  width: 220rpx;
+  border: 1rpx solid #A0AFBA;
+  height: 60rpx;
+  border-radius: 4rpx;
+  padding: 0 20rpx;
+  .sc(24rpx, #999);
 }

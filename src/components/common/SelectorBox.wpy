@@ -29,9 +29,9 @@
 }</style>
 
 <template>
-  <view class="selector-box">
+  <view class="selector-box search-from-item">
     <view class="selector-box-bd">
-      <picker wx:if="{{mode === 'select'}}" @change="handleChange" range="{{options}}" value="{{pickerValue}}"
+      <picker wx:if="{{isCommon}}" @change="handleChange" range="{{options}}" value="{{pickerValue}}"
               range-key="label">
         {{options[pickerValue].label}}
       </picker>
@@ -67,7 +67,11 @@ export default class Placeholder extends wepy.component {
     pickerValue: 0
   };
 
-  computed = {};
+  computed = {
+    isCommon() {
+      return this.mode === 'select'
+    }
+  };
 
   methods = {
     handleChange(evt) {
@@ -92,6 +96,11 @@ export default class Placeholder extends wepy.component {
   events = {};
 
   onLoad() {
+    if(this.isCommon) {
+      this.pickerValue = this.options.findIndex(v => v.value === this.value)
+      this.$apply()
+    }
+
     // console.log(this.options);
   }
 }

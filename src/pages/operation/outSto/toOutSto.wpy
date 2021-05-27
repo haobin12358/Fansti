@@ -2,7 +2,7 @@
 @import "src/styles/base";
 
 .container {
-  padding: 20rpx 20rpx 0;
+  padding: 20rpx 20rpx 150rpx;
 
   &-hd {
     margin-bottom: 21rpx;
@@ -120,7 +120,7 @@
     <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
     <load-more :type.sync="loadingType"></load-more>
 
-    <view class="btn-wrap">
+    <view class="btn-wrap fixed">
       <button class="type-blue" @tap="goFee">下一步</button>
     </view>
   </view>
@@ -217,7 +217,11 @@ export default class noJcInSto extends wepy.page {
       );
     },
     goFee(){
-      this.$navigate('/pages/person/outSto/toOutStoFee');
+      let noList = this.planList.filter(v => v.checked).map(v => v.ydno)
+
+      this.$navigate('/pages/operation/outSto/toOutStoFee', {
+        noList
+      });
     }
   };
 
@@ -269,7 +273,7 @@ export default class noJcInSto extends wepy.page {
   }
 
   onReachBottom() {
-    if(this.loadingType != 'nomore'){
+    if(this.loadingType === 'normal'){
       this.getList();
     }
   }

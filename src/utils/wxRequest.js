@@ -6,7 +6,7 @@ const wxRequest = async (params = {}, url) => {
   showLoading = !params._noLoading;
   if (showLoading) {
     tip.loading('数据加载中...');
-    wepy.showNavigationBarLoading();
+    // wepy.showNavigationBarLoading();
   }
   // request api没有分query和data字段,因此在post时就比较有些不合理
   let data = params.query || {};
@@ -23,7 +23,7 @@ const wxRequest = async (params = {}, url) => {
 
   if (showLoading) {
     tip.loaded();
-    wepy.hideNavigationBarLoading();
+    // wepy.hideNavigationBarLoading();
   }
 
   /*if(res.data.status != 200){

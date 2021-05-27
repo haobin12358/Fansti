@@ -79,3 +79,29 @@ export const khOptions = [
   }
 ];
 
+export const inOutStoOptions = [
+  {
+    label: '全部',
+    value: ''
+  }, {
+    label: '未入库',
+    value: 0
+  }, {
+    label: '已入库',
+    value: 1
+  }
+];
+
+export const truckTypeOptions = [
+  {
+    label: '全部',
+    value: ''
+  }, {
+    label: '大车',
+    value: '大车'
+  }];
+
+
+
+
+

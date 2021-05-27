@@ -97,27 +97,15 @@
 <template>
   <view class="container">
     <view class="container-hd">
-      <view class="container-hd-one">
-        <image src="src/images/scan.png" @tap="scanToOutSto"></image>
-        <form @submit="doSearch" style="position: relative;flex: 1;">
-          <view class="search-bar" style="">
-            <view class="input-wrap">
-              <image class="search-icon" src="src/images/search.png"></image>
-              <input type="text" name="query" placeholder="请输入进仓号/运单号/目的港/订单号/临时编号"/>
-            </view>
-            <button class="type-blue" form-type="submit">搜索</button>
-          </view>
-        </form>
-      </view>
       <view class="container-hd-two">
-        <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
-        <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
-        <selector-box-package :value="origin" :options="packageOptions"></selector-box-package>
-        <selector-box-date :value="package" mode="date"></selector-box-date>
+        <selector-box :value="truck_type" :options="truckTypeOptions"></selector-box>
+        <!--<selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>-->
+        <!--<selector-box-package :value="origin" :options="packageOptions"></selector-box-package>-->
+        <!--<selector-box-date :value="package" mode="date"></selector-box-date>-->
       </view>
     </view>
 
-    <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
+    <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail" @removeItem.user="removeItem"></plan-list>
 
     <view class="btn-wrap">
       <button class="type-blue" @tap="doSaveFee">保存</button>
@@ -132,7 +120,7 @@ import LoadMore from '@/components/common/loadMore';
 import api from '@/api/api';
 import tip from '@/utils/tip';
 import PlanList from '@/components/planList';
-import { flightOptions, originOptions, packageOptions } from '@/utils/config';
+import { flightOptions, originOptions, packageOptions,truckTypeOptions } from '@/utils/config';
 
 
 export default class noJcInSto extends wepy.page {
@@ -144,12 +132,14 @@ export default class noJcInSto extends wepy.page {
     'selector-box': SelectorBox,
     'selector-box-origin': SelectorBox,
     'selector-box-package': SelectorBox,
-    'load-more': LoadMore,
     'selector-box-date': SelectorBox,
     'plan-list': PlanList
   };
 
   data = {
+    truck_type: '',
+    truck_curr: '',
+
     dmczlx: '',
     origin: '',
     package: '',
@@ -157,12 +147,8 @@ export default class noJcInSto extends wepy.page {
     flightOptions: flightOptions,
     originOptions: originOptions,
     packageOptions: packageOptions,
-    loadingType: 'normal', // 加载状态
     pageType: 3,
-    planList: [{}],
-    pageNum: 1,
-    pageSize: 10,
-    total: 0
+    planList: [],
   };
 
   computed = {};
@@ -219,34 +205,68 @@ export default class noJcInSto extends wepy.page {
         }
       );
     },
-    doSaveFee(){
+    removeItem(item){
+      let params = {
+        method: 'POST',
+        login_name: wx.getStorageSync('token'),
+        query: {
+          id: item.id
+        }
+      }
+      api.deleteFree(params).then(
+        res => {
+          if (res.data.status == 200) {
+            tip.alert('删除成功');
+            let index = this.planList.findIndex(v => v.id === item.id)
 
+            this.planList.splice(index,  1)
+            this.$apply()
+          } else {
+            tip.alert(res.data.message);
+          }
+        }
+      )
+    },
+    doSaveFee(){
+      let params = {
+        method: 'POST',
+        login_name: wx.getStorageSync('token'),
+        query: {
+          truck_type: '',
+          truck_curr: '',
+          data: this.planList
+        }
+      }
+
+      api.updateFreeList(params)
     }
   };
 
-  getList(replace = false) {
-    this.loadingType = 'loading';
-    this.$apply();
-
-    if (replace) {
-      this.pageNum = 1;
-    }
-
+  getList(noList) {
     let params = {
+      method: 'POST',
+      login_name: wx.getStorageSync('token'),
       query: {
-        page_num: this.pageNum,
-        page_size: this.pageSize,
-        login_name: wx.getStorageSync('token'),
-        time_use: '',
-        select_name: '',
-        dmczlx: ''
+        ydno_list: noList
       }
     };
-    api.getInJcno(params);
+    api.getFree(params).then(
+      res => {
+        if (res.data.status == 200) {
+          let data = res.data.data;
+
+          this.planList = data
+          this.$apply()
+        } else {
+          tip.alert(res.data.message);
+        }
+      }
+    )
   }
 
-  onLoad() {
-    // this.getList()
+  onLoad(params) {
+    console.log('toOutStoFee');
+    this.getList(params.noList.split(','))
   };
 }
 </script>

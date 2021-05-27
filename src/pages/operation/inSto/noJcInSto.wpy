@@ -2,7 +2,7 @@
 @import "src/styles/base";
 
 .container {
-  padding: 20rpx 20rpx 50rpx;
+  padding: 20rpx 20rpx 150rpx;
 
   &-hd {
     margin-bottom: 21rpx;
@@ -118,7 +118,7 @@
         </view>
         <view class="container-hd-two">
           <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
-          <input style="border: 1px solid #000;flex: 1;" type="text" value="{{warehouse_address}}" name="warehouse" placeholder="库位">
+          <input class="search-from-item search-from-item-input" type="text" value="{{warehouse_address}}" name="warehouse" placeholder="库位">
           <selector-box-date :value="time_use" mode="date"></selector-box-date>
         </view>
       </view>
@@ -156,7 +156,7 @@
     </view>
     <load-more :type.sync="loadingType"></load-more>
 
-    <view class="btn-wrap">
+    <view class="btn-wrap fixed">
       <button class="type-blue" @tap="addInSto">新 增</button>
     </view>
   </view>
