@@ -323,7 +323,7 @@
     }
     onLoad(){
       // todo
-      // this.$navigate('/pages/operation/outSto/toOutStoFee')
+      this.$navigate('/pages/operation/outSto/outSto')
 
       this.userType = wx.getStorageSync('user_type')
     }

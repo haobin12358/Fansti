@@ -70,7 +70,7 @@
     </view>
 
     <view class="order-list">
-      <view class="{{chooseItem.id === item.id ? 'order-item choosed' : 'order-item'}}" wx:for="{{planList}}">
+      <view class="{{chooseItem.id === item.id ? 'order-item choosed' : 'order-item'}}" wx:for="{{planList}}" @tap="tapItem({{item}})">
         <view class="order-item-bd">
           <view class="order-item-bd-col">
             <view class="label">车次</view>
@@ -136,8 +136,11 @@ export default class outSto extends wepy.page {
       this.getList(true)
     },
     tapItem(item) {
-      this.chooseItem = item
-      this.$apply()
+      console.log('tapItem', item);
+      this.$navigate('/pages/operation/outSto/outStoFee', {
+        truck_times: item.truck_times,
+        vehicle_cost: item.vehicle_cost
+      });
     }
   };
 

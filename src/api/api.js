@@ -15,7 +15,7 @@ const getReceivingList = params => wxRequest(params, host + `/control/get_receiv
 const deleteFree = params => wxRequest(params, host + `control/delete_free?login_name=${params.login_name}`); // post
 const getTruckCurr = params => wxRequest(params, host + `/control/get_truck_curr`);
 const getFree = params => wxRequest(params, host + `/control/get_free?login_name=${params.login_name}`);
-const updateFreeList = params => wxRequest(params, host + `control/update_free_list?login_name=${params.login_name}`);
+const updateFreeList = params => wxRequest(params, host + `/control/update_free_list?login_name=${params.login_name}`);
 const freeList = params => wxRequest(params, host + `/control/free_list`);
 const getOutedList = params => wxRequest(params, host + `/control/get_outed_list`);
 const getOutingList = params => wxRequest(params, host + `/control/get_outing_list`);

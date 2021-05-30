@@ -208,12 +208,13 @@
                 <text space="emsp">件数</text>
               </view>
               <input wx:if="{{pageType === 3}}" placeholder="请输入" class="item-value item-value-input" value="{{item.jsbzcc}}" style="width: 100rpx" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
+              <input wx:elif="{{pageType === 4}}" placeholder="请输入" class="item-value item-value-input" value="{{item.delivery_num}}" style="width: 100rpx;" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
               <view wx:else class="item-value">
                 {{item.jsbzcc || '暂无'}}
               </view>
             </view>
           </view>
-          <view wx:if="{{pageType === 3}}" class="line-detail">
+          <view wx:if="{{pageType === 3 || pageType === 4}}" class="line-detail">
             <view class="line-left">
               <view class="item-label" style="color: red;" @tap.stop="handleRemove({{item}})">
                 <text>删除</text>
@@ -223,7 +224,9 @@
               <view class="item-label">
                 <text space="emsp">费用</text>
               </view>
-              <input class="item-value item-value-input" placeholder="请输入" style="width: 100rpx" type="text" value="{{item.curr}}" @input="handleChangeCurr({{index}})" @tap.stop="tapStop"/>
+              <input wx:if="{{pageType === 3}}" class="item-value item-value-input" placeholder="请输入" style="width: 100rpx" type="text" value="{{item.curr}}" @input="handleChangeCurr({{index}})" @tap.stop="tapStop"/>
+              <input wx:else class="item-value item-value-input" placeholder="请输入" style="width: 100rpx" type="text" value="{{item.move_charge}}" @input="handleChangeCurr({{index}})" @tap.stop="tapStop"/>
+
             </view>
           </view>
 
@@ -291,7 +294,7 @@ export default class PlanList extends wepy.component {
     // 0计划 1待出库 2入库列表 3费用
     pageType: {
       type: Number,
-      default: 3
+      default: 0
     }
   };
 
@@ -316,16 +319,26 @@ export default class PlanList extends wepy.component {
     tapItemHandler(item) {
       this.$emit('tapItem', item);
     },
+    // 修改件数
     handleChangeFee(index, evt) {
       let val = evt.detail.value
 
-      this.list[index].jsbzcc = val
+      if(this.pageType == 3) {
+        this.list[index].jsbzcc = val
+      }else {
+        this.list[index].delivery_num = val
+      }
       this.$apply()
     },
+    // 修改费用
     handleChangeCurr(index, evt) {
       let val = evt.detail.value
 
-      this.list[index].curr = val
+      if(this.pageType == 3) {
+        this.list[index].curr = val
+      }else {
+        this.list[index].move_charge = val
+      }
       this.$apply()
     },
     handleRemove(item) {

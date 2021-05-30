@@ -76,17 +76,6 @@
 
 <template>
   <view class="container">
-    <view class="container-hd">
-      <view class="container-hd-row">
-        <selector-box :value="truck_type" :options="truckTypeOptions" @change.user="changeTruckType"></selector-box>
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_times}}" @change="handleInput('truck_times')" placeholder="车次"/>
-      </view>
-      <view class="container-hd-row">
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_num}}" @change="handleInput('truck_num')" placeholder="车号"/>
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_curr}}" @change="handleInput('truck_curr')" placeholder="整车费用"/>
-      </view>
-    </view>
-
     <plan-list :list.sync="planList" :pageType="pageType" @removeItem.user="removeItem"></plan-list>
 
     <view class="btn-wrap fixed">
@@ -119,10 +108,8 @@ export default class noJcInSto extends wepy.page {
   };
 
   data = {
-    truck_type: '大车',
     truck_times: '',
-    truck_num: '',
-    truck_curr: '',
+    vehicle_cost: '',
 
     dmczlx: '',
     origin: '',
@@ -132,7 +119,7 @@ export default class noJcInSto extends wepy.page {
     originOptions: originOptions,
     packageOptions: packageOptions,
     truckTypeOptions: truckTypeOptions,
-    pageType: 3,
+    pageType: 4,
     planList: [],
   };
 
@@ -228,21 +215,13 @@ export default class noJcInSto extends wepy.page {
         method: 'POST',
         login_name: wx.getStorageSync('token'),
         query: {
-          truck_type: this.truck_type,
           truck_times: this.truck_times,
-          truck_num: this.truck_num,
-          vehicle_cost: this.truck_curr,
-          goods_list: this.planList.map(v => ({
-            "ydno": v.ydno,
-            "move_charge": v.curr,
-            "delivery_num": v.jsbzcc
-          }))
+          vehicle_cost: this.vehicle_cost,
+          data: this.planList
         }
       }
 
-      // console.log(params);
-
-      api.outingGoods(params).then(
+      api.updateFreeList(params).then(
         res => {
           if (res.data.status == 200) {
             let data = res.data.data;
@@ -276,15 +255,14 @@ export default class noJcInSto extends wepy.page {
     })
   }
 
-  getList(noList) {
+  getList(truck_times) {
     let params = {
-      method: 'POST',
-      login_name: wx.getStorageSync('token'),
       query: {
-        ydno_list: noList
+        login_name: wx.getStorageSync('token'),
+        truck_times: truck_times
       }
     };
-    api.getFree(params).then(
+    api.freeList(params).then(
       res => {
         if (res.data.status == 200) {
           let data = res.data.data;
@@ -299,8 +277,15 @@ export default class noJcInSto extends wepy.page {
   }
 
   onLoad(params) {
-    // this.getList(params.noList.split(','))
-    this.getTruckCurr()
+    let {
+      vehicle_cost,
+      truck_times
+    } = params
+
+    this.vehicle_cost = vehicle_cost
+    this.truck_times = truck_times
+    this.$apply()
+    this.getList(truck_times)
   };
 }
 </script>
