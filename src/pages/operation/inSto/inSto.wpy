@@ -208,8 +208,6 @@ export default class noJcInSto extends wepy.page {
 
           this.$preload('res', data);
           this.$navigate('/pages/person/inStoDetail');
-        } else {
-          tip.alert(res.data.message);
         }
       }
     );

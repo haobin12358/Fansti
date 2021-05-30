@@ -92,6 +92,12 @@
           display: inline-block;
           color: #333;
           flex: 1;
+
+          &-input{
+            border: 1px solid #000;
+            padding-left: 10rpx;
+            border-radius: 10rpx;
+          }
         }
       }
     }
@@ -201,7 +207,7 @@
               <view class="item-label">
                 <text space="emsp">件数</text>
               </view>
-              <input wx:if="{{pageType === 3}}" placeholder="请输入" class="item-value" value="{{item.jsbzcc}}" style="width: 100rpx" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
+              <input wx:if="{{pageType === 3}}" placeholder="请输入" class="item-value item-value-input" value="{{item.jsbzcc}}" style="width: 100rpx" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
               <view wx:else class="item-value">
                 {{item.jsbzcc || '暂无'}}
               </view>
@@ -217,7 +223,7 @@
               <view class="item-label">
                 <text space="emsp">费用</text>
               </view>
-              <input class="item-value" placeholder="请输入" style="width: 100rpx" type="text" value="{{item.curr}}" @input="handleChangeCurr({{index}})" @tap.stop="tapStop"/>
+              <input class="item-value item-value-input" placeholder="请输入" style="width: 100rpx" type="text" value="{{item.curr}}" @input="handleChangeCurr({{index}})" @tap.stop="tapStop"/>
             </view>
           </view>
 

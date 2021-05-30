@@ -81,9 +81,6 @@ export const khOptions = [
 
 export const inOutStoOptions = [
   {
-    label: '全部',
-    value: ''
-  }, {
     label: '未入库',
     value: 0
   }, {
@@ -99,6 +96,9 @@ export const truckTypeOptions = [
   }, {
     label: '大车',
     value: '大车'
+  }, {
+    label: '小车',
+    value: '小车'
   }];
 
 

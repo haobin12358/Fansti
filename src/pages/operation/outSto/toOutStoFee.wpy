@@ -2,37 +2,17 @@
 @import "src/styles/base";
 
 .container {
-  padding: 20rpx 20rpx 0;
+  padding: 20rpx 20rpx 150rpx;
 
   &-hd {
     margin-bottom: 21rpx;
 
-    &-one {
-      .fj();
+    &-row{
       margin-bottom: 21rpx;
-
-      image {
-        .wl(48rpx, 48rpx);
-        margin-right: 20rpx;
-      }
-    }
-
-    &-two {
       .fj();
 
-      .selector-box {
-        flex: 1;
-        width: 220rpx;
-        border: 1rpx solid #A0AFBA;
-        height: 60rpx;
-        border-radius: 4rpx;
-        .fj();
-        padding: 0 20rpx;
-        .sc(21rpx, #999);
-
-        image {
-          .wl(20rpx, 20rpx);
-        }
+      &:last-child{
+        margin-bottom: 0rpx;
       }
     }
   }
@@ -97,17 +77,19 @@
 <template>
   <view class="container">
     <view class="container-hd">
-      <view class="container-hd-two">
-        <selector-box :value="truck_type" :options="truckTypeOptions"></selector-box>
-        <!--<selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>-->
-        <!--<selector-box-package :value="origin" :options="packageOptions"></selector-box-package>-->
-        <!--<selector-box-date :value="package" mode="date"></selector-box-date>-->
+      <view class="container-hd-row">
+        <selector-box :value="truck_type" :options="truckTypeOptions" @change.user="changeTruckType"></selector-box>
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_times}}" @change="handleInput('truck_times')" placeholder="车次">
+      </view>
+      <view class="container-hd-row">
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_num}}" @change="handleInput('truck_num')" placeholder="车号">
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_curr}}" @change="handleInput('truck_curr')" placeholder="整车费用">
       </view>
     </view>
 
-    <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail" @removeItem.user="removeItem"></plan-list>
+    <plan-list :list.sync="planList" :pageType="pageType" @removeItem.user="removeItem"></plan-list>
 
-    <view class="btn-wrap">
+    <view class="btn-wrap fixed">
       <button class="type-blue" @tap="doSaveFee">保存</button>
     </view>
   </view>
@@ -130,14 +112,16 @@ export default class noJcInSto extends wepy.page {
 
   components = {
     'selector-box': SelectorBox,
-    'selector-box-origin': SelectorBox,
-    'selector-box-package': SelectorBox,
-    'selector-box-date': SelectorBox,
+    // 'selector-box-origin': SelectorBox,
+    // 'selector-box-package': SelectorBox,
+    // 'selector-box-date': SelectorBox,
     'plan-list': PlanList
   };
 
   data = {
-    truck_type: '',
+    truck_type: '大车',
+    truck_times: '',
+    truck_num: '',
     truck_curr: '',
 
     dmczlx: '',
@@ -147,6 +131,7 @@ export default class noJcInSto extends wepy.page {
     flightOptions: flightOptions,
     originOptions: originOptions,
     packageOptions: packageOptions,
+    truckTypeOptions: truckTypeOptions,
     pageType: 3,
     planList: [],
   };
@@ -165,6 +150,12 @@ export default class noJcInSto extends wepy.page {
       };
 
       console.log(parmas);
+    },
+    handleInput(type, evt) {
+      let value = evt.detail.value
+
+      this[type] = value
+      this.$apply()
     },
     scanToOutSto() {
       let that = this
@@ -213,17 +204,22 @@ export default class noJcInSto extends wepy.page {
           id: item.id
         }
       }
-      api.deleteFree(params).then(
-        res => {
-          if (res.data.status == 200) {
-            tip.alert('删除成功');
-            let index = this.planList.findIndex(v => v.id === item.id)
 
-            this.planList.splice(index,  1)
-            this.$apply()
-          } else {
-            tip.alert(res.data.message);
-          }
+      tip.confirm('确认删除该费用?').then(
+        () => {
+          api.deleteFree(params).then(
+            res => {
+              if (res.data.status == 200) {
+                tip.success('删除成功');
+                let index = this.planList.findIndex(v => v.id === item.id)
+
+                this.planList.splice(index,  1)
+                this.$apply()
+              } else {
+                tip.alert(res.data.message);
+              }
+            }
+          )
         }
       )
     },
@@ -232,15 +228,53 @@ export default class noJcInSto extends wepy.page {
         method: 'POST',
         login_name: wx.getStorageSync('token'),
         query: {
-          truck_type: '',
-          truck_curr: '',
-          data: this.planList
+          truck_type: this.truck_type,
+          truck_times: this.truck_times,
+          truck_num: this.truck_num,
+          vehicle_cost: this.truck_curr,
+          goods_list: this.planList.map(v => ({
+            "ydno": v.ydno,
+            "move_charge": v.curr,
+            "delivery_num": v.jsbzcc
+          }))
         }
       }
 
-      api.updateFreeList(params)
+      // console.log(params);
+
+      api.outingGoods(params).then(
+        res => {
+          if (res.data.status == 200) {
+            let data = res.data.data;
+
+            tip.success('提交成功')
+            wx.navigateBack();
+          }
+        }
+      )
+    },
+    changeTruckType(val) {
+      console.log('changeTruckType');
     }
   };
+
+  getTruckCurr(val) {
+    api.getTruckCurr({
+      query: {
+        truck_type: val,
+        login_name: wx.getStorageSync('token')
+      }
+    }).then(res => {
+      if (res.data.status == 200) {
+        let data = res.data.data;
+
+        this.truck_curr = data.truck_curr
+        this.$apply()
+      } else {
+        tip.alert(res.data.message);
+      }
+    })
+  }
 
   getList(noList) {
     let params = {
@@ -265,8 +299,8 @@ export default class noJcInSto extends wepy.page {
   }
 
   onLoad(params) {
-    console.log('toOutStoFee');
     this.getList(params.noList.split(','))
+    this.getTruckCurr(this.truck_type)
   };
 }
 </script>

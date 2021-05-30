@@ -67,13 +67,10 @@
     <view class="container-hd">
       <selector-box-origin :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
       <selector-box-date :value="time_use" mode="date" @change.user="doSearch"></selector-box-date>
-      <view class="{{chooseItem.id ? 'cancel-out' : 'cancel-out disabled'}}">
-        {{chooseItem.id ? '取消出库' : '请选择'}}
-      </view>
     </view>
 
     <view class="order-list">
-      <view class="{{chooseItem.id === item.id ? 'order-item choosed' : 'order-item'}}" wx:for="{{planList}}" @tap="tapItem({{item}})">
+      <view class="{{chooseItem.id === item.id ? 'order-item choosed' : 'order-item'}}" wx:for="{{planList}}">
         <view class="order-item-bd">
           <view class="order-item-bd-col">
             <view class="label">车次</view>
@@ -97,9 +94,6 @@
       </view>
     </view>
     <load-more :type.sync="loadingType"></load-more>
-
-
-
   </view>
 </template>
 
