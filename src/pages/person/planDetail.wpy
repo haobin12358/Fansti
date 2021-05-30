@@ -813,20 +813,20 @@
                   {{photoList.weight && photoList.weight.length}}
                 </view>
               </view>
-              <view class="photo-item" @tap="goAddPhoto('by')">
+              <view class="photo-item" @tap="goAddPhoto('container')">
                 <view class="title">
                   集装器板条
                 </view>
                 <view class="num">
-                  {{photoList.by && photoList.by.length}}
+                  {{photoList.container && photoList.container.length}}
                 </view>
               </view>
-              <view class="photo-item" @tap="goAddPhoto('by')">
+              <view class="photo-item" @tap="goAddPhoto('packing')">
                 <view class="title">
                   包装视频
                 </view>
                 <view class="num">
-                  {{photoList.by && photoList.by.length}}
+                  {{photoList.packing && photoList.packing.length}}
                 </view>
               </view>
 
@@ -1440,7 +1440,7 @@
     }
     // 获取电子交接单
     getPhotos(){
-      api.getJcPic({
+      api.getJcPicNew({
         query: {
           jcno: this.jcno,
           login_name: wx.getStorageSync('token')
@@ -1571,7 +1571,7 @@
     };
 
     onLoad(params){
-      this.jcno = params.jcno
+      this.jcno = params.jcno || 'E15060029'
       this.isYard = !!params.isYard
       this.userType = wx.getStorageSync('user_type')
     }

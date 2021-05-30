@@ -50,6 +50,11 @@
 
           &:nth-child(2n) {
             width: 60%;
+
+            .value{
+              width: 70%;
+              word-break: break-all;
+            }
           }
 
           .label {
@@ -71,22 +76,21 @@
   <view class="container">
     <view class="container-hd">
       <view class="container-hd-one row">
-        <selector-box :value="origin" :options="originOptions"></selector-box>
-        <selector-box-date :value="starttime" mode="date"></selector-box-date>
-        <selector-box-date2 :value="endtime" mode="date"></selector-box-date2>
+        <selector-box :value="origin" :options="originOptions" @change.user="doSearch"></selector-box>
+        <selector-box-date :value="starttime" mode="date" :datePlaceholder="starttimePl" @change.user="doSearch"></selector-box-date>
+        <selector-box-date2 :value="endtime" mode="date" :datePlaceholder="endtimePl" @change.user="doSearch"></selector-box-date2>
       </view>
 
       <view class="row">
-        <selector-box-dv :value="data_value" :options="dataValueOptions"></selector-box-dv>
-        <selector-box-wp :value="wphw" :options="wpOptions"></selector-box-wp>
-        <selector-box-hk :value="iskh" :options="khOptions"></selector-box-hk>
+        <selector-box-dv :value="data_value" :options.sync="dataValueOptions" @change.user="doSearch"></selector-box-dv>
+        <selector-box-wp :value="wphw" :options="wpOptions" @change.user="doSearch"></selector-box-wp>
+        <selector-box-hk :value="iskh" :options="khOptions" @change.user="doSearch"></selector-box-hk>
       </view>
 
       <view class="row">
-        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{company}}" name="company" @input="inputCompany" placeholder="航司">
-        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{destination}}" name="destination"
-               placeholder="目的港">
-        <input style="border: 1px solid #5A738A;flex: 1;" type="text" value="{{un}}" name="un" placeholder="un">
+        <input class="search-from-item search-from-item-input" type="text" value="{{company}}" @change="handleInput('company')" placeholder="航司"/>
+        <input class="search-from-item search-from-item-input" type="text" value="{{destination}}" @change="handleInput('destination')" placeholder="目的港"/>
+        <input class="search-from-item search-from-item-input" type="text" value="{{un}}" @change="handleInput('un')" placeholder="un"/>
       </view>
     </view>
 
@@ -152,11 +156,16 @@ export default class history extends wepy.page {
   data = {
     origin: '',
     starttime: '',
+    starttimePl: '开始日期',
+    endtimePl: '结束日期',
     endtime: '',
     originOptions,
 
     data_value: '',
-    dataValueOptions: [],
+    dataValueOptions: [{
+      label: '全部',
+      value: ''
+    }],
     wphw: '',
     iskh: '',
     wpOptions,
@@ -176,8 +185,15 @@ export default class history extends wepy.page {
   computed = {};
 
   methods = {
-    inputCompany(evt) {
-      this.company = evt.detail.value
+    handleInput(type, evt) {
+      let value = evt.detail.value
+
+      this[type] = value
+      this.$apply()
+      this.getList(true)
+    },
+    doSearch(){
+      this.getList(true)
     }
   };
 
@@ -190,14 +206,10 @@ export default class history extends wepy.page {
       if (res.data.status == 200) {
         let data = res.data.data;
 
-        this.dataValueOptions = data.map(v => ({
+        this.dataValueOptions = this.dataValueOptions.concat(data.map(v => ({
           label: v.data_text,
           value: v.data_value
-        }));
-        this.dataValueOptions.unshift({
-          label: '全部',
-          value: ''
-        });
+        })));
         this.$apply();
       } else {
         tip.alert(res.data.message);

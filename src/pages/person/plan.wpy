@@ -14,21 +14,7 @@
 
       &-two {
         .fj();
-
-        .selector-box {
-          flex: 1;
-          width: 220rpx;
-          border: 1rpx solid #A0AFBA;
-          height: 60rpx;
-          border-radius: 4rpx;
-          .fj();
-          padding: 0 20rpx;
-          .sc(21rpx, #999);
-
-          image {
-            .wl(20rpx, 20rpx);
-          }
-        }
+        margin-bottom: 20rpx;
       }
     }
   }
@@ -51,6 +37,8 @@
       <view class="container-hd-two">
         <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
         <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
+      </view>
+      <view style="display: flex">
         <selector-box-bz :value="bzflag" :options="packageOptions"></selector-box-bz>
         <selector-box-date :value="time_use" mode="date"></selector-box-date>
       </view>

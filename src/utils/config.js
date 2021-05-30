@@ -91,9 +91,6 @@ export const inOutStoOptions = [
 
 export const truckTypeOptions = [
   {
-    label: '全部',
-    value: ''
-  }, {
     label: '大车',
     value: '大车'
   }, {

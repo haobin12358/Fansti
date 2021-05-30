@@ -81,6 +81,24 @@
 
 
     }
+
+    .video-wrap{
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+
+      &-close{
+
+      }
+
+      video{
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 </style>
 
@@ -112,8 +130,11 @@
 
       <image wx:if="{{type != 'in' || batchIndex == batchList.length - 1}}" src="../../images/plus.png"
              class="add-photo-block" @tap="newAddPhoto"></image>
-
     </view>
+
+    <!--<div wx:if="{{videoSrc}}" class="video-wrap">
+      <video src="{{videoSrc}}"></video>
+    </div>-->
 
     <!--<view class="btn-wrap">
       <view class="button" @tap="removeCheckedImgs">删除</view>
@@ -139,7 +160,9 @@
 
       batchIndex: '',
       batchList: [],
-      list: []
+      list: [],
+
+      videoSrc: ''
     };
 
     computed = {};
@@ -189,21 +212,32 @@
       newAddPhoto(){
         let that = this
 
-        wx.chooseImage({
-          success: function({tempFiles}){
-            let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
+        if(this.type !== 'packing') {
+          wx.chooseImage({
+            success: function({tempFiles}){
+              let filterFiles = tempFiles.filter(item => item.size < 5 * 1024 * 1024)
 
-            if(filterFiles.length != tempFiles.length){
-              tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
-                () => {
-                  that.afterChoose(filterFiles)
-                }
-              )
-            }else{
-              that.afterChoose(filterFiles)
+              if(filterFiles.length != tempFiles.length){
+                tip.confirm(`有${tempFiles.length - filterFiles.length}张照片过大(5MB),继续上传?`).then(
+                  () => {
+                    that.afterChoose(filterFiles)
+                  }
+                )
+              }else{
+                that.afterChoose(filterFiles)
+              }
             }
-          }
-        })
+          })
+        }else {
+          wx.chooseVideo({
+            success({tempFilePath, size}) {
+              /*wx.openVideoEditor({
+                filePath: tempFilePath
+              })*/
+              that.afterChoose([tempFilePath])
+            }
+          })
+        }
       },
     };
     afterChoose(filterFiles){
@@ -235,13 +269,14 @@
     }
     uploadFiles(file){
       let that = this
+      let filePath = typeof file === 'string' ? file : file.path
 
       tip.loading()
       return new Promise(
         (resolve, reject) => {
           wx.uploadFile({
             url: api.uploadFilesUrl,
-            filePath: file.path,
+            filePath: filePath,
             name: 'file',
             header: {
               "Content-Type": "multipart/form-data"
@@ -335,7 +370,7 @@
     }
 
     getPhotoList(){
-      api.getJcPic({
+      api.getJcPicNew({
         query: {
           login_name: wx.getStorageSync('token'),
           jcno: this.jcno,
@@ -357,7 +392,7 @@
     onLoad(parmas) {
       // todo
       this.jcno = parmas.jcno || 'E15060029'
-      this.type = parmas.type || 'out'
+      this.type = parmas.type || 'packing'
 
       if(this.type == 'in'){
         this.getBatchList()

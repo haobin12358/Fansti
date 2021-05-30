@@ -36,7 +36,7 @@
         {{options[pickerValue].label}}
       </picker>
       <picker wx:else mode="date" @change="handleDateChange" @cancel="doSearchAllDate">
-        {{value || '全部日期'}}
+        {{value || datePlaceholder}}
       </picker>
     </view>
     <image src="../../images/arrow-down.png"></image>
@@ -59,8 +59,13 @@ export default class Placeholder extends wepy.component {
     },
     options: {
       type: Array,
-      default: () => []
+      default: () => [],
+      twoWay: true
     },
+    datePlaceholder: {
+      type: String,
+      default: '全部日期'
+    }
   };
 
   data = {
