@@ -192,7 +192,7 @@ export default class outSto extends wepy.page {
     }
   }
 
-  onLoad() {
+  onShow() {
     this.getList(true)
   };
 }

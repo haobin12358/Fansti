@@ -118,7 +118,7 @@
         </view>
         <view class="container-hd-two">
           <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
-          <input class="search-from-item search-from-item-input" type="text" value="{{warehouse_address}}" name="warehouse" placeholder="库位">
+          <input class="search-from-item search-from-item-input" type="text" value="{{warehouse_address}}" name="warehouse" placeholder="库位"/>
           <selector-box-date :value="time_use" mode="date"></selector-box-date>
         </view>
       </view>
@@ -201,7 +201,6 @@ export default class noJcInSto extends wepy.page {
     doSearch(evt) {
       let { query, warehouse } = evt.detail.value;
 
-      console.log(warehouse);
       this.select_name = query;
       this.warehouse_address = warehouse
       this.getList(true);

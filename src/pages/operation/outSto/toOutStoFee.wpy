@@ -79,11 +79,11 @@
     <view class="container-hd">
       <view class="container-hd-row">
         <selector-box :value="truck_type" :options="truckTypeOptions" @change.user="changeTruckType"></selector-box>
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_times}}" @change="handleInput('truck_times')" placeholder="车次">
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_times}}" @change="handleInput('truck_times')" placeholder="车次"/>
       </view>
       <view class="container-hd-row">
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_num}}" @change="handleInput('truck_num')" placeholder="车号">
-        <input class="search-from-item search-from-item-input" type="text" value="{{truck_curr}}" @change="handleInput('truck_curr')" placeholder="整车费用">
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_num}}" @change="handleInput('truck_num')" placeholder="车号"/>
+        <input class="search-from-item search-from-item-input" type="text" value="{{truck_curr}}" @change="handleInput('truck_curr')" placeholder="整车费用"/>
       </view>
     </view>
 
@@ -133,7 +133,26 @@ export default class noJcInSto extends wepy.page {
     packageOptions: packageOptions,
     truckTypeOptions: truckTypeOptions,
     pageType: 3,
-    planList: [],
+    planList: [{
+      backcolor: "灰色",
+      createtime: "2020-05-09 13:48:49",
+      curr: "0",
+      czr: "admin",
+      destination: "IST",
+      dmczlx: "CA",
+      flag_date: "2021-05-16",
+      icon: null,
+      isphoto: null,
+      jcno: "E15060029",
+      jsbzcc: "10",
+      jzmz: "1",
+      location: "1",
+      size: 1,
+      transtime: null,
+      wphw: "普",
+      xsr: "刘茜",
+      ydno: "160-22222222"
+    }],
   };
 
   computed = {};
@@ -253,15 +272,15 @@ export default class noJcInSto extends wepy.page {
         }
       )
     },
-    changeTruckType(val) {
-      console.log('changeTruckType');
+    changeTruckType() {
+      this.getTruckCurr()
     }
   };
 
-  getTruckCurr(val) {
+  getTruckCurr() {
     api.getTruckCurr({
       query: {
-        truck_type: val,
+        truck_type: this.truck_type,
         login_name: wx.getStorageSync('token')
       }
     }).then(res => {
@@ -299,8 +318,8 @@ export default class noJcInSto extends wepy.page {
   }
 
   onLoad(params) {
-    this.getList(params.noList.split(','))
-    this.getTruckCurr(this.truck_type)
+    // this.getList(params.noList.split(','))
+    this.getTruckCurr()
   };
 }
 </script>
