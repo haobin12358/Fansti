@@ -83,7 +83,9 @@ export default class print extends wepy.page {
   components = {};
 
   data = {
-    isIos: false
+    isIos: false,
+    formData: {},
+    isNoJc: false
   };
 
   computed = {};
@@ -167,7 +169,15 @@ export default class print extends wepy.page {
   }
 
   onLoad() {
-    barcode('printBar', '123456789', 710, 200);
+    let {
+      isNoJC = false,
+      res: formData
+    } = data.preload
+    let code = isNoJC ? formData.temporary_no : formData.jcno
+
+    this.isNoJC = isNoJC
+    this.formData = formData
+    barcode('printBar', code, 710, 200);
     let {system} = wx.getSystemInfoSync()
 
     console.log(system);

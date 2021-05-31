@@ -172,7 +172,7 @@
       </view>
 
       <view class="btn-wrap">
-        <button class="button plain" form-type="submit" @tap="goPrint">打印面单</button>
+        <button class="button plain" @tap="goPrint">打印面单</button>
         <button class="button" form-type="submit">保 存</button>
       </view>
     </form>
@@ -206,6 +206,8 @@ export default class InStoDetail extends wepy.page {
 
   methods = {
     goPrint() {
+      this.$preload('res', this.formData);
+      this.$preload('isNoJc', this.isNoJc);
       this.$navigate('/pages/person/print');
     },
     addPhoto() {

@@ -234,6 +234,7 @@
               /*wx.openVideoEditor({
                 filePath: tempFilePath
               })*/
+              console.log(tempFilePath);
               that.afterChoose([tempFilePath])
             }
           })
@@ -247,9 +248,12 @@
       Promise.all(proms).then(
         rsts => {
           let uploadedFile = rsts.filter(i => i)
-          console.log(uploadedFile);
           let newProms = uploadedFile.map(i => that.addNewFile(i))
 
+          if(!uploadedFile.length){
+            // tip.loaded()
+            tip.toast('上传失败')
+          }
           promiseQueue(newProms).then(
             newRsts => {
               let succCount = newRsts.filter(i => i).length,
@@ -271,6 +275,12 @@
       let that = this
       let filePath = typeof file === 'string' ? file : file.path
 
+      console.log(filePath, {
+        FileType: that.type,
+        index: that.list.length + 1,
+        jcno: that.jcno
+      });
+
       tip.loading()
       return new Promise(
         (resolve, reject) => {
@@ -287,16 +297,23 @@
               jcno: that.jcno
             },
             success: function(res) {
-              let data = JSON.parse(res.data).data
-              let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+              let resData = JSON.parse(res.data)
 
-              resolve({
-                url: data,
-                file_name: fileName
-              })
+              console.log(resData);
+              if(resData.status !== 200){
+                resolve(false)
+              }else{
+                let data = resData.data
+                let fileName =  Date.now().toString() + data.substr(data.lastIndexOf('.'))
+
+                resolve({
+                  url: data,
+                  file_name: fileName
+                })
+              }
             },
             fail: function(){
-              reject(false)
+              resolve(false)
             },
           })
         }
