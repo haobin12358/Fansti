@@ -8,7 +8,7 @@
   <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" @columnchange="changeDateTimeColumn" range="{{dateTimeArray}}">
     <view>
       <input class="hidden" type="text" name="{{name}}" value="{{date}}"/>
-      {{date}}
+      {{date || '暂无'}}
     </view>
   </picker>
 </template>
