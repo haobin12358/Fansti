@@ -258,6 +258,27 @@
             </view>
           </view>
 
+          <view wx:if="{{pageType == 5}}" class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <text>称重状态</text>
+              </view>
+              <view class="item-value">
+                {{item.isweight ? '已称重' : '未称重'}}
+              </view>
+            </view>
+
+            <view class="line-right">
+              <view class="item-label">
+                <text space="emsp">销售</text>
+              </view>
+              <view class="item-value">
+                {{item.jsbzcc || '暂无'}}
+              </view>
+            </view>
+          </view>
+
+
         </view>
 
 
