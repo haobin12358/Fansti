@@ -19,7 +19,9 @@ const wxRequest = async (params = {}, url) => {
     method: params.method || 'GET',
     data: data,
     header: { 'Content-Type': params.contentType || 'application/json' }
-  });
+  }).catch(err => {
+    tip.alert('网络超时')
+  })
 
   if (showLoading) {
     tip.loaded();

@@ -31,15 +31,15 @@ export default class extends wepy.app {
 
 
 
+      'pages/track/index',  //跟踪首页
+      'pages/search/index', //查询首页
 
-
-      'pages/track/index',  //跟踪首页m
-      'pages/person/print', // 打印
-      'pages/person/printTest', // 打印
+      'pages/person/planDetail', // 计划详情
       'pages/person/addPhoto', // 添加照片
 
-      'pages/search/index', //查询首页
-      'pages/person/planDetail', // 计划详情
+      'pages/person/print', // 打印
+      'pages/person/printTest', // 打印
+
 
 
       'pages/search/dgrSearch', //dgr
@@ -83,6 +83,7 @@ export default class extends wepy.app {
           // 出库
           'outSto/toOutSto', // 待出库菜单
           'outSto/outSto', // 已出库菜单
+          'outSto/outStoFee', // 已出库菜单
           'outSto/index', // 出库菜单
           'outSto/toOutStoFee', // 待出库菜单
 

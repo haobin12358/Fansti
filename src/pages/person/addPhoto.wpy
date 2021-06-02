@@ -85,18 +85,22 @@
     .video-wrap{
       position: fixed;
       left: 0;
-      top: 0;
+      bottom: 0;
       width: 100%;
-      height: 100%;
-      background: black;
+      height: 500rpx;
+      border-top: 1px solid #C5C5C5;
+      /*background: black;*/
 
       &-close{
-
+        height: 50rpx;
+        line-height: 50rpx;
+        color: #999999;
+        text-align: center;
       }
 
       video{
         width: 100%;
-        height: 100%;
+        height: 420rpx ;
       }
     }
   }
@@ -119,7 +123,8 @@
 
     <view class="choose-photo">
       <view class="photo-item" wx:for="{{list}}">
-        <image class="img" src="{{item.photourl}}" @tap.stop="previewImg({{item.photourl}})"></image>
+        <image wx:if="{{type === 'packing'}}" class="img" src="../../images/play.png" @tap.stop="previewVideo({{item.photourl}})"></image>
+        <image wx:else class="img" src="{{item.photourl}}" @tap.stop="previewImg({{item.photourl}})"></image>
 
         <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{item}})"></image>
         <view class="info">
@@ -132,9 +137,11 @@
              class="add-photo-block" @tap="newAddPhoto"></image>
     </view>
 
-    <!--<div wx:if="{{videoSrc}}" class="video-wrap">
+
+    <view wx:if="{{videoSrc}}" class="video-wrap">
+      <view class="video-wrap-close" @tap="hideVideoPreview">收起视频预览</view>
       <video src="{{videoSrc}}"></video>
-    </div>-->
+    </view>
 
     <!--<view class="btn-wrap">
       <view class="button" @tap="removeCheckedImgs">删除</view>
@@ -175,6 +182,14 @@
           urls: photoUrls,
           current: item
         })
+      },
+      previewVideo(url) {
+        this.videoSrc = url
+        this.$apply()
+      },
+      hideVideoPreview(){
+        this.videoSrc = ''
+        this.$apply()
       },
 
       handleBatchChange(evt){
@@ -275,11 +290,6 @@
       let that = this
       let filePath = typeof file === 'string' ? file : file.path
 
-      console.log(filePath, {
-        FileType: that.type,
-        index: that.list.length + 1,
-        jcno: that.jcno
-      });
 
       tip.loading()
       return new Promise(
@@ -294,7 +304,8 @@
             formData: {
               FileType: that.type,
               index: that.list.length + 1,
-              jcno: that.jcno
+              jcno: that.jcno,
+              photo_head: that.batchIndex
             },
             success: function(res) {
               let resData = JSON.parse(res.data)
@@ -409,7 +420,7 @@
     onLoad(parmas) {
       // todo
       this.jcno = parmas.jcno || 'E15060029'
-      this.type = parmas.type || 'packing'
+      this.type = parmas.type || 'in'
 
       if(this.type == 'in'){
         this.getBatchList()
