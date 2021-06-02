@@ -69,14 +69,30 @@
       .value {
         flex: 1;
         .sc(24rpx, #333333);
-
+        /*display: flex;*/
         textarea {
-          width: 520rpx;
+          width: 100%;
         }
       }
     }
   }
 
+  .batch-list {
+    .fj();
+
+    .batch-item {
+      flex: 1;
+      text-align: center;
+      .type-blue-plain;
+      border: 1px solid @mainBlueColor;
+      .fz28;
+      padding: 7rpx 0;
+
+      &.active {
+        .type-blue;
+      }
+    }
+  }
 }
 </style>
 
@@ -90,6 +106,12 @@
         <view>运单号
           <text style="font-weight: bold;margin-left: 28rpx;">{{formData.ydno || '暂无'}}</text>
         </view>
+      </view>
+    </view>
+    <view class="batch-list" wx:if="{{inStoList.length}}">
+      <view class="{{activeBatchIndex == index ? 'batch-item active' : 'batch-item'}}" wx:for="{{inStoList.length}}"
+            @tap="chooseBatch({{index}})">
+        {{index + 1}}
       </view>
     </view>
     <form @submit="doSubmit">
@@ -106,7 +128,7 @@
             {{formData.hwpm || '暂无'}}
           </view>
           <view class="value" wx:else>
-            <input type="text" name="hwpm" placeholder="请输入">
+            <input type="text" name="hwpm" value="{{formData.hwpm}}" placeholder="请输入">
           </view>
         </view>
         <view class="form-item">
@@ -158,11 +180,11 @@
             <textarea auto-height placeholder="请填写" value="{{formData.remark}}" name="remark"/>
           </view>
         </view>
-        <view class="form-item photo" wx:if="{{!isNoJc || formData.temporary_no}}">
-          <view class="label">入仓照片</view>
+        <view class="form-item photo" wx:if="{{!isNoJc || formData.temporary_no}}" style="padding: 20rpx 0">
+          <view class="label" style="padding-left: 20rpx">入仓照片</view>
           <view class="list">
             <view wx:for="{{picture}}" @tap="previewImage({{index}})" class="photo-item">
-              <image class="img" src="{{item.url}}"></image>
+              <image class="img" src="{{item.photourl}}"></image>
               <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{index}})"></image>
             </view>
 
@@ -198,6 +220,8 @@ export default class InStoDetail extends wepy.page {
   data = {
     isNoJc: false,
     date: '',
+    activeBatchIndex: 0,
+    inStoList: [],
     picture: [],
     formData: {}
   };
@@ -209,6 +233,12 @@ export default class InStoDetail extends wepy.page {
       this.$preload('res', this.formData);
       this.$preload('isNoJc', this.isNoJc);
       this.$navigate('/pages/person/print');
+    },
+    chooseBatch(index) {
+      this.activeBatchIndex = index;
+      this.formData = this.inStoList[this.activeBatchIndex];
+      this.picture = this.formData.pic_list;
+      this.$apply();
     },
     addPhoto() {
       let that = this;
@@ -241,40 +271,27 @@ export default class InStoDetail extends wepy.page {
 
       formData.hwpm = formData.hwpm ? formData.hwpm : this.formData.hwpm;
       formData.enter_time += ':00';
-      formData.pic_list = this.picture;
+      formData.pic_list = this.picture.map(v => {
+        return {
+          photourl: v.photourl,
+          filename: v.filename,
+          url: v.photourl
+        };
+      });
       formData.receiver_name = '';
-      formData.temporary_no = formData.temporary_no ? formData.temporary_no : '';
+      formData = {
+        ...this.formData,
+        ...formData
+      };
 
-      let func = this.isNoJc ? api.updateNojcno : api.addIn;
-
-      func({
-        method: 'POST',
-        temporary_no: formData.temporary_no,
-        jcno: this.formData.jcno,
-        login_name: wx.getStorageSync('token'),
-        query: formData
-      }).then(
-        res => {
-          if (res.data.status == 200) {
-            let data = res.data.data;
-
-            tip.success('保存成功').then(
-              () => {
-                wx.navigateBack();
-              }
-            );
-          } else {
-            tip.alert(res.data.message);
-          }
-        }
-      );
+      this.isNoJc ? this.saveNoJcInSto(formData) : this.saveInSto(formData);
     },
 
     removePhoto(index) {
       this.picture.splice(index, 1);
     },
     previewImage(index) {
-      let urls = this.picture.map(item => item.url);
+      let urls = this.picture.map(item => item.photourl);
 
       wx.previewImage({
         current: urls[index],
@@ -283,6 +300,50 @@ export default class InStoDetail extends wepy.page {
     }
 
   };
+
+  saveInSto(formData) {
+    api.addIn({
+      method: 'POST',
+      jcno: this.formData.jcno,
+      login_name: wx.getStorageSync('token'),
+      query: formData
+    }).then(
+      res => {
+        if (res.data.status == 200) {
+          let data = res.data.data;
+
+          this.inStoList.splice(this.activeBatchIndex, 1, formData);
+          this.$apply();
+          tip.success('保存成功');
+        } else {
+          tip.alert(res.data.message);
+        }
+      }
+    );
+  }
+
+  saveNoJcInSto(formData) {
+    api.updateNojcno({
+      method: 'POST',
+      temporary_no: this.formData.temporary_no,
+      login_name: wx.getStorageSync('token'),
+      query: formData
+    }).then(
+      res => {
+        if (res.data.status == 200) {
+          let data = res.data.data;
+
+          tip.success('保存成功').then(
+            () => {
+              wx.navigateBack();
+            }
+          );
+        } else {
+          tip.alert(res.data.message);
+        }
+      }
+    );
+  }
 
   afterChoose(filterFiles) {
     let that = this;
@@ -301,6 +362,18 @@ export default class InStoDetail extends wepy.page {
   uploadFiles(file) {
     let that = this;
 
+    let formData = {
+      FileType: 'in',
+      index: that.picture.length + 1,
+      photo_head: that.isNoJc ? 1 : that.formData.photo_head
+    }
+
+    if(this.isNoJc) {
+      formData.temporary_no = this.formData.temporary_no
+    }else {
+      formData.jcno = this.formData.jcno
+    }
+
     tip.loading();
     return new Promise(
       (resolve, reject) => {
@@ -311,19 +384,14 @@ export default class InStoDetail extends wepy.page {
           header: {
             'Content-Type': 'multipart/form-data'
           },
-          formData: {
-            FileType: 'in',
-            index: that.picture.length + 1,
-            jcno: that.formData.jcno,
-            photo_head: that.formData.photo_head
-          },
+          formData: formData,
           success: function(res) {
             let resData = JSON.parse(res.data);
             let data = resData.data;
 
             if (resData.status === 200) {
               that.picture.push({
-                url: data,
+                photourl: data,
                 filename: Date.now().toString() + data.substr(data.lastIndexOf('.'))
               });
               that.$apply();
@@ -351,7 +419,7 @@ export default class InStoDetail extends wepy.page {
       rst = '请填货物品名';
       return rst;
     }
-     if (!formData.warehouse_address) {
+    if (!formData.warehouse_address) {
       rst = '请填库房存放地';
       return rst;
     }
@@ -395,9 +463,13 @@ export default class InStoDetail extends wepy.page {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
       this.formData = data.preload.item || {};
+      this.picture = this.formData.pic_list;
     } else {
-      this.formData = data.preload.res;
+      this.inStoList = data.preload.res;
+      this.formData = this.inStoList[this.activeBatchIndex];
+      this.picture = this.formData.pic_list;
     }
+    this.$apply();
   }
 }
 </script>
