@@ -49,7 +49,9 @@
 import wepy from 'wepy';
 
 export default class inStoIndex extends wepy.page {
-  config = {};
+  config = {
+    navigationBarTitleText: '入库计划'
+  };
 
   components = {};
 

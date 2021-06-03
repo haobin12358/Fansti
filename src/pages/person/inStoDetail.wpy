@@ -180,7 +180,7 @@
             <textarea auto-height placeholder="请填写" value="{{formData.remark}}" name="remark"/>
           </view>
         </view>
-        <view class="form-item photo" wx:if="{{!isNoJc || formData.temporary_no}}" style="padding: 20rpx 0">
+        <view class="form-item photo" style="padding: 20rpx 0">
           <view class="label" style="padding-left: 20rpx">入仓照片</view>
           <view class="list">
             <view wx:for="{{picture}}" @tap="previewImage({{index}})" class="photo-item">

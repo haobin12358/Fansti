@@ -171,18 +171,19 @@ export default class print extends wepy.page {
 
   onLoad(params, data) {
     let {
-      isNoJC = false,
+      isNoJc = false,
       res: formData
     } = data.preload
-    let code = isNoJC ? formData.temporary_no : formData.jcno
+    console.log(isNoJc, formData);
+    let code = isNoJc ? formData.temporary_no : formData.jcno
 
-    this.isNoJC = isNoJC
+    this.isNoJc = isNoJc
     this.formData = formData
     this.code = code
     barcode('printBar', code, 710, 200);
     let {system} = wx.getSystemInfoSync()
 
-    console.log(system);
+    // console.log(system);
     // todo
     this.isIos = /^ios/i.test(system)
   };

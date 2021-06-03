@@ -137,7 +137,9 @@ import { flightOptions, originOptions, weightOptions, wpOptions, khOptions } fro
 
 
 export default class history extends wepy.page {
-  config = {};
+  config = {
+    navigationBarTitleText: '历史走货记录'
+  };
 
   components = {
     'selector-box': SelectorBox,

@@ -273,12 +273,24 @@
                 <text space="emsp">销售</text>
               </view>
               <view class="item-value">
-                {{item.jsbzcc || '暂无'}}
+                {{item.xsr || '暂无'}}
               </view>
             </view>
           </view>
 
+           <view wx:if="{{pageType == 6}}" class="line-detail">
+            <view class="line-left">
+            </view>
 
+            <view class="line-right">
+              <view class="item-label">
+                <text space="emsp">销售</text>
+              </view>
+              <view class="item-value">
+                {{item.xsr || '暂无'}}
+              </view>
+            </view>
+          </view>
         </view>
 
 

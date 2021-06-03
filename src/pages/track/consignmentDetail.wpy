@@ -460,6 +460,9 @@
 
     computed = {
       showConfirmAll(){
+        if(!this.detail.confirmation) {
+          return false
+        }
         if(this.detail.in_status == 0 && this.detail.in.picture && this.detail.in.picture.length){
           return true;
         }
@@ -552,6 +555,7 @@
       goConfirmConsignment(type){
         let params = {
           jcno: this.detail.jcno,
+          confirmation: this.detail.confirmation,
           type
         };
 

@@ -420,7 +420,7 @@
     onLoad(parmas) {
       // todo
       this.jcno = parmas.jcno || 'E15060029'
-      this.type = parmas.type || 'in'
+      this.type = parmas.type || 'packing'
 
       if(this.type == 'in'){
         this.getBatchList()
