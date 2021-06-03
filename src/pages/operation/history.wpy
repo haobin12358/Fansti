@@ -269,7 +269,7 @@ export default class history extends wepy.page {
   }
 
   onReachBottom() {
-    if (this.loadingType != 'nomore') {
+    if(this.loadingType == 'normal'){
       this.getList();
     }
   }

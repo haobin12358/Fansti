@@ -273,12 +273,12 @@ export default class noJcInSto extends wepy.page {
   }
 
   onReachBottom() {
-    if(this.loadingType === 'normal'){
+    if(this.loadingType == 'normal'){
       this.getList();
     }
   }
 
-  onLoad() {
+  onShow() {
     this.getList(true)
   };
 }

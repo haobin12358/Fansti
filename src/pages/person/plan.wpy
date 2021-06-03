@@ -63,7 +63,7 @@
 
   export default class Plan extends wepy.page {
     config = {
-      navigationBarTitleText: '当日计划'
+      navigationBarTitleText: '包装计划表'
     };
 
     components = {
@@ -177,7 +177,7 @@
               this.planList = [...this.planList, ...res.data.data];
             }
             // 设置标题
-            wx.setNavigationBarTitle({title: `计划查询${this.select_name ?  '-'+ this.select_name: ''} ${res.data.total_size}票`})
+            // wx.setNavigationBarTitle({title: `计划查询${this.select_name ?  '-'+ this.select_name: ''} ${res.data.total_size}票`})
 
 
             if (res.data.data.length == this.pageSize) {
@@ -200,7 +200,7 @@
     }
 
     onReachBottom() {
-      if(this.loadingType != 'nomore'){
+      if(this.loadingType == 'normal'){
         this.getTodayList();
       }
     }

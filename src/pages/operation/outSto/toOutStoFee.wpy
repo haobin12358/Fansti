@@ -299,7 +299,7 @@ export default class noJcInSto extends wepy.page {
   }
 
   onLoad(params) {
-    // this.getList(params.noList.split(','))
+    this.getList(params.noList.split(','))
     this.getTruckCurr()
   };
 }

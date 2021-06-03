@@ -104,7 +104,7 @@
     }
 
     onReachBottom() {
-      if (this.loadingType != 'nomore') {
+      if(this.loadingType == 'normal'){
         this.getAllNews();
       }
     }

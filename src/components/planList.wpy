@@ -231,12 +231,12 @@
           </view>
 
           <view wx:if="{{pageType <= 2}}" class="line-detail">
-            <view wx:if="{{pageType !== 2}}" class="line-left">
+            <view wx:if="{{pageType == 0}}" class="line-left">
               <view class="item-label">
                 <text>包装状态</text>
               </view>
               <view class="item-value">
-                {{item.hxno || '暂无'}}
+                {{item.bzflag === 1 ? '已包装' : '未包装'}}
               </view>
             </view>
             <view wx:else class="line-left">
@@ -253,7 +253,7 @@
                 <text space="emsp">销售</text>
               </view>
               <view class="item-value">
-                {{item.jsbzcc || '暂无'}}
+                {{item.xsr || '暂无'}}
               </view>
             </view>
           </view>
@@ -375,7 +375,8 @@ export default class PlanList extends wepy.component {
   };
 
   onLoad() {
-    console.log(this.pageType);
+
+    console.log( typeof this.pageType);
   };
 }
 </script>
