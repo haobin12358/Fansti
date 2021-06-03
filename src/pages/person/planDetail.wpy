@@ -1518,6 +1518,7 @@
           }
           return
         case 4:
+          this.hasAuth = true
           this.getHcAbo()
           return
       }
@@ -1561,13 +1562,14 @@
       );
     }
 
-
-    onShow() {
+    handleChangeTab(){
       wx.setNavigationBarTitle({
         title: this.tabs[this.activeName]
       })
-
       this.refreshTab()
+    }
+    onShow() {
+      this.handleChangeTab()
     };
 
     onLoad(params){

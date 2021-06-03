@@ -326,7 +326,8 @@
       // todo
       // this.$navigate('/pages/operation/inSto/noJcInSto')
       // this.$navigate('/pages/operation/inSto/inSto')
-      // this.$navigate('/pages/person/addPhoto')
+      // this.$navigate('/pages/person/planDetail')
+      // this.$navigate('/pages/person/yardReceive/toYardReceive')
 
       this.userType = wx.getStorageSync('user_type')
     }

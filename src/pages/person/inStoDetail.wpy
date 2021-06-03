@@ -93,6 +93,16 @@
       }
     }
   }
+
+  .hwpm-scan{
+    width: 100rpx;
+    height: 48rpx;
+    line-height: 48rpx;
+    text-align: center;
+    .type-blue-plain;
+    border: 1px solid @mainBlueColor;
+    border-radius: 10rpx;
+  }
 }
 </style>
 
@@ -127,8 +137,9 @@
           <view class="value" wx:if="{{!isNoJc}}">
             {{formData.hwpm || '暂无'}}
           </view>
-          <view class="value" wx:else>
-            <input type="text" name="hwpm" value="{{formData.hwpm}}" placeholder="请输入">
+          <view class="value" style="display: flex;align-items: center" wx:else>
+            <textarea auto-height name="hwpm" style="flex: 1" value="{{formData.hwpm}}" placeholder="请输入"/>
+            <view class="hwpm-scan" @tap.stop="hwpmScan">识别</view>
           </view>
         </view>
         <view class="form-item">
@@ -297,8 +308,39 @@ export default class InStoDetail extends wepy.page {
         current: urls[index],
         urls
       });
-    }
+    },
+    hwpmScan(){
+      let that = this;
 
+      tip.loading();
+      wx.chooseImage({
+        count: 1,
+        success({ tempFilePaths }) {
+          let path = tempFilePaths[0]
+
+          wx.uploadFile({
+            url: api.picOcrUrl,
+            filePath: path,
+            name: 'file',
+            header: {
+              'Content-Type': 'multipart/form-data'
+            },
+            success: function(res) {
+              let resData = JSON.parse(res.data);
+              let data = resData.data;
+
+              if (resData.status === 200) {
+                tip.success('识别成功')
+                that.formData.hwpm += data.map(v => v.words).join(' ')
+                that.$apply()
+              }else {
+                tip.error('识别失败')
+              }
+            }
+          })
+        }
+      })
+    }
   };
 
   saveInSto(formData) {

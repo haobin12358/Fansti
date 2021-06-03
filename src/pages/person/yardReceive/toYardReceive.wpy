@@ -174,10 +174,10 @@ export default class noJcInSto extends wepy.page {
     scanToOutSto() {
       let that = this;
 
-      if (!['0', '3', '4', '5'].includes(that.userType)) {
+      /*if (!['0', '3', '4', '5'].includes(that.userType)) {
         tip.alert('该账号无权使用');
         return;
-      }
+      }*/
 
       wx.scanCode({
         success(res) {
@@ -202,8 +202,7 @@ export default class noJcInSto extends wepy.page {
           if (res.data.status == 200) {
             let data = res.data.data;
 
-            this.$preload('res', data);
-            this.$navigate('/pages/person/outStoDetail');
+            this.$navigate('/pages/person/planDetail', { jcno: item.jcno, isYard: true });
           } else {
             tip.alert(res.data.message);
           }
@@ -214,20 +213,16 @@ export default class noJcInSto extends wepy.page {
     scanToReceive() {
       let that = this;
 
-      if (!['0', '3', '6', '7'].includes(that.userType)) {
+      /*if (!['0', '3', '6', '7'].includes(that.userType)) {
         tip.alert('该账号无权使用');
         return;
-      }
+      }*/
 
       wx.scanCode({
         success(res) {
           let jcno = res.result.substr(0, 12);
 
-          that.getHcAbo(jcno);
-        },
-        fail() {
-          that.showInputBox = true;
-          that.$apply();
+          this.$navigate('/pages/person/planDetail', { jcno, isYard: true });
         }
       });
     },

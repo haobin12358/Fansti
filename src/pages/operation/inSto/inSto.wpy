@@ -174,15 +174,15 @@ export default class noJcInSto extends wepy.page {
     scanToInSto() {
       let that = this;
 
-      if (!['0', '3', '4', '5'].includes(that.userType)) {
+      /*if (!['0', '3', '4', '5'].includes(that.userType)) {
         tip.alert('该账号无权使用');
         return;
-      }
+      }*/
 
       wx.scanCode({
         success(res) {
           let jcno = res.result.substr(0, 12);
-          that.getInAbo(jcno);
+          that.getInAbo({ jcno });
         },
         fail(evt) {
           that.showInputBox = true;
@@ -232,6 +232,7 @@ export default class noJcInSto extends wepy.page {
         page_size: this.pageSize,
         login_name: wx.getStorageSync('token'),
         time_use: this.time_use,
+        location: this.origin,
         select_name: this.select_name,
         inflag: this.inflag
       }

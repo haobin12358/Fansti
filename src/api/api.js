@@ -68,6 +68,7 @@ const addNewFile = params => wxRequest(params, host + `/control/add_new_file?log
 const deleteFile = params => wxRequest(params, host + `/control/delete_file?login_name=${params.login_name}&jcno=${params.jcno}&file_type=${params.file_type}`);  // 删除文件
 
 const uploadFilesUrl = host + `/control/upload_files`; // post 上传文件 url
+const picOcrUrl = host + `/control/pic_ocr`; // post 上传文件 url
 
 
 //  绑定用户  POST
@@ -202,6 +203,7 @@ export default {
 
   updateWts,
   uploadFilesUrl,
+  picOcrUrl,
   updateDzjjd,
   addIn,
   retrueOuthc,

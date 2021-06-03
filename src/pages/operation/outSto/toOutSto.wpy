@@ -180,10 +180,10 @@ export default class noJcInSto extends wepy.page {
     scanToOutSto() {
       let that = this
 
-      if(!['0', '3', '4', '5'].includes(that.userType) ){
+      /*if(!['0', '3', '4', '5'].includes(that.userType) ){
         tip.alert('该账号无权使用')
         return
-      }
+      }*/
 
       wx.scanCode({
         success(res){
