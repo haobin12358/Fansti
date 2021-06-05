@@ -1,0 +1,353 @@
+<style lang="less" scoped>
+@import "src/styles/base";
+
+.container {
+  padding: 0 20rpx;
+
+  .print-location {
+    padding: 50rpx 0;
+    display: flex;
+    justify-content: center;
+    .fz(50rpx);
+  }
+
+  .print-no {
+    height: 56rpx;
+    .fj();
+    background: #ebebeb;
+    padding: 0 20rpx;
+
+    &-left {
+      font-weight: bold;
+    }
+  }
+
+  .print-info {
+    padding: 30rpx 20rpx;
+    .fj();
+
+    &-item {
+      flex: 1;
+      display: flex;
+    }
+  }
+
+  .blue-list-wrap {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 500rpx;
+    border-top: 1px solid #C5C5C5;
+    background: white;
+    .fjc('flex-start', 'stretch');
+
+    &-close {
+      height: 50rpx;
+      line-height: 50rpx;
+      color: #999999;
+      text-align: center;
+    }
+
+    .blue-list {
+      height: 450rpx;
+      padding: 0 20rpx;
+      overflow: auto;
+
+
+      .blue-item {
+        display: flex;
+        align-items: center;
+        border: 1px solid #C5C5C5;
+        border-radius: 10rpx;
+        padding: 20rpx;
+        margin-bottom: 20rpx;
+
+        &.choosed {
+          border-color: @mainBlueColor;
+        }
+
+        &-lf{
+          flex: 1;
+          text-align: left;
+        }
+
+        &-rt {
+          width: 200rpx;
+          text-align: center;
+          color: @mainBlueColor;
+          font-weight: bold;
+          .fz36;
+        }
+      }
+    }
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="print-location">
+      <view style="margin-right: 20rpx;color: #999999;">库位</view>
+      <view style="font-weight: bold;">{{formData.warehouse_address || ''}}</view>
+    </view>
+    <view class="print-no">
+      <view class="print-no-left">
+        {{code}}
+      </view>
+      <view>
+        {{formData.goods_quantity || 0}}件
+      </view>
+    </view>
+    <view class="print-info">
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">快递公司</view>
+        <view>{{formData.delivery_unit || ''}}</view>
+      </div>
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">快递单号</view>
+        <view>{{formData.delivery_number || ''}}</view>
+      </div>
+    </view>
+    <view class="print-bar">
+      <canvas canvas-id="printBar" style="width: 710rpx;height: 200rpx;"></canvas>
+      <view style="text-align: center;font-size: 50rpx;">
+        {{code}}
+      </view>
+    </view>
+
+    <view class="btn-wrap">
+      <view class="button">
+        打印({{choosedDevice.name || '未连接'}})
+      </view>
+    </view>
+
+    <view wx:if="{{blueListShow}}" class="blue-list-wrap" @touchstart.stop="">
+      <view class="blue-list-wrap-close" @tap="hideVideoPreview">请选择打印机
+        <view class="blue-list">
+          <view wx:for="{{blueList}}"
+                class="{{choosedDevice.deviceId === item.deviceId ? 'blue-item choosed' : 'blue-item'}}" @tap="tapBlueItem({{item}})">
+            <view class="blue-item-lf">
+              <view style="color: #333;font-size: 36rpx;font-weight: bold">{{item.name}}</view>
+              <view style="color: #999">
+                {{item.deviceId}}
+              </view>
+            </view>
+            <view class="blue-item-rt">
+              {{choosedDevice.deviceId === item.deviceId ? '已连接' : ''}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { barcode } from './util/qrcode';
+import tip from '@/utils/tip';
+import {
+  getDeviceCharacteristics,
+  printImage,
+  sendDataToDevice,
+  overwriteImageData,
+  printQR
+} from './util/wx-weapp-tool/bluetoolth.js';
+
+const app = getApp();
+export default class print extends wepy.page {
+  config = {};
+
+  components = {};
+
+  data = {
+    isIos: false,
+    formData: {},
+    code: '',
+    isNoJc: false,
+
+    blueListShow: true,
+    blueList: [], // 蓝牙设备列表
+    choosedDevice: {}, // 连接的设备
+    services: [],
+    character: []
+  };
+
+  computed = {};
+
+  methods = {
+    tapBlueItem(item){
+      tip.loading(`正在连接${item.name}`)
+      wepy.createBLEConnection({
+        deviceId: item.deviceId
+      }).then(
+        (res) => {
+          wepy.getBLEDeviceServices({
+            deviceId: item.deviceId
+          }).then(
+            res => {
+              this.services = res.services;
+              this.choosedDevice = item
+              this.blueListShow = false
+              this.$apply()
+
+              console.log(this.services);
+              getDeviceCharacteristics(
+                item.deviceId,
+                [...this.services],
+                (character) => {
+                  console.log(character);
+                  this.character = character;
+                  this.$apply()
+                  wx.hideLoading();
+                }
+              )
+            }
+          )
+        }
+      ).finally(() =>{
+        tip.loaded()
+      })
+    },
+    tapPrint(){
+      if(this.choosedDevice.deviceId){
+
+      }else {
+        this.blueListShow = true
+        this.$apply()
+      }
+    }
+  };
+
+  onPrint() {
+    if (!wx.openBluetoothAdapter) {
+      wx.showModal({
+        title: '提示',
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      });
+      return;
+    }
+
+    // 开启蓝牙
+    wx.openBluetoothAdapter({
+      success: (res) => {
+        console.log('openBluetoothAdapter success', res);
+        this.checkPermission();
+      }, fail: () => {
+        wx.showModal({
+          title: '提示',
+          content: '蓝牙初始化失败，请打开蓝牙'
+        });
+      }
+    });
+  }
+
+  checkPermission() {  //android 6.0以上需授权地理位置权限
+    let that = this;
+
+    if (this.isIos) {
+      that.startBluetoothDevicesDiscovery();
+    } else {
+      console.log('[开始授权]');
+      wepy.getSetting().then(
+        res => {
+          if (res.authSetting['scope.userLocation']) {
+            that.startBluetoothDevicesDiscovery();
+          } else {
+            wx.authorize({
+              scope: 'scope.userLocation',
+              complete(res) {
+                that.startBluetoothDevicesDiscovery();
+              }
+            });
+          }
+        }
+      );
+    }
+  }
+
+  // 开始扫描
+  startBluetoothDevicesDiscovery() {
+    wx.startBluetoothDevicesDiscovery({
+      success: (res) => {
+        console.log('startBluetoothDevicesDiscovery success', res);
+        this.onBluetoothDeviceFound();
+      },
+      fail: (res) => {
+        console.log('startBluetoothDevicesDiscovery fail', res);
+      }
+    });
+  }
+
+  onBluetoothDeviceFound() {
+    let that = this;
+
+    setTimeout(() => {
+      wx.getBluetoothDevices({
+        success(res) {
+          var devices = [];
+          var num = 0;
+          for (var i = 0; i < res.devices.length; ++i) {
+            if (res.devices[i].name != '未知设备') {
+              devices[num] = res.devices[i];
+              num++;
+            }
+          }
+
+          that.blueList = devices;
+          that.$apply();
+        }
+      });
+    }, 1000);
+  }
+
+  onLoad(params, data) {
+    /*let {
+      isNoJc = false,
+      res: formData
+    } = data.preload*/
+
+    let isNoJc = true;
+    let formData = {
+      batch_number: null,
+      cargo_size: '623',
+      client_name: '71231',
+      create_time: '2021-06-05',
+      delivery_number: '123',
+      delivery_unit: '423',
+      goods_quantity: '3123',
+      goods_weight: '51231',
+      hwpm: 'asd',
+      list_id: 'b7ad1154-c2e2-11eb-8520-a4a5eb82cb94',
+      location: '0',
+      originator_phone: null,
+      photo_head: '1',
+      pic_list: [],
+      receiver_name: null,
+      remark: '823',
+      temp_bq_url: 'https://fstwechat.com/photo/unJcno/0742021-06-01706/code/code.png',
+      temporary_no: '0742021-06-01706',
+      warehouse_address: '2123fgg'
+    };
+
+
+    let code = isNoJc ? formData.temporary_no : formData.jcno;
+
+    this.isNoJc = isNoJc;
+    this.formData = formData;
+    this.code = code;
+    barcode('printBar', code, 710, 200);
+    let { system } = wx.getSystemInfoSync();
+
+    // console.log(system);
+    // todo
+    this.isIos = /^ios/i.test(system);
+    this.onPrint()
+  };
+
+  onHide(){
+    wx.stopBluetoothDevicesDiscovery()
+  }
+}
+</script>
