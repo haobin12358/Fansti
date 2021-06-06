@@ -325,7 +325,7 @@
     onLoad(){
       // todo
       // this.$navigate('/pages/operation/inSto/noJcInSto')
-      this.$navigate('/pages/operation/print')
+      // this.$navigate('/pages/operation/print')
       // this.$navigate('/pages/person/planDetail')
       // this.$navigate('/pages/person/yardReceive/toYardReceive')
 

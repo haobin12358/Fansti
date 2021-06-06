@@ -29,7 +29,7 @@
 
       .height-maintain {
         height: 770rpx;
-        /*flex: 1;*/
+        flex: 1;
         /*background: #5A738A;*/
 
         .news-card-content{

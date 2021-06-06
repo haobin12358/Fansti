@@ -117,11 +117,27 @@
     </view>
 
     <view class="btn-wrap">
-      <view class="button">
+      <view class="button" @tap="tapPrint">
         打印({{choosedDevice.name || '未连接'}})
       </view>
     </view>
-
+    <!--<popup :show="blueListShow">
+      <view class="blue-list">
+        <view wx:for="{{blueList}}"
+              class="{{choosedDevice.deviceId === item.deviceId ? 'blue-item choosed' : 'blue-item'}}"
+              @tap="tapBlueItem({{item}})">
+          <view class="blue-item-lf">
+            <view style="color: #333;font-size: 36rpx;font-weight: bold">{{item.name}}</view>
+            <view style="color: #999">
+              {{item.deviceId}}
+            </view>
+          </view>
+          <view class="blue-item-rt">
+            {{choosedDevice.deviceId === item.deviceId ? '已连接' : ''}}
+          </view>
+        </view>
+      </view>
+    </popup>-->
     <view wx:if="{{blueListShow}}" class="blue-list-wrap" @touchstart.stop="">
       <view class="blue-list-wrap-close" @tap="hideVideoPreview">请选择打印机
         <view class="blue-list">
@@ -154,12 +170,19 @@ import {
   overwriteImageData,
   printQR
 } from './util/wx-weapp-tool/bluetoolth.js';
+import GBK from './util/wx-weapp-tool/libs/gbk.min';
+
+import PrinterJobs from './util/printer/printerjobs';
+import printerUtil from './util/printer/printerutil';
+import Popup from '../../components/common/popup';
 
 const app = getApp();
 export default class print extends wepy.page {
   config = {};
 
-  components = {};
+  components = {
+    popup: Popup
+  };
 
   data = {
     isIos: false,
@@ -171,14 +194,29 @@ export default class print extends wepy.page {
     blueList: [], // 蓝牙设备列表
     choosedDevice: {}, // 连接的设备
     services: [],
-    character: []
+    character: [],
+    message: `【2019】
+        当事人姓名：获取当事人姓名
+        年龄：获取当事人年龄
+        你（单位）于___年___月___日___时___分在___________________因____________________________的行为，违反了__________________________________的规定，有证据___________________
+        现责令你（单位）于_______年______月______日    _______时前自行__________________________
+        现依据___________________________的规定、本局决定对你（单位）处以下行政处罚：
+        警告；
+        罚款人民币伍拾元整。￥:【50元】 缴纳罚款方式：
+        当场收缴。（依据《中华人民共和国行政处罚法》第四十七条、第四十八条的规定）
+        自收到本决定书之日起15日内将）罚款交至____银行（账  号：                  )。逾期未缴纳罚款的，可以每日按罚款数额的3%加处罚款。
+        本局执法人员当场向你（单位）告知了违法事实、依据和依法享有的权利。陈述申辩情况：
+        我于___年___月___日收到本处罚决定书、执法人员在处罚前已向我告知了权利，并听取了我的陈述和申辩。
+        送达方式：___________________________________
+        当事人签名：
+        年     月      日`
   };
 
   computed = {};
 
   methods = {
-    tapBlueItem(item){
-      tip.loading(`正在连接${item.name}`)
+    tapBlueItem(item) {
+      tip.loading(`正在连接${item.name}`);
       wepy.createBLEConnection({
         deviceId: item.deviceId
       }).then(
@@ -188,9 +226,9 @@ export default class print extends wepy.page {
           }).then(
             res => {
               this.services = res.services;
-              this.choosedDevice = item
-              this.blueListShow = false
-              this.$apply()
+              this.choosedDevice = item;
+              this.blueListShow = false;
+              this.$apply();
 
               console.log(this.services);
               getDeviceCharacteristics(
@@ -199,26 +237,114 @@ export default class print extends wepy.page {
                 (character) => {
                   console.log(character);
                   this.character = character;
-                  this.$apply()
+                  this.$apply();
                   wx.hideLoading();
                 }
-              )
+              );
             }
-          )
+          );
         }
-      ).finally(() =>{
-        tip.loaded()
-      })
+      ).finally(() => {
+        tip.loaded();
+      });
     },
-    tapPrint(){
-      if(this.choosedDevice.deviceId){
-
-      }else {
-        this.blueListShow = true
-        this.$apply()
+    tapPrint() {
+      if (this.choosedDevice.deviceId) {
+        // this.startPrint()
+        this.writeBLECharacteristicValue();
+      } else {
+        this.blueListShow = true;
+        this.$apply();
       }
     }
   };
+
+  startPrint() {
+    const opt = { deviceId: this.choosedDevice.deviceId, ...this.character };
+
+    console.log('start', opt);
+    sendDataToDevice({
+      ...opt,
+      value: new Uint8Array(GBK.encode(this.data.message)).buffer
+    });
+  }
+
+  writeBLECharacteristicValue() {
+    let printerJobs = new PrinterJobs();
+    let {
+      warehouse_address,
+      goods_quantity,
+      delivery_unit,
+      delivery_number
+    } = this.formData;
+
+    printerJobs
+      .setBold(true)
+      .setAlign('ct')
+      .setSize(2, 1)
+      .print(`库位 ${warehouse_address || ''}`)
+      .print(`${this.code} ${goods_quantity || 0}件`)
+      .print(`快递公司 ${delivery_unit || ''}`)
+      .println(`快递单号 ${delivery_number || ''}`);
+
+    let buffer = printerJobs.buffer();
+
+    const opt = { deviceId: this.choosedDevice.deviceId, ...this.character };
+
+    let that = this;
+
+    sendDataToDevice({
+      ...opt,
+      value: buffer,
+      lasterSuccess: () => {
+        that.printNo();
+        // this.printBarCode()
+      }
+    });
+  }
+
+  printNo() {
+    let printerJobs = new PrinterJobs();
+    printerJobs
+      .setBold(true)
+      .setAlign('ct')
+      .setSize(2, 2)
+      .println(this.code);
+    let buffer = printerJobs.buffer();
+
+    const opt = { deviceId: this.choosedDevice.deviceId, ...this.character };
+
+    sendDataToDevice({
+      ...opt,
+      value: buffer
+    });
+  }
+
+  printBarCode() {
+    const w = 500;
+    const h = 300;
+
+    wx.canvasGetImageData({
+      canvasId: 'printBar',
+      x: 0,
+      y: 0,
+      width: w,
+      height: h,
+      success: (res) => {
+        console.log(res);
+        const pix = res.data;
+        const opt = { deviceId: this.choosedDevice.deviceId, ...this.character };
+        const sendImageinfo = overwriteImageData({
+          imageData: pix,
+          width: w,
+          height: h,
+          threshold: 190
+        });
+        //打印图片
+        printImage(opt, sendImageinfo);
+      }
+    });
+  }
 
   onPrint() {
     if (!wx.openBluetoothAdapter) {
@@ -232,7 +358,6 @@ export default class print extends wepy.page {
     // 开启蓝牙
     wx.openBluetoothAdapter({
       success: (res) => {
-        console.log('openBluetoothAdapter success', res);
         this.checkPermission();
       }, fail: () => {
         wx.showModal({
@@ -249,7 +374,6 @@ export default class print extends wepy.page {
     if (this.isIos) {
       that.startBluetoothDevicesDiscovery();
     } else {
-      console.log('[开始授权]');
       wepy.getSetting().then(
         res => {
           if (res.authSetting['scope.userLocation']) {
@@ -271,11 +395,9 @@ export default class print extends wepy.page {
   startBluetoothDevicesDiscovery() {
     wx.startBluetoothDevicesDiscovery({
       success: (res) => {
-        console.log('startBluetoothDevicesDiscovery success', res);
         this.onBluetoothDeviceFound();
       },
       fail: (res) => {
-        console.log('startBluetoothDevicesDiscovery fail', res);
       }
     });
   }
@@ -303,12 +425,12 @@ export default class print extends wepy.page {
   }
 
   onLoad(params, data) {
-    /*let {
+    let {
       isNoJc = false,
       res: formData
-    } = data.preload*/
+    } = data.preload
 
-    let isNoJc = true;
+    /*let isNoJc = true;
     let formData = {
       batch_number: null,
       cargo_size: '623',
@@ -329,7 +451,7 @@ export default class print extends wepy.page {
       temp_bq_url: 'https://fstwechat.com/photo/unJcno/0742021-06-01706/code/code.png',
       temporary_no: '0742021-06-01706',
       warehouse_address: '2123fgg'
-    };
+    };*/
 
 
     let code = isNoJc ? formData.temporary_no : formData.jcno;
@@ -343,11 +465,11 @@ export default class print extends wepy.page {
     // console.log(system);
     // todo
     this.isIos = /^ios/i.test(system);
-    this.onPrint()
+    this.onPrint();
   };
 
-  onHide(){
-    wx.stopBluetoothDevicesDiscovery()
+  onHide() {
+    wx.stopBluetoothDevicesDiscovery();
   }
 }
 </script>

@@ -243,7 +243,7 @@ export default class InStoDetail extends wepy.page {
     goPrint() {
       this.$preload('res', this.formData);
       this.$preload('isNoJc', this.isNoJc);
-      this.$navigate('/pages/person/print');
+      this.$navigate('/pages/operation/print');
     },
     chooseBatch(index) {
       this.activeBatchIndex = index;

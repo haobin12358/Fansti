@@ -26,9 +26,9 @@ export default class extends wepy.app {
       'pages/person/yardReceive/toYardReceive', // 货场菜单
       'pages/person/yardReceive/index', // 货场菜单
 
-      'pages/index/index',  //首页
       'pages/index/newsDetail', //新闻详情
 
+      'pages/index/index',  //首页
 
 
       'pages/track/index',  //跟踪首页
@@ -36,10 +36,6 @@ export default class extends wepy.app {
 
       'pages/person/planDetail', // 计划详情
       'pages/person/addPhoto', // 添加照片
-
-      'pages/person/print', // 打印
-      'pages/person/printTest', // 打印
-
 
 
       'pages/search/dgrSearch', //dgr
@@ -74,6 +70,7 @@ export default class extends wepy.app {
       {
         root: 'pages/operation',
         pages: [
+          'print', // 操作首页
           'history', // 操作首页
 
           'inSto/noJcInSto', // 无进仓号入库
@@ -86,8 +83,6 @@ export default class extends wepy.app {
           'outSto/outStoFee', // 已出库菜单
           'outSto/index', // 出库菜单
           'outSto/toOutStoFee', // 待出库菜单
-
-
         ]
       }
     ],
