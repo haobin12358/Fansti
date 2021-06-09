@@ -68,7 +68,7 @@
 
           .fj(space-between, flex-end);
           .sc(20rpx, black);
-          text-shadow:0px -1px 0px #fff;
+          text-shadow:-1px -1px 0px #fff;
 
           .time{
             flex: 1;
@@ -198,6 +198,12 @@
       },
       removePhoto(item){
         let that = this
+        let loginName = wx.getStorageSync('token')
+
+        if(item.czr && item.czr !== loginName) {
+          tip.toast('无法删除他人上传的内容')
+          return
+        }
 
         tip.confirm('确认删除该图?').then(
           ()=>{
@@ -420,7 +426,7 @@
     onLoad(parmas) {
       // todo
       this.jcno = parmas.jcno || 'E15060029'
-      this.type = parmas.type || 'packing'
+      this.type = parmas.type || 'in'
 
       if(this.type == 'in'){
         this.getBatchList()

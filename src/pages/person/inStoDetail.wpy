@@ -56,6 +56,24 @@
               right: 0rpx;
               .wl(35rpx, 35rpx);
             }
+
+            .info{
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              .wl(100%);
+              padding: 0 5rpx;
+              box-sizing: border-box;
+
+              .fj(space-between, flex-end);
+              .sc(20rpx, black);
+              text-shadow:-1px -1px 0px #fff;
+
+              .time{
+                flex: 1;
+                margin-right: 5rpx;
+              }
+            }
           }
         }
       }
@@ -191,12 +209,17 @@
             <textarea auto-height placeholder="请填写" value="{{formData.remark}}" name="remark"/>
           </view>
         </view>
-        <view class="form-item photo" style="padding: 20rpx 0">
+        <view wx:if="{{!isAddNoJc}}" class="form-item photo" style="padding: 20rpx 0">
           <view class="label" style="padding-left: 20rpx">入仓照片</view>
           <view class="list">
             <view wx:for="{{picture}}" @tap="previewImage({{index}})" class="photo-item">
               <image class="img" src="{{item.photourl}}"></image>
               <image class="remove" src="../../images/remove.png" @tap.stop="removePhoto({{index}})"></image>
+
+              <view class="info">
+                <view class="time">{{item.createtime}}</view>
+                <view >{{item.czr}}</view>
+              </view>
             </view>
 
             <image src="../../images/plus.png" class="photo-item" @tap="addPhoto"></image>
@@ -205,7 +228,7 @@
       </view>
 
       <view class="btn-wrap">
-        <button class="button plain" @tap="goPrint">打印面单</button>
+        <button wx:if="{{!isAddNoJc}}" class="button plain" @tap="goPrint">打印面单</button>
         <button class="button" form-type="submit">保 存</button>
       </view>
     </form>
@@ -237,7 +260,11 @@ export default class InStoDetail extends wepy.page {
     formData: {}
   };
 
-  computed = {};
+  computed = {
+    isAddNoJc(){
+      return this.isNoJc && !this.formData.temporary_no
+    }
+  };
 
   methods = {
     goPrint() {
@@ -284,6 +311,7 @@ export default class InStoDetail extends wepy.page {
       formData.enter_time += ':00';
       formData.pic_list = this.picture.map(v => {
         return {
+          id: v.id,
           photourl: v.photourl,
           filename: v.filename,
           url: v.photourl
@@ -299,6 +327,13 @@ export default class InStoDetail extends wepy.page {
     },
 
     removePhoto(index) {
+      let removeItem = this.picture[index]
+      let loginName = wx.getStorageSync('token')
+
+      if(removeItem.czr && removeItem.czr !== loginName) {
+        tip.toast('无法删除他人上传的内容')
+        return
+      }
       this.picture.splice(index, 1);
     },
     previewImage(index) {
@@ -338,6 +373,9 @@ export default class InStoDetail extends wepy.page {
               }
             }
           })
+        },
+        fail(){
+          tip.loaded()
         }
       })
     }
@@ -505,11 +543,11 @@ export default class InStoDetail extends wepy.page {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
       this.formData = data.preload.item || {};
-      this.picture = this.formData.pic_list;
+      this.picture = this.formData.pic_list || [];
     } else {
       this.inStoList = data.preload.res;
       this.formData = this.inStoList[this.activeBatchIndex];
-      this.picture = this.formData.pic_list;
+      this.picture = this.formData.pic_list || [];
     }
     this.$apply();
   }
