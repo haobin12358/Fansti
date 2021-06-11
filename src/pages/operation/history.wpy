@@ -76,7 +76,7 @@
   <view class="container">
     <view class="container-hd">
       <view class="container-hd-one row">
-        <selector-box :value="origin" :options="originOptions" @change.user="doSearch"></selector-box>
+        <selector-box wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions" @change.user="doSearch"></selector-box>
         <selector-box-date :value="starttime" mode="date" :datePlaceholder="starttimePl" @change.user="doSearch"></selector-box-date>
         <selector-box-date2 :value="endtime" mode="date" :datePlaceholder="endtimePl" @change.user="doSearch"></selector-box-date2>
       </view>
@@ -133,6 +133,7 @@ import api from '@/api/api';
 import tip from '@/utils/tip';
 import PlanList from '@/components/planList';
 import { flightOptions, originOptions, weightOptions, wpOptions, khOptions } from '@/utils/config';
+import AuthMixin from '@/mixins/authMixin';
 
 
 
@@ -183,6 +184,8 @@ export default class history extends wepy.page {
     pageSize: 10,
     total: 0
   };
+
+  mixins = [AuthMixin];
 
   computed = {};
 

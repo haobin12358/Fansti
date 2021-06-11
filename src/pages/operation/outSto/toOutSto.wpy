@@ -111,7 +111,7 @@
       </view>
       <view class="container-hd-two">
         <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
-        <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
+        <selector-box-origin wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions"></selector-box-origin>
         <selector-box-package :value="bzflag" :options="packageOptions"></selector-box-package>
         <selector-box-date :value="time_use" mode="date"></selector-box-date>
       </view>
@@ -134,6 +134,7 @@ import api from '@/api/api';
 import tip from '@/utils/tip';
 import PlanList from '@/components/planList';
 import { flightOptions, originOptions, packageOptions } from '@/utils/config';
+import AuthMixin from '@/mixins/authMixin';
 
 
 export default class noJcInSto extends wepy.page {
@@ -167,6 +168,8 @@ export default class noJcInSto extends wepy.page {
     pageSize: 10,
     total: 0
   };
+
+  mixins = [AuthMixin];
 
   computed = {};
 

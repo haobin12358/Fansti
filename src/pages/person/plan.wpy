@@ -36,7 +36,7 @@
       </view>
       <view class="container-hd-two">
         <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
-        <selector-box-origin :value="origin" :options="originOptions"></selector-box-origin>
+        <selector-box-origin wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions"></selector-box-origin>
       </view>
       <view style="display: flex">
         <selector-box-bz :value="bzflag" :options="packageOptions"></selector-box-bz>
@@ -59,6 +59,7 @@
   import { getCurrentTime } from '@/utils/util';
   import SelectorBox from '@/components/common/SelectorBox';
   import { flightOptions, originOptions, packageOptions } from '@/utils/config';
+  import AuthMixin from '@/mixins/authMixin';
 
 
   export default class Plan extends wepy.page {
@@ -107,6 +108,7 @@
 
     computed = {
     };
+    mixins = [AuthMixin];
 
     watch={};
 

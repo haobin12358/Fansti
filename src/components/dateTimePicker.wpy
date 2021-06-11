@@ -1,11 +1,12 @@
 <style type="less">
-  input.hidden{
-    display: none;
-  }
+input.hidden {
+  display: none;
+}
 </style>
 
 <template>
-  <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" @columnchange="changeDateTimeColumn" range="{{dateTimeArray}}">
+  <picker mode="multiSelector" value="{{dateTime}}" @change="changeDateTime" @columnchange="changeDateTimeColumn"
+          range="{{dateTimeArray}}">
     <view>
       <input class="hidden" type="text" name="{{name}}" value="{{date}}"/>
       {{date || '暂无'}}
@@ -14,171 +15,179 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy';
 
-  export default class DateTimePicker extends wepy.component {
-    props = {
-      date: { //传递出去的值
-        type: String,
-        default: '',
-        twoWay: true
-      },
-      name: { //传递出去的值
-        type: String,
-        default: 'dateTimePicker'
-      },
-      minutes:{ //自定义分钟
-        type: Number,
-        default: 0
-      }
+export default class DateTimePicker extends wepy.component {
+  props = {
+    date: { //传递出去的值
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    name: { //传递出去的值
+      type: String,
+      default: 'dateTimePicker'
+    },
+    minutes: { //自定义分钟
+      type: Number,
+      default: 0
     }
+  };
 
-    data = {
-      dateTimeArray: [],
-      dateTime: []
-    }
+  data = {
+    dateTimeArray: [],
+    dateTime: [],
+    num: 1
+  };
 
 
-    methods = {
-      changeDateTime(e) {
-        this.initDate()
-      },
-      changeDateTimeColumn(e) {
-        let arr = this.dateTime
-        let dateArr = this.dateTimeArray
-
-        arr[e.detail.column] = e.detail.value
-        dateArr[2] = this._getMonthDay(dateArr[0][arr[0]], dateArr[1][arr[1]])
-        this.dateTimeArray = dateArr
-        this.dateTime = arr
-      }
-    }
-
-    onLoad() {
-      this._initDateFormat()
-      let date = new Date
-      let startYear = date.getFullYear() - 5
-      let endYear = startYear + 10
-
-      let min = date.getMinutes()
-      date.setMinutes(min + this.minutes)
-      let newDate = date.Format('yyyy-MM-dd HH:mm:ss')
-
-      let dateTimePicker = this._dateTimePicker(startYear, endYear, newDate)
-      dateTimePicker.dateTime.pop()
-      dateTimePicker.dateTimeArray.pop()
-      this.dateTime = dateTimePicker.dateTime
-      this.dateTimeArray = dateTimePicker.dateTimeArray
+  methods = {
+    changeDateTime(e) {
       this.initDate();
-      this.$apply()
+    },
+    changeDateTimeColumn(e) {
+      let arr = this.dateTime;
+      let dateArr = this.dateTimeArray;
+
+      arr[e.detail.column] = e.detail.value;
+      dateArr[2] = this._getMonthDay(dateArr[0][arr[0]], dateArr[1][arr[1]]);
+      this.dateTimeArray = dateArr;
+      this.dateTime = arr;
     }
-
-    initDate() {
-      if (this.dateTimeArray.length && this.dateTime.length) {
-        this.date = `${this.dateTimeArray[0][this.dateTime[0]]}-${this.dateTimeArray[1][this.dateTime[1]]}-${this.dateTimeArray[2][this.dateTime[2]]} ${this.dateTimeArray[3][this.dateTime[3]]}:${this.dateTimeArray[4][this.dateTime[4]]}`
-      }
-    }
-
-    _withData(param) {
-      return param < 10 ? '0' + param : '' + param
-    }
-
-    _getLoopArray(start, end) {
-      start = start || 0
-      end = end || 1
-      let array = []
-      for (let i = start; i <= end; i++) {
-        array.push(this._withData(i))
-      }
-      return array
-    }
-
-    _getMonthDay(year, month) {
-      let flag = year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0)
-      let array = null
-
-      switch (month) {
-        case '01':
-        case '03':
-        case '05':
-        case '07':
-        case '08':
-        case '10':
-        case '12':
-          array = this._getLoopArray(1, 31)
-          break
-        case '04':
-        case '06':
-        case '09':
-        case '11':
-          array = this._getLoopArray(1, 30)
-          break
-        case '02':
-          array = flag ? this._getLoopArray(1, 29) : this._getLoopArray(1, 28)
-          break
-        default:
-          array = '月份格式不正确，请重新输入！'
-      }
-      return array
-    }
-
-    _getNewDateArry() {
-      // 当前时间的处理
-      let newDate = new Date()
-      let year = this._withData(newDate.getFullYear())
-      let mont = this._withData(newDate.getMonth() + 1)
-      let date = this._withData(newDate.getDate())
-      let hour = this._withData(newDate.getHours())
-      let minu = this._withData(newDate.getMinutes())
-      let seco = this._withData(newDate.getSeconds())
-
-      return [year, mont, date, hour, minu, seco]
-    }
-
-    _dateTimePicker(startYear, endYear, date) {
-      // 返回默认显示的数组和联动数组的声明
-      let dateTime = []
-      let dateTimeArray = [[], [], [], [], [], []]
-      let start = startYear || 1978
-      let end = endYear || 2100
-      // 默认开始显示数据
-      let defaultDate = date ? [...date.split(' ')[0].split('-'), ...date.split(' ')[1].split(':')] : this._getNewDateArry()
-      // 处理联动列表数据
-      /*年月日 时分秒*/
-      dateTimeArray[0] = this._getLoopArray(start, end)
-      dateTimeArray[1] = this._getLoopArray(1, 12)
-      dateTimeArray[2] = this._getMonthDay(defaultDate[0], defaultDate[1])
-      dateTimeArray[3] = this._getLoopArray(0, 23)
-      dateTimeArray[4] = this._getLoopArray(0, 59)
-      dateTimeArray[5] = this._getLoopArray(0, 59)
-
-      dateTimeArray.forEach((current, index) => {
-        dateTime.push(current.indexOf(defaultDate[index]))
-      })
-
-      return {
-        dateTimeArray: dateTimeArray,
-        dateTime: dateTime
-      }
-    }
-
-    _initDateFormat() {
-      Date.prototype.Format = function (fmt) {
-        let o = {
-          'M+': this.getMonth() + 1, //月份
-          'd+': this.getDate(), //日
-          'H+': this.getHours(), //小时
-          'm+': this.getMinutes(), //分
-          's+': this.getSeconds(), //秒
-          'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-          'S': this.getMilliseconds() //毫秒
-        }
-        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length))
-        for (var k in o)
-          if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
-        return fmt
-      }
+  };
+  watch = {
+    date(val) {
+      console.log('date change', val);
+      // this.onLoad()
     }
   }
+
+  onLoad() {
+    this._initDateFormat();
+    let date = this.date ? new Date(this.date) : new Date();
+    let startYear = date.getFullYear() - 5;
+    let endYear = startYear + 10;
+
+    let min = date.getMinutes();
+    date.setMinutes(min + this.minutes);
+    let newDate = date.Format('yyyy-MM-dd HH:mm:ss');
+
+    let dateTimePicker = this._dateTimePicker(startYear, endYear, newDate);
+    dateTimePicker.dateTime.pop();
+    dateTimePicker.dateTimeArray.pop();
+    this.dateTime = dateTimePicker.dateTime;
+    this.dateTimeArray = dateTimePicker.dateTimeArray;
+    this.date && this.initDate();
+    this.$apply();
+  }
+
+  initDate() {
+    console.log('initDate');
+    if (this.dateTimeArray.length && this.dateTime.length) {
+      this.date = `${this.dateTimeArray[0][this.dateTime[0]]}-${this.dateTimeArray[1][this.dateTime[1]]}-${this.dateTimeArray[2][this.dateTime[2]]} ${this.dateTimeArray[3][this.dateTime[3]]}:${this.dateTimeArray[4][this.dateTime[4]]}`;
+    }
+  }
+
+  _withData(param) {
+    return param < 10 ? '0' + param : '' + param;
+  }
+
+  _getLoopArray(start, end) {
+    start = start || 0;
+    end = end || 1;
+    let array = [];
+    for (let i = start; i <= end; i++) {
+      array.push(this._withData(i));
+    }
+    return array;
+  }
+
+  _getMonthDay(year, month) {
+    let flag = year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
+    let array = null;
+
+    switch (month) {
+      case '01':
+      case '03':
+      case '05':
+      case '07':
+      case '08':
+      case '10':
+      case '12':
+        array = this._getLoopArray(1, 31);
+        break;
+      case '04':
+      case '06':
+      case '09':
+      case '11':
+        array = this._getLoopArray(1, 30);
+        break;
+      case '02':
+        array = flag ? this._getLoopArray(1, 29) : this._getLoopArray(1, 28);
+        break;
+      default:
+        array = '月份格式不正确，请重新输入！';
+    }
+    return array;
+  }
+
+  _getNewDateArry() {
+    // 当前时间的处理
+    let newDate = new Date();
+    let year = this._withData(newDate.getFullYear());
+    let mont = this._withData(newDate.getMonth() + 1);
+    let date = this._withData(newDate.getDate());
+    let hour = this._withData(newDate.getHours());
+    let minu = this._withData(newDate.getMinutes());
+    let seco = this._withData(newDate.getSeconds());
+
+    return [year, mont, date, hour, minu, seco];
+  }
+
+  _dateTimePicker(startYear, endYear, date) {
+    // 返回默认显示的数组和联动数组的声明
+    let dateTime = [];
+    let dateTimeArray = [[], [], [], [], [], []];
+    let start = startYear || 1978;
+    let end = endYear || 2100;
+    // 默认开始显示数据
+    let defaultDate = date ? [...date.split(' ')[0].split('-'), ...date.split(' ')[1].split(':')] : this._getNewDateArry();
+    // 处理联动列表数据
+    /*年月日 时分秒*/
+    dateTimeArray[0] = this._getLoopArray(start, end);
+    dateTimeArray[1] = this._getLoopArray(1, 12);
+    dateTimeArray[2] = this._getMonthDay(defaultDate[0], defaultDate[1]);
+    dateTimeArray[3] = this._getLoopArray(0, 23);
+    dateTimeArray[4] = this._getLoopArray(0, 59);
+    dateTimeArray[5] = this._getLoopArray(0, 59);
+
+    dateTimeArray.forEach((current, index) => {
+      dateTime.push(current.indexOf(defaultDate[index]));
+    });
+
+    return {
+      dateTimeArray: dateTimeArray,
+      dateTime: dateTime
+    };
+  }
+
+  _initDateFormat() {
+    Date.prototype.Format = function(fmt) {
+      let o = {
+        'M+': this.getMonth() + 1, //月份
+        'd+': this.getDate(), //日
+        'H+': this.getHours(), //小时
+        'm+': this.getMinutes(), //分
+        's+': this.getSeconds(), //秒
+        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+        'S': this.getMilliseconds() //毫秒
+      };
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+      for (var k in o)
+        if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+      return fmt;
+    };
+  }
+}
 
 </script>

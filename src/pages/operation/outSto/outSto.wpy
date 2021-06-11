@@ -65,7 +65,7 @@
 <template>
   <view class="container">
     <view class="container-hd">
-      <selector-box-origin :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
+      <selector-box-origin wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
       <selector-box-date :value="time_use" mode="date" @change.user="doSearch"></selector-box-date>
     </view>
 
@@ -104,6 +104,7 @@ import { originOptions } from '@/utils/config';
 import api from '@/api/api';
 import tip from '@/utils/tip';
 import LoadMore from '@/components/common/loadMore';
+import AuthMixin from '@/mixins/authMixin';
 
 export default class outSto extends wepy.page {
   config = {
@@ -130,6 +131,8 @@ export default class outSto extends wepy.page {
   };
 
   computed = {};
+
+  mixins = [AuthMixin];
 
   methods = {
     doSearch(){

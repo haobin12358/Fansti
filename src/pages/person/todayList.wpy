@@ -3,39 +3,27 @@
 
 .container {
   color: @mainBlueColor;
-  padding: 0 30rpx;
+  padding: 30rpx;
+
+  &-hd {
+    margin-bottom: 21rpx;
 
 
-  .search-form{
-    margin: 25rpx 0;
-    padding: 0 30rpx;
-    .fj();
-
-    view{
-      border-bottom: 1px solid @mainBlueColor;
-    }
   }
 }
 </style>
 
 <template>
   <view class="container">
-    <view class="search-form">
-      <view>
-        <picker @change="changeFlight" range="{{flightOptions}}" value="{{searchForm.flight}}"
-                range-key="label">
-          {{flightOptions[searchForm.flight].label}}
-        </picker>
+    <view class="container-hd">
+      <view style="margin-bottom: 20rpx;display: flex">
+        <selector-box :value="flight" :options="flightOptions" @change.user="doSearch"></selector-box>
+        <selector-box-origin wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
+        <selector-box-date :value="date" mode="date" @change.user="doSearch"></selector-box-date>
       </view>
-      <view>
-        <picker @change="changeOrigin" value="{{searchForm.origin}}" range="{{originOptions}}" range-key="label">
-          {{originOptions[searchForm.origin].label}}
-        </picker>
-      </view>
-      <view>
-        <picker @change="changeSearchDate" @cancel="doSearchAllDate" mode="date" value="{{searchForm.date}}">
-          {{searchDateTxt}}
-        </picker>
+      <view wx:if="{{authIsPd}}" style="margin-bottom: 20rpx;display: flex">
+        <selector-box-jd-status :value="jdStatus" :options="jdStatusOptions" @change.user="doSearch"></selector-box-jd-status>
+        <selector-box-hbdate :value="hbdate" mode="date" :datePlaceholder="hbdatePl" @change.user="doSearch"></selector-box-hbdate>
       </view>
     </view>
     <plan-list :list.sync="planList" :pageType="pageType" @tapItem.user="goPlanDetail"></plan-list>
@@ -51,6 +39,9 @@ import LoadMore from '@/components/common/loadMore';
 import api from '@/api/api';
 import tip from '@/utils/tip';
 import { getCurrentTime } from '@/utils/util';
+import SelectorBox from '@/components/common/SelectorBox';
+import { flightOptions, originOptions, jdStatusOptions } from '@/utils/config';
+import AuthMixin from '@/mixins/authMixin';
 
 
 export default class Plan extends wepy.page {
@@ -60,11 +51,22 @@ export default class Plan extends wepy.page {
 
   components = {
     'plan-list': PlanList,
-    'load-more': LoadMore
+    'load-more': LoadMore,
+    'selector-box': SelectorBox,
+    'selector-box-date': SelectorBox,
+    'selector-box-jd-status': SelectorBox,
+    'selector-box-hbdate': SelectorBox,
+    'selector-box-origin': SelectorBox
   };
 
   data = {
     pageType: 0,
+    flight: '',
+    origin: '',
+    date: '',
+    jdStatus: '0',
+    hbdate: '',
+    hbdatePl: '全部航班日期',
     searchForm: {
       flight: 0,
       origin: 0,
@@ -72,33 +74,9 @@ export default class Plan extends wepy.page {
 
     },
 
-    flightOptions: [
-      {
-        label: '全部',
-        value: ''
-      },{
-        label: 'CA',
-        value: 'CA'
-      },{
-        label: 'BGS',
-        value: 'BGS'
-      }
-    ],
-    originOptions: [
-      {
-        label: '全部区域',
-        value: ''
-      },{
-        label: '北京',
-        value: '0'
-      },{
-        label: '上海',
-        value: '1'
-      },{
-        label: '广州',
-        value: '2'
-      }
-    ],
+    flightOptions: flightOptions,
+    originOptions: originOptions,
+    jdStatusOptions: jdStatusOptions,
 
 
     showAll: false,
@@ -112,42 +90,17 @@ export default class Plan extends wepy.page {
     select_name: '',
   };
 
+  mixins = [AuthMixin];
+
   computed = {
-    searchDateTxt(){
-      if (this.searchForm.date === '')  return '全部日期'
-      if(this.searchForm.date == getCurrentTime(true)){
-        return '今天 '+this.searchForm.date
-      }else {
-        return this.searchForm.date
-      }
-    }
   };
 
   watch={};
 
   methods = {
-    // 搜索条件
-    // 航空
-    changeFlight(evt){
-      this.searchForm.flight = evt.detail.value
+    doSearch(){
       this.getTodayList(true)
     },
-    // 区域
-    changeOrigin(evt){
-      this.searchForm.origin = evt.detail.value
-      this.getTodayList(true)
-    },
-
-    // 日期
-    changeSearchDate(evt){
-      this.searchForm.date = evt.detail.value
-      this.getTodayList(true)
-    },
-    doSearchAllDate(){
-      this.searchForm.date = ''
-      this.getTodayList(true)
-    },
-
     goPlanDetail({jcno}){
       this.$navigate('/pages/person/planDetail', { jcno });
     }
@@ -161,17 +114,16 @@ export default class Plan extends wepy.page {
       this.pageNum = 1;
     }
 
-    let dmczlx = this.flightOptions[this.searchForm.flight].value
-    let location = this.originOptions[this.searchForm.origin].value
-
     api.getTodayList({
       // _noLoading: true,
       query: {
         page_num: this.pageNum,
         page_size: this.pageSize,
-        dmczlx: dmczlx,
-        location: location,
-        time_use: this.searchForm.date,
+        dmczlx: this.flight,
+        location: this.origin,
+        time_use: this.date,
+        jdStatus: this.jdStatus,
+        hbdate: this.hbdate,
         select_name: this.select_name,
         login_name: wx.getStorageSync('token')
       }

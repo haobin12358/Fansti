@@ -3,7 +3,7 @@
 
 .selector-box{
   flex: 1;
-  width: 220rpx;
+  max-width: 42%;
   border: 1rpx solid #A0AFBA;
   height: 60rpx;
   border-radius: 4rpx;
@@ -91,7 +91,7 @@ export default class Placeholder extends wepy.component {
       this.$apply()
       this.$emit('change')
     },
-    doSearchAllDate() {
+    doSearchAllDate(evt) {
       this.value = ''
       this.$apply()
       this.$emit('change')

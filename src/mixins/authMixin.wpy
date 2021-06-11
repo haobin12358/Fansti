@@ -1,0 +1,39 @@
+<style lang="less">
+
+</style>
+
+<template>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  //  拿到windowHeight后设置合适的cardHeight
+  export default class CardMixin extends wepy.mixin{
+    props = {
+
+    };
+
+    data = {
+      authUserType: '',
+      authIsPd: false,
+      authShowOrigin: false,
+    };
+
+    computed = {};
+
+    methods = {};
+
+    events = {};
+
+    onLoad() {
+      let userType = wx.getStorageSync('user_type');
+
+      this.authUserType = userType
+      this.authIsPd = userType == 8
+      this.authShowOrigin = userType == 0 || userType == 2
+    }
+  }
+</script>
+

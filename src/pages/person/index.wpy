@@ -324,9 +324,9 @@
     }
     onLoad(){
       // todo
-      this.$navigate('/pages/operation/inSto/noJcInSto')
+      // this.$navigate('/pages/operation/inSto/noJcInSto')
       // this.$navigate('/pages/operation/print')
-      // this.$navigate('/pages/operation/outSto/toOutSto')
+      // this.$navigate('/pages/operation/outSto/outSto')
       // this.$navigate('/pages/person/addPhoto')
       // this.$navigate('/pages/person/yardReceive/toYardReceive')
       // this.$navigate('/pages/person/yardReceive/yardReceive')

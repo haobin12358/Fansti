@@ -96,7 +96,22 @@ export const truckTypeOptions = [
   }, {
     label: '小车',
     value: '小车'
-  }];
+  }
+];
+
+
+export const jdStatusOptions = [
+  {
+    label: '已交单',
+    value: '2'
+  }, {
+    label: '可交单',
+    value: '1'
+  }, {
+    label: '待交单',
+    value: '0'
+  }
+];
 
 
 

@@ -170,7 +170,7 @@
         <view class="form-item">
           <view class="label">进仓时间</view>
           <view class="value">
-            <date-time-picker style="height: 20rpx" :date="formData.enter_time" name="enter_time"></date-time-picker>
+            <date-time-picker style="height: 20rpx" :date.sync="create_time" name="create_time"></date-time-picker>
           </view>
         </view>
         <view class="form-item">
@@ -257,7 +257,9 @@ export default class InStoDetail extends wepy.page {
     activeBatchIndex: 0,
     inStoList: [],
     picture: [],
-    formData: {}
+    formData: {},
+    create_time: '',
+    createTimeShow: true,
   };
 
   computed = {
@@ -275,6 +277,7 @@ export default class InStoDetail extends wepy.page {
     chooseBatch(index) {
       this.activeBatchIndex = index;
       this.formData = this.inStoList[this.activeBatchIndex];
+      this.create_time = this.formData.create_time
       this.picture = this.formData.pic_list;
       this.$apply();
     },
@@ -308,7 +311,7 @@ export default class InStoDetail extends wepy.page {
       }
 
       formData.hwpm = formData.hwpm ? formData.hwpm : this.formData.hwpm;
-      formData.enter_time += ':00';
+      formData.create_time += ':00';
       formData.pic_list = this.picture.map(v => {
         return {
           id: v.id,
@@ -366,6 +369,9 @@ export default class InStoDetail extends wepy.page {
 
               if (resData.status === 200) {
                 tip.success('识别成功')
+                if(!that.formData.hwpm){
+                  that.formData.hwpm = ''
+                }
                 that.formData.hwpm += data.map(v => v.words).join(' ')
                 that.$apply()
               }else {
@@ -503,7 +509,7 @@ export default class InStoDetail extends wepy.page {
       rst = '请填库房存放地';
       return rst;
     }
-    if (!formData.enter_time) {
+    if (!formData.create_time) {
       rst = '请选择进仓时间';
       return rst;
     }
@@ -542,13 +548,16 @@ export default class InStoDetail extends wepy.page {
   onLoad(params, data) {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
-      this.formData = data.preload.item || {hwpm: ''};
+      this.formData = data.preload.item || {};
+      this.create_time = this.formData.create_time
       this.picture = this.formData.pic_list || [];
     } else {
       this.inStoList = data.preload.res;
       this.formData = this.inStoList[this.activeBatchIndex];
+      this.create_time = this.formData.create_time
       this.picture = this.formData.pic_list || [];
     }
+    // this.createTimeShow = true
     this.$apply();
   }
 }
