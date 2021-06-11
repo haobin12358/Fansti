@@ -324,10 +324,15 @@
     }
     onLoad(){
       // todo
-      // this.$navigate('/pages/operation/inSto/noJcInSto')
+      this.$navigate('/pages/operation/inSto/noJcInSto')
       // this.$navigate('/pages/operation/print')
-      // this.$navigate('/pages/person/planDetail')
+      // this.$navigate('/pages/operation/outSto/toOutSto')
+      // this.$navigate('/pages/person/addPhoto')
       // this.$navigate('/pages/person/yardReceive/toYardReceive')
+      // this.$navigate('/pages/person/yardReceive/yardReceive')
+
+      // this.$preload('isNoJc', true);
+      // this.$navigate('/pages/person/inStoDetail');
 
       this.userType = wx.getStorageSync('user_type')
     }

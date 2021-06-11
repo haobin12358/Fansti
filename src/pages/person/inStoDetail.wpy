@@ -542,7 +542,7 @@ export default class InStoDetail extends wepy.page {
   onLoad(params, data) {
     if (data.preload.isNoJc) {
       this.isNoJc = true;
-      this.formData = data.preload.item || {};
+      this.formData = data.preload.item || {hwpm: ''};
       this.picture = this.formData.pic_list || [];
     } else {
       this.inStoList = data.preload.res;

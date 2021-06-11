@@ -197,29 +197,13 @@ export default class noJcInSto extends wepy.page {
       );
     },
     removeItem(item){
-      let params = {
-        method: 'POST',
-        login_name: wx.getStorageSync('token'),
-        query: {
-          id: item.id
-        }
-      }
-
       tip.confirm('确认删除该费用?').then(
         () => {
-          api.deleteFree(params).then(
-            res => {
-              if (res.data.status == 200) {
-                tip.success('删除成功');
-                let index = this.planList.findIndex(v => v.id === item.id)
+          tip.success('删除成功');
+          let index = this.planList.findIndex(v => v.ydno === item.ydno)
 
-                this.planList.splice(index,  1)
-                this.$apply()
-              } else {
-                tip.alert(res.data.message);
-              }
-            }
-          )
+          this.planList.splice(index,  1)
+          this.$apply()
         }
       )
     },
@@ -300,6 +284,7 @@ export default class noJcInSto extends wepy.page {
 
   onLoad(params) {
     this.getList(params.noList.split(','))
+    // this.getList(["125-66247101","125-66247160","125-66247230","125-66247241"])
     this.getTruckCurr()
   };
 }

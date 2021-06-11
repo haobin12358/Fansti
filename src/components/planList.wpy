@@ -70,15 +70,16 @@
           margin-bottom: 0;
         }
 
-        .line-right {
-          min-width: 45%;
-          .fj();
+        .line-left,.line-right {
+          flex: 1;
+          display: flex;
+          word-break: break-all;
         }
 
         .item-label {
           display: inline-block;
           margin-right: 20rpx;
-          width: 4em;
+          width: 5em;
           text-align: right;
           color: #999;
 
@@ -171,7 +172,7 @@
                 <text space="emsp">客服</text>
               </view>
               <view class="item-value">
-                {{item.xsr || '暂无'}}
+                {{item.czr || '暂无'}}
               </view>
             </view>
           </view>
@@ -203,14 +204,62 @@
                 {{item.hxno || '暂无'}}
               </view>
             </view>
-            <view class="line-right">
+            <view wx:if="{{pageType !== 5 && pageType !== 6}}" class="line-right" style="align-items: center">
               <view class="item-label">
-                <text space="emsp">件数</text>
+                <text space="emsp">{{pageType !== 1 ? '总件数' : '件数'}}</text>
               </view>
               <input wx:if="{{pageType === 3}}" placeholder="请输入" class="item-value item-value-input" value="{{item.jsbzcc}}" style="width: 100rpx" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
               <input wx:elif="{{pageType === 4}}" placeholder="请输入" class="item-value item-value-input" value="{{item.delivery_num}}" style="width: 100rpx;" type="text" @input="handleChangeFee({{index}})" @tap.stop="tapStop"/>
               <view wx:else class="item-value">
-                {{item.jsbzcc || '暂无'}}
+                {{item.jsbzcc || '0'}}
+              </view>
+            </view>
+            <!--货场接收-->
+            <view wx:else class="line-right">
+              <view class="item-label">
+                <text space="emsp">已接收件数</text>
+              </view>
+              <view class="item-value">
+                {{item.recive_num || '暂无'}}
+              </view>
+            </view>
+          </view>
+          <!--货场接收-->
+          <view wx:if="{{pageType === 5 || pageType === 6}}" class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <text>剩余件数</text>
+              </view>
+              <view class="item-value">
+                {{item.remain || '0'}}
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <text>待接收件数</text>
+              </view>
+              <view class="item-value">
+                {{item.delivery_num || '0'}}
+
+              </view>
+            </view>
+          </view>
+          <!--待出库-->
+          <view wx:if="{{pageType === 1}}" class="line-detail">
+            <view class="line-left">
+              <view class="item-label">
+                <text>剩余件数</text>
+              </view>
+              <view class="item-value">
+                {{item.remain || '0'}}
+              </view>
+            </view>
+            <view class="line-right">
+              <view class="item-label">
+                <text>出库件数</text>
+              </view>
+              <view class="item-value">
+                {{item.delivery_num || '0'}}
               </view>
             </view>
           </view>
@@ -383,6 +432,12 @@ export default class PlanList extends wepy.component {
 
       this.list[index].checked = !oldStatus
       this.$apply()
+    },
+    itemValueFilter(val) {
+      let valid = val || val === 0
+
+      console.log(val);
+      return valid ? val : '暂无'
     }
   };
 

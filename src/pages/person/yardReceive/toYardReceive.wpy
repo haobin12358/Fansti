@@ -218,11 +218,15 @@ export default class noJcInSto extends wepy.page {
         return;
       }*/
 
+      // let jcno = ''
+      // this.$navigate('/pages/person/planDetail', { jcno, isYard: true });
+
       wx.scanCode({
         success(res) {
           let jcno = res.result.substr(0, 12);
 
-          this.$navigate('/pages/person/planDetail', { jcno, isYard: true });
+          // console.log(jcno);
+          that.$navigate('/pages/person/planDetail', { jcno, isYard: true });
         }
       });
     },
