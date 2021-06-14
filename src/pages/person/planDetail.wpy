@@ -377,6 +377,11 @@
     }
   }
 </style>
+<style>
+page{
+  border: none;
+}
+</style>
 
 <template>
   <view class="container" style="height: {{containerHeight - 45}}px;">
@@ -543,7 +548,7 @@
 
 
 
-            <view wx:if="{{planDetail.show_button == 1 && detailType == '1'}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
+            <view wx:if="{{planDetail.show_button == 1 && showJdBtn}}" @tap="doSaveJdTime" class="btn-wrap" style="margin-top: 200rpx">
               <view class="button">提交交单时间</view>
             </view>
             <view wx:if="{{planDetail.save_button == 1 && detailType == '2'}}" @tap="doSaveBz" class="btn-wrap" style="margin-top: 200rpx">
@@ -957,6 +962,7 @@
 
     data = {
       hasAuth: false,
+      showJdBtn: false,
       userType: '',
 
       jcno: '',
@@ -1489,8 +1495,9 @@
             this.detailType = '2';
           } else if (['0', '3', '5'].includes(this.userType)) {
             this.detailType = '3';
-          } else {
-            this.detailType = '1';
+          }
+          if (['0', '8'].includes(this.userType)) {
+            this.showJdBtn = true;
           }
           return;
         case 1:

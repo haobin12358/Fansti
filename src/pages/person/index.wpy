@@ -170,18 +170,34 @@
       handleRedirect(command) {
         switch (command) {
           case 'inSto':
+            if(!['0','3', '4', '5'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/operation/inSto/index');
             break;
            case 'today':
             this.$navigate('/pages/person/todayList');
             break;
           case 'package':
+            if(!['0','3', '4', '5', '6', '7'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/person/plan');
             break;
           case 'outSto':
+            if(!['0','3', '4', '5', '6', '7'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/operation/outSto/index');
             break;
           case 'yardReceive':
+            if(!['0','2','3', '4', '5', '6', '7'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/person/yardReceive/index');
             break
           case 'declare':
@@ -192,13 +208,15 @@
             this.$navigate('/pages/person/declare');
             break;
           case 'history':
+            if(!['0','3', '10'].includes(this.userType) ){
+              tip.alert('该账号无权使用')
+              return
+            }
             this.$navigate('/pages/operation/history');
             break;
-
           case 'share':
             this.$navigate('/pages/person/personCard');
             break;
-
         }
       },
 
@@ -235,26 +253,6 @@
         this.$navigate('/pages/person/login')
       }
     };
-
-    scanToInSto() {
-      let that = this
-
-      if(!['0', '3', '4', '5'].includes(that.userType) ){
-        tip.alert('该账号无权使用')
-        return
-      }
-
-      wx.scanCode({
-        success(res){
-          let jcno = res.result.substr(0,12);
-          that.getInAbo(jcno)
-        },
-        fail(evt){
-          that.showInputBox = true
-          that.$apply()
-        }
-      })
-    }
     getInAbo(jcno){
       api.getInAbo({
         query: {
@@ -276,28 +274,6 @@
     }
 
 
-
-    // 货场接收
-    scanToReceive() {
-      let that = this;
-
-      if(!['0', '3', '6', '7'].includes(that.userType) ){
-        tip.alert('该账号无权使用')
-        return
-      }
-
-      wx.scanCode({
-        success(res) {
-          let jcno = res.result.substr(0,12);
-
-          that.getHcAbo(jcno)
-        },
-        fail() {
-          that.showInputBox = true
-          that.$apply()
-        }
-      });
-    }
     getHcAbo(jcno){
       let that = this;
 
