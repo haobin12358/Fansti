@@ -194,7 +194,7 @@
             this.$navigate('/pages/operation/outSto/index');
             break;
           case 'yardReceive':
-            if(!['0','2','3', '4', '5', '6', '7'].includes(this.userType) ){
+            if(!['0', '11','3', '4', '5', '6', '7'].includes(this.userType) ){
               tip.alert('该账号无权使用')
               return
             }

@@ -21,7 +21,7 @@
         <selector-box-origin wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions" @change.user="doSearch"></selector-box-origin>
         <selector-box-date :value="date" mode="date" @change.user="doSearch"></selector-box-date>
       </view>
-      <view wx:if="{{authIsPd}}" style="margin-bottom: 20rpx;display: flex">
+      <view wx:if="{{authTodaySearch}}" style="margin-bottom: 20rpx;display: flex">
         <selector-box-jd-status :value="jdStatus" :options="jdStatusOptions" @change.user="doSearch"></selector-box-jd-status>
         <selector-box-hbdate :value="hbdate" mode="date" :datePlaceholder="hbdatePl" @change.user="doSearch"></selector-box-hbdate>
       </view>

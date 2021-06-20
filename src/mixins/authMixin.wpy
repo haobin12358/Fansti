@@ -18,6 +18,7 @@
     data = {
       authUserType: '',
       authIsPd: false,
+      authTodaySearch: false,
       authShowOrigin: false,
     };
 
@@ -30,8 +31,10 @@
     onLoad() {
       let userType = wx.getStorageSync('user_type');
 
+      userType = userType.toString()
       this.authUserType = userType
       this.authIsPd = userType == 8
+      this.authTodaySearch = ['0','3','8'].includes(userType)
       this.authShowOrigin = userType == 0 || userType == 2
     }
   }
