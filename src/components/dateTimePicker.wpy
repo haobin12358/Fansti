@@ -57,14 +57,14 @@ export default class DateTimePicker extends wepy.component {
   };
   watch = {
     date(val) {
-      console.log('date change', val);
+      // console.log('date change', val);
       // this.onLoad()
     }
   }
 
   onLoad() {
     this._initDateFormat();
-    let date = this.date ? new Date(this.date) : new Date();
+    let date = this.date ? new Date(this.date.replace(/-/g,'/')) : new Date();
     let startYear = date.getFullYear() - 5;
     let endYear = startYear + 10;
 
@@ -77,12 +77,11 @@ export default class DateTimePicker extends wepy.component {
     dateTimePicker.dateTimeArray.pop();
     this.dateTime = dateTimePicker.dateTime;
     this.dateTimeArray = dateTimePicker.dateTimeArray;
-    this.date && this.initDate();
+    this.initDate();
     this.$apply();
   }
 
   initDate() {
-    console.log('initDate');
     if (this.dateTimeArray.length && this.dateTime.length) {
       this.date = `${this.dateTimeArray[0][this.dateTime[0]]}-${this.dateTimeArray[1][this.dateTime[1]]}-${this.dateTimeArray[2][this.dateTime[2]]} ${this.dateTimeArray[3][this.dateTime[3]]}:${this.dateTimeArray[4][this.dateTime[4]]}`;
     }
