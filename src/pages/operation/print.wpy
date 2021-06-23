@@ -23,7 +23,7 @@
   }
 
   .print-info {
-    padding: 30rpx 20rpx;
+    padding: 20rpx;
     .fj();
 
     &-item {
@@ -101,6 +101,16 @@
     </view>
     <view class="print-info">
       <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">货物品名</view>
+        <view>{{formData.hwpm || ''}}</view>
+      </div>
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">备注</view>
+        <view>{{formData.remark || ''}}</view>
+      </div>
+    </view>
+    <view class="print-info" wx:if="{{isNoJc}}">
+      <div class="print-info-item">
         <view style="margin-right: 30rpx;color: #999999;">快递公司</view>
         <view>{{formData.delivery_unit || ''}}</view>
       </div>
@@ -109,6 +119,17 @@
         <view>{{formData.delivery_number || ''}}</view>
       </div>
     </view>
+    <view class="print-info" wx:else>
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">销售</view>
+        <view>{{formData.xsr || ''}}</view>
+      </div>
+      <div class="print-info-item">
+        <view style="margin-right: 30rpx;color: #999999;">客服</view>
+        <view>{{formData.czr || ''}}</view>
+      </div>
+    </view>
+
     <view class="print-bar">
       <canvas canvas-id="printBar" style="width: 710rpx;height: 200rpx;"></canvas>
       <view style="text-align: center;font-size: 50rpx;">
@@ -275,17 +296,24 @@ export default class print extends wepy.page {
       warehouse_address,
       goods_quantity,
       delivery_unit,
-      delivery_number
+      delivery_number,
+      hwpm,
+      remark,
+      xsr,
+      czr
     } = this.formData;
+    const lastLine = this.isNoJc ? `快递公司:${delivery_unit || ''} 快递单号:${delivery_number || ''}` : `销售:${xsr || ''} 客服:${czr || ''}`
 
     printerJobs
       .setBold(true)
       .setAlign('ct')
+      .setSize(2, 2)
+      .println(`库位 ${warehouse_address || ''}`)
       .setSize(2, 1)
-      .print(`库位 ${warehouse_address || ''}`)
+      .print(`${hwpm} ${remark ? `备注:${remark}` : ''}`)
       .print(`${this.code} ${goods_quantity || 0}件`)
-      .print(`快递公司 ${delivery_unit || ''}`)
-      .println(`快递单号 ${delivery_number || ''}`);
+      .println(lastLine)
+
 
     let buffer = printerJobs.buffer();
 
@@ -430,7 +458,7 @@ export default class print extends wepy.page {
       res: formData
     } = data.preload
 
-    /*let isNoJc = true;
+    /*let isNoJc = false;
     let formData = {
       batch_number: null,
       cargo_size: '623',
@@ -450,6 +478,9 @@ export default class print extends wepy.page {
       remark: '823',
       temp_bq_url: 'https://fstwechat.com/photo/unJcno/0742021-06-01706/code/code.png',
       temporary_no: '0742021-06-01706',
+      jcno: '0742021-06-01706',
+      xsr: '张三',
+      czr: '李四',
       warehouse_address: '2123fgg'
     };*/
 
