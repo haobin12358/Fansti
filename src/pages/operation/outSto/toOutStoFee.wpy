@@ -105,7 +105,7 @@ import PlanList from '@/components/planList';
 import { flightOptions, originOptions, packageOptions,truckTypeOptions } from '@/utils/config';
 
 
-export default class noJcInSto extends wepy.page {
+export default class toOutStoFee extends wepy.page {
   config = {
     navigationBarTitleText: '短驳费分摊'
   };

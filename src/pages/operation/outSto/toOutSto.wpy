@@ -137,7 +137,7 @@ import { flightOptions, originOptions, packageOptions } from '@/utils/config';
 import AuthMixin from '@/mixins/authMixin';
 
 
-export default class noJcInSto extends wepy.page {
+export default class toOutSto extends wepy.page {
   config = {
     navigationBarTitleText: '待出库'
   };
