@@ -119,16 +119,20 @@
         this.select_name = query
         this.getTodayList(true)
       },
-      goPlanDetail({ jcno,bzflag }){
+      goPlanDetail(item){
+        let { jcno,bzflag }=  item
+
         if(bzflag){
           this.$navigate('/pages/person/planDetail', { jcno });
         }else {
-          this.getInAbo(jcno)
+          this.getInAbo(item)
         }
       }
     };
 
-    getInAbo(jcno) {
+    getInAbo(item) {
+      let {jcno} = item
+
       api.getInAbo({
         query: {
           jcno,
@@ -139,6 +143,7 @@
           if (res.data.status == 200) {
             let data = res.data.data;
 
+            data = data.length ? data : [item]
             this.$preload('res', data);
             this.$navigate('/pages/person/planConfirm', { jcno });
           } else {

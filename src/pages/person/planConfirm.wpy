@@ -170,7 +170,7 @@
     </view>
 
     <view class="btn-wrap">
-      <button class="button plain" @tap="addInSto">扫 码</button>
+      <button class="button plain" @tap="scanToInSto">扫 码</button>
       <button class="button type-blue" @tap="goDetail">详 情</button>
     </view>
   </view>
@@ -208,12 +208,12 @@ export default class planConfirm extends wepy.page {
         success(res) {
           let jcno = res.result.substr(0, 12);
 
-          if(this.jcno === jcno) {
+          if(that.jcno == jcno) {
             wx.redirectTo({
               url: `/pages/person/planDetail?jcno=${this.jcno}`
             })
           }else{
-
+            tip.error('扫码结果不一致')
           }
         },
         fail(evt) {
