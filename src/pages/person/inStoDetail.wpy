@@ -264,6 +264,7 @@ export default class InStoDetail extends wepy.page {
     formData: {},
     create_time: '',
     createTimeShow: true,
+    willPrint: false,
   };
 
   computed = {
@@ -273,10 +274,10 @@ export default class InStoDetail extends wepy.page {
   };
 
   methods = {
-    goPrint() {
-      this.$preload('res', this.formData);
-      this.$preload('isNoJc', this.isNoJc);
-      this.$navigate('/pages/operation/print');
+    handlePrint(){
+      console.log('[handlePrint]');
+      this.willPrint = true
+      this.$apply()
     },
     chooseBatch(index) {
       this.activeBatchIndex = index;
@@ -306,6 +307,16 @@ export default class InStoDetail extends wepy.page {
     },
     doSubmit(evt) {
       let formData = evt.detail.value;
+
+      if(this.willPrint){
+        this.willPrint = false
+        this.$apply()
+        this.goPrint({
+          ...this.formData,
+          ...formData
+        })
+        return
+      }
 
       let checkRst = this.checkFormData(formData);
 
@@ -420,6 +431,11 @@ export default class InStoDetail extends wepy.page {
         }
       }
     );
+  }
+  goPrint(formData) {
+    this.$preload('res', formData);
+    this.$preload('isNoJc', this.isNoJc);
+    this.$navigate('/pages/operation/print');
   }
 
   saveNoJcInSto(formData) {
