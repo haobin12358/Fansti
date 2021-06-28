@@ -232,7 +232,7 @@
       </view>
 
       <view class="btn-wrap">
-        <button wx:if="{{!isAddNoJc}}" class="button plain" @tap="goPrint">打印面单</button>
+        <button wx:if="{{!isAddNoJc}}" class="button plain" form-type="submit" @tap="handlePrint">打印面单</button>
         <button class="button" form-type="submit">保 存</button>
       </view>
     </form>
