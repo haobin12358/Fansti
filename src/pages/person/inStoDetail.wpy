@@ -139,7 +139,7 @@
     <view class="batch-list" wx:if="{{inStoList.length}}">
       <view class="{{activeBatchIndex == index ? 'batch-item active' : 'batch-item'}}" wx:for="{{inStoList.length}}"
             @tap="chooseBatch({{index}})">
-        {{index + 1}}
+        {{(index === inStoList.length - 1) ? '新' : (index + 1)}}
       </view>
     </view>
     <form @submit="doSubmit">
@@ -283,7 +283,7 @@ export default class InStoDetail extends wepy.page {
       this.activeBatchIndex = index;
       this.formData = this.inStoList[this.activeBatchIndex];
       this.create_time = this.formData.create_time
-      this.picture = this.formData.pic_list;
+      this.picture = this.formData.pic_list || [];
       this.$apply();
     },
     addPhoto() {
@@ -326,7 +326,6 @@ export default class InStoDetail extends wepy.page {
       }
 
       formData.hwpm = formData.hwpm ? formData.hwpm : this.formData.hwpm;
-      formData.create_time += ':00';
       formData.pic_list = this.picture.map(v => {
         return {
           id: v.id,
@@ -413,9 +412,10 @@ export default class InStoDetail extends wepy.page {
   };
 
   saveInSto(formData) {
-    api.addIn({
+    api.updateJcno({
       method: 'POST',
       jcno: this.formData.jcno,
+      photo_head: this.formData.photo_head,
       login_name: wx.getStorageSync('token'),
       query: formData
     }).then(
@@ -424,6 +424,12 @@ export default class InStoDetail extends wepy.page {
           let data = res.data.data;
 
           this.inStoList.splice(this.activeBatchIndex, 1, formData);
+          if(this.activeBatchIndex === this.inStoList.length - 1){
+            this.inStoList.push({
+              jcno: this.formData.jcno,
+              photo_head: this.inStoList.length
+            })
+          }
           this.$apply();
           tip.success('保存成功');
         } else {
@@ -576,6 +582,7 @@ export default class InStoDetail extends wepy.page {
   }
 
   onLoad(params, data) {
+    // data.preload = {}
     if (data.preload.isNoJc) {
       this.isNoJc = true;
       this.formData = data.preload.item || {};
@@ -583,6 +590,43 @@ export default class InStoDetail extends wepy.page {
       this.picture = this.formData.pic_list || [];
     } else {
       this.inStoList = data.preload.res;
+
+      /*this.inStoList = [{
+        batch_number: null,
+        cargo_size: "123",
+        client_name: null,
+        create_time: "",
+        czr: "刘雪敏",
+        delivery_number: null,
+        delivery_unit: "圆通",
+        enter_time: "2019-05-05 00:00:00",
+        goods_quantity: "1",
+        goods_weight: "7",
+        hwpm: "危123",
+        jcno: "E15460896",
+        jcno_bq_url: "https://fansti.sanbinit.cn/photo/E15460896/code/code.png",
+        originator_phone: null,
+        photo_head: "1",
+      }, {
+        batch_number: null,
+        cargo_size: "11",
+        client_name: "qqq",
+        create_time: "2021-06-25 00:00:00",
+        czr: "刘雪敏",
+        delivery_number: null,
+        delivery_unit: "qqq",
+        enter_time: null,
+        goods_quantity: "11",
+        goods_weight: "2",
+        hwpm: "qqq",
+        jcno: "E15460896",
+        jcno_bq_url: null,
+        originator_phone: null,
+        photo_head: "2",
+        receiver_name: null,
+        remark: "qqq",
+        warehouse_address: "qqq"
+      }]*/
       this.formData = this.inStoList[this.activeBatchIndex];
       this.create_time = this.formData.create_time
       this.picture = this.formData.pic_list || [];

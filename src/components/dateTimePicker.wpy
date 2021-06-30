@@ -83,7 +83,7 @@ export default class DateTimePicker extends wepy.component {
 
   initDate() {
     if (this.dateTimeArray.length && this.dateTime.length) {
-      this.date = `${this.dateTimeArray[0][this.dateTime[0]]}-${this.dateTimeArray[1][this.dateTime[1]]}-${this.dateTimeArray[2][this.dateTime[2]]} ${this.dateTimeArray[3][this.dateTime[3]]}:${this.dateTimeArray[4][this.dateTime[4]]}`;
+      this.date = `${this.dateTimeArray[0][this.dateTime[0]]}-${this.dateTimeArray[1][this.dateTime[1]]}-${this.dateTimeArray[2][this.dateTime[2]]} ${this.dateTimeArray[3][this.dateTime[3]]}:${this.dateTimeArray[4][this.dateTime[4]]}:00`;
     }
   }
 

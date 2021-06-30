@@ -7,6 +7,7 @@ const mock = true;
 const host = mock ? 'https://fansti.sanbinit.cn/fansti' : 'https://fstwechat.com/fansti';
 
 // 三期
+const updateJcno = params => wxRequest(params, host + `/control/update_jcno?login_name=${params.login_name}&jcno=${params.jcno}&photo_head=${params.photo_head}`);
 const getJcPicNew = params => wxRequest(params, host + `/control/get_jc_pic_new`);
 const outingGoods = params => wxRequest(params, host + `/control/outing_goods?login_name=${params.login_name}`);
 const getReceivedList = params => wxRequest(params, host + `/control/get_received`);
@@ -216,4 +217,5 @@ export default {
   addNewFile,
   deleteFile,
   getJdNum,
+  updateJcno,
 };

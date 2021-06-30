@@ -210,7 +210,7 @@ export default class noJcInSto extends wepy.page {
         if (res.data.status == 200) {
           let data = res.data.data;
 
-          data = data.length ? data : [item]
+          data = data.length ? [...data, {jcno: item.jcno, photo_head: data.length + 1}] : [item]
           console.log(data);
           this.$preload('res', data);
           this.$navigate('/pages/person/inStoDetail');
