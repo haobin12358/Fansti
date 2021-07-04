@@ -117,7 +117,7 @@
           </view>
         </view>
         <view class="container-hd-two">
-          <selector-box :value="dmczlx" :options="flightOptions"></selector-box>
+          <selector-box wx:if="{{authShowOrigin}}" :value="origin" :options="originOptions"></selector-box>
           <input class="search-from-item search-from-item-input" type="text" value="{{warehouse_address}}" name="warehouse" placeholder="库位"/>
           <selector-box-date :value="time_use" mode="date"></selector-box-date>
         </view>
@@ -168,7 +168,8 @@ import SelectorBox from '@/components/common/SelectorBox';
 import LoadMore from '@/components/common/loadMore';
 import api from '@/api/api';
 import tip from '@/utils/tip';
-import { flightOptions } from '@/utils/config';
+import { flightOptions, originOptions } from '@/utils/config';
+import AuthMixin from '@/mixins/authMixin';
 
 
 export default class noJcInSto extends wepy.page {
@@ -182,12 +183,16 @@ export default class noJcInSto extends wepy.page {
     'selector-box-date': SelectorBox
   };
 
+  mixins = [AuthMixin];
+
   data = {
     dmczlx: '',
+    origin: '',
     time_use: '',
     select_name: '',
     warehouse_address: '',
     flightOptions: flightOptions,
+    originOptions: originOptions,
     loadingType: 'normal', // 加载状态
     planList: [],
     pageNum: 1,
@@ -285,7 +290,7 @@ export default class noJcInSto extends wepy.page {
         login_name: wx.getStorageSync('token'),
         time_use: this.time_use,
         select_name: this.select_name,
-        dmczlx: this.dmczlx,
+        location: this.origin,
         warehouse_address: this.warehouse_address
       }
     };

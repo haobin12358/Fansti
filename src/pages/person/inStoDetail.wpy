@@ -138,13 +138,15 @@
         </view>
       </view>
     </view>
-    <view class="batch-list" wx:if="{{inStoList.length}}">
-      <view class="{{activeBatchIndex == index ? 'batch-item active' : 'batch-item'}}" wx:for="{{inStoList.length}}"
-            @tap="chooseBatch({{index}})">
-        {{(index === inStoList.length - 1) ? '新' : (index + 1)}}
-      </view>
-    </view>
+
     <form @submit="doSubmit">
+      <view class="batch-list" wx:if="{{inStoList.length}}">
+        <button form-type="submit" class="{{activeBatchIndex == index ? 'batch-item active' : 'batch-item'}}" wx:for="{{inStoList.length}}" style="padding: 0;border-radius: 0"
+              @tap="chooseBatch({{index}})">
+          {{(index === inStoList.length - 1) ? '新' : (index + 1)}}
+        </button>
+      </view>
+
       <view class="form">
         <view class="form-item" wx:if="{{isNoJc}}">
           <view class="label">临时单号</view>
@@ -268,6 +270,7 @@ export default class InStoDetail extends wepy.page {
     createTimeShow: true,
     willPrint: false,
     submitFormdata: false,
+    switchPatch: false
   };
 
   computed = {
@@ -283,11 +286,16 @@ export default class InStoDetail extends wepy.page {
       this.$apply()
     },
     chooseBatch(index) {
-      this.activeBatchIndex = index;
-      this.formData = this.inStoList[this.activeBatchIndex];
-      this.create_time = this.formData.create_time
-      this.picture = this.formData.pic_list || [];
-      this.$apply();
+      this.switchPatch = true
+      this.$apply()
+
+      setTimeout(() => {
+        this.activeBatchIndex = index;
+        this.formData = this.inStoList[this.activeBatchIndex];
+        this.create_time = this.formData.create_time
+        this.picture = this.formData.pic_list || [];
+        this.$apply();
+      }, 300)
     },
     addPhoto() {
       let that = this;
@@ -311,7 +319,17 @@ export default class InStoDetail extends wepy.page {
     doSubmit(evt) {
       let formData = evt.detail.value;
 
-      console.log(this.submitFormdata);
+      console.log(this.switchPatch);
+      if(this.switchPatch){
+        this.switchPatch = false
+        this.inStoList.splice(this.activeBatchIndex, 1, {
+            ...this.formData,
+            ...formData
+          }
+        );
+        this.$apply()
+        return;
+      }
       if(this.submitFormdata){
         this.submitFormdata = false
         this.formData = {
@@ -331,7 +349,6 @@ export default class InStoDetail extends wepy.page {
         return
       }
 
-      return
       let checkRst = this.checkFormData(formData);
 
       if (checkRst) {
@@ -609,7 +626,8 @@ export default class InStoDetail extends wepy.page {
     } else {
       this.inStoList = data.preload.res;
       this.activeBatchIndex = parseInt(data.preload.photo_head || 1) - 1
-      /*this.inStoList = [{
+      /*
+      this.inStoList = [{
         batch_number: null,
         cargo_size: "123",
         client_name: null,
@@ -644,7 +662,8 @@ export default class InStoDetail extends wepy.page {
         receiver_name: null,
         remark: "qqq",
         warehouse_address: "qqq"
-      }]*/
+      }]
+      */
       this.formData = this.inStoList[this.activeBatchIndex];
       this.create_time = this.formData.create_time
       this.picture = this.formData.pic_list || [];

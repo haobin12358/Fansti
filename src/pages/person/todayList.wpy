@@ -122,8 +122,8 @@ export default class Plan extends wepy.page {
         dmczlx: this.flight,
         location: this.origin,
         time_use: this.date,
-        jdStatus: this.jdStatus,
-        hbdate: this.hbdate,
+        jd_flag: this.jdStatus,
+        hbdate1: this.hbdate,
         select_name: this.select_name,
         login_name: wx.getStorageSync('token')
       }
