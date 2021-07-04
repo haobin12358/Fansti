@@ -120,6 +120,8 @@
     .type-blue-plain;
     border: 1px solid @mainBlueColor;
     border-radius: 10rpx;
+    font-size: 24rpx;
+    padding: 0;
   }
 }
 </style>
@@ -154,7 +156,7 @@
           <view class="label">货物品名</view>
           <view class="value" style="display: flex;align-items: center">
             <textarea auto-height name="hwpm" style="flex: 1" value="{{formData.hwpm}}" placeholder="请输入"/>
-            <view class="hwpm-scan" @tap.stop="hwpmScan">识别</view>
+            <button class="hwpm-scan" style="font-size: 24rpx;padding: 0" form-type="submit" @tap.stop="hwpmScan">识别</button>
           </view>
         </view>
         <view class="form-item">
@@ -186,7 +188,7 @@
           <view class="label">快递单号</view>
           <view class="value" style="display: flex;align-items: center">
             <textarea auto-height placeholder="请填写" value="{{formData.delivery_number}}" name="delivery_number"/>
-            <view class="hwpm-scan" @tap.stop="deNumberScan">识别</view>
+            <button class="hwpm-scan" form-type="submit" @tap.stop="deNumberScan">识别</button>
           </view>
         </view>
         <view class="form-item">
@@ -265,6 +267,7 @@ export default class InStoDetail extends wepy.page {
     create_time: '',
     createTimeShow: true,
     willPrint: false,
+    submitFormdata: false,
   };
 
   computed = {
@@ -308,6 +311,16 @@ export default class InStoDetail extends wepy.page {
     doSubmit(evt) {
       let formData = evt.detail.value;
 
+      console.log(this.submitFormdata);
+      if(this.submitFormdata){
+        this.submitFormdata = false
+        this.formData = {
+          ...this.formData,
+          ...formData
+        }
+        this.$apply()
+        return;
+      }
       if(this.willPrint){
         this.willPrint = false
         this.$apply()
@@ -318,6 +331,7 @@ export default class InStoDetail extends wepy.page {
         return
       }
 
+      return
       let checkRst = this.checkFormData(formData);
 
       if (checkRst) {
@@ -364,6 +378,8 @@ export default class InStoDetail extends wepy.page {
     hwpmScan(){
       let that = this;
 
+      this.submitFormdata = true
+      this.$apply()
       tip.loading();
       wx.chooseImage({
         count: 1,
@@ -400,6 +416,8 @@ export default class InStoDetail extends wepy.page {
       })
     },
     deNumberScan(){
+      this.submitFormdata = true
+      this.$apply()
       wepy.scanCode({
         scanType: ['barCode']
       }).then(
@@ -427,7 +445,7 @@ export default class InStoDetail extends wepy.page {
           if(this.activeBatchIndex === this.inStoList.length - 1){
             this.inStoList.push({
               jcno: this.formData.jcno,
-              photo_head: this.inStoList.length
+              photo_head: this.inStoList.length + 1
             })
           }
           this.$apply();
@@ -590,7 +608,7 @@ export default class InStoDetail extends wepy.page {
       this.picture = this.formData.pic_list || [];
     } else {
       this.inStoList = data.preload.res;
-
+      this.activeBatchIndex = parseInt(data.preload.photo_head || 1) - 1
       /*this.inStoList = [{
         batch_number: null,
         cargo_size: "123",
