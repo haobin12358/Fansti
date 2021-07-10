@@ -154,6 +154,20 @@
             {{formData.temporary_no}}
           </view>
         </view>
+        <block wx:if="{{isNoJc}}">
+          <view class="form-item">
+            <view class="label">接货人</view>
+            <view class="value">
+              {{formData.receiver_name}}
+            </view>
+          </view>
+          <view class="form-item">
+            <view class="label">始发方电话</view>
+            <view class="value">
+              <textarea auto-height placeholder="请填写" value="{{formData.originator_phone}}" name="originator_phone"/>
+            </view>
+          </view>
+        </block>
         <view class="form-item">
           <view class="label">货物品名</view>
           <view class="value" style="display: flex;align-items: center">
@@ -365,7 +379,6 @@ export default class InStoDetail extends wepy.page {
           url: v.photourl
         };
       });
-      formData.receiver_name = '';
       formData = {
         ...this.formData,
         ...formData
