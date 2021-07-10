@@ -228,7 +228,7 @@ export default class noJcInSto extends wepy.page {
         success(res) {
           let jcno = res.result.substr(0, 12);
 
-          // console.log(jcno);
+          console.log(jcno);
           that.$navigate('/pages/person/planDetail', { jcno, isYard: true });
         }
       });

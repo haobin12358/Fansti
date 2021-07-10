@@ -135,6 +135,7 @@ import tip from '@/utils/tip';
 import PlanList from '@/components/planList';
 import { flightOptions, originOptions, packageOptions } from '@/utils/config';
 import AuthMixin from '@/mixins/authMixin';
+import { getCurrentTime } from '@/utils/util';
 
 
 export default class toOutSto extends wepy.page {
@@ -155,7 +156,7 @@ export default class toOutSto extends wepy.page {
     dmczlx: '',
     origin: '',
     package: '',
-    time_use: '',
+    time_use: getCurrentTime(true),
     select_name: '',
     bzflag: '',
     flightOptions: flightOptions,

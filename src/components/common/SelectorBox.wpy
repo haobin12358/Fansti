@@ -10,6 +10,7 @@
   .fj();
   padding: 0 20rpx;
   .sc(24rpx, #999);
+  min-width: 0;
 
   &.small{
     .fz(16rpx);
@@ -21,6 +22,7 @@
     picker{
       line-height: 60rpx;
       .sc(24rpx, #999);
+      white-space: nowrap;
     }
   }
   image{

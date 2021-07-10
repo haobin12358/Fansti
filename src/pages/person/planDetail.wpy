@@ -581,12 +581,12 @@ page{
                 <view class="row">
                   <view class="form-item">
                     <view class="label">客服:</view>
-                    <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
+                    <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
                   </view>
                   <view class="form-item">
                     <view class="label">销售:</view>
                     <!--todo-->
-                    <view class="value">{{deliveryReceipt.czr || '暂无'}}</view>
+                    <view class="value">{{deliveryReceipt.xsr || '暂无'}}</view>
                   </view>
                 </view>
                 <view class="row">
